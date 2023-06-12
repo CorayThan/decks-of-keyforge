@@ -1,5 +1,5 @@
 module.exports = {
     eslint: {
-        mode: "file"
-    }
-}
+        enable: false,
+    },
+};

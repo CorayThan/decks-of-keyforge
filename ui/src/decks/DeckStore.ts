@@ -13,8 +13,8 @@ import { userDeckStore } from "../userdeck/UserDeckStore"
 import { DeckCompareResults } from "./comparison/CompareDecks"
 import { DeckCount, DeckPage, DeckSearchResult, DeckWithSynergyInfo } from "./models/DeckSearchResult"
 import { DeckFilters } from "./search/DeckFilters"
-import { DeckStoreInterface } from "../alliancedecks/DeckStoreInterface";
-import { DecksToCompareDto } from "../generated-src/DecksToCompareDto";
+import { DeckStoreInterface } from "../alliancedecks/DeckStoreInterface"
+import { DecksToCompareDto } from "../generated-src/DecksToCompareDto"
 
 export class DeckStore implements DeckStoreInterface {
     static readonly DECK_PAGE_SIZE = 20

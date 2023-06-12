@@ -11,7 +11,9 @@ import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.TraitStrength
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeCard
 import coraythan.keyswap.users.CurrentUserService
+import coraythan.keyswap.users.KeyUser
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -40,6 +42,7 @@ class CardService(
 
     private var previousInfoWithNames: Map<String, Card>? = null
     private var nextInfoWithNames: Map<String, Card>? = null
+    private var tokenCards: Map<String, Card>? = null
     private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
     private var nonMaverickCachedCardsWithNames: Map<String, Card>? = null
     private var nonMaverickCachedCardsWithUrlNames: Map<String, Card>? = null
@@ -122,6 +125,7 @@ class CardService(
 
     fun findByCardName(cardName: String) = nonMaverickCachedCardsWithNames!![cardName.cleanCardName()]
     fun findByCardUrlName(cardUrlName: String) = nonMaverickCachedCardsWithUrlNames!![cardUrlName]
+    fun findTokenById(tokenId: String) = tokenCards!![tokenId]
 
     fun previousInfo(): Map<String, Card> {
         if (previousInfoWithNames == null) {
@@ -188,6 +192,44 @@ class CardService(
         val cards = cardsFromCardIds(deck.cardIds, deck.name)
         check(cards.size == 36) { "Why doesn't this deck have cards? $deck" }
         return cards
+    }
+
+    fun tokenForDeck(deck: GenericDeck): Card? {
+        if (deck.tokenId == null) return null
+        if (tokenCards == null) {
+            reloadCachedCards()
+        }
+        return tokenCards?.get(deck.tokenId)!!
+    }
+
+    fun cardsAndTokenFutureProof(deck: GenericDeck, user: KeyUser?): CardsAndToken {
+        val cards = if (user?.displayFutureSas() == true) {
+            futureCardsForDeck(deck)
+        } else {
+            cardsForDeck(deck)
+        }
+        val token = if (user?.displayFutureSas() == true) {
+            futureTokenForDeck(deck)
+        } else {
+            tokenForDeck(deck)
+        }
+        return CardsAndToken(cards, token)
+    }
+
+    fun futureTokenForDeck(deck: GenericDeck): Card? {
+        if (deck.tokenId == null) return null
+        if (tokenCards == null) {
+            reloadCachedCards()
+        }
+        tokenCards?.get(deck.tokenId)!!
+            .apply {
+                val nextInfo = nextExtraInfo[this.cardTitle.cleanCardName()]
+                return if (nextInfo != null) {
+                    this.copy(extraCardInfo = nextInfo)
+                } else {
+                    this
+                }
+            }
     }
 
     fun futureCardsForDeck(deck: GenericDeck): List<Card> {
@@ -286,9 +328,9 @@ class CardService(
     }
 
     fun reloadCachedCards() {
-
+        val allCards = cardRepo.findAll()
         val cards = fullCardsFromCards(
-            cardRepo.findAll()
+            allCards
                 .groupBy { "${it.expansion}-${it.cardNumber}" }
                 .values
                 .map { groupedCards ->
@@ -362,6 +404,7 @@ class CardService(
             it.value.cardNumbers = cardExpansions[it.value.cardTitle]
         }
 
+        tokenCards = cards.values.filter { it.token }.associateBy { it.id }
         nonMaverickCachedCards = cards
         nonMaverickCachedCardsWithNames = cards.map { it.value.cardTitle.cleanCardName() to it.value }.toMap()
         nonMaverickCachedCardsWithUrlNames = cards.map { cardNameToCardImageUrl(it.value.cardTitle) to it.value }.toMap()

@@ -1,7 +1,7 @@
 import { clone, isEqual } from "lodash"
 import { makeObservable, observable } from "mobx"
 import * as React from "react"
-import { log, prettyJson, Utils } from "../../config/Utils"
+import { log, Utils } from "../../config/Utils"
 import { Constraint } from "../../generated-src/Constraint"
 import { DeckCardQuantity } from "../../generated-src/DeckCardQuantity"
 import { House } from "../../generated-src/House"
@@ -9,6 +9,7 @@ import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQu
 import { SortDirection } from "../../generic/SortDirection"
 import { userStore } from "../../user/UserStore"
 import { defaultSort } from "../selects/DeckSortSelect"
+import { queryParamsFromObject, SearchFiltersBuilder } from "../../config/SearchFiltersBuilder"
 
 export class DeckFilters {
     static forSale = () => {
@@ -17,56 +18,38 @@ export class DeckFilters {
         return filters
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static rehydrateFromQuery = (queryObject: any): DeckFilters => {
-        log.debug(`Rehydrating deck filters from : ${prettyJson(queryObject)}`)
-        if (typeof queryObject.houses === "string") {
-            queryObject.houses = [queryObject.houses]
-        }
-        if (typeof queryObject.excludeHouses === "string") {
-            queryObject.excludeHouses = [queryObject.excludeHouses]
-        }
-        if (queryObject.expansions != null) {
-            if (queryObject.expansions.constructor === Array) {
-                queryObject.expansions = queryObject.expansions.map((expansion: string) => Number(expansion))
-            } else {
-                const expansionAsNumber = Number(queryObject.expansions)
-                queryObject.expansions = [expansionAsNumber]
-            }
-        }
-        if (queryObject.tags != null) {
-            if (queryObject.tags.constructor === Array) {
-                queryObject.tags = queryObject.tags.map((expansion: string) => Number(expansion))
-            } else {
-                const asNumber = Number(queryObject.tags)
-                queryObject.tags = [asNumber]
-            }
-        }
-        if (queryObject.owners != null) {
-            if (queryObject.owners.constructor !== Array) {
-                queryObject.owners = [queryObject.owners]
-            }
-        }
-        if (queryObject.tournamentIds != null) {
-            if (queryObject.tournamentIds.constructor !== Array) {
-                queryObject.tournamentIds = [queryObject.tournamentIds]
-            }
-        }
-        if (queryObject.notTags != null) {
-            if (queryObject.notTags.constructor === Array) {
-                queryObject.notTags = queryObject.notTags.map((expansion: string) => Number(expansion))
-            } else {
-                const asNumber = Number(queryObject.notTags)
-                queryObject.notTags = [asNumber]
-            }
-        }
-        if (queryObject.cards) {
-            if (typeof queryObject.cards === "string") {
-                queryObject.cards = [queryObject.cards]
-            }
-            queryObject.cards = queryObject.cards.map((forQuery: string) => {
-                const lastIndexOf = forQuery.lastIndexOf("-")
-                const secondPart = forQuery.substring(lastIndexOf + 1)
+    static rehydrateFromQuery = (params: string): DeckFilters => {
+        // log.debug(`Rehydrating deck filters from : ${prettyJson(params)}`)
+
+        const built = new SearchFiltersBuilder(params, new DeckFilters())
+            .value("title")
+            .value("notes")
+            .value("notesUser")
+            .value("page")
+            .value("sort")
+            .value("forSaleInCountry")
+            .value("sortDirection")
+            .value("owner")
+            .value("teamDecks")
+            .value("withOwners")
+            .value("myFavorites")
+            .value("completedAuctions")
+            .value("forAuction")
+            .value("forTrade")
+            .value("notForSale")
+            .value("forSale")
+            .value("titleQl")
+
+            .stringArrayValue("houses")
+            .stringArrayValue("excludeHouses")
+            .numberArrayValue("expansions")
+            .numberArrayValue("tags")
+            .stringArrayValue("owners")
+            .stringArrayValue("tournamentIds")
+            .numberArrayValue("notTags")
+            .customArrayValue("cards", (val: string) => {
+                const lastIndexOf = val.lastIndexOf("-")
+                const secondPart = val.substring(lastIndexOf + 1)
                 const quantity = isNaN(Number(secondPart)) ? undefined : Number(secondPart)
                 let house
                 let mav = undefined
@@ -78,25 +61,20 @@ export class DeckFilters {
                     }
                 }
                 return {
-                    cardNames: forQuery.substring(0, lastIndexOf).split(cardSeparator),
+                    cardNames: val.substring(0, lastIndexOf).split(cardSeparator),
                     quantity,
                     house,
                     mav
                 }
             })
-        }
-        if (queryObject.constraints) {
-            if (typeof queryObject.constraints === "string") {
-                queryObject.constraints = [queryObject.constraints]
-            }
-            queryObject.constraints = queryObject.constraints.map((forQuery: string) => {
-                const split = forQuery.split(forQuery.includes("_") ? "_" : "-")
+            .customArrayValue("constraints", (val: string) => {
+                const split = val.split(val.includes("_") ? "_" : "-")
                 let property = split[0]
                 if (property === "askingPrice") {
                     // temp to fix these urls
                     property = "buyItNow"
                 }
-                log.debug("From constraint: " + forQuery)
+                log.debug("From constraint: " + val)
                 log.debug(`Found ${property} ${split[1]} ${Number(split[2])}`)
                 return {
                     property,
@@ -104,49 +82,10 @@ export class DeckFilters {
                     value: Number(split[2])
                 }
             })
-        }
-        if (queryObject.page) {
-            queryObject.page = Number(queryObject.page)
-        }
-        if (queryObject.titleQl != null) {
-            queryObject.titleQl = queryObject.titleQl === "true"
-        }
-        if (queryObject.forSale != null) {
-            queryObject.forSale = queryObject.forSale === "true"
-        }
-        if (queryObject.notForSale != null) {
-            queryObject.notForSale = queryObject.notForSale === "true"
-        }
-        if (queryObject.forTrade != null) {
-            queryObject.forTrade = queryObject.forTrade === "true"
-        }
-        if (queryObject.forAuction != null) {
-            queryObject.forAuction = queryObject.forAuction === "true"
-        }
-        if (queryObject.completedAuctions != null) {
-            queryObject.completedAuctions = queryObject.completedAuctions === "true"
-        }
-        if (queryObject.myFavorites != null) {
-            queryObject.myFavorites = queryObject.myFavorites === "true"
-        }
-        if (queryObject.withOwners != null) {
-            queryObject.withOwners = queryObject.withOwners === "true"
-        }
-        if (queryObject.teamDecks != null) {
-            queryObject.teamDecks = queryObject.teamDecks === "true"
-        }
-        if (queryObject.validOnly != null) {
-            queryObject.validOnly = queryObject.validOnly === "true"
-        }
-        if (queryObject.invalidOnly != null) {
-            queryObject.invalidOnly = queryObject.invalidOnly === "true"
-        }
+            .build()
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const filters = new DeckFilters() as any
-        Object.keys(queryObject).forEach(key => filters[key] = queryObject[key])
-        log.debug(`Rehydrated to: ${prettyJson(filters)}`)
-        return filters
+        // log.debug(`Rehydrated to: ${prettyJson(built)}`)
+        return built
     }
 
     houses: House[] = []
@@ -270,7 +209,7 @@ export class DeckFilters {
     }
 }
 
-export const prepareDeckFiltersForQueryString = (filters: DeckFilters | SaleNotificationQueryDto) => {
+export const deckFiltersToQueryString = (filters: DeckFilters | SaleNotificationQueryDto) => {
     const copied = Utils.jsonCopy(filters)
 
     Object.keys(copied).forEach((key: string) => {
@@ -293,12 +232,17 @@ export const prepareDeckFiltersForQueryString = (filters: DeckFilters | SaleNoti
 
     if (copied.cards) {
         copied.cards = copied.cards.filter((card: DeckCardQuantity) => card.cardNames != null && card.cardNames[0] != null && card.cardNames[0].length > 0)
-        copied.cards = cardsAsParam(copied.cards)
+        if (copied.cards.length > 0) {
+            copied.cards = cardsAsParam(copied.cards)
+        } else {
+            delete copied.cards
+        }
     }
-    if (copied.constraints) {
+    if (copied.constraints && copied.constraints.length > 0) {
         copied.constraints = constraintsAsParam(copied.constraints)
     }
-    return copied
+
+    return queryParamsFromObject(copied)
 }
 
 export const constraintsAsParam = (constraints: Constraint[]) => (

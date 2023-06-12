@@ -77,7 +77,7 @@ export class Utils {
                 url
             })
         } catch (e) {
-            log.debug(`Couldn't share with bowser info ${prettyJson(Utils.bowser.getBrowser())} ` + e.toString())
+            log.debug(`Couldn't share with bowser info ${prettyJson(Utils.bowser.getBrowser())} `, e)
         }
     }
 

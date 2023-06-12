@@ -172,7 +172,7 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, dec
 }
 
 const CardLine = observer((props: CardAsLineProps & {fullCard: KCard}) => {
-    const {card, fullCard, hideRarity} = props
+    const {card, fullCard, hideRarity, deck} = props
 
     const enhanced = CardUtils.bonusIconCount(card) > 0
 
@@ -210,7 +210,7 @@ const CardLine = observer((props: CardAsLineProps & {fullCard: KCard}) => {
             ) : (
                 <>
                     {card.maverick && <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div>}
-                    {card.legacy && <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div>}
+                    {card.legacy && (deck?.expansion === null || deck?.expansion !== Expansion.UNCHAINED_2022) && <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div>}
                 </>
             )}
         </div>

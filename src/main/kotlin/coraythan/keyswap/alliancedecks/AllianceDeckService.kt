@@ -100,6 +100,7 @@ class AllianceDeckService(
                         .map { TheoryCard(it.cardTitle, it.enhanced ?: false) }
                 },
                 expansion = expansion,
+                tokenId = toSave.tokenId,
             )
 
             val deck = deckImporterService.viewTheoreticalDeck(allianceDeckInfo)
@@ -166,7 +167,8 @@ class AllianceDeckService(
         return deck.toDeckSearchResult(
             cardService.deckToHouseAndCards(deck),
             cardService.cardsForDeck(deck),
-            stats = statsService.findCurrentStats()
+            stats = statsService.findCurrentStats(),
+            token = cardService.tokenForDeck(deck),
         )
     }
 
@@ -210,17 +212,16 @@ class AllianceDeckService(
             .fetch()
 
         val decks = deckResults.mapNotNull {
-            val cards = if (userHolder.user?.displayFutureSas() == true) {
-                cardService.futureCardsForDeck(it)
-            } else {
-                cardService.cardsForDeck(it)
-            }
+            val cardsAndToken = cardService.cardsAndTokenFutureProof(it, userHolder.user)
+            val cards = cardsAndToken.cards
+            val token = cardsAndToken.token
 
             var searchResult = it.toDeckSearchResult(
                 cardService.deckToHouseAndCards(it),
                 cards,
                 stats = statsService.findCurrentStats(),
-                synergies = DeckSynergyService.fromDeckWithCards(it, cards)
+                synergies = DeckSynergyService.fromDeckWithCards(it, cards, token),
+                token = token,
             )
 
             if (filters.teamDecks) {
@@ -339,18 +340,17 @@ class AllianceDeckService(
     private fun allianceDeckToAllianceDeckWithSynergies(deck: AllianceDeck): DeckWithSynergyInfo {
         val user = currentUserService.loggedInUser()
         val stats = statsService.findCurrentStats()
-        val cards = if (user?.displayFutureSas() == true) {
-            cardService.futureCardsForDeck(deck)
-        } else {
-            cardService.cardsForDeck(deck)
-        }
+        val cardsAndToken = cardService.cardsAndTokenFutureProof(deck, user)
+        val cards = cardsAndToken.cards
+        val token = cardsAndToken.token
 
         val searchResult = deck.toDeckSearchResult(
             cardService.deckToHouseAndCards(deck),
             cards,
             stats = stats,
-            synergies = DeckSynergyService.fromDeckWithCards(deck, cards),
-            includeDetails = true
+            synergies = DeckSynergyService.fromDeckWithCards(deck, cards, token),
+            includeDetails = true,
+            token,
         )
 
         return DeckWithSynergyInfo(

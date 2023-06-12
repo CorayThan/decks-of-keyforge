@@ -1,15 +1,31 @@
-import { log, Utils } from "../config/Utils";
-import { AllianceDeckFilters } from "../generated-src/AllianceDeckFilters";
-import { DeckFilters } from "../decks/search/DeckFilters";
-import { AllianceDeckSortOptions } from "../generated-src/AllianceDeckSortOptions";
-import { SortDirection } from "../generated-src/SortDirection";
-import { isEqual } from "lodash";
+import { log, prettyJson, Utils } from "../config/Utils"
+import { AllianceDeckFilters } from "../generated-src/AllianceDeckFilters"
+import { AllianceDeckSortOptions } from "../generated-src/AllianceDeckSortOptions"
+import { SortDirection } from "../generated-src/SortDirection"
+import { isEqual } from "lodash"
+import { queryParamsFromObject, SearchFiltersBuilder } from "../config/SearchFiltersBuilder"
 
 export class AllianceDeckFiltersUtils {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static rehydrateFromQuery = (queryObject: any): AllianceDeckFilters => {
-        log.debug(`Rehydrating alliance deck filters`)
-        return DeckFilters.rehydrateFromQuery(queryObject) as unknown as AllianceDeckFilters
+
+    static rehydrateFromQuery = (params: string): AllianceDeckFilters => {
+        log.debug(`Rehydrating alliance deck filters from : ${prettyJson(params)}`)
+
+        const built = new SearchFiltersBuilder(params, {} as AllianceDeckFilters)
+            .stringArrayValue("excludeHouses")
+            .numberArrayValue("expansions")
+            .stringArrayValue("houses")
+            .value("invalidOnly")
+            .stringArrayValue("owners")
+            .value("page")
+            .value("sort")
+            .value("sortDirection")
+            .value("teamDecks")
+            .value("title")
+            .value("validOnly")
+            .build()
+
+        // log.debug(`Rehydrated to2222: ${prettyJson(built)}`)
+        return built
     }
 
     static createEmpty = (): AllianceDeckFilters => {
@@ -32,7 +48,7 @@ export class AllianceDeckFiltersUtils {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static empty: any = AllianceDeckFiltersUtils.createEmpty()
 
-    static prepareDeckFiltersForQueryString = (filters: AllianceDeckFilters) => {
+    static deckFiltersToQueryString = (filters: AllianceDeckFilters) => {
         const copied = Utils.jsonCopy(filters)
 
         Object.keys(copied).forEach((key: string) => {
@@ -41,7 +57,7 @@ export class AllianceDeckFiltersUtils {
             }
         })
 
-        return copied
+        return queryParamsFromObject(copied)
     }
 
 }

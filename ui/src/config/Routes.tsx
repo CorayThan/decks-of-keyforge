@@ -1,6 +1,5 @@
 import { Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
-import * as QueryString from "query-string"
 import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { AboutPage } from "../about/AboutPage"
@@ -9,7 +8,7 @@ import { PrivacyPolicy } from "../about/PrivacyPolicy"
 import { ThirdPartyIntegrations } from "../about/ThirdPartyIntegrations"
 import { AdminPanelView } from "../admin/AdminPanelView"
 import { ArticlesPage } from "../articles/ArticlesPage"
-import { CardFilters, prepareCardFiltersForQueryString } from "../cards/CardFilters"
+import { CardFilters, cardFiltersToQueryString } from "../cards/CardFilters"
 import { CardSearchPage } from "../cards/CardSearchPage"
 import { cardNameToCardNameKey } from "../cards/KCard"
 import { CardPage } from "../cards/views/CardPage"
@@ -19,9 +18,9 @@ import { KeyTopbar } from "../components/KeyTopbar"
 import { VerifyEmailPage } from "../components/VerifyEmailPage"
 import { DeckComparisonView } from "../decks/comparison/DeckComparisonView"
 import { DeckViewPage } from "../decks/DeckViewFull"
-import { prepareForSaleQueryForQueryString } from "../decks/salenotifications/ForSaleNotificationsStore"
+import { prepareForSaleQueryString } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { CollectionStatsSearchPage } from "../decks/search/CollectionStatsSearchPage"
-import { DeckFilters, prepareDeckFiltersForQueryString } from "../decks/search/DeckFilters"
+import { DeckFilters, deckFiltersToQueryString } from "../decks/search/DeckFilters"
 import { DeckSearchPage } from "../decks/search/DeckSearchPage"
 import { ExpansionNumber } from "../expansions/Expansions"
 import { UpdateExtraCardInfoPage } from "../extracardinfo/UpdateExtraCardInfoPage"
@@ -50,14 +49,14 @@ import { KeyLoaderBar } from "./KeyLoaderBar"
 import { LoggedInRoute } from "./LoggedInRoute"
 import { spacing } from "./MuiConfig"
 import { serverStatusStore } from "./ServerStatusStore"
-import { ViewMyOldAllianceDecks } from "../importdeck/theoretical/ViewMyOldAllianceDecks";
-import { GamesSearchPage } from "../gamestracker/GamesSearchPage";
-import { AllianceDeckFilters } from "../generated-src/AllianceDeckFilters";
-import { AllianceDeckViewPage } from "../alliancedecks/AllianceDeckViewPage";
-import { AllianceDeckSearchPage } from "../alliancedecks/AllianceDeckSearchPage";
-import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils";
-import { DeckNameId } from "../decks/comparison/CompareDecks";
-import { DeckType } from "../generated-src/DeckType";
+import { ViewMyOldAllianceDecks } from "../importdeck/theoretical/ViewMyOldAllianceDecks"
+import { GamesSearchPage } from "../gamestracker/GamesSearchPage"
+import { AllianceDeckFilters } from "../generated-src/AllianceDeckFilters"
+import { AllianceDeckViewPage } from "../alliancedecks/AllianceDeckViewPage"
+import { AllianceDeckSearchPage } from "../alliancedecks/AllianceDeckSearchPage"
+import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils"
+import { DeckNameId } from "../decks/comparison/CompareDecks"
+import { DeckType } from "../generated-src/DeckType"
 
 class Routes {
 
@@ -128,8 +127,7 @@ class Routes {
      * @param filters
      */
     static analyzeDeckSearch = (filters: DeckFilters) => {
-        const cleaned = prepareDeckFiltersForQueryString(filters)
-        const stringified = QueryString.stringify(cleaned)
+        const stringified = deckFiltersToQueryString(filters)
         if (stringified === "") {
             return Routes.collectionStats
         }
@@ -141,8 +139,7 @@ class Routes {
      * @param filters
      */
     static deckSearch = (filters: DeckFilters) => {
-        const cleaned = prepareDeckFiltersForQueryString(filters)
-        const stringified = QueryString.stringify(cleaned)
+        const stringified = deckFiltersToQueryString(filters)
         if (stringified === "") {
             return Routes.decks
         }
@@ -154,8 +151,7 @@ class Routes {
      * @param filters
      */
     static allianceDeckSearch = (filters: AllianceDeckFilters) => {
-        const cleaned = AllianceDeckFiltersUtils.prepareDeckFiltersForQueryString(filters)
-        const stringified = QueryString.stringify(cleaned)
+        const stringified = AllianceDeckFiltersUtils.deckFiltersToQueryString(filters)
         if (stringified === "") {
             return Routes.allianceDecks
         }
@@ -207,8 +203,11 @@ class Routes {
      * @param filters
      */
     static cardSearch = (filters: CardFilters) => {
-        const cleaned = prepareCardFiltersForQueryString(filters)
-        return `${Routes.cards}?${QueryString.stringify(cleaned)}`
+        const stringified = cardFiltersToQueryString(filters)
+        if (stringified === "") {
+            return Routes.cards
+        }
+        return `${Routes.cards}?${stringified}`
     }
 
     static cardsUpdate = (aercHistoryDate: string) => {
@@ -219,8 +218,7 @@ class Routes {
     }
 
     static deckSearchForSaleQuery = (filters: SaleNotificationQueryDto) => {
-        const cleaned = prepareForSaleQueryForQueryString(filters)
-        return `${Routes.decks}?${QueryString.stringify(cleaned)}`
+        return `${Routes.decks}?${prepareForSaleQueryString(filters)}`
     }
 
     static userDecksForSale = (username: string) => {

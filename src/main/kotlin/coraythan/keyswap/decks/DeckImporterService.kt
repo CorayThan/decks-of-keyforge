@@ -16,8 +16,9 @@ import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.DeckSynergyService
-import coraythan.keyswap.thirdpartyservices.KeyforgeApi
-import coraythan.keyswap.thirdpartyservices.keyforgeApiDeckPageSize
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
+import coraythan.keyswap.thirdpartyservices.mastervault.keyforgeApiDeckPageSize
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.hibernate.exception.ConstraintViolationException
 import org.slf4j.LoggerFactory
@@ -318,6 +319,7 @@ class DeckImporterService(
             keyforgeId = UUID.randomUUID().toString(),
             name = deckBuilderData.name,
             expansion = deckBuilderData.expansion.expansionNumber,
+            tokenId = deckBuilderData.tokenId,
         ) to cards
     }
 
@@ -335,7 +337,7 @@ class DeckImporterService(
                     val deckCards = keyforgeDeck.cards ?: keyforgeDeck._links?.cards
                     ?: error("Cards in the deck ${keyforgeDeck.id} are null.")
 
-                    val cardsList = deckCards
+                    val cardsListWithToken = deckCards
                         .filter {
                             // Skip stupid tide card
                             it != "37377d67-2916-4d45-b193-bea6ecd853e3"
@@ -365,6 +367,9 @@ class DeckImporterService(
                             dbCard
                         }
 
+                    val cardsList = cardsListWithToken.filter { !it.token }
+                    val token = cardsListWithToken.firstOrNull { it.token }
+
                     if (cardsList.size != 36) error("Deck ${keyforgeDeck.id} must have 36 cards.")
 
                     val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
@@ -376,7 +381,7 @@ class DeckImporterService(
                     val deckToSave = keyforgeDeck.toDeck().withBonusIcons(bonusIconSimpleCards)
 
                     try {
-                        saveDeck(deckToSave, houses, cardsList)
+                        saveDeck(deckToSave, houses, cardsList, token)
                         savedCount++
                     } catch (e: DataIntegrityViolationException) {
                         if (e.message?.contains("deck_keyforge_id_uk") == true) {
@@ -399,18 +404,23 @@ class DeckImporterService(
 
     fun viewTheoreticalDeck(deck: DeckBuildingData): Deck {
         val deckAndCards = makeBasicDeckFromDeckBuilderData(deck)
-        return validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second)
+        val tokenCard = if (deck.tokenId == null) {
+            null
+        } else {
+            this.cardService.findTokenById(deck.tokenId)
+        }
+        return validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second, tokenCard)
     }
 
-    private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
-        val ratedDeck = validateAndRateDeck(deck, houses, cardsList)
+    private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, token: Card?): Deck {
+        val ratedDeck = validateAndRateDeck(deck, houses, cardsList, token)
         val saved = deckRepo.save(ratedDeck)
 
         postProcessDecksService.addPostProcessDeck(saved)
         return saved
     }
 
-    private fun validateAndRateDeck(deck: Deck, houses: List<House>, cardsList: List<Card>): Deck {
+    private fun validateAndRateDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, token: Card?): Deck {
         check(houses.size == 3) { "Deck doesn't have 3 houses! $deck" }
         check(cardsList.size == 36) { "Can't have a deck without 36 cards deck: $deck" }
 
@@ -418,7 +428,8 @@ class DeckImporterService(
             .withCards(cardsList)
             .copy(
                 houseNamesString = houses.sorted().joinToString("|"),
-                cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList))
+                cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList)),
+                tokenId = token?.id
             )
 
         val ratedDeck = rateDeck(saveable).first
@@ -430,7 +441,8 @@ class DeckImporterService(
 
     fun rateDeck(deck: Deck, majorRevision: Boolean = false): Pair<Deck, DeckSynergyInfo> {
         val cards = cardService.cardsForDeck(deck)
-        val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards)
+        val token = cardService.tokenForDeck(deck)
+        val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards, token)
         val bonusDraw = cards.mapNotNull { it.extraCardInfo?.enhancementDraw }.sum()
         val bonusCapture = cards.mapNotNull { it.extraCardInfo?.enhancementCapture }.sum()
         return Pair(

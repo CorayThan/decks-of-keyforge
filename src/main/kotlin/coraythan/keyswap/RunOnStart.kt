@@ -19,11 +19,11 @@ var startupComplete = false
 @Transactional
 @Component
 class RunOnStart(
-        private val cardService: CardService,
-        private val fixSynergies: FixSynergies,
-        private val userSearchService: UserSearchService,
-        private val cardRepo: CardRepo,
-        private val restTemplate: RestTemplate,
+    private val cardService: CardService,
+    private val fixSynergies: FixSynergies,
+    private val userSearchService: UserSearchService,
+    private val cardRepo: CardRepo,
+    private val restTemplate: RestTemplate,
 ) : CommandLineRunner {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -46,44 +46,52 @@ class RunOnStart(
 
         startupComplete = true
 
-        log.info("\n" + """
-              _________ __                 __     ____ ___          _________                       .__          __        ._.
-             /   _____//  |______ ________/  |_  |    |   \______   \_   ___ \  ____   _____ ______ |  |   _____/  |_  ____| |
-             \_____  \\   __\__  \\_  __ \   __\ |    |   /\____ \  /    \  \/ /  _ \ /     \\____ \|  | _/ __ \   __\/ __ \ |
-             /        \|  |  / __ \|  | \/|  |   |    |  / |  |_> > \     \___(  <_> )  Y Y  \  |_> >  |_\  ___/|  | \  ___/\|
-            /_______  /|__| (____  /__|   |__|   |______/  |   __/   \______  /\____/|__|_|  /   __/|____/\___  >__|  \___  >_
-                    \/           \/                        |__|             \/             \/|__|             \/          \/\/
-        """.trimIndent() + "\n")
+        log.info(
+            "\n" + """
+            .-./`) ,---------.         .--.      .--.    ,-----.    .-------.    .--.   .--.      .-''-.   ______     .---.  
+            \ .-.')\          \        |  |_     |  |  .'  .-,  '.  |  _ _   \   |  | _/  /     .'_ _   \ |    _ `''. \   /  
+            / `-' \ `--.  ,---'        | _( )_   |  | / ,-.|  \ _ \ | ( ' )  |   | (`' ) /     / ( ` )   '| _ | ) _  \|   |  
+             `-'`"`    |   \           |(_ o _)  |  |;  \  '_ /  | :|(_ o _) /   |(_ ()_)     . (_ o _)  ||( ''_'  ) | \ /   
+             .---.     :_ _:           | (_,_) \ |  ||  _`,/ \ _/  || (_,_).' __ | (_,_)   __ |  (_,_)___|| . (_) `. |  v    
+             |   |     (_I_)           |  |/    \|  |: (  '\_/ \   ;|  |\ \  |  ||  |\ \  |  |'  \   .---.|(_    ._) ' _ _   
+             |   |    (_(=)_)          |  '  /\  `  | \ `"/  \  ) / |  | \ `'   /|  | \ `'   / \  `-'    /|  (_.\.' / (_I_)  
+             |   |     (_I_)           |    /  \    |  '. \_/``".'  |  |  \    / |  |  \    /   \       / |       .' (_(=)_) 
+             '---'     '---'           `---'    `---`    '-----'    ''-'   `'-'  `--'   `'-'     `'-..-'  '-----'`    (_I_)  
+        """.trimIndent() + "\n"
+        )
     }
 
     private fun downloadAllNewCardImages() {
-        cardRepo.findByExpansion(Expansion.DARK_TIDINGS.expansionNumber)
-                .distinctBy { it.cardTitle }
-                .forEach { card ->
+        cardRepo.findByExpansion(Expansion.WINDS_OF_EXCHANGE.expansionNumber)
+            .plus(cardRepo.findByExpansion(Expansion.ANOMALY_EXPANSION.expansionNumber))
+            .filter { it.frontImage.contains("mastervault-storage-prod.s3") }
+            .distinctBy { it.cardTitle }
+            .forEach { card ->
 
-                    val headers = HttpHeaders()
-                    headers.accept = listOf(MediaType.APPLICATION_OCTET_STREAM)
+                val headers = HttpHeaders()
+                headers.accept = listOf(MediaType.APPLICATION_OCTET_STREAM)
 
-                    val entity = HttpEntity<String>(headers)
+                val entity = HttpEntity<String>(headers)
 
-                    val response = restTemplate.exchange(
-                            card.frontImage,
-                            HttpMethod.GET, entity, ByteArray::class.java, "1")
+                val response = restTemplate.exchange(
+                    card.frontImage,
+                    HttpMethod.GET, entity, ByteArray::class.java, "1"
+                )
 
-                    if (response.statusCode == HttpStatus.OK) {
-                        val titleMod = card.cardTitle.toUrlFriendlyCardTitle()
+                if (response.statusCode == HttpStatus.OK) {
+                    val titleMod = card.cardTitle.toUrlFriendlyCardTitle()
 
-                        val written = Files.write(Paths.get("card-imgs/$titleMod.png"), response.body!!)
-                        log.info("Wrote card image to location ${written.toAbsolutePath()}")
-                    }
+                    val written = Files.write(Paths.get("card-imgs/$titleMod.png"), response.body!!)
+                    log.info("Wrote card image to location ${written.toAbsolutePath()}")
                 }
+            }
         log.info("Creating card imgs complete.")
     }
 }
 
 fun String.toUrlFriendlyCardTitle(): String {
     return this
-            .replace("[^\\d\\w\\s]".toRegex(), "")
-            .replace(" ", "-")
-            .lowercase()
+        .replace("[^\\d\\w\\s]".toRegex(), "")
+        .replace(" ", "-")
+        .lowercase()
 }

@@ -18,6 +18,8 @@ export enum ExpansionNumber {
     ANOM = 453,
     MM = 479,
     DT = 496,
+    WOE = 600,
+    UC22 = 601,
 }
 
 export const activeExpansions = [
@@ -26,6 +28,8 @@ export const activeExpansions = [
     Expansion.WORLDS_COLLIDE,
     Expansion.MASS_MUTATION,
     Expansion.DARK_TIDINGS,
+    Expansion.WINDS_OF_EXCHANGE,
+    Expansion.UNCHAINED_2022,
 ]
 
 export const activeSasExpansions = [
@@ -43,6 +47,16 @@ export const activeCardExpansions = [
     ExpansionNumber.ANOM,
     ExpansionNumber.MM,
     ExpansionNumber.DT,
+    ExpansionNumber.WOE,
+]
+
+export const activeCardLinksExpansions = [
+    Expansion.CALL_OF_THE_ARCHONS,
+    Expansion.AGE_OF_ASCENSION,
+    Expansion.WORLDS_COLLIDE,
+    Expansion.MASS_MUTATION,
+    Expansion.DARK_TIDINGS,
+    Expansion.WINDS_OF_EXCHANGE,
 ]
 
 export const possibleCardExpansionsForExpansion = (exp: ExpansionNumber): ExpansionNumber[] => {
@@ -63,6 +77,8 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.ANOM, name: "Anomalies", abbreviation: "ANOM", backendEnum: Expansion.ANOMALY_EXPANSION},
     {expansionNumber: ExpansionNumber.MM, name: "Mass Mutation", abbreviation: "MM", backendEnum: Expansion.MASS_MUTATION},
     {expansionNumber: ExpansionNumber.DT, name: "Dark Tidings", abbreviation: "DT", backendEnum: Expansion.DARK_TIDINGS},
+    {expansionNumber: ExpansionNumber.WOE, name: "Winds of Exchange", abbreviation: "WoE", backendEnum: Expansion.WINDS_OF_EXCHANGE},
+    {expansionNumber: ExpansionNumber.UC22, name: "Unchained 2022", abbreviation: "UC22", backendEnum: Expansion.UNCHAINED_2022},
 ]
 
 export const activeExpansionInfos: ExpansionInfo[] = expansionInfos.filter(info => activeExpansions.includes(info.backendEnum))

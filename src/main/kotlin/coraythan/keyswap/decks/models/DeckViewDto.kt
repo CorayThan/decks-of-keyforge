@@ -8,13 +8,11 @@ import coraythan.keyswap.generatets.GenerateTs
 @GenerateTs
 data class HouseAndCards(
     val house: House,
-    val cards: List<SimpleCard>
+    val cards: List<SimpleCard>,
 )
 
 fun List<HouseAndCards>.addBonusIcons(bonusIcons: DeckBonusIcons?): List<HouseAndCards> {
     if (bonusIcons == null) return this
-
-    println("adding bonus icons: $bonusIcons to house and cards $this")
 
     return this.map { houseAndCards ->
         val cardIcons = bonusIcons.bonusIconHouses

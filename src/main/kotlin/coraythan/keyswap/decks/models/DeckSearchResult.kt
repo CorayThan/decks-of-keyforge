@@ -74,6 +74,7 @@ data class DeckSearchResult(
     val synergyDetails: List<SynergyCombo>? = null,
     val dateAdded: LocalDate? = null,
     val twinId: String? = null,
+    val tokenInfo: TokenInfo? = null,
 
     val allianceHouses: List<AllianceHouseInfo>? = null,
     val validAlliance: Boolean? = null,
@@ -94,10 +95,11 @@ data class DeckSearchResult(
             else -> ""
         }
 
+        val tokenName = if (this.tokenInfo == null) "" else " • ${this.tokenInfo.name}"
+
         return "$sasRating SAS • ${expansion.readable} • ${
             housesAndCards.map { it.house }.joinToString(" – ") { it.masterVaultValue }
-        }" +
-                forSaleMessage
+        }" + tokenName + forSaleMessage
     }
 
     fun printDeck(saleInfo: DeckListing? = null): String {
@@ -127,6 +129,13 @@ data class SimpleDeckSearchResult(
 @GenerateTs
 data class AllianceHouseInfo(
     val keyforgeId: String,
+    val name: String,
+    val house: House,
+)
+
+@GenerateTs
+data class TokenInfo(
+    val id: String,
     val name: String,
     val house: House,
 )

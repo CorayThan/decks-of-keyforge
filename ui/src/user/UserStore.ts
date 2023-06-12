@@ -60,23 +60,27 @@ export class UserStore {
             this.loginInProgress = false
             this.checkLastSeenVersion()
         } catch (error) {
-            let logout = true
-            if (
-                // 401 or 403 means there is no logged in user
-                (error.response && (error.response.status === 401 || error.response.status === 403)) ||
-                (error.message && error.message.includes("JWT signature does not match "))
-            ) {
-                log.info("Logging user out and displaying warning message to log back in.")
-                messageStore.setWarningMessage("Please log back in to the DoK.")
+            if (axios.isAxiosError(error)) {
+                let logout = true
+                if (
+                    // 401 or 403 means there is no logged in user
+                    (error.response && (error.response.status === 401 || error.response.status === 403)) ||
+                    (error.message && error.message.includes("JWT signature does not match "))
+                ) {
+                    log.info("Logging user out and displaying warning message to log back in.")
+                    messageStore.setWarningMessage("Please log back in to the DoK.")
+                } else {
+                    logout = false
+                    log.error(`Error loading logged in user ${error}`)
+                    messageStore.setRequestErrorMessage()
+                }
+                if (logout) {
+                    this.logout()
+                }
+                this.loginInProgress = false
             } else {
-                logout = false
-                log.error(`Error loading logged in user ${error}`)
-                messageStore.setRequestErrorMessage()
+                throw error
             }
-            if (logout) {
-                this.logout()
-            }
-            this.loginInProgress = false
         }
     }
 

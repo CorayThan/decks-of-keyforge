@@ -45,11 +45,11 @@ import { DeckSearchResult } from "./models/DeckSearchResult"
 import { OrganizedPlayStats } from "./OrganizedPlayStats"
 import { DeckOwnershipButton } from "./ownership/DeckOwnershipButton"
 import { ForSaleView } from "./sales/ForSaleView"
-import { DeleteTheoreticalDeckButton } from "../importdeck/theoretical/DeleteTheoreticalDeckButton";
-import { Expansion } from "../generated-src/Expansion";
-import { DeckType } from "../generated-src/DeckType";
-import { MiniDeckLink } from "./buttons/MiniDeckLink";
-import { amber } from "@material-ui/core/colors";
+import { DeleteTheoreticalDeckButton } from "../importdeck/theoretical/DeleteTheoreticalDeckButton"
+import { Expansion } from "../generated-src/Expansion"
+import { DeckType } from "../generated-src/DeckType"
+import { MiniDeckLink } from "./buttons/MiniDeckLink"
+import { amber } from "@material-ui/core/colors"
 
 interface DeckViewSmallProps {
     deck: DeckSearchResult
@@ -70,7 +70,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         }
 
         const {deck, saleInfo, fullVersion, hideActions, style, fake, margin} = this.props
-        const {id, keyforgeId, name, wishlistCount, funnyCount, owners, twinId} = deck
+        const {id, keyforgeId, name, wishlistCount, funnyCount, owners, twinId, tokenInfo} = deck
         const alliance = deck.deckType === DeckType.ALLIANCE
 
         const compact = screenStore.smallDeckView()
@@ -134,6 +134,18 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                         </Typography>
                                     </Box>
                                 </KeyLink>
+                                {tokenInfo && (
+                                    <Box display={"flex"} alignItems={"center"}>
+                                        <Typography variant={"subtitle1"}>Token: </Typography>
+                                        <Box mt={0.25}>
+                                            <CardAsLine
+                                                card={{cardTitle: tokenInfo.name}}
+                                                cardActualHouse={tokenInfo.house}
+                                                hideRarity={true}
+                                            />
+                                        </Box>
+                                    </Box>
+                                )}
                                 <DisplayAllCardsByHouse deck={deck} compact={compact} fake={!!fake}/>
                                 <OwnersList owners={ownersFiltered}/>
                                 <Collapse in={viewTags}>

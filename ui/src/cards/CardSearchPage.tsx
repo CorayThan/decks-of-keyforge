@@ -3,7 +3,6 @@ import * as History from "history"
 import { isEqual } from "lodash"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
-import * as QueryString from "query-string"
 import * as React from "react"
 import { RouteComponentProps } from "react-router-dom"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
@@ -22,8 +21,7 @@ import { CardTableView } from "./views/CardTableView"
 export class CardSearchPage extends React.Component<RouteComponentProps<{}>> {
 
     makeFilters = (props: Readonly<RouteComponentProps<{}>>): CardFilters => {
-        const queryValues = QueryString.parse(props.location.search)
-        return CardFilters.rehydrateFromQuery(queryValues)
+        return CardFilters.rehydrateFromQuery(props.location.search)
     }
 
     render() {
