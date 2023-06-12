@@ -9,71 +9,31 @@ import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
 import { SortDirection } from "../generic/SortDirection"
+import { queryParamsFromObject, SearchFiltersBuilder } from "../config/SearchFiltersBuilder"
 
 export class CardFilters {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static rehydrateFromQuery = (queryObject: any): CardFilters => {
+
+    static rehydrateFromQuery = (params: string): CardFilters => {
         // log.debug(`Rehydrating from : ${prettyJson(queryObject)}`)
-        if (typeof queryObject.houses === "string") {
-            queryObject.houses = [queryObject.houses]
-        }
-        if (typeof queryObject.types === "string") {
-            queryObject.types = [queryObject.types]
-        }
-        if (typeof queryObject.rarities === "string") {
-            queryObject.rarities = [queryObject.rarities]
-        }
-        if (typeof queryObject.powers === "string") {
-            queryObject.powers = [Number(queryObject.powers)]
-        } else if (queryObject.powers != null) {
-            queryObject.powers = queryObject.powers.map((val: string) => Number(val))
-        }
-        if (typeof queryObject.ambers === "string") {
-            queryObject.ambers = [Number(queryObject.ambers)]
-        } else if (queryObject.ambers != null) {
-            queryObject.ambers = queryObject.ambers.map((val: string) => Number(val))
-        }
-        if (queryObject.expansions != null) {
-            if (queryObject.expansions.constructor === Array) {
-                queryObject.expansions = queryObject.expansions.map((expansion: string) => Number(expansion))
-            } else {
-                const expansionAsNumber = Number(queryObject.expansions)
-                queryObject.expansions = [expansionAsNumber]
-            }
-        }
-        if (queryObject.excludedExpansions != null) {
-            if (queryObject.excludedExpansions.constructor === Array) {
-                queryObject.excludedExpansions = queryObject.excludedExpansions.map((expansion: string) => Number(expansion))
-            } else {
-                const expansionAsNumber = Number(queryObject.excludedExpansions)
-                queryObject.excludedExpansions = [expansionAsNumber]
-            }
-        }
-        if (queryObject.constraints) {
-            if (typeof queryObject.constraints === "string") {
-                queryObject.constraints = [queryObject.constraints]
-            }
-            queryObject.constraints = queryObject.constraints.map((forQuery: string) => {
-                const split = forQuery.split("-")
+
+        return new SearchFiltersBuilder(params, new CardFilters())
+            .stringArrayValue("houses")
+            .stringArrayValue("types")
+            .stringArrayValue("rarities")
+            .numberArrayValue("powers")
+            .numberArrayValue("ambers")
+            .numberArrayValue("expansions")
+            .numberArrayValue("excludedExpansions")
+            .value("aercHistory")
+            .customArrayValue("constraints", (val: string) => {
+                const split = val.split("-")
                 return {
                     property: split[0],
                     cap: split[1],
                     value: Number(split[2])
                 }
             })
-        }
-        if (queryObject.aercHistory) {
-            queryObject.aercHistory = queryObject.aercHistory === "true"
-        }
-        if (queryObject.aercHistoryDate === "") {
-            queryObject.aercHistoryDate = undefined
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const filters = new CardFilters() as any
-        Object.keys(queryObject).forEach(key => filters[key] = queryObject[key])
-        // log.debug(`Rehydrated to: ${prettyJson(filters)}`)
-        return filters
+            .build()
     }
 
     @observable
@@ -128,7 +88,7 @@ export class CardFilters {
     }
 }
 
-export const prepareCardFiltersForQueryString = (filters: CardFilters): CardFilters => {
+export const cardFiltersToQueryString = (filters: CardFilters) => {
     const copied = Utils.jsonCopy(filters)
 
     Object.keys(copied).forEach((key: string) => {
@@ -141,7 +101,7 @@ export const prepareCardFiltersForQueryString = (filters: CardFilters): CardFilt
         copied.constraints = constraintsAsParam(copied.constraints)
     }
 
-    return copied
+    return queryParamsFromObject(copied)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

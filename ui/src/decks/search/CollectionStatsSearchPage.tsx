@@ -1,7 +1,6 @@
 import { isEqual } from "lodash"
 import { autorun, IReactionDisposer } from "mobx"
 import { observer } from "mobx-react"
-import * as QueryString from "query-string"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { log } from "../../config/Utils"
@@ -37,8 +36,7 @@ export class CollectionStatsSearchPage extends React.Component<RouteComponentPro
 
     makeFilters = (props: Readonly<RouteComponentProps>): DeckFilters => {
         log.debug(`Location search is ${props.location.search}`)
-        const queryValues = QueryString.parse(props.location.search)
-        return DeckFilters.rehydrateFromQuery(queryValues)
+        return DeckFilters.rehydrateFromQuery(props.location.search)
     }
 
     search = (filters: DeckFilters) => {
@@ -86,8 +84,8 @@ class CollectionStatsSearchContainer extends React.Component<DeckSearchContainer
 
         let owner: string | undefined
         if (queryParams) {
-            const queryValues = QueryString.parse(queryParams)
-            owner = queryValues.owner as (string | undefined)
+            const queryValues = new URLSearchParams(queryParams)
+            owner = queryValues.get("owner") ?? undefined
         }
 
         if (userStore.username != null && owner === userStore.username) {
@@ -109,8 +107,14 @@ class CollectionStatsSearchContainer extends React.Component<DeckSearchContainer
                         flexGrow: 1,
                     }}
                 >
-                    <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                        {screenStore.screenSizeXs() ? <Loader show={collectionStats == null || calculatingStats}/> : null}
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center"
+                    }}>
+                        {screenStore.screenSizeXs() ?
+                            <Loader show={collectionStats == null || calculatingStats}/> : null}
                         {collectionStats != null && (
                             <CollectionStatsView stats={collectionStats}/>
                         )}

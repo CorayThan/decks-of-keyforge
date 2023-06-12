@@ -27,7 +27,6 @@ import { Edit } from "@material-ui/icons"
 import * as History from "history"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
-import * as QueryString from "query-string"
 import * as React from "react"
 import { useState } from "react"
 import ReactDOM from "react-dom"
@@ -68,8 +67,8 @@ export class MyProfile extends React.Component<MyProfileProps> {
         if (!profile) {
             return <Loader/>
         }
-        const queryParams = QueryString.parse(this.props.location.search) as { code?: string }
-        const patreonCode = queryParams == null ? undefined : queryParams.code
+        const queryParams = new URLSearchParams(this.props.location.search)
+        const patreonCode = queryParams.get("code") ?? undefined
         return <MyProfileInner profile={profile} patreonCode={patreonCode} history={this.props.history}/>
     }
 }

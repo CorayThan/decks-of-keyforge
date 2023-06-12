@@ -1,50 +1,48 @@
-import {Box, Divider, FormGroup, IconButton, Switch, Tooltip} from "@material-ui/core"
+import { Box, Divider, FormGroup, IconButton, Switch, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
-import {BarChart, Close, Delete, ViewList, ViewModule} from "@material-ui/icons"
-import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
+import { BarChart, Close, Delete, ViewList, ViewModule } from "@material-ui/icons"
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
-import {computed, makeObservable, observable} from "mobx"
-import {observer} from "mobx-react"
+import { computed, makeObservable, observable } from "mobx"
+import { observer } from "mobx-react"
 import * as React from "react"
-import {cardStore} from "../../../cards/CardStore"
-import {KeyDrawer, keyDrawerStore, KeyDrawerVersion} from "../../../components/KeyDrawer"
-import {SearchDrawerExpansionPanel} from "../../../components/SearchDrawerExpansionPanel"
-import {SortDirectionView} from "../../../components/SortDirectionView"
-import {keyLocalStorage} from "../../../config/KeyLocalStorage"
-import {spacing} from "../../../config/MuiConfig"
-import {MyDokSubPaths, Routes} from "../../../config/Routes"
-import {log} from "../../../config/Utils"
-import {expansionInfoMapNumbers} from "../../../expansions/Expansions"
-import {ExpansionSelectOrExclude, SelectedOrExcludedExpansions} from "../../../expansions/ExpansionSelectOrExclude"
-import {PatreonRewardsTier} from "../../../generated-src/PatreonRewardsTier"
-import {AuctionDeckIcon} from "../../../generic/icons/AuctionDeckIcon"
-import {SellDeckIcon} from "../../../generic/icons/SellDeckIcon"
-import {TradeDeckIcon} from "../../../generic/icons/TradeDeckIcon"
-import {HouseSelectOrExclude, SelectedOrExcludedHouses} from "../../../houses/HouseSelectOrExclude"
-import {KeyButton} from "../../../mui-restyled/KeyButton"
-import {KeyLink} from "../../../mui-restyled/KeyLink"
-import {LinkButton} from "../../../mui-restyled/LinkButton"
-import {messageStore} from "../../../ui/MessageStore"
-import {screenStore} from "../../../ui/ScreenStore"
-import {UserSearchSuggest} from "../../../user/search/UserSearchSuggest"
-import {UserLink} from "../../../user/UserLink"
-import {userStore} from "../../../user/UserStore"
-import {deckStore} from "../../DeckStore"
-import {CreateForSaleQuery} from "../../salenotifications/CreateForSaleQuery"
-import {DeckSorts, DeckSortSelect, DeckSortSelectStore} from "../../selects/DeckSortSelect"
-import {FiltersConstraintsStore} from "../ConstraintDropdowns"
-import {DeckCardSelectStore} from "../DeckCardSelect"
-import {DeckFilters} from "../DeckFilters"
-import {DownloadDeckResults} from "../DownloadDeckResults"
-import {DeckSearchDrawerCards} from "./DeckSearchDrawerCards"
-import {DeckSearchDrawerConstraints} from "./DeckSearchDrawerConstraints"
-import {DeckSearchDrawerTagsAndNotes} from "./DeckSearchDrawerTagsAndNotes"
-import {ArrayUtils} from "../../../config/ArrayUtils";
+import { cardStore } from "../../../cards/CardStore"
+import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../../../components/KeyDrawer"
+import { SearchDrawerExpansionPanel } from "../../../components/SearchDrawerExpansionPanel"
+import { SortDirectionView } from "../../../components/SortDirectionView"
+import { keyLocalStorage } from "../../../config/KeyLocalStorage"
+import { spacing } from "../../../config/MuiConfig"
+import { MyDokSubPaths, Routes } from "../../../config/Routes"
+import { log, Utils } from "../../../config/Utils"
+import { ExpansionSelectOrExclude } from "../../../expansions/ExpansionSelectOrExclude"
+import { PatreonRewardsTier } from "../../../generated-src/PatreonRewardsTier"
+import { AuctionDeckIcon } from "../../../generic/icons/AuctionDeckIcon"
+import { SellDeckIcon } from "../../../generic/icons/SellDeckIcon"
+import { TradeDeckIcon } from "../../../generic/icons/TradeDeckIcon"
+import { HouseSelectOrExclude } from "../../../houses/HouseSelectOrExclude"
+import { KeyButton } from "../../../mui-restyled/KeyButton"
+import { KeyLink } from "../../../mui-restyled/KeyLink"
+import { LinkButton } from "../../../mui-restyled/LinkButton"
+import { messageStore } from "../../../ui/MessageStore"
+import { screenStore } from "../../../ui/ScreenStore"
+import { UserSearchSuggest } from "../../../user/search/UserSearchSuggest"
+import { UserLink } from "../../../user/UserLink"
+import { userStore } from "../../../user/UserStore"
+import { deckStore } from "../../DeckStore"
+import { CreateForSaleQuery } from "../../salenotifications/CreateForSaleQuery"
+import { DeckSorts, DeckSortSelect } from "../../selects/DeckSortSelect"
+import { DeckFilters } from "../DeckFilters"
+import { DownloadDeckResults } from "../DownloadDeckResults"
+import { DeckSearchDrawerCards } from "./DeckSearchDrawerCards"
+import { DeckSearchDrawerConstraints } from "./DeckSearchDrawerConstraints"
+import { DeckSearchDrawerTagsAndNotes } from "./DeckSearchDrawerTagsAndNotes"
+import { ArrayUtils } from "../../../config/ArrayUtils"
+import { deckSearchDrawerStore } from "./DeckSearchDrawerStore"
 
 interface DecksSearchDrawerProps {
     location: History.Location
@@ -61,23 +59,12 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     @observable
     displayCards = false
 
-    selectedExpansions = new SelectedOrExcludedExpansions(this.props.filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum))
-    selectedHouses = new SelectedOrExcludedHouses(this.props.filters.houses, this.props.filters.excludeHouses)
-    selectedSortStore = new DeckSortSelectStore(
-        this.props.filters.forTrade || (this.props.filters.forSale === true),
-        this.props.filters.forAuction && !(this.props.filters.forTrade || this.props.filters.forSale),
-        this.props.filters.completedAuctions,
-        this.props.filters.sort
-    )
-    constraintsStore = new FiltersConstraintsStore(this.props.filters.constraints)
-    deckCardsStore = new DeckCardSelectStore(this.props.filters.cards)
-
     search = (event?: React.FormEvent, analyze?: boolean) => {
         if (event) {
             event.preventDefault()
         }
 
-        if (!this.selectedHouses.validHouseSelection()) {
+        if (!deckSearchDrawerStore.selectedHouses.validHouseSelection()) {
             messageStore.setWarningMessage("You may select up to 3 houses with houses excluded, and exclude all but 3.")
             return
         }
@@ -102,22 +89,18 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     makeFilters = () => {
         const filters = this.props.filters
-        filters.expansions = this.selectedExpansions.expansionsAsNumberArray()
-        filters.houses = this.selectedHouses.getHousesSelectedTrue()
-        filters.excludeHouses = this.selectedHouses.getHousesExcludedTrue()
-        filters.cards = this.deckCardsStore.cards
-        filters.sort = this.selectedSortStore.toEnumValue()
-        filters.constraints = this.constraintsStore.cleanConstraints()
+        filters.expansions = deckSearchDrawerStore.selectedExpansions.expansionsAsNumberArray()
+        filters.houses = deckSearchDrawerStore.selectedHouses.getHousesSelectedTrue()
+        filters.excludeHouses = deckSearchDrawerStore.selectedHouses.getHousesExcludedTrue()
+        filters.cards = deckSearchDrawerStore.deckCardsStore.cards
+        filters.sort = deckSearchDrawerStore.selectedSortStore.toEnumValue()
+        filters.constraints = deckSearchDrawerStore.constraintsStore.cleanConstraints()
         return filters
     }
 
     clearSearch = () => {
-        this.selectedHouses.reset()
-        this.selectedSortStore.selectedValue = ""
+        deckSearchDrawerStore.clear()
         this.props.filters.reset()
-        this.constraintsStore.reset()
-        this.selectedExpansions.reset()
-        this.deckCardsStore.reset()
     }
 
     updateForSale = (forSale?: boolean) => {
@@ -170,13 +153,13 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         if (!(filters.forSale || filters.forTrade || filters.forAuction)) {
             filters.forSaleInCountry = undefined
         }
-        this.selectedSortStore.forSaleOrTrade = filters.forSale || filters.forTrade
-        this.selectedSortStore.forAuction = filters.forAuction
-        this.selectedSortStore.completedAuctions = false
+        deckSearchDrawerStore.selectedSortStore.forSaleOrTrade = filters.forSale || filters.forTrade
+        deckSearchDrawerStore.selectedSortStore.forAuction = filters.forAuction
+        deckSearchDrawerStore.selectedSortStore.completedAuctions = false
         filters.completedAuctions = false
         filters.notForSale = false
 
-        if (!this.selectedSortStore.sortIsValid()) {
+        if (!deckSearchDrawerStore.selectedSortStore.sortIsValid()) {
             log.debug("Sort not defined")
             filters.sort = DeckSorts.sas
         }
@@ -185,6 +168,17 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     constructor(props: DecksSearchDrawerProps) {
         super(props)
         makeObservable(this)
+        deckSearchDrawerStore.updateValues(props.filters)
+    }
+
+    componentDidMount() {
+        deckSearchDrawerStore.updateValues(this.props.filters)
+    }
+
+    componentDidUpdate(prevProps: Readonly<DecksSearchDrawerProps>, prevState: Readonly<{}>, snapshot?: any) {
+        if (!Utils.equals(prevProps.filters, this.props.filters)) {
+            deckSearchDrawerStore.updateValues(this.props.filters)
+        }
     }
 
     @computed
@@ -265,7 +259,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             ) : null}
                         </ListItem>
                         <ListItem style={{marginTop: spacing(2)}}>
-                            <ExpansionSelectOrExclude selectedExpansions={this.selectedExpansions}/>
+                            <ExpansionSelectOrExclude selectedExpansions={deckSearchDrawerStore.selectedExpansions}/>
                         </ListItem>
                         <ListItem style={{marginTop: spacing(1)}}>
                             <div>
@@ -433,7 +427,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                     checked={this.props.filters.completedAuctions}
                                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                         this.props.filters.handleCompletedAuctionsUpdate(event)
-                                                        this.selectedSortStore.completedAuctions = this.props.filters.completedAuctions
+                                                        deckSearchDrawerStore.selectedSortStore.completedAuctions = this.props.filters.completedAuctions
                                                     }}
                                                 />
                                             }
@@ -525,24 +519,26 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     handleNotesUpdate={this.handleNotesUpdate}
                                     removeNotes={this.removeNotes}
                                 />
-                                <SearchDrawerExpansionPanel initiallyOpen={this.selectedHouses.anySelected()}
-                                                            title={"Houses"}>
-                                    <HouseSelectOrExclude selectedHouses={this.selectedHouses} excludeTitle={true}/>
+                                <SearchDrawerExpansionPanel
+                                    initiallyOpen={deckSearchDrawerStore.selectedHouses.anySelected()}
+                                    title={"Houses"}>
+                                    <HouseSelectOrExclude selectedHouses={deckSearchDrawerStore.selectedHouses}
+                                                          excludeTitle={true}/>
                                 </SearchDrawerExpansionPanel>
                                 <DeckSearchDrawerConstraints
-                                    store={this.constraintsStore}
+                                    store={deckSearchDrawerStore.constraintsStore}
                                     forSale={!!forSale}
                                     forTrade={forTrade}
                                 />
                                 <DeckSearchDrawerCards
-                                    store={this.deckCardsStore}
+                                    store={deckSearchDrawerStore.deckCardsStore}
                                     loading={cardStore.cardNames.length === 0}
                                 />
                                 <Divider style={{marginBottom: spacing(1)}}/>
                             </div>
                         </ListItem>
                         <ListItem>
-                            <DeckSortSelect store={this.selectedSortStore}/>
+                            <DeckSortSelect store={deckSearchDrawerStore.selectedSortStore}/>
                             <div style={{marginTop: "auto", marginLeft: spacing(2)}}>
                                 <SortDirectionView hasSort={this.props.filters}/>
                             </div>
@@ -567,8 +563,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         || this.props.filters.owner === userStore.username
                                     }
                                     filters={this.makeFilters}
-                                    houses={this.selectedHouses}
-                                    constraints={this.constraintsStore}
+                                    houses={deckSearchDrawerStore.selectedHouses}
+                                    constraints={deckSearchDrawerStore.constraintsStore}
                                 />
                                 {analyze ? (
                                     <KeyButton

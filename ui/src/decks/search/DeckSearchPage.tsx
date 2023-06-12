@@ -4,7 +4,6 @@ import * as History from "history"
 import { isEqual } from "lodash"
 import { autorun, IReactionDisposer } from "mobx"
 import { observer } from "mobx-react"
-import * as QueryString from "query-string"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
@@ -52,8 +51,7 @@ export class DeckSearchPage extends React.Component<RouteComponentProps<{}>> {
     }
 
     makeFilters = (props: Readonly<RouteComponentProps<{}>>): DeckFilters => {
-        const queryValues = QueryString.parse(props.location.search)
-        return DeckFilters.rehydrateFromQuery(queryValues)
+        return DeckFilters.rehydrateFromQuery(props.location.search)
     }
 
     search = (filters: DeckFilters) => {
@@ -114,8 +112,8 @@ export class DeckSearchContainer extends React.Component<DeckSearchContainerProp
         let owner: string | undefined
         let sellerDetails: SellerDetails | undefined
         if (queryParams) {
-            const queryValues = QueryString.parse(queryParams)
-            owner = queryValues.owner as (string | undefined)
+            const queryValues = new URLSearchParams(queryParams)
+            owner = queryValues.get("owner") ?? undefined
             if (owner) {
                 sellerDetails = sellerStore.findSellerWithUsername(owner)
             }

@@ -1,6 +1,5 @@
 import { Box, Paper, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
-import * as QueryString from "querystring"
 import * as React from "react"
 import { useEffect } from "react"
 import { useLocation } from "react-router-dom"
@@ -13,7 +12,7 @@ import { userStore } from "../../user/UserStore"
 import { deckStore } from "../DeckStore"
 import { DeckViewSmall } from "../DeckViewSmall"
 import { DeckComparisonSummary } from "./DeckComparisonSummary"
-import { log } from "../../config/Utils";
+import { log } from "../../config/Utils"
 
 export const DeckComparisonView = observer(() => {
 
@@ -24,24 +23,10 @@ export const DeckComparisonView = observer(() => {
         if (search.startsWith("?")) {
             searchToUse = search.substr(1)
         }
-        const queryValues = QueryString.parse(searchToUse)
+        const queryValues = new URLSearchParams(searchToUse)
         log.info("Searching for comparison decks with values: " + JSON.stringify(queryValues))
-        let deckIds: string[] = []
-        let allianceDeckIds: string[] = []
-        if (queryValues.decks != null) {
-            if (queryValues.decks.constructor === Array) {
-                deckIds = queryValues.decks
-            } else if (queryValues.decks.constructor === String) {
-                deckIds = [queryValues.decks]
-            }
-        }
-        if (queryValues.allianceDecks != null) {
-            if (queryValues.allianceDecks.constructor === Array) {
-                allianceDeckIds = queryValues.allianceDecks
-            } else if (queryValues.allianceDecks.constructor === String) {
-                allianceDeckIds = [queryValues.allianceDecks]
-            }
-        }
+        let deckIds: string[] = queryValues.getAll("decks")
+        let allianceDeckIds: string[] = queryValues.getAll("allianceDecks")
         deckStore.findComparisonDecks(deckIds, allianceDeckIds)
     }, [search])
     useEffect(() => {

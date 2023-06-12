@@ -14,8 +14,6 @@ data class HouseAndCards(
 fun List<HouseAndCards>.addBonusIcons(bonusIcons: DeckBonusIcons?): List<HouseAndCards> {
     if (bonusIcons == null) return this
 
-    println("adding bonus icons: $bonusIcons to house and cards $this")
-
     return this.map { houseAndCards ->
         val cardIcons = bonusIcons.bonusIconHouses
             .find { bonusIconHouse -> bonusIconHouse.house == houseAndCards.house }

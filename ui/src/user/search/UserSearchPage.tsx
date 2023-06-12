@@ -24,37 +24,35 @@ import {
     Typography
 } from "@material-ui/core"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
-import {sortBy} from "lodash"
-import {makeObservable, observable} from "mobx"
-import {observer} from "mobx-react"
-import * as QueryString from "querystring"
+import { sortBy } from "lodash"
+import { makeObservable, observable } from "mobx"
+import { observer } from "mobx-react"
 import * as React from "react"
-import {useEffect, useState} from "react"
-import {useLocation} from "react-router-dom"
-import {keyLocalStorage} from "../../config/KeyLocalStorage"
-import {spacing} from "../../config/MuiConfig"
-import {log, SortOrder} from "../../config/Utils"
-import {PatreonRewardsTier} from "../../generated-src/PatreonRewardsTier"
-import {UserSearchResult} from "../../generated-src/UserSearchResult"
-import {UserType} from "../../generated-src/UserType"
-import {Loader} from "../../mui-restyled/Loader"
-import {SellerRatingView} from "../../sellerratings/SellerRatingView"
-import {TeamBadge} from "../../teams/TeamBadge"
-import {teamStore} from "../../teams/TeamStore"
-import {patronRewardLevelDescription} from "../../thirdpartysites/patreon/PatreonRewardsTier"
-import {screenStore} from "../../ui/ScreenStore"
-import {uiStore} from "../../ui/UiStore"
-import {UserLink} from "../UserLink"
-import {userStore} from "../UserStore"
-import {UserFilters} from "./UserFilters"
-import {userSearchStore} from "./UserSearchStore"
-import {FilterList} from "@material-ui/icons";
+import { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
+import { keyLocalStorage } from "../../config/KeyLocalStorage"
+import { spacing } from "../../config/MuiConfig"
+import { log, SortOrder } from "../../config/Utils"
+import { PatreonRewardsTier } from "../../generated-src/PatreonRewardsTier"
+import { UserSearchResult } from "../../generated-src/UserSearchResult"
+import { UserType } from "../../generated-src/UserType"
+import { Loader } from "../../mui-restyled/Loader"
+import { SellerRatingView } from "../../sellerratings/SellerRatingView"
+import { TeamBadge } from "../../teams/TeamBadge"
+import { teamStore } from "../../teams/TeamStore"
+import { patronRewardLevelDescription } from "../../thirdpartysites/patreon/PatreonRewardsTier"
+import { screenStore } from "../../ui/ScreenStore"
+import { uiStore } from "../../ui/UiStore"
+import { UserLink } from "../UserLink"
+import { userStore } from "../UserStore"
+import { UserFilters } from "./UserFilters"
+import { userSearchStore } from "./UserSearchStore"
+import { FilterList } from "@material-ui/icons"
 
 export const UserSearchPage = observer(() => {
 
     const location = useLocation()
-    const queryValues = QueryString.parse(location.search)
-    const filters = UserFilters.rehydrateFromQuery(queryValues)
+    const filters = UserFilters.rehydrateFromQuery(location.search)
 
     useEffect(() => {
         uiStore.setTopbarValues("Collections of KeyForge", "Collections", "")
@@ -235,7 +233,8 @@ const UserSearchContainer = observer((props: { filters: UserFilters }) => {
                             >
                                 <FilterList/>
                             </IconButton>
-                            <Dialog open={store.dialogOpen} onClose={closeDialog} aria-labelledby="search-users-filter-dialog">
+                            <Dialog open={store.dialogOpen} onClose={closeDialog}
+                                    aria-labelledby="search-users-filter-dialog">
                                 <DialogTitle id="search-users-filter-dialog">Search Users</DialogTitle>
                                 <DialogContent>
                                     <TextField

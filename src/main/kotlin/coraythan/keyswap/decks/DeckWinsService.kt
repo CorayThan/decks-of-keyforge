@@ -5,7 +5,6 @@ import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.config.Env
-import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.KeyForgeDeck
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledException
@@ -14,10 +13,8 @@ import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.thirdpartyservices.KeyforgeApi
 import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.users.search.UserSearchService
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
@@ -30,23 +27,23 @@ private const val lockUpdatePageOfWinLosses = "PT20S"
 @Transactional
 @Service
 class DeckWinsService(
-        private val keyforgeApi: KeyforgeApi,
-        private val cardService: CardService,
-        private val cardRepo: CardRepo,
-        private val deckRepo: DeckRepo,
-        private val deckPageService: DeckPageService,
-        private val ownedDeckRepo: OwnedDeckRepo,
-        private val userSearchService: UserSearchService,
-        private val cardWinsService: CardWinsService,
-        @Value("\${env}")
-        private val env: Env
+    private val keyforgeApi: KeyforgeApi,
+    private val cardService: CardService,
+    private val cardRepo: CardRepo,
+    private val deckRepo: DeckRepo,
+    private val deckPageService: DeckPageService,
+    private val ownedDeckRepo: OwnedDeckRepo,
+    private val userSearchService: UserSearchService,
+    private val cardWinsService: CardWinsService,
+    @Value("\${env}")
+    private val env: Env
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private var updatingWinsAndLosses: Boolean? = null
 
-    @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.winsLossesInitialDelay)
-    @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastFor = lockUpdateWinsLosses, lockAtMostFor = lockUpdateWinsLosses)
+    //    @Scheduled(fixedDelayString = onceEverySixHoursLock, initialDelayString = SchedulingConfig.winsLossesInitialDelay)
+//    @SchedulerLock(name = "updateWinsAndLosses", lockAtLeastFor = lockUpdateWinsLosses, lockAtMostFor = lockUpdateWinsLosses)
     fun updateWinsAndLosses() {
 
         if (env == Env.qa) {
@@ -79,7 +76,7 @@ class DeckWinsService(
     }
 
     // @Scheduled(fixedDelayString = lockUpdatePageOfWinLosses, initialDelayString = SchedulingConfig.recurringWinLossTaskInitialDelay)
-    @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastFor = lockUpdatePageOfWinLosses, lockAtMostFor = lockUpdatePageOfWinLosses)
+//    @SchedulerLock(name = "updateWinsLossesPage", lockAtLeastFor = lockUpdatePageOfWinLosses, lockAtMostFor = lockUpdatePageOfWinLosses)
     fun findAndUpdateDecksForWinRates() {
 
         try {
@@ -137,10 +134,12 @@ class DeckWinsService(
 
             val decksWithScores = deckRepo.findByWinsGreaterThanOrLossesGreaterThan(0, 0)
             log.info("Found ${decksWithScores.size} decks with a win or loss. total wins ${decksWithScores.sumOf { it.wins }} " +
-                    "losses ${decksWithScores.sumOf { it.losses }}")
+                    "losses ${decksWithScores.sumOf { it.losses }}"
+            )
 
             val cardWins = mutableMapOf<String, Wins>()
-            val cardWinsWithExpansions = Expansion.values().map { it to mutableMapOf<String, Wins>() }.toMap().toMutableMap()
+            val cardWinsWithExpansions =
+                Expansion.values().map { it to mutableMapOf<String, Wins>() }.toMap().toMutableMap()
             val houseWins = mutableMapOf<House, Wins>()
 
             decksWithScores.forEach { deck ->
@@ -152,7 +151,10 @@ class DeckWinsService(
                     val winsValue = wins.copy(wins = wins.wins + deck.wins, losses = wins.losses + deck.losses)
                     cardWins[card.cardTitle] = winsValue
                     val expansionWins = cardWinsWithExpansions[expansion]?.get(card.cardTitle) ?: Wins()
-                    val expansionWinsValue = expansionWins.copy(wins = expansionWins.wins + deck.wins, losses = expansionWins.losses + deck.losses)
+                    val expansionWinsValue = expansionWins.copy(
+                        wins = expansionWins.wins + deck.wins,
+                        losses = expansionWins.losses + deck.losses
+                    )
                     cardWinsWithExpansions[expansion]!![card.cardTitle] = expansionWinsValue
                 }
                 deck.houses.forEach { house ->
@@ -162,12 +164,12 @@ class DeckWinsService(
             }
 
             log.info(
-                    "House wins: ${
-                        houseWins.map {
-                            val wins = it.value.wins.toDouble()
-                            "${it.key} = ${wins / (wins + it.value.losses.toDouble())} -- "
-                        }
-                    }" + "house map: $houseWins")
+                "House wins: ${
+                    houseWins.map {
+                        val wins = it.value.wins.toDouble()
+                        "${it.key} = ${wins / (wins + it.value.losses.toDouble())} -- "
+                    }
+                }" + "house map: $houseWins")
 
             saveCardWins(cardWins)
             cardWinsService.saveCardWins(cardWinsWithExpansions)
@@ -188,7 +190,7 @@ class DeckWinsService(
                 deckRepo.save(updated)
                 if (preexisting.powerLevel != updated.powerLevel || preexisting.chains != updated.chains) {
                     ownedDeckRepo.findByDeckId(updated.id)
-                            .forEach { userSearchService.scheduleUserForUpdate(it.owner) }
+                        .forEach { userSearchService.scheduleUserForUpdate(it.owner) }
                 }
             }
         }
@@ -196,12 +198,12 @@ class DeckWinsService(
 
     private fun saveCardWins(wins: Map<String, Wins>) {
         val cards = cardRepo.findByMaverickFalse()
-                .map {
-                    it.copy(
-                            wins = wins[it.cardTitle]?.wins ?: 0,
-                            losses = wins[it.cardTitle]?.losses ?: 0
-                    )
-                }
+            .map {
+                it.copy(
+                    wins = wins[it.cardTitle]?.wins ?: 0,
+                    losses = wins[it.cardTitle]?.losses ?: 0
+                )
+            }
         cardRepo.saveAll(cards)
     }
 

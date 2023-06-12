@@ -9,7 +9,7 @@ import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQu
 import { LinkButton } from "../../mui-restyled/LinkButton"
 import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
-import { prepareDeckFiltersForQueryString } from "../search/DeckFilters"
+import { deckFiltersToQueryString } from "../search/DeckFilters"
 
 export class ForSaleNotificationsStore {
     static readonly CONTEXT = HttpConfig.API + "/for-sale-notifications"
@@ -73,10 +73,10 @@ export class ForSaleNotificationsStore {
     }
 }
 
-export const prepareForSaleQueryForQueryString = (filters: SaleNotificationQueryDto) => {
+export const prepareForSaleQueryString = (filters: SaleNotificationQueryDto) => {
     const copied = Utils.jsonCopy(filters)
     delete copied.name
-    return prepareDeckFiltersForQueryString(copied)
+    return deckFiltersToQueryString(copied)
 }
 
 export const forSaleNotificationsStore = new ForSaleNotificationsStore()
