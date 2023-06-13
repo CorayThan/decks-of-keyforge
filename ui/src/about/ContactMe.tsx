@@ -9,7 +9,6 @@ import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { GithubTicketsButton } from "../thirdpartysites/github/GithubTicketsButton"
 import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
-import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { AboutGridItem } from "./AboutPage"
 
 @observer
@@ -34,7 +33,6 @@ export class ContactMe extends React.Component {
                             "Wishlist and mark decks as funny, and see what everyone else thinks too!",
                             <Box display={"flex"} alignItems={"center"} my={2}>
                                 <DiscordButton style={{marginRight: spacing(2)}}/>
-                                <TwitterButton style={{marginRight: spacing(2)}}/>
                                 <GithubTicketsButton/>
                             </Box>,
                             <span>

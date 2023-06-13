@@ -6,10 +6,10 @@ import { Constraint } from "../../generated-src/Constraint"
 import { DeckCardQuantity } from "../../generated-src/DeckCardQuantity"
 import { House } from "../../generated-src/House"
 import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQueryDto"
-import { SortDirection } from "../../generic/SortDirection"
 import { userStore } from "../../user/UserStore"
 import { defaultSort } from "../selects/DeckSortSelect"
 import { queryParamsFromObject, SearchFiltersBuilder } from "../../config/SearchFiltersBuilder"
+import { SortDirection } from "../../generated-src/SortDirection"
 
 export class DeckFilters {
     static forSale = () => {
@@ -127,7 +127,7 @@ export class DeckFilters {
     expansions: number[] = []
     cards: DeckCardQuantity[] = []
     @observable
-    sortDirection: SortDirection = "DESC"
+    sortDirection: SortDirection = SortDirection.DESC
     @observable
     owner = ""
     @observable
@@ -156,7 +156,7 @@ export class DeckFilters {
         this.excludeHouses = []
         this.tags = []
         this.notTags = []
-        this.sortDirection = "DESC"
+        this.sortDirection = SortDirection.DESC
         this.owner = ""
         this.owners = []
         this.previousOwner = ""

@@ -12,6 +12,7 @@ import { activeExpansions, expansionInfoMap, ExpansionLabel } from "./Expansions
 
 interface ExpansionSelectOrExcludeProps {
     selectedExpansions: SelectedOrExcludedExpansions
+    availableExpansions?: Expansion[]
     allowExclusions?: boolean
     style?: React.CSSProperties
 }
@@ -19,14 +20,15 @@ interface ExpansionSelectOrExcludeProps {
 @observer
 export class ExpansionSelectOrExclude extends React.Component<ExpansionSelectOrExcludeProps> {
     render() {
-        const {selectedExpansions, allowExclusions, style} = this.props
+        const {selectedExpansions, allowExclusions, availableExpansions, style} = this.props
+        const expansions = availableExpansions ?? activeExpansions
         return (
             <FormControl style={style}>
                 <FormLabel style={{marginBottom: spacing(1)}}>Expansions</FormLabel>
                 <FormGroup
                     row={true}
                 >
-                    {activeExpansions.map((expansionValue) => {
+                    {expansions.map((expansionValue) => {
                         const select = selectedExpansions.selectedExpansions.filter((selectedExpansion) => selectedExpansion.expansion === expansionValue)
                         return (
                             <ExpansionCheckbox
@@ -80,12 +82,15 @@ export interface SelectedOrExcludedExpansion {
 
 export class SelectedOrExcludedExpansions {
 
+    private readonly availableExpansions: Expansion[]
+
     @observable
     selectedExpansions: SelectedOrExcludedExpansion[]
 
-    constructor(initialExpansionsSelected: Expansion[], initialExpansionsExcluded?: Expansion[]) {
+    constructor(initialExpansionsSelected: Expansion[], initialExpansionsExcluded?: Expansion[], availableExpansions?: Expansion[]) {
         makeObservable(this)
-        this.selectedExpansions = activeExpansions.map(expansionValue => {
+        this.availableExpansions = availableExpansions ?? activeExpansions
+        this.selectedExpansions = this.availableExpansions.map(expansionValue => {
             const isSelected = initialExpansionsSelected.indexOf(expansionValue) !== -1
             const isExcluded = initialExpansionsExcluded == null ? false : (initialExpansionsExcluded?.indexOf(expansionValue) !== -1)
             return {
@@ -100,7 +105,7 @@ export class SelectedOrExcludedExpansions {
         toUpdate.state = state
     }
 
-    reset = () => this.selectedExpansions = activeExpansions.map(expansionValue => ({expansion: expansionValue, state: CheckboxState.OFF}))
+    reset = () => this.selectedExpansions = this.availableExpansions.map(expansionValue => ({expansion: expansionValue, state: CheckboxState.OFF}))
 
     getExpansionsSelectedTrue = () => this.selectedExpansions.filter(expansion => expansion.state === CheckboxState.ON).map(expansion => expansion.expansion)
     getExpansionsExcludedTrue = () => this.selectedExpansions.filter(expansion => expansion.state === CheckboxState.EXCLUDED).map(expansion => expansion.expansion)

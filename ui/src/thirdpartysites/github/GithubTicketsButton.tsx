@@ -10,7 +10,7 @@ export class GithubTicketsButton extends React.Component<{ size?: "small" | "med
                 style={this.props.style}
                 color={"primary"}
                 variant={"contained"}
-                href={"https://github.com/CorayThan/decks-of-keyforge-tickets"}
+                href={"https://github.com/CorayThan/decks-of-keyforge/issues"}
                 newWindow={true}
                 size={this.props.size ?? "large"}
             >

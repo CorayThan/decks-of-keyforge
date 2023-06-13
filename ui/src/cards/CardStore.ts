@@ -132,6 +132,8 @@ export class CardStore {
                 &&
                 (filters.trait == null || extraInfo.traits.some(infoTrait => infoTrait.trait === filters.trait))
                 &&
+                (!filters.anomalies || (filters.anomalies && card.anomaly))
+                &&
                 (filters.synergy == null || extraInfo.synergies.some(infoTrait => infoTrait.trait === filters.synergy))
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)

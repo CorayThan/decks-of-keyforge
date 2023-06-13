@@ -10,24 +10,23 @@ import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { ExpansionSelectOrExclude } from "../expansions/ExpansionSelectOrExclude";
-import { HouseSelectOrExclude } from "../houses/HouseSelectOrExclude";
+import { ExpansionSelectOrExclude } from "../expansions/ExpansionSelectOrExclude"
+import { HouseSelectOrExclude } from "../houses/HouseSelectOrExclude"
 import { AllianceDeckSortSelect } from "./AllianceDeckSortSelect"
-import { messageStore } from "../ui/MessageStore";
-import { Routes } from "../config/Routes";
-import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../components/KeyDrawer";
-import { userStore } from "../user/UserStore";
-import { SortDirectionView } from "../components/SortDirectionView";
-import { screenStore } from "../ui/ScreenStore";
-import { spacing } from "../config/MuiConfig";
-import { UserLink } from "../user/UserLink";
-import { UserSearchSuggest } from "../user/search/UserSearchSuggest";
-import { KeyButton } from "../mui-restyled/KeyButton";
-import { keyLocalStorage } from "../config/KeyLocalStorage";
-import { allianceDeckStore } from "./AllianceDeckStore";
-import { ArrayUtils } from "../config/ArrayUtils";
-import { allianceFiltersStore } from "./AllianceFiltersStore";
-import { LinkButton } from "../mui-restyled/LinkButton";
+import { messageStore } from "../ui/MessageStore"
+import { Routes } from "../config/Routes"
+import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../components/KeyDrawer"
+import { userStore } from "../user/UserStore"
+import { SortDirectionView } from "../components/SortDirectionView"
+import { screenStore } from "../ui/ScreenStore"
+import { spacing } from "../config/MuiConfig"
+import { UserLink } from "../user/UserLink"
+import { UserSearchSuggest } from "../user/search/UserSearchSuggest"
+import { KeyButton } from "../mui-restyled/KeyButton"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { allianceDeckStore } from "./AllianceDeckStore"
+import { ArrayUtils } from "../config/ArrayUtils"
+import { allianceFiltersStore } from "./AllianceFiltersStore"
 
 interface AllianceDecksSearchDrawerProps {
     location: History.Location
@@ -120,10 +119,8 @@ export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSear
                                                 disabled={!showMyDecks}
                                             />
                                         }
-                                        label={<Typography variant={"body2"}>My Alliances</Typography>}
+                                        label={<Typography variant={"body2"}>Mine</Typography>}
                                     />
-                                </FormGroup>
-                                <FormGroup row={true}>
                                     <FormControlLabel
                                         control={
                                             <Checkbox
@@ -131,7 +128,7 @@ export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSear
                                                 onChange={this.handleValidUpdate}
                                             />
                                         }
-                                        label={<Typography variant={"body2"}>Valid Alliances</Typography>}
+                                        label={<Typography variant={"body2"}>Valid</Typography>}
                                     />
                                     <FormControlLabel
                                         control={
@@ -140,7 +137,7 @@ export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSear
                                                 onChange={this.handleInvalidUpdate}
                                             />
                                         }
-                                        label={<Typography variant={"body2"}>Invalid Alliances</Typography>}
+                                        label={<Typography variant={"body2"}>Invalid</Typography>}
                                     />
                                 </FormGroup>
                             </div>
@@ -269,18 +266,12 @@ export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSear
                         </ListItem>
                     </List>
                 </form>
-                {userStore.patron && (
-                    <Box display={"flex"} m={2} mt={1}>
-                        <LinkButton
-                            href={Routes.oldMyAllianceDecks}
-                            size={"small"}
-                            newWindow={true}
-                            style={{marginRight: spacing(2)}}
-                        >
-                            Old Alliances
-                        </LinkButton>
+                <Box display={"flex"} m={2} mt={1}>
+                    {userStore.patron ? (
                         <KeyButton
                             size={"small"}
+                            color={"primary"}
+                            variant={"outlined"}
                             onClick={() => {
                                 keyLocalStorage.updateGenericStorage({
                                     buildAllianceDeck: true
@@ -290,8 +281,12 @@ export class AllianceDecksSearchDrawer extends React.Component<AllianceDecksSear
                         >
                             Build Alliance
                         </KeyButton>
-                    </Box>
-                )}
+                    ) : (
+                        <Typography variant={"subtitle2"} color={"textSecondary"}>
+                            Become a patron to create alliances!
+                        </Typography>
+                    )}
+                </Box>
             </KeyDrawer>
         )
     }

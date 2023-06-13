@@ -17,7 +17,7 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "../decks/search/ConstraintDropdowns"
-import { expansionInfoMapNumbers } from "../expansions/Expansions"
+import { activeCardLinksExpansions, expansionInfoMapNumbers } from "../expansions/Expansions"
 import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../expansions/ExpansionSelectOrExclude"
 import { validSynergies, validTraits } from "../extracardinfo/SynergyTrait"
 import { CardType } from "../generated-src/CardType"
@@ -35,7 +35,7 @@ import { cardStore } from "./CardStore"
 import { CardUtils } from "./KCard"
 import { CardSortSelect, CardSortSelectStore } from "./selects/CardSortSelect"
 import { PublishDateSelect, SelectedPublishDate } from "./selects/PublishDateSelect"
-import {ArrayUtils} from "../config/ArrayUtils";
+import { ArrayUtils } from "../config/ArrayUtils"
 
 interface CardsSearchDrawerProps {
     filters: CardFilters
@@ -54,6 +54,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
     selectedExpansions = new SelectedOrExcludedExpansions(
         this.props.filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum),
         this.props.filters.excludedExpansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum),
+        activeCardLinksExpansions,
     )
     selectedPublishDate = new SelectedPublishDate(this.props.filters.aercHistoryDate)
 
@@ -72,7 +73,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
         filters.sort = this.selectedSortStore.toEnumValue() as CardSort
         filters.expansions = this.selectedExpansions.expansionsAsNumberArray()
         filters.excludedExpansions = this.selectedExpansions.excludedExpansionsAsNumberArray()
-        filters.aercHistoryDate = this.selectedPublishDate.date
+        filters.aercHistoryDate = this.selectedPublishDate.date === "" ? undefined : this.selectedPublishDate.date
         filters.constraints = this.constraintsStore.cleanConstraints()
         cardStore.searchCards(filters)
         keyDrawerStore.closeIfSmall()
@@ -135,14 +136,21 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                             />
                         </ListItem>
                         <ListItem style={{marginTop: spacing(1)}}>
-                            <ExpansionSelectOrExclude selectedExpansions={this.selectedExpansions} allowExclusions={true}/>
+                            <ExpansionSelectOrExclude
+                                selectedExpansions={this.selectedExpansions}
+                                allowExclusions={true}
+                                availableExpansions={activeCardLinksExpansions}
+                            />
                         </ListItem>
                         <ListItem>
                             <HouseSelect selectedHouses={this.selectedHouses}/>
                         </ListItem>
                         <ListItem>
                             <div>
-                                <SearchDrawerExpansionPanel initiallyOpen={this.selectedCardTypes.selectedValues.length > 0} title={"Attributes"}>
+                                <SearchDrawerExpansionPanel
+                                    initiallyOpen={this.selectedCardTypes.selectedValues.length > 0}
+                                    title={"Attributes"}
+                                >
                                     <Box>
                                         <KeyMultiCheckbox
                                             name={"Card Type"}
@@ -171,9 +179,20 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                             options={range(1, 17)
                                                 .map(power => power.toString())}
                                         />
+                                        <FormControlLabel
+                                            style={{marginTop: spacing(1)}}
+                                            control={
+                                                <Checkbox
+                                                    checked={filters.anomalies}
+                                                    onChange={filters.handleAnomaliesUpdate}
+                                                />
+                                            }
+                                            label={"Anomalies Only"}
+                                        />
                                     </Box>
                                 </SearchDrawerExpansionPanel>
-                                <SearchDrawerExpansionPanel initiallyOpen={!this.constraintsStore.isDefaultConstraints()} title={"Constraints"}>
+                                <SearchDrawerExpansionPanel
+                                    initiallyOpen={!this.constraintsStore.isDefaultConstraints()} title={"Constraints"}>
                                     <ConstraintDropdowns
                                         store={this.constraintsStore}
                                         properties={constraintOptions}
@@ -188,7 +207,8 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                         options={ArrayUtils.arrPlus(validTraits, ["", SynergyTrait.alpha, SynergyTrait.omega]) as (SynergyTrait | "")[]}
                                         value={filters.trait ?? ""}
                                         renderInput={(params) => <TextField {...params} label={"Trait"}/>}
-                                        renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
+                                        renderOption={(option) => <Typography
+                                            noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
                                         onChange={(event: ChangeEvent<{}>, newValue: string | null) => {
                                             const newValueTyped = newValue as (SynergyTrait | "" | null)
                                             filters.trait = newValueTyped == "" || newValueTyped == null ? undefined : newValueTyped
@@ -200,7 +220,8 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                         options={ArrayUtils.arrPlus(validSynergies, "") as (SynergyTrait | "")[]}
                                         value={filters.synergy ?? ""}
                                         renderInput={(params) => <TextField {...params} label={"Synergy"}/>}
-                                        renderOption={(option) => <Typography noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
+                                        renderOption={(option) => <Typography
+                                            noWrap>{startCase(option).replace(" R ", " ??? ")}</Typography>}
                                         onChange={(event: ChangeEvent<{}>, newValue: string | null) => {
                                             const newValueTyped = newValue as (SynergyTrait | "" | null)
                                             filters.synergy = newValueTyped == "" || newValueTyped == null ? undefined : newValueTyped

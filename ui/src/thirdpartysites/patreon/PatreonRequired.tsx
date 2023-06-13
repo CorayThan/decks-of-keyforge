@@ -14,12 +14,13 @@ interface PatreonRequiredProps {
     message?: string
     requiredLevel?: PatreonRewardsTier
     style?: React.CSSProperties
+    children?: React.ReactNode
 }
 
 @observer
 export class PatreonRequired extends React.Component<PatreonRequiredProps> {
     render() {
-        const {message, requiredLevel, style} = this.props
+        const {message, requiredLevel, style, children} = this.props
 
         if (!userStore.loggedIn()) {
             return (
@@ -28,7 +29,9 @@ export class PatreonRequired extends React.Component<PatreonRequiredProps> {
         }
 
         if (userStore.patron && (requiredLevel == null || userStore.patronLevelEqualToOrHigher(requiredLevel))) {
-            return null
+            return (
+                <>{children}</>
+            )
         }
 
         let mustBeMessage = "You must be a Patron to use this feature."

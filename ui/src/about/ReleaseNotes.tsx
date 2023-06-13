@@ -11,7 +11,6 @@ import { AboutSubPaths, MyDokSubPaths, Routes, StatsSubPaths } from "../config/R
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
-import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
@@ -1439,10 +1438,9 @@ export class ReleaseNotes extends React.Component {
                             SAS v6 Roadmap
                         </Link>
                     </div>,
-                    "Send me a message on Discord or Twitter to provide feedback and comments!",
+                    "Send me a message on Discord to provide feedback and comments!",
                     <div>
                         <DiscordButton/>
-                        <TwitterButton style={{marginLeft: spacing(2)}}/>
                     </div>,
                 ]}/>
                 <ReleaseNote releaseNumber={"3.20"} date={"8/14/2019"} expanded={true} releaseNotes={[

@@ -1,22 +1,29 @@
 import { isEqual } from "lodash"
 import { makeObservable, observable } from "mobx"
 import * as React from "react"
-import { Utils } from "../config/Utils"
+import { log, prettyJson, Utils } from "../config/Utils"
 import { constraintsAsParam } from "../decks/search/DeckFilters"
 import { CardType } from "../generated-src/CardType"
 import { Constraint } from "../generated-src/Constraint"
 import { House } from "../generated-src/House"
 import { Rarity } from "../generated-src/Rarity"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
-import { SortDirection } from "../generic/SortDirection"
 import { queryParamsFromObject, SearchFiltersBuilder } from "../config/SearchFiltersBuilder"
+import { SortDirection } from "../generated-src/SortDirection"
 
 export class CardFilters {
 
     static rehydrateFromQuery = (params: string): CardFilters => {
         // log.debug(`Rehydrating from : ${prettyJson(queryObject)}`)
 
-        return new SearchFiltersBuilder(params, new CardFilters())
+        const builtFilters = new SearchFiltersBuilder(params, new CardFilters())
+            .value("title")
+            .value("description")
+            .value("trait")
+            .value("synergy")
+            .value("aercHistoryDate")
+            .value("sortDirection")
+            .value("anomalies")
             .stringArrayValue("houses")
             .stringArrayValue("types")
             .stringArrayValue("rarities")
@@ -34,6 +41,10 @@ export class CardFilters {
                 }
             })
             .build()
+
+        log.info(`Card Search Filters built to be: ${prettyJson(builtFilters)}`)
+
+        return builtFilters
     }
 
     @observable
@@ -45,6 +56,8 @@ export class CardFilters {
     houses: House[] = []
     powers: number[] = []
     ambers: number[] = []
+    @observable
+    anomalies: boolean = false
     @observable
     trait?: SynergyTrait
     @observable
@@ -59,17 +72,18 @@ export class CardFilters {
 
     sort?: CardSort
     @observable
-    sortDirection: SortDirection = "DESC"
+    sortDirection: SortDirection = SortDirection.DESC
 
     reset = () => {
         this.title = ""
         this.description = ""
-        this.sortDirection = "DESC"
+        this.sortDirection = SortDirection.DESC
         this.rarities = []
         this.types = []
         this.houses = []
         this.powers = []
         this.ambers = []
+        this.anomalies = false
         this.trait = undefined
         this.constraints = []
         this.synergy = undefined
@@ -82,6 +96,7 @@ export class CardFilters {
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
     handleDescriptionUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.description = event.target.value
+    handleAnomaliesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.anomalies = event.target.checked
 
     constructor() {
         makeObservable(this)

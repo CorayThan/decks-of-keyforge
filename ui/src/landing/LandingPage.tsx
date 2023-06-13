@@ -7,7 +7,7 @@ import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
-import { activeExpansions, expansionInfoMap } from "../expansions/Expansions"
+import { activeCardLinksExpansions, activeExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { PromotedKeyForgeEvents } from "../keyforgeevents/PromotedKeyForgeEvents"
 import { LinkButton } from "../mui-restyled/LinkButton"
@@ -15,14 +15,16 @@ import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
 import { statsStore } from "../stats/StatsStore"
 import { WinRateBar } from "../stats/WinRateStatsView"
-import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
+import { decksOfKeyForgeDiscord, DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { GithubTicketsButton } from "../thirdpartysites/github/GithubTicketsButton"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
-import { TwitterButton } from "../thirdpartysites/twitter/TwitterButton"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { AlliancesSearchLink, DeckSearchLink, LandingPageLink } from "./DeckSearchLink"
-import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils";
+import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils"
+import { SortDirection } from "../generated-src/SortDirection"
+import { AnnouncementPaper } from "../generic/AnnouncementPaper"
+import { LinkNewWindow } from "../mui-restyled/KeyLink"
 
 const topSas = new DeckFilters()
 const topChains = new DeckFilters()
@@ -45,7 +47,7 @@ completedAuctions.completedAuctions = true
 completedAuctions.sort = DeckSorts.completedRecently
 
 const worstSas = new DeckFilters()
-worstSas.sortDirection = "ASC"
+worstSas.sortDirection = SortDirection.ASC
 
 const validAlliances = AllianceDeckFiltersUtils.createEmpty()
 validAlliances.validOnly = true
@@ -148,7 +150,7 @@ export class LandingPage extends React.Component<{}> {
                                     color={"secondary"}
                                     style={{marginBottom: spacing(2)}}
                                 />
-                                {activeExpansions.map(expansion => {
+                                {activeCardLinksExpansions.map(expansion => {
                                     return (
                                         <LandingPageLink
                                             key={expansion}
@@ -173,20 +175,30 @@ export class LandingPage extends React.Component<{}> {
                     </KeyDrawer>
                     <Box style={{flexGrow: 1}}>
 
-                        {/*<AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>*/}
-                        {/*    <Typography variant={"h5"} gutterBottom={true}>*/}
-                        {/*        KEYFORGE LIVE*/}
-                        {/*    </Typography>*/}
-                        {/*    <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
-                        {/*        July 23rd to 25th in Milwaukee, WI*/}
-                        {/*    </Typography>*/}
-                        {/*    <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
-                        {/*        KEYFORGE LIVE is an in-person KeyForge event at the Four Points by Sheraton in Milwaukee, WI. There will be $3,750 in cash*/}
-                        {/*        prizes for the events hosted!*/}
-                        {/*        See the <LinkNewWindow href={"http://keyforgelive.archonscorner.com"}>website for more info</LinkNewWindow>.*/}
-                        {/*    </Typography>*/}
-                        {/*</AnnouncementPaper>*/}
-
+                        <AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>
+                            <Typography variant={"h5"} gutterBottom={true}>
+                                WoE be to those who Seek the SAS
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                The Architects of SAS are hard at work building SAS and AERC scores for Winds of Exchange! You should
+                                expect scores to be released around early July, but no deadline has been set yet.
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                I'm also planning on building a feature for $6+ patrons to preview SAS scores as they are built.
+                            </Typography>
+                            <Typography variant={"h5"} gutterBottom={true}>
+                                DoKvelopments
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                DoK is now a <LinkNewWindow href={"https://github.com/CorayThan/decks-of-keyforge"}>public github repository</LinkNewWindow> and an open source code base!
+                            </Typography>
+                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
+                                If you're a skilled TypeScript + React or Kotlin + Spring Boot developer and want
+                                to donate some time to the KeyForge
+                                community, <LinkNewWindow href={decksOfKeyForgeDiscord}>join the DoK Discord</LinkNewWindow>!
+                                I'm building a small team to maintain DoK and add new features.
+                            </Typography>
+                        </AnnouncementPaper>
                         {screenStore.screenSizeSm() ? (
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                                 <DeckSearchLink name={"Search"} filters={topSas} style={{marginTop: spacing(2)}}/>
@@ -227,7 +239,6 @@ export class LandingPage extends React.Component<{}> {
                                 <PatronButton size={"large"}
                                               style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                                 <DiscordButton style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                <TwitterButton style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                                 <GithubTicketsButton style={{marginBottom: spacing(2)}}/>
                             </Box>
                             <LandingPageTitle marginTop={2}>
