@@ -71,8 +71,8 @@ export const displaySas = (expansion: Expansion) => {
 }
 
 export const expansionInfos: ExpansionInfo[] = [
-    {expansionNumber: ExpansionNumber.COTA, name: "Call of the Archons", abbreviation: "COTA", backendEnum: Expansion.CALL_OF_THE_ARCHONS},
-    {expansionNumber: ExpansionNumber.AOA, name: "Age of Ascension", abbreviation: "AOA", backendEnum: Expansion.AGE_OF_ASCENSION},
+    {expansionNumber: ExpansionNumber.COTA, name: "Call of the Archons", abbreviation: "CotA", backendEnum: Expansion.CALL_OF_THE_ARCHONS},
+    {expansionNumber: ExpansionNumber.AOA, name: "Age of Ascension", abbreviation: "AoA", backendEnum: Expansion.AGE_OF_ASCENSION},
     {expansionNumber: ExpansionNumber.WC, name: "Worlds Collide", abbreviation: "WC", backendEnum: Expansion.WORLDS_COLLIDE},
     {expansionNumber: ExpansionNumber.ANOM, name: "Anomalies", abbreviation: "ANOM", backendEnum: Expansion.ANOMALY_EXPANSION},
     {expansionNumber: ExpansionNumber.MM, name: "Mass Mutation", abbreviation: "MM", backendEnum: Expansion.MASS_MUTATION},

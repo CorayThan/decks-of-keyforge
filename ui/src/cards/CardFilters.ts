@@ -11,6 +11,18 @@ import { SynergyTrait } from "../generated-src/SynergyTrait"
 import { queryParamsFromObject, SearchFiltersBuilder } from "../config/SearchFiltersBuilder"
 import { SortDirection } from "../generated-src/SortDirection"
 
+export enum CardSort {
+    EXPECTED_AMBER = "EXPECTED_AMBER",
+    AMBER_CONTROL = "AMBER_CONTROL",
+    CREATURE_CONTROL = "CREATURE_CONTROL",
+    ARTIFACT_CONTROL = "ARTIFACT_CONTROL",
+    RELATIVE_WIN_RATE = "RELATIVE_WIN_RATE",
+    WIN_RATE = "WIN_RATE",
+    SET_NUMBER = "SET_NUMBER",
+    AERC = "AERC",
+    NAME = "NAME",
+}
+
 export class CardFilters {
 
     static rehydrateFromQuery = (params: string): CardFilters => {
@@ -70,7 +82,7 @@ export class CardFilters {
     aercHistory?: boolean
     aercHistoryDate?: string
 
-    sort?: CardSort
+    sort: CardSort = CardSort.SET_NUMBER
     @observable
     sortDirection: SortDirection = SortDirection.DESC
 
@@ -89,7 +101,7 @@ export class CardFilters {
         this.synergy = undefined
         this.expansions = []
         this.excludedExpansions = []
-        this.sort = undefined
+        this.sort = CardSort.SET_NUMBER
         this.aercHistory = undefined
         this.aercHistoryDate = undefined
     }
@@ -121,15 +133,3 @@ export const cardFiltersToQueryString = (filters: CardFilters) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DefaultCardFilters: any = new CardFilters()
-
-export enum CardSort {
-    EXPECTED_AMBER = "EXPECTED_AMBER",
-    AMBER_CONTROL = "AMBER_CONTROL",
-    CREATURE_CONTROL = "CREATURE_CONTROL",
-    ARTIFACT_CONTROL = "ARTIFACT_CONTROL",
-    RELATIVE_WIN_RATE = "RELATIVE_WIN_RATE",
-    WIN_RATE = "WIN_RATE",
-    SET_NUMBER = "SET_NUMBER",
-    AERC = "AERC",
-    NAME = "NAME",
-}

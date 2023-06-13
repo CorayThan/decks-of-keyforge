@@ -1,10 +1,10 @@
-import axios, {AxiosError, AxiosResponse} from "axios"
-import {messageStore} from "../ui/MessageStore"
-import {clientVersion} from "./ClientVersion"
-import {keyLocalStorage} from "./KeyLocalStorage"
-import {monitoring} from "./Monitoring"
-import {TimeUtils} from "./TimeUtils"
-import {log} from "./Utils"
+import axios, { AxiosError, AxiosResponse } from "axios"
+import { messageStore } from "../ui/MessageStore"
+import { clientVersion } from "./ClientVersion"
+import { keyLocalStorage } from "./KeyLocalStorage"
+import { monitoring } from "./Monitoring"
+import { TimeUtils } from "./TimeUtils"
+import { log } from "./Utils"
 
 export let axiosWithoutErrors = axios.create()
 
@@ -60,7 +60,11 @@ export class HttpConfig {
                 message = undefined
             }
             if (code === 401) {
+                if (axios.isAxiosError(error)) {
+                    log.warn(`Got 401 for url ${error.request.url} message is ${error.message} response message`)
+                }
                 messageStore.setErrorMessage("You are unauthorized to make this request.")
+                keyLocalStorage.clear()
             } else if (message === undefined) {
                 messageStore.setRequestErrorMessage()
             } else {

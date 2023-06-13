@@ -50,5 +50,4 @@ spring:
             enable: true
             required: true
 
-jwt-secret: ${JWT_SECRET:bim7zBI-QETG2e-AITxr21U7bkgvn1Z641LvU8Jby9No1vUaVEVSL3gIVLUtUY6FUShuIgml8TCd2nZuDWJkmV6cPIVYCgLYprw9NW3EYUDnPhEibrJXkbuxRD7d6RK-rAauzgOWMh0dbF1TAnPRmg2C4fwUYjzOB_nzQ461Io8QLcl8he69Q3IONdmxvvdelJX2GaYkyH2SyNrpprl4kJ4U_1KRlmlcjE-peR-S0GZKzaj_vpTWciQurZxkI3ij88sMlKOwHFvNFKEQAG2TyC1DN6KpQ9hAWVVWPcagI4xOf00RcNkEUShN48x6utnzMCvHaF0YCHT8zK32Eqa48w}
 env: ${ENV:dev}

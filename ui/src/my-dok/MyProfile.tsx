@@ -20,7 +20,8 @@ import {
     OutlinedInput,
     Select,
     Switch,
-    TextField
+    TextField,
+    Tooltip
 } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { Edit } from "@material-ui/icons"
@@ -135,8 +136,20 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         super(props)
         makeObservable(this)
         const {
-            publicContactInfo, allowUsersToSeeDeckOwnership, country, preferredCountries, email, shippingCost,
-            sellerEmail, discord, tcoUsername, storeName, currencySymbol, allowsTrades, allowsMessages, autoRenewListings,
+            publicContactInfo,
+            allowUsersToSeeDeckOwnership,
+            country,
+            preferredCountries,
+            email,
+            shippingCost,
+            sellerEmail,
+            discord,
+            tcoUsername,
+            storeName,
+            currencySymbol,
+            allowsTrades,
+            allowsMessages,
+            autoRenewListings,
             viewFutureSas
         } = props.profile
         this.email = email
@@ -300,7 +313,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                     <DialogTitle>Change your email?</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to change your email to "{this.update && this.update.email}"? This will be your new login for the site.
+                            Are you sure you want to change your email to "{this.update && this.update.email}"? This
+                            will be your new login for the site.
                             You will need to sign in again after making this change.
                         </DialogContentText>
                     </DialogContent>
@@ -391,7 +405,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 >
                                                     {CountryUtils.values.map(country => (
                                                         <MenuItem key={country} value={country}>
-                                                            <Checkbox checked={this.preferredCountries.indexOf(country) > -1}/>
+                                                            <Checkbox
+                                                                checked={this.preferredCountries.indexOf(country) > -1}/>
                                                             <ListItemText primary={countryToLabel(country)}/>
                                                         </MenuItem>
                                                     ))}
@@ -462,16 +477,23 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 label={"Autorenew Deck Sales (Patron only)"}
                                             />
                                             {userStore.contentCreator && (
-                                                <FormControlLabel
-                                                    control={
-                                                        <Switch
-                                                            checked={this.viewFutureSas}
-                                                            onChange={() => this.viewFutureSas = !this.viewFutureSas}
-                                                            tabIndex={10}
-                                                        />
+                                                <Tooltip
+                                                    title={
+                                                        "Preview unreleased SAS scores. These may be inaccurate " +
+                                                        "relative to released versions of SAS!"
                                                     }
-                                                    label={"View Future SAS"}
-                                                />
+                                                >
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Switch
+                                                                checked={this.viewFutureSas}
+                                                                onChange={() => this.viewFutureSas = !this.viewFutureSas}
+                                                                tabIndex={10}
+                                                            />
+                                                        }
+                                                        label={"Preview SAS Mode"}
+                                                    />
+                                                </Tooltip>
                                             )}
                                         </Grid>
                                     </Grid>
@@ -579,7 +601,8 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                 {userStore.featuredSeller && (
                     <Box maxWidth={560}>
                         <KeyCard
-                            topContents={<Typography variant={"h4"} style={{color: "#FFFFFF"}}>Store Details</Typography>}
+                            topContents={<Typography variant={"h4"} style={{color: "#FFFFFF"}}>Store
+                                Details</Typography>}
                             style={{margin: 0}}
                         >
                             <Box p={2}>
@@ -621,7 +644,8 @@ const PatreonSupporter = (props: { profile: KeyUserDto }) => {
     return (
         <Grid item={true}>
             <div>
-                <Typography style={{marginBottom: spacing(2)}}>Patreon tier: {patronRewardLevelName(props.profile.patreonTier)}</Typography>
+                <Typography style={{marginBottom: spacing(2)}}>Patreon
+                    tier: {patronRewardLevelName(props.profile.patreonTier)}</Typography>
                 <LinkButton
                     href={AboutSubPaths.patreon}
                     variant={"contained"}

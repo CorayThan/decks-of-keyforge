@@ -190,8 +190,8 @@ export class SasAndAerc extends React.Component {
                             text={"Timetraveller is one of the highest AERC cards with a 3.5 average. Played by itself or with Help from Future Self it consistently provides " +
                             "Aember, a creature, and often replaces itself with its draw effect. " +
                             "Key of Darkness, on the other hand, is one of the lowest at 0.2. It provides no aember and is very difficult to use."}
-                            img1={"https://cdn.keyforgegame.com/media/card_front/en/341_153_X83CX7XJ5GRX_en.png"}
-                            img2={"https://cdn.keyforgegame.com/media/card_front/en/341_273_VHRR6QWG3C3_en.png"}
+                            img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/timetraveller.png"}
+                            img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/help-from-future-self.png"}
                         />,
                         <div style={{paddingBottom: spacing(1)}}/>,
                         <Typography variant={"h6"}>Card Synergies</Typography>,

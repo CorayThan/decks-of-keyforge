@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.security.SignatureException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -91,6 +92,9 @@ class JwtAuthService(
 
             } catch (expired: ExpiredJwtException) {
                 log.debug("jwt expired")
+                return null
+            } catch (badSignature: SignatureException) {
+                log.warn("Invalid JWT sent.")
                 return null
             }
         }
