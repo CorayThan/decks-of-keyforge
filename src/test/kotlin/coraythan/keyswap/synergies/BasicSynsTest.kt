@@ -50,10 +50,10 @@ class BasicSynsTest {
 
         assertEquals(36, basicDeckCards.size)
 
-        val synergyResults = DeckSynergyService.fromDeckWithCards(boringDeck, basicDeckCards)
+        val synergyResults = DeckSynergyService.fromDeckWithCards(boringDeck, basicDeckCards, null)
         assertEquals(36, synergyResults.synergyCombos.map { it.expectedAmber * it.copies }.sum().toInt())
-        assertEquals(0, synergyResults.synergyRating.toInt())
-        assertEquals(0, synergyResults.antisynergyRating.toInt())
+        assertEquals(0, synergyResults.synergyRating)
+        assertEquals(0, synergyResults.antisynergyRating)
 
     }
 
@@ -111,7 +111,7 @@ class BasicSynsTest {
     @Test
     fun testHuntingWitch() {
 
-        val huntingResults = DeckSynergyService.fromDeckWithCards(boringDeck, huntingWitch)
+        val huntingResults = DeckSynergyService.fromDeckWithCards(boringDeck, huntingWitch, null)
         assertEquals(0, huntingResults.synergyRating)
         assertEquals(2.875, huntingResults.expectedAmber, 0.001)
         val combos = huntingResults.synergyCombos.find { it.cardName == "Hunting Witch" }!!.synergies
@@ -164,7 +164,7 @@ class BasicSynsTest {
     @Test
     fun testBasicSynAntisyn() {
 
-        val basicSynAntisynResults = DeckSynergyService.fromDeckWithCards(boringDeck, basicSynAndAntisyn)
+        val basicSynAntisynResults = DeckSynergyService.fromDeckWithCards(boringDeck, basicSynAndAntisyn, null)
         assertEquals(0, basicSynAntisynResults.synergyRating)
         assertEquals(2, basicSynAntisynResults.sasRating - basicSynAntisynResults.metaScores.values.sum().roundToInt())
         assertEquals(2, basicSynAntisynResults.rawAerc)

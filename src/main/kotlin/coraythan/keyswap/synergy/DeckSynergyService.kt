@@ -65,7 +65,7 @@ object DeckSynergyService {
         }
     }
 
-    fun fromDeckWithCards(deck: GenericDeck, inputCards: List<Card>, token: Card?): DeckSynergyInfo {
+    fun fromDeckWithCards(deck: GenericDeck, inputCards: List<Card>, token: Card? = null): DeckSynergyInfo {
 
         val cards = if (inputCards.any { it.big == true }) {
             inputCards

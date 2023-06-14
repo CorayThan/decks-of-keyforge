@@ -1,5 +1,6 @@
 package coraythan.keyswap.cards
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValueRepo
 import coraythan.keyswap.users.CurrentUserService
@@ -12,9 +13,11 @@ import java.util.*
 @Transactional
 @Service
 class ExtraCardInfoService(
-        private val extraCardInfoRepo: ExtraCardInfoRepo,
-        private val currentUserService: CurrentUserService,
-        private val synTraitValueRepo: SynTraitValueRepo,
+    private val extraCardInfoRepo: ExtraCardInfoRepo,
+    private val currentUserService: CurrentUserService,
+    private val synTraitValueRepo: SynTraitValueRepo,
+    private val cardEditHistoryRepo: CardEditHistoryRepo,
+    private val objectMapper: ObjectMapper,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -32,19 +35,20 @@ class ExtraCardInfoService(
         val currentVersion = publishedAercVersion
 
         val info = ExtraCardInfo(
-                cardName = card.cardTitle,
-                expectedAmber = card.amber.toDouble(),
-                effectivePower = card.power + card.armor,
-                version = currentVersion,
-                active = true,
-                published = now(),
+            cardName = card.cardTitle,
+            expectedAmber = card.amber.toDouble(),
+            effectivePower = card.power + card.armor,
+            version = currentVersion,
+            active = true,
+            published = now(),
         )
 
         return extraCardInfoRepo.save(info)
     }
 
     fun updateExtraCardInfo(sourceInfo: ExtraCardInfo): UUID {
-        currentUserService.adminOrUnauthorized()
+        currentUserService.contentCreatorOrUnauthorized()
+        val user = currentUserService.loggedInUserOrUnauthorized()
 
         val info = sourceInfo.nullMaxes()
 
@@ -96,12 +100,20 @@ class ExtraCardInfoService(
             saved.id
         }
 
+        cardEditHistoryRepo.save(
+            CardEditHistory(
+                extraCardInfoId = id,
+                editorId = user.id,
+                beforeEditExtraCardInfoJson = objectMapper.writeValueAsString(latestExtraInfo),
+            )
+        )
+
         return id
     }
 
     private fun findNextOrCurrentInfo(info: ExtraCardInfo): ExtraCardInfo {
         val preExistingInfos = extraCardInfoRepo.findByCardName(info.cardName)
-                .sortedBy { it.version }
+            .sortedBy { it.version }
         return preExistingInfos.last()
     }
 
