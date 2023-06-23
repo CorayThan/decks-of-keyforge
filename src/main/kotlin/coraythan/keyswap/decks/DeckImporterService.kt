@@ -35,7 +35,7 @@ import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT2M"
+private const val lockImportNewDecksFor = "PT20S"
 private const val lockUpdateRatings = "PT10S"
 
 var deckImportingUpToDate = false
@@ -319,7 +319,7 @@ class DeckImporterService(
             keyforgeId = UUID.randomUUID().toString(),
             name = deckBuilderData.name,
             expansion = deckBuilderData.expansion.expansionNumber,
-            tokenId = deckBuilderData.tokenId,
+            tokenNumber = if (deckBuilderData.tokenTitle == null) null else TokenCard.ordinalByCardTitle(deckBuilderData.tokenTitle),
         ) to cards
     }
 
@@ -404,10 +404,10 @@ class DeckImporterService(
 
     fun viewTheoreticalDeck(deck: DeckBuildingData): Deck {
         val deckAndCards = makeBasicDeckFromDeckBuilderData(deck)
-        val tokenCard = if (deck.tokenId == null) {
+        val tokenCard = if (deck.tokenTitle == null) {
             null
         } else {
-            this.cardService.findTokenById(deck.tokenId)
+            this.cardService.findTokenByName(deck.tokenTitle)
         }
         return validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second, tokenCard)
     }
@@ -429,7 +429,7 @@ class DeckImporterService(
             .copy(
                 houseNamesString = houses.sorted().joinToString("|"),
                 cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList)),
-                tokenId = token?.id
+                tokenNumber = if (token == null) null else TokenCard.ordinalByCardTitle(token.cardTitle)
             )
 
         val ratedDeck = rateDeck(saveable).first

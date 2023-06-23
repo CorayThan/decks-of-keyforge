@@ -55,6 +55,7 @@ import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { userStore } from "../user/UserStore"
 import { UploadStoreImage } from "./UploadStoreImage"
+import { PatreonRewardsTier } from "../generated-src/PatreonRewardsTier"
 
 interface MyProfileProps extends RouteComponentProps<{}> {
 
@@ -476,11 +477,12 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                                 }
                                                 label={"Autorenew Deck Sales (Patron only)"}
                                             />
-                                            {userStore.contentCreator && (
+                                            {(userStore.contentCreator || userStore.patronLevelEqualToOrHigher(PatreonRewardsTier.SUPPORT_SOPHISTICATION)) && (
                                                 <Tooltip
                                                     title={
-                                                        "Preview unreleased SAS scores. These may be inaccurate " +
-                                                        "relative to released versions of SAS!"
+                                                        "Preview unreleased SAS scores. This may include completely " +
+                                                        "unscored cards and be highly " +
+                                                        "inaccurate relative to released versions of SAS!"
                                                     }
                                                 >
                                                     <FormControlLabel

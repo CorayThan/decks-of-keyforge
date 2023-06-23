@@ -100,7 +100,7 @@ class AllianceDeckService(
                         .map { TheoryCard(it.cardTitle, it.enhanced ?: false) }
                 },
                 expansion = expansion,
-                tokenId = toSave.tokenId,
+                tokenTitle = toSave.tokenName,
             )
 
             val deck = deckImporterService.viewTheoreticalDeck(allianceDeckInfo)

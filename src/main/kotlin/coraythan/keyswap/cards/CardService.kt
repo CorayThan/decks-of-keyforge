@@ -125,7 +125,7 @@ class CardService(
 
     fun findByCardName(cardName: String) = nonMaverickCachedCardsWithNames!![cardName.cleanCardName()]
     fun findByCardUrlName(cardUrlName: String) = nonMaverickCachedCardsWithUrlNames!![cardUrlName]
-    fun findTokenById(tokenId: String) = tokenCards!![tokenId]
+    fun findTokenByName(tokenName: String) = tokenCards!![tokenName]
 
     fun previousInfo(): Map<String, Card> {
         if (previousInfoWithNames == null) {
@@ -195,11 +195,11 @@ class CardService(
     }
 
     fun tokenForDeck(deck: GenericDeck): Card? {
-        if (deck.tokenId == null) return null
+        val deckTokenNum = deck.tokenNumber ?: return null
         if (tokenCards == null) {
             reloadCachedCards()
         }
-        return tokenCards?.get(deck.tokenId)!!
+        return tokenCards?.get(TokenCard.cardTitleFromOrdinal(deckTokenNum))!!
     }
 
     fun cardsAndTokenFutureProof(deck: GenericDeck, user: KeyUser?): CardsAndToken {
@@ -217,11 +217,11 @@ class CardService(
     }
 
     fun futureTokenForDeck(deck: GenericDeck): Card? {
-        if (deck.tokenId == null) return null
+        val tokenNum = deck.tokenNumber ?: return null
         if (tokenCards == null) {
             reloadCachedCards()
         }
-        tokenCards?.get(deck.tokenId)!!
+        tokenCards?.get(TokenCard.cardTitleFromOrdinal(tokenNum))!!
             .apply {
                 val nextInfo = nextExtraInfo[this.cardTitle.cleanCardName()]
                 return if (nextInfo != null) {
@@ -404,7 +404,7 @@ class CardService(
             it.value.cardNumbers = cardExpansions[it.value.cardTitle]
         }
 
-        tokenCards = cards.values.filter { it.token }.associateBy { it.id }
+        tokenCards = cards.values.filter { it.token }.associateBy { it.cardTitle }
         nonMaverickCachedCards = cards
         nonMaverickCachedCardsWithNames = cards.map { it.value.cardTitle.cleanCardName() to it.value }.toMap()
         nonMaverickCachedCardsWithUrlNames = cards.map { cardNameToCardImageUrl(it.value.cardTitle) to it.value }.toMap()

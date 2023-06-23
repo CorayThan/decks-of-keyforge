@@ -11,7 +11,7 @@ import { defaultSort } from "../selects/DeckSortSelect"
 import { queryParamsFromObject, SearchFiltersBuilder } from "../../config/SearchFiltersBuilder"
 import { SortDirection } from "../../generated-src/SortDirection"
 
-export class DeckFilters {
+export class  DeckFilters {
     static forSale = () => {
         const filters = new DeckFilters()
         filters.forSale = true
@@ -44,6 +44,7 @@ export class DeckFilters {
             .stringArrayValue("excludeHouses")
             .numberArrayValue("expansions")
             .numberArrayValue("tags")
+            .stringArrayValue("tokens")
             .stringArrayValue("owners")
             .stringArrayValue("tournamentIds")
             .numberArrayValue("notTags")
@@ -125,7 +126,10 @@ export class DeckFilters {
     myFavorites = false
     constraints: Constraint[] = []
     expansions: number[] = []
+    @observable
     cards: DeckCardQuantity[] = []
+    @observable
+    tokens: string[] = []
     @observable
     sortDirection: SortDirection = SortDirection.DESC
     @observable
@@ -150,6 +154,7 @@ export class DeckFilters {
         this.forSaleInCountry = undefined
         this.myFavorites = false
         this.cards = []
+        this.tokens = []
         this.expansions = []
         this.constraints = []
         this.houses = []

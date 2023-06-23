@@ -8,7 +8,7 @@ data class DeckBuildingData(
         val cards: Map<House, List<TheoryCard>>,
         val name: String,
         val expansion: Expansion = Expansion.CALL_OF_THE_ARCHONS,
-        val tokenId: String?,
+        val tokenTitle: String?,
 )
 
 @GenerateTs

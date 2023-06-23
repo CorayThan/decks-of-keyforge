@@ -1,48 +1,27 @@
-import { Button, IconButton, MenuItem } from "@material-ui/core"
+import { Box, Button, IconButton, MenuItem } from "@material-ui/core"
 import TextField from "@material-ui/core/TextField/TextField"
 import { Delete } from "@material-ui/icons"
 import { Autocomplete } from "@material-ui/lab"
-import { makeObservable, observable } from "mobx"
-import { observer } from "mobx-react"
 import * as React from "react"
-import { ChangeEvent } from "react"
-import { cardStore } from "../../cards/CardStore"
+import { ChangeEvent, memo } from "react"
 import { spacing } from "../../config/MuiConfig"
-import { Utils } from "../../config/Utils"
 import { DeckCardQuantity } from "../../generated-src/DeckCardQuantity"
 import { House } from "../../generated-src/House"
 import { houseValuesArray } from "../../houses/HouseUtils"
 import { SelectedOptions } from "../../mui-restyled/SelectedOptions"
 
-interface DeckCardSelectProps {
-    store: DeckCardSelectStore
+export interface DeckCardSelectProps {
+    cardNames: string[]
+    selectedCards: DeckCardQuantity[]
+    updateSelectedCards: (cards: DeckCardQuantity[]) => void
 }
 
-export class DeckCardSelectStore {
-
-    @observable
-    cards: DeckCardQuantity[]
-
-    constructor(initialCards: DeckCardQuantity[]) {
-        makeObservable(this)
-        this.cards = initialCards.length === 0 ? this.defaultCardsSearch() : initialCards
-    }
-
-    isDefaultValue = () => Utils.equals(this.cards, this.defaultCardsSearch())
-
-    reset = () => {
-        this.cards = this.defaultCardsSearch()
-    }
-
-    private defaultCardsSearch = () => [{cardNames: [], quantity: 1, mav: false}]
-}
-
-export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
-    const {store} = props
+export const DeckCardSelect = memo((props: DeckCardSelectProps) => {
+    const {cardNames, selectedCards, updateSelectedCards} = props
 
     return (
-        <>
-            {store.cards.map((card, idx) => {
+        <Box>
+            {selectedCards.map((card, idx) => {
                 const value = card.mav ? "Maverick" : (card.house ? card.house : card.quantity.toString())
                 const selected = new SelectedOptions(card.cardNames, (values: string[]) => card.cardNames = values)
                 return (
@@ -50,7 +29,7 @@ export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
                         <Autocomplete
                             multiple={true}
                             // @ts-ignore
-                            options={cardStore.cardNames}
+                            options={cardNames}
                             value={selected.selectedValues}
                             renderInput={(params) => <TextField {...params} label={"Any of these cards"}/>}
                             onChange={(event: ChangeEvent<{}>, newValue: string[] | null) => {
@@ -75,6 +54,7 @@ export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
                                     card.quantity = valueAsNumber
                                     card.house = undefined
                                 }
+                                updateSelectedCards(selectedCards)
                             }}
                         >
                             <MenuItem value={"0"}>None</MenuItem>
@@ -95,7 +75,11 @@ export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
                             })}
                         </TextField>
                         <IconButton
-                            onClick={() => store.cards.splice(idx, 1)}
+                            onClick={() => {
+                                const updated = selectedCards.slice()
+                                updated.splice(idx, 1)
+                                updateSelectedCards(updated)
+                            }}
                             style={{marginTop: spacing(2), marginLeft: spacing(1)}}
                         >
                             <Delete fontSize={"small"}/>
@@ -103,9 +87,16 @@ export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
                     </div>
                 )
             })}
-            <Button style={{marginTop: spacing(1)}} onClick={() => store.cards.push({cardNames: [], quantity: 1, mav: false})}>
+            <Button
+                style={{marginTop: spacing(1)}}
+                onClick={() => {
+                    const newArr = selectedCards.slice()
+                    newArr.push({cardNames: [], quantity: 1, mav: false})
+                    updateSelectedCards(newArr)
+                }}
+            >
                 Add Card
             </Button>
-        </>
+        </Box>
     )
 })

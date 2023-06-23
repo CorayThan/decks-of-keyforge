@@ -44,7 +44,7 @@ interface GenericDeck {
 
     // Json of card ids for performance loading decks, loading cards from cache
     val cardIds: String
-    val tokenId: String?
+    val tokenNumber: Int?
 
     val cardNames: String
 

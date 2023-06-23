@@ -11,7 +11,6 @@ import * as History from "history"
 import { computed, makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { cardStore } from "../../../cards/CardStore"
 import { KeyDrawer, keyDrawerStore, KeyDrawerVersion } from "../../../components/KeyDrawer"
 import { SearchDrawerExpansionPanel } from "../../../components/SearchDrawerExpansionPanel"
 import { SortDirectionView } from "../../../components/SortDirectionView"
@@ -92,7 +91,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         filters.expansions = deckSearchDrawerStore.selectedExpansions.expansionsAsNumberArray()
         filters.houses = deckSearchDrawerStore.selectedHouses.getHousesSelectedTrue()
         filters.excludeHouses = deckSearchDrawerStore.selectedHouses.getHousesExcludedTrue()
-        filters.cards = deckSearchDrawerStore.deckCardsStore.cards
         filters.sort = deckSearchDrawerStore.selectedSortStore.toEnumValue()
         filters.constraints = deckSearchDrawerStore.constraintsStore.cleanConstraints()
         return filters
@@ -531,8 +529,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                     forTrade={forTrade}
                                 />
                                 <DeckSearchDrawerCards
-                                    store={deckSearchDrawerStore.deckCardsStore}
-                                    loading={cardStore.cardNames.length === 0}
+                                    filters={this.props.filters}
                                 />
                                 <Divider style={{marginBottom: spacing(1)}}/>
                             </div>

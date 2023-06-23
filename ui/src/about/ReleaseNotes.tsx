@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.15"
+export const latestVersion = "6.16"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,24 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.16"}
+                    date={"6/22/2023"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Search by Token Cards",
+                            note: "You can now search decks by the tokens in the decks! Open the Cards pane in the " +
+                                "deck search panel to search by tokens."
+                        },
+                        {
+                            highlight: "Preview SAS",
+                            note: "$6+ per month patrons can now preview SAS scores in progress! Please note that " +
+                                "these will be highly inaccurate, and even include cards that are completely " +
+                                "unscored."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.15"}
                     date={"5/31/2023"}

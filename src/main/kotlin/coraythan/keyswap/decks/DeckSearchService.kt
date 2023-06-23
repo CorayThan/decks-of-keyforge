@@ -10,9 +10,11 @@ import coraythan.keyswap.House
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.QDeckListing
 import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.TokenCard
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.patreon.levelAtLeast
@@ -248,7 +250,22 @@ class DeckSearchService(
         }
 
         if (filters.expansions.isNotEmpty()) {
-            predicate.andAnyOf(*filters.expansions.map { deckQ.expansion.eq(it) }.toTypedArray())
+            val expansions = if (filters.tokens.isEmpty()) {
+                filters.expansions
+            } else {
+                val validExpansions = filters.expansions
+                    .filter {
+                        val expToFilter = Expansion.forExpansionNumber(it)
+                        Expansion.expansionsWithTokens().contains(expToFilter)
+                    }
+                validExpansions
+            }
+            if (expansions.isEmpty()) {
+                // Nothing! No tokens in these expansions
+                predicate.and(deckQ.expansion.eq(-100))
+            } else {
+                predicate.andAnyOf(*expansions.map { deckQ.expansion.eq(it) }.toTypedArray())
+            }
         }
 
         if (filters.houses.isNotEmpty()) {
@@ -424,6 +441,16 @@ class DeckSearchService(
                 }
             }
         }
+
+        if (filters.tokens.isNotEmpty()) {
+            predicate.and(
+                deckQ.tokenNumber.`in`(
+                    *filters.tokens.map { TokenCard.ordinalByCardTitle(it) }.toTypedArray()
+                )
+            )
+        }
+
+        filters.tokens
 
         filters.cards.forEach {
             when {

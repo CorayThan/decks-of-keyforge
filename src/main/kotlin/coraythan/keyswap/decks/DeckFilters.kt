@@ -13,6 +13,7 @@ interface DeckQuery {
     val notesUser: String
     val tags: List<Long>
     val notTags: List<Long>
+    val tokens: List<String>
 
     val titleQl: Boolean
     val notForSale: Boolean
@@ -44,6 +45,7 @@ data class DeckFilters(
     override val notesUser: String = "",
     override val tags: List<Long> = listOf(),
     override val notTags: List<Long> = listOf(),
+    override val tokens: List<String> = listOf(),
 
     val page: Long = 0,
 

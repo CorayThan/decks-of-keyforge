@@ -15,6 +15,7 @@ import { statsStore } from "../stats/StatsStore"
 import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
 import { cardNameToCardNameKey, CardNumberSetPair, CardUtils, CardWinRates, KCard, winPercentForCard } from "./KCard"
+import { CardType } from "../generated-src/CardType"
 
 export class CardStore {
     static readonly CONTEXT = HttpConfig.API + "/cards"
@@ -31,7 +32,12 @@ export class CardStore {
     @observable
     cardsLoaded = false
 
+    @observable
     allCards: KCard[] = []
+    @observable
+    allCardsNoTokens: KCard[] = []
+    @observable
+    allTokens: KCard[] = []
 
     private cardNameLowercaseToCard?: Map<string, KCard>
     private cardNameLowercaseToHasAerc?: Map<string, HasAerc>
@@ -250,6 +256,8 @@ export class CardStore {
             return card.cardTitle
         })
         this.allCards = cardsLoaded
+        this.allCardsNoTokens = cardsLoaded.filter(card => card.cardType !== CardType.TokenCreature)
+        this.allTokens = cardsLoaded.filter(card => card.cardType === CardType.TokenCreature)
 
         if (userStore.contentCreator) {
             this.findNextExtraInfo()

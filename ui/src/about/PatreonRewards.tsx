@@ -77,6 +77,8 @@ export class PatreonRewards extends React.Component {
                                 Search <Link href={Routes.decksForSale()}>decks for sale</Link> and you will see a "Notify" button appear next to
                                 the "Search" button. Use that to save a custom search and get notified when someone lists a match.
                             </Typography>,
+                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>SAS Preview Mode – $6+</Typography>,
+                            <Typography>Head to your <Link href={MyDokSubPaths.profile}>profile</Link> to toggle on SAS Preview Mode.</Typography>,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Store listing on the landing page – $12+</Typography>,
                             <Typography>
                                 You must have 10 or more decks listed for sale or trade for your store to show. You can change your store name,
@@ -118,6 +120,7 @@ export class PatreonRewards extends React.Component {
                         infos={[
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Rewards</Typography>,
                             "Up to 25 deck sale notifications: Set up to be notified whenever decks that match certain search criteria are listed for sale or trade.",
+                            "Preview new SAS Scores before they are released!",
                             `See deck ownership. Use the "Extra Options" on search page`,
                             "Your KeyForge Events will be displayed on the landing page of DoK",
                             "List up to 1000 decks for sale",

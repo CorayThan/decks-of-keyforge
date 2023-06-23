@@ -57,7 +57,7 @@ data class AllianceDeck(
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     override val cardIds: String = "",
-    override val tokenId: String? = null,
+    override val tokenNumber: Int? = null,
 
     override val cardNames: String = "",
 

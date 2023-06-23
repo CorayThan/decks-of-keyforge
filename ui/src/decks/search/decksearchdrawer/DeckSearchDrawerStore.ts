@@ -3,7 +3,6 @@ import { expansionInfoMapNumbers } from "../../../expansions/Expansions"
 import { SelectedOrExcludedHouses } from "../../../houses/HouseSelectOrExclude"
 import { DeckSortSelectStore } from "../../selects/DeckSortSelect"
 import { FiltersConstraintsStore } from "../ConstraintDropdowns"
-import { DeckCardSelectStore } from "../DeckCardSelect"
 import { DeckFilters } from "../DeckFilters"
 
 class DeckSearchDrawerStore {
@@ -20,15 +19,12 @@ class DeckSearchDrawerStore {
     selectedSortStore:  DeckSortSelectStore
     // @ts-ignore
     constraintsStore: FiltersConstraintsStore
-    // @ts-ignore
-    deckCardsStore: DeckCardSelectStore
 
     clear = () => {
         this.selectedHouses.reset()
         this.selectedSortStore.selectedValue = ""
         this.constraintsStore.reset()
         this.selectedExpansions.reset()
-        this.deckCardsStore.reset()
     }
     
     updateValues = (filters: DeckFilters) => {
@@ -41,7 +37,6 @@ class DeckSearchDrawerStore {
             filters.sort
         )
         this.constraintsStore = new FiltersConstraintsStore(filters.constraints)
-        this.deckCardsStore = new DeckCardSelectStore(filters.cards)
     }
 }
 

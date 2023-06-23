@@ -49,7 +49,7 @@ class TheoreticalDeckService(
                 deckToHouseCardsPair(deckTwo, toSave.houseTwo),
                 deckToHouseCardsPair(deckThree, toSave.houseThree),
             ),
-            tokenId = toSave.tokenId,
+            tokenTitle = toSave.tokenName,
         )
 
         val deck = deckImporterService.viewTheoreticalDeck(allianceDeckInfo)
