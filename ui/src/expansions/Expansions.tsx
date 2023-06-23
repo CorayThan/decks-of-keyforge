@@ -67,7 +67,7 @@ export const possibleCardExpansionsForExpansion = (exp: ExpansionNumber): Expans
 }
 
 export const displaySas = (expansion: Expansion) => {
-    return userStore.contentCreator || activeSasExpansions.includes(expansion)
+    return userStore.displayFutureSas || activeSasExpansions.includes(expansion)
 }
 
 export const expansionInfos: ExpansionInfo[] = [

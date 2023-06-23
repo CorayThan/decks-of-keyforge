@@ -457,7 +457,7 @@ export class UserStore {
 
     @computed
     get displayFutureSas(): boolean {
-        return this.contentCreator && this.user?.viewFutureSas === true
+        return this.user?.viewFutureSas === true
     }
 
     @computed

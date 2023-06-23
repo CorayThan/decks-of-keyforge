@@ -35,7 +35,7 @@ import { RouteComponentProps } from "react-router"
 import { deckListingStore } from "../auctions/DeckListingStore"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, MyDokSubPaths, Routes } from "../config/Routes"
-import { log, prettyJson, Utils } from "../config/Utils"
+import { log, Utils } from "../config/Utils"
 import { forSaleNotificationsStore } from "../decks/salenotifications/ForSaleNotificationsStore"
 import { Country, CountryUtils } from "../generated-src/Country"
 import { KeyUserDto } from "../generated-src/KeyUserDto"
@@ -642,7 +642,6 @@ const PatreonSupporter = (props: { profile: KeyUserDto }) => {
     if (props.profile.patreonTier == null) {
         return null
     }
-    log.info(`user profile info: ${prettyJson(props.profile)}`)
     return (
         <Grid item={true}>
             <div>
