@@ -1,24 +1,47 @@
 import { observer } from "mobx-react"
 import { TraitBuilderStore } from "./TraitBuilderStore"
 import { synergyAndTraitGroups, SynTraitDisplayGroup } from "../SynergyTrait"
-import { Box, Button, DialogContent, DialogTitle } from "@material-ui/core"
+import { Box, Button, DialogContent, DialogTitle, TextField } from "@material-ui/core"
 import { Utils } from "../../config/Utils"
 import { grey } from "@material-ui/core/colors"
 import Typography from "@material-ui/core/Typography/Typography"
-import React from "react"
+import React, { useState } from "react"
 import { TraitBubble } from "../../synergy/TraitBubble"
 import { HelperText } from "../../generic/CustomTypographies"
+import { themeStore } from "../../config/MuiConfig"
 
-const replaceRs = (convert: string) => {
-    return convert.replace(/_ R_/g, " ??? ")
+const replaceRsAndConvertToTitleCase = (convert: string) => {
+    return Utils.camelCaseToTitleCase(convert).replace(/_ R_/g, " ??? ")
 }
 
 export const SelectTraitOrSyn = observer((props: { store: TraitBuilderStore }) => {
     const store = props.store
+    const [filter, setFilter] = useState("")
+
+    let filteredTraitGroups = synergyAndTraitGroups
+        .filter(traitGroup => store.traitOrSynergy === "synergy" || !traitGroup.synergyOnly)
+
+    if (filter.trim().length > 1) {
+        filteredTraitGroups = filteredTraitGroups
+            .map(group => ({
+                ...group,
+                traits: group.traits.filter(trait => replaceRsAndConvertToTitleCase(trait).toLowerCase().includes(filter.trim().toLowerCase()))
+            }))
+            .filter(group => group.traits.length > 0)
+    }
     return (
         <>
             <DialogTitle id="form-dialog-title">Add {Utils.camelCaseToTitleCase(store.traitOrSynergy)}</DialogTitle>
             <DialogContent>
+                <Box my={1}>
+                    <TextField
+                        size={"small"}
+                        variant={"outlined"}
+                        label={"Filter"}
+                        value={filter}
+                        onChange={(event) => setFilter(event.target.value)}
+                    />
+                </Box>
                 {store.trait != null && (
                     <Box display={"flex"} mb={1}>
                         <TraitBubble
@@ -28,8 +51,7 @@ export const SelectTraitOrSyn = observer((props: { store: TraitBuilderStore }) =
                     </Box>
                 )}
                 <Box width={480} height={400}>
-                    {synergyAndTraitGroups
-                        .filter(traitGroup => store.traitOrSynergy === "synergy" || !traitGroup.synergyOnly)
+                    {filteredTraitGroups
                         .map(traitGroup => (
                             <DiplayTraitSelectGroup traitGroup={traitGroup} store={store} key={traitGroup.groupName}/>
                         ))}
@@ -42,7 +64,7 @@ export const SelectTraitOrSyn = observer((props: { store: TraitBuilderStore }) =
 export const DiplayTraitSelectGroup = (props: { store: TraitBuilderStore, traitGroup: SynTraitDisplayGroup }) => {
     const {store, traitGroup} = props
     return (
-        <Box mb={1} p={1} style={{backgroundColor: grey["100"], borderRadius: 8}}>
+        <Box mb={1} p={1} style={{backgroundColor: themeStore.darkMode ? grey["700"] : grey["100"], borderRadius: 8}}>
             <Typography
                 variant={"subtitle2"}
                 style={{fontWeight: "bold"}}
@@ -67,7 +89,7 @@ export const DiplayTraitSelectGroup = (props: { store: TraitBuilderStore, traitG
                                 store.navigateToNextPage()
                             }}
                         >
-                            {replaceRs(Utils.camelCaseToTitleCase(trait))}
+                            {replaceRsAndConvertToTitleCase(trait)}
                         </Button>
                     ))}
             </Box>

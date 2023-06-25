@@ -41,7 +41,7 @@ export const TraitOrSynBuilder = observer((props: AddTraitProps) => {
                 variant={"contained"}
                 color={"secondary"}
                 onClick={() => {
-                    store.open = true
+                    store.traitOrSynergy = "trait"
                     store.openDialog()
                 }}
             >
