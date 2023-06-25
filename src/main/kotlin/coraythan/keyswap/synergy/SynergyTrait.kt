@@ -18,126 +18,68 @@ fun Set<String>.toSynergies(): List<SynergyTrait> {
 @GenerateTs
 enum class SynergyTrait {
 
-    any,
+    // Amber and Keys
+    stealsAmber,
+    capturesAmber,
+    increasesKeyCost,
+    scalingAmberControl,
+    exalt,
+    putsAmberOnTarget,
+    removesCapturedAmber,
+    forgesKeys,
 
-    damagesMultiple,
-
+    // Board Control
     destroys,
+    dealsDamage,
+    boardClear,
+    damagesMultiple,
+    exhausts,
 
-    moves,
-
-
-    uses,
-    readies,
-    causesFighting,
-    causesReaping,
-
-    purges,
-
+    // Efficiency
     archives,
+    archivesRandom,
+    drawsCards,
+    increasesHandSize,
+    playsCards,
+    playsFromOtherHouse,
+    shufflesDiscard,
+    mills,
 
-    controls,
+    // Disruption
+    discardsCards,
+    purges,
+    chains,
+    reduces_R_HandSize,
+    revealsHand,
+    controlsHouseChoice,
 
+    // Recursion
     returns_R_ToHand,
     returns_R_FromDiscard,
     shuffles_R_IntoDeck,
     replays,
 
-    discardsCards,
-    discardsFromDeck,
-
-    reduces_R_HandSize,
-
-    inAllHouses,
-
-    // Amber / keys
-    capturesAmber,
-    putsAmberOnTarget,
-    exalt,
-    removesCapturedAmber,
-
-    stealsAmber,
-    increasesKeyCost,
-    scalingAmberControl,
-
-    // Damage and wipes
-    distributableDamage, // eg sack of coins, cooperative hunting
-    dealsDamage,
-    preventsDamage,
-    boardClear,
-
-    // Creatures
-    stuns,
-    heals,
-    sacrificesCreatures,
-
-    // Protects Creatures
-    protectsCreatures,
-    preventsFighting,
-    protectsFromEffects,
-    preventsRemoval,
-    addsArmor,
-    increasesCreaturePower,
-    addsPowerTokens,
-
-    // Keywords
-    elusive,
-    skirmish,
-    poison,
-    deploy,
-    ward,
-
-    // Archives
-    archivesRandom,
-
-    // Discard
-
-
-    // Artifacts
-    usableArtifact,
-    staticArtifact,
-
-    // Hand Manipulation
-
-    drawsCards,
-    increasesHandSize,
-    playsCards,
-    playsFromOtherHouse,
-    revealsHand,
-    shufflesDiscard,
-
-    // Deck manip
-    reorderDeck,
-    mills,
-
-    // Playing
-    dangerousRandomPlay,
-
-    // Houses
-    controlsHouseChoice,
-
-
-    // other
-    revealsTopDeck,
-    chains,
-    forgesKeys,
-    revealsBottomDeck,
-    raisesTide,
-    lowersTide,
-    exhausts,
-
-
+    // Creatures and Artifacts
+    uses,
+    readies,
+    causesFighting,
+    causesReaping,
     goodReap,
     goodAction,
     goodPlay,
     goodFight,
     goodDestroyed,
+    protectsCreatures,
+    increasesCreaturePower,
+    moves,
 
-    // Bad penny in house, automatons
-    regenerates,
-
+    // Other Traits
+    any,
+    preventsDamage,
     alpha,
     omega,
+    raisesTide,
+    lowersTide,
 
     // Automatically applied traits below here
 
@@ -176,10 +118,41 @@ enum class SynergyTrait {
     lowExpectedAmber, // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
     // for deck: 18-=1/4, 17-=1/2, 16-=3/4, 14-=1
 
+    tokenCreation,
+
     // Special traits
     card,
     // Automatically applied
-    good;
+    good,
+
+    // DEPRECATED
+
+    elusive,
+    skirmish,
+    poison,
+    deploy,
+    ward,
+    dangerousRandomPlay,
+    preventsFighting,
+    protectsFromEffects,
+    preventsRemoval,
+    heals,
+    distributableDamage,
+    stuns,
+    sacrificesCreatures,
+    addsPowerTokens,
+    discardsFromDeck,
+    addsArmor,
+    usableArtifact,
+    staticArtifact,
+    reorderDeck,
+    revealsTopDeck,
+    revealsBottomDeck,
+    controls,
+    inAllHouses,
+    regenerates;
+
+    // DEPRECATED END
 
     companion object {
         fun fromTrait(trait: String): SynergyTrait? {

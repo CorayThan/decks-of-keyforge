@@ -1,53 +1,36 @@
 import {
-    Box,
-    Button,
     Card,
     CardActions,
-    Checkbox,
     FormControl,
-    FormControlLabel,
-    FormGroup,
-    FormLabel,
     Grid,
     IconButton,
     InputLabel,
     MenuItem,
-    Radio,
-    RadioGroup,
     Select,
     TextField,
     Typography
 } from "@material-ui/core"
-import { ChevronLeft, ChevronRight, Close, Delete, Edit, Save } from "@material-ui/icons"
-import { Autocomplete } from "@material-ui/lab"
-import { startCase } from "lodash"
+import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
-import React, { ChangeEvent } from "react"
+import React from "react"
 import { RouteComponentProps } from "react-router-dom"
 import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
 import { CardView } from "../cards/views/CardSimpleView"
-import { spacing, themeStore } from "../config/MuiConfig"
+import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
 import { CardType } from "../generated-src/CardType"
-import { SynergyTrait } from "../generated-src/SynergyTrait"
-import { SynTraitHouse } from "../generated-src/SynTraitHouse"
-import { SynTraitPlayer } from "../generated-src/SynTraitPlayer"
 import { SynTraitValue } from "../generated-src/SynTraitValue"
 import { EventValue } from "../generic/EventValue"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
-import { SelectedOptions } from "../mui-restyled/SelectedOptions"
-import { synTraitHouseShortLabel } from "../synergy/SynTraitHouse"
-import { SynTraitRatingValues } from "../synergy/SynTraitValue"
-import { TraitBubble } from "../synergy/TraitBubble"
 import { uiStore } from "../ui/UiStore"
 import { ExtraCardInfo } from "./ExtraCardInfo"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
-import { synergyOptions, traitOptions, validSynergies, validTraits } from "./SynergyTrait"
+import { CardTraitsViewAndEdit } from "./traitsynbuilder/CardTraitsViewAndEdit"
 
 interface UpdateExtraCardInfoPageProps extends RouteComponentProps<{ infoId: string }> {
 }
@@ -309,18 +292,18 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                             </Typography>
                             <div style={{flexGrow: 1}}/>
                             {prevId != null && (
-                                    <IconButton
-                                        href={Routes.editExtraCardInfo(prevId)}
-                                    >
-                                        <ChevronLeft/>
-                                    </IconButton>
+                                <IconButton
+                                    href={Routes.editExtraCardInfo(prevId)}
+                                >
+                                    <ChevronLeft/>
+                                </IconButton>
                             )}
                             {nextId != null && (
-                                    <IconButton
-                                        href={Routes.editExtraCardInfo(nextId)}
-                                    >
-                                        <ChevronRight/>
-                                    </IconButton>
+                                <IconButton
+                                    href={Routes.editExtraCardInfo(nextId)}
+                                >
+                                    <ChevronRight/>
+                                </IconButton>
                             )}
                         </div>
                         <Grid
@@ -470,7 +453,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 </FormControl>
                             </Grid>
                             <Grid item={true} xs={12}>
-                                <AddTrait traits={this.traits} synergies={this.synergies} reset={this.reset} extraCardId={this.infoId}/>
+                                <CardTraitsViewAndEdit traits={this.traits} synergies={this.synergies}/>
                             </Grid>
                         </Grid>
                         <CardActions>
@@ -511,471 +494,4 @@ const InfoInput = (props: { name: string, value: string, update: (event: EventVa
             />
         </Grid>
     )
-}
-
-type SynGroup = "A" | "B" | "C" | "D" | ""
-
-interface AddTraitProps {
-    traits: SynTraitValue[]
-    synergies: SynTraitValue[]
-    reset: (resetTo: ExtraCardInfo) => void
-    extraCardId: string
-}
-
-@observer
-class AddTrait extends React.Component<AddTraitProps> {
-    cardTraitsStore = new SelectedOptions()
-
-    @observable
-    traitOrSynergy: "trait" | "synergy" = "synergy"
-
-    @observable
-    rating: SynTraitRatingValues = 3
-
-    @observable
-    house: SynTraitHouse = SynTraitHouse.anyHouse
-
-    @observable
-    cardTypes: CardType[] = []
-
-    @observable
-    notCardTraits = false
-
-    @observable
-    powersString = ""
-
-    @observable
-    player: SynTraitPlayer = SynTraitPlayer.ANY
-
-    @observable
-    cardName = ""
-
-    @observable
-    trait: SynergyTrait = SynergyTrait.any
-
-    @observable
-    group: SynGroup = ""
-
-    @observable
-    groupMax = ""
-
-    @observable
-    primaryGroup = false
-
-    addTraitOrSyn = (trait?: SynergyTrait) => {
-        const {traits, synergies} = this.props
-        let isSynergy = this.traitOrSynergy === "synergy"
-        if (trait != null) {
-            isSynergy = false
-        }
-        const addTo = isSynergy ? synergies : traits
-
-        let traitValue
-        if (trait != null) {
-            traitValue = trait
-        } else if (this.cardName != "") {
-            traitValue = SynergyTrait.card
-        } else {
-            traitValue = this.trait
-        }
-
-        const toAdd: SynTraitValue = {
-            trait: traitValue as SynergyTrait,
-            rating: this.rating,
-            cardName: this.cardName == "" ? undefined : this.cardName,
-            house: this.house,
-            player: this.player,
-            cardTypes: this.cardTypes.slice(),
-            notCardTraits: this.notCardTraits,
-            cardTraits: this.cardTraitsStore.selectedValues.slice(),
-            powersString: this.powersString.trim(),
-            synergyGroup: this.group === "" ? undefined : this.group,
-            synergyGroupMax: this.groupMax === "" ? undefined : Number(this.groupMax),
-            primaryGroup: this.primaryGroup
-        }
-        addTo.push(toAdd)
-    }
-
-    setTraitTo = (value: SynTraitValue, synergy: boolean) => {
-        this.cardName = value.cardName ?? ""
-        this.powersString = value.powersString
-        this.player = value.player
-        this.house = value.house
-        this.traitOrSynergy = synergy ? "synergy" : "trait"
-        this.cardTypes = value.cardTypes
-        this.rating = value.rating as SynTraitRatingValues
-        this.trait = value.trait
-        this.cardTraitsStore.update(value.cardTraits)
-        this.group = value.synergyGroup as SynGroup
-        this.groupMax = value.synergyGroupMax?.toString() ?? ""
-        this.primaryGroup = value.primaryGroup
-        this.notCardTraits = value.notCardTraits
-    }
-
-    constructor(props: AddTraitProps) {
-        super(props)
-        makeObservable(this)
-    }
-
-    render() {
-
-        const {traits, synergies, reset, extraCardId} = this.props
-
-        const selectableTraits = this.traitOrSynergy === "synergy" ? validSynergies : validTraits
-
-        const cardNames = cardStore.cardNames.slice()
-        cardNames.push("")
-
-        return (
-            <Grid container={true} spacing={2} style={{backgroundColor: themeStore.aercViewBackground, marginBottom: spacing(2)}}>
-                <Grid item={true} xs={12} sm={6}>
-                    <div>
-                        {traits.map((synergy, idx) => (
-                            <div
-                                key={idx}
-                                style={{display: "flex"}}
-                            >
-                                <TraitBubble
-                                    traitValue={synergy}
-                                    trait={true}
-                                />
-                                <IconButton
-                                    onClick={() => traits.splice(idx, 1)}
-                                >
-                                    <Delete/>
-                                </IconButton>
-                                <IconButton
-                                    onClick={() => {
-                                        const toEdit = traits[idx]
-                                        this.setTraitTo(toEdit, false)
-                                        traits.splice(idx, 1)
-                                    }}
-                                >
-                                    <Edit/>
-                                </IconButton>
-                            </div>
-                        ))}
-                    </div>
-                </Grid>
-                <Grid item={true} xs={12} sm={6}>
-                    <div>
-                        {synergies.map((synergy, idx) => (
-                            <div
-                                key={idx}
-                                style={{display: "flex"}}
-                            >
-                                <TraitBubble
-                                    traitValue={synergy}
-                                />
-                                <IconButton
-                                    onClick={() => synergies.splice(idx, 1)}
-                                >
-                                    <Delete/>
-                                </IconButton>
-                                <IconButton
-                                    onClick={() => {
-                                        const toEdit = synergies[idx]
-                                        this.setTraitTo(toEdit, true)
-                                        synergies.splice(idx, 1)
-                                    }}
-                                >
-                                    <Edit/>
-                                </IconButton>
-                            </div>
-                        ))}
-                    </div>
-                </Grid>
-                <Grid item={true} xs={12}>
-                    <FormControl>
-                        <FormLabel>Rating</FormLabel>
-                        <RadioGroup
-                            value={this.rating}
-                            onChange={(event) => this.rating = Number(event.target.value) as SynTraitRatingValues}
-                        >
-                            <div style={{display: "flex", flexWrap: "wrap"}}>
-                                {[-4, -3, -2, -1, 1, 2, 3, 4].map(value => (
-                                    <FormControlLabel
-                                        key={value}
-                                        value={value}
-                                        control={<Radio/>}
-                                        label={value.toString()}
-                                        disabled={value < 1 && this.traitOrSynergy === "trait"}
-                                    />
-                                ))}
-                            </div>
-                        </RadioGroup>
-                    </FormControl>
-                </Grid>
-                <Grid item={true}>
-                    <div>
-                        <div>
-                            <FormControl>
-                                <FormLabel>Type</FormLabel>
-                                <RadioGroup
-                                    value={this.traitOrSynergy}
-                                    onChange={event => {
-                                        const changedToTrait = this.traitOrSynergy === "synergy"
-                                        const newValids = changedToTrait ? traitOptions : synergyOptions
-                                        const choosenTrait = this.trait
-                                        if (choosenTrait != null && newValids.find(option => choosenTrait === option.value) == null) {
-                                            this.trait = SynergyTrait.any
-                                        }
-                                        if (changedToTrait && this.rating < 1) {
-                                            this.rating = 3
-                                        }
-                                        this.traitOrSynergy = event.target.value as "trait" | "synergy"
-                                    }}
-                                >
-                                    <FormControlLabel value={"trait"} control={<Radio/>} label={"Trait"}/>
-                                    <FormControlLabel value={"synergy"} control={<Radio/>} label={"Syn"}/>
-                                </RadioGroup>
-                            </FormControl>
-                        </div>
-                        <div>
-                            <TextField
-                                select={true}
-                                label={"Group"}
-                                value={this.group}
-                                onChange={(event) => this.group = event.target.value as SynGroup}
-                                style={{width: 64}}
-                            >
-                                <MenuItem value={""}>
-                                    None
-                                </MenuItem>
-                                <MenuItem value={"A"}>
-                                    A
-                                </MenuItem>
-                                <MenuItem value={"B"}>
-                                    B
-                                </MenuItem>
-                                <MenuItem value={"C"}>
-                                    C
-                                </MenuItem>
-                                <MenuItem value={"D"}>
-                                    D
-                                </MenuItem>
-                            </TextField>
-                        </div>
-                        <div>
-                            <TextField
-                                label="Max"
-                                value={this.groupMax}
-                                type={"number"}
-                                onChange={(event) => this.groupMax = event.target.value}
-                                style={{width: 64}}
-                            />
-                        </div>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.primaryGroup}
-                                    onChange={() => this.primaryGroup = !this.primaryGroup}
-                                />
-                            }
-                            label="Primary"
-                        />
-                    </div>
-                </Grid>
-                <Grid item={true}>
-                    <FormControl>
-                        <FormLabel>Card Types</FormLabel>
-                        <FormGroup>
-                            {(Utils.enumValues(CardType) as CardType[]).map(type => (
-                                <FormControlLabel
-                                    key={type}
-                                    control={
-                                        <Checkbox
-                                            checked={this.cardTypes.includes(type)}
-                                            onChange={() => {
-                                                if (this.cardTypes.includes(type)) {
-                                                    this.cardTypes = this.cardTypes.filter(toRemove => type !== toRemove)
-                                                } else {
-                                                    this.cardTypes.push(type)
-                                                }
-                                            }}
-                                        />
-                                    }
-                                    label={type}
-                                />
-                            ))}
-                        </FormGroup>
-                    </FormControl>
-                </Grid>
-                <Grid item={true}>
-                    <FormControl>
-                        <FormLabel>House</FormLabel>
-                        <RadioGroup
-                            value={this.house}
-                            onChange={(event) => this.house = event.target.value as SynTraitHouse}
-                        >
-                            {Utils.enumValues(SynTraitHouse).map(option => (
-                                <FormControlLabel
-                                    key={option}
-                                    value={option}
-                                    control={<Radio/>}
-                                    label={synTraitHouseShortLabel(option as SynTraitHouse)}
-                                />
-                            ))}
-                        </RadioGroup>
-                    </FormControl>
-                </Grid>
-                <Grid item={true}>
-                    <FormControl>
-                        <FormLabel>Player</FormLabel>
-                        <RadioGroup
-                            value={this.player}
-                            onChange={(event) => this.player = event.target.value as SynTraitPlayer}
-                            color={"primary"}
-                        >
-                            {Utils.enumValues(SynTraitPlayer).map(option => (
-                                <FormControlLabel key={option} value={option} control={<Radio/>} label={startCase((option as string).toLowerCase())}/>
-                            ))}
-                        </RadioGroup>
-                    </FormControl>
-                </Grid>
-                <Grid item={true} style={{minWidth: 280}}>
-                    <TextField
-                        label={"Power"}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        value={this.powersString}
-                        placeholder={"odd, even, 2-5, 2 or less, 3+, 3,5,7"}
-                        onChange={(event) => this.powersString = event.target.value}
-                        fullWidth={true}
-                    />
-
-                    <Box display={"flex"}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={this.notCardTraits}
-                                    onChange={() => this.notCardTraits = !this.notCardTraits}
-                                />
-                            }
-                            label="Non"
-                        />
-                        <Autocomplete
-                            multiple={true}
-                            // @ts-ignore
-                            options={cardStore.cardTraits}
-                            value={this.cardTraitsStore.selectedValues}
-                            renderInput={(params) => <TextField {...params} label={"Card Traits"}/>}
-                            onChange={(event: ChangeEvent<{}>, newValue: string[] | null) => {
-                                this.cardTraitsStore.update(newValue ?? [])
-                            }}
-                            size={"small"}
-                            fullWidth={true}
-                            style={{marginLeft: spacing(1)}}
-                        />
-                    </Box>
-
-                    <Autocomplete
-                        options={cardNames}
-                        value={this.cardName}
-                        renderInput={(params) => <TextField {...params} label={"Card"}/>}
-                        onChange={(event: ChangeEvent<{}>, newValue: string | null) => this.cardName = newValue ?? ""}
-                        clearOnEscape={true}
-                        size={"small"}
-                    />
-
-                    <Autocomplete
-                        options={selectableTraits}
-                        getOptionLabel={(trait) => startCase(trait).replace(" R ", " ??? ")}
-                        value={this.trait}
-                        renderInput={(params) => <TextField {...params} label={"Trait"}/>}
-                        onChange={(event: ChangeEvent<{}>, newValue: SynergyTrait | null) => this.trait = newValue ?? SynergyTrait.any}
-                        style={{marginTop: spacing(1)}}
-                    />
-
-                    <div style={{display: "flex"}}>
-                        <IconButton
-                            onClick={() => {
-                                this.cardName = ""
-                                this.powersString = ""
-                                this.player = SynTraitPlayer.ANY
-                                this.house = SynTraitHouse.anyHouse
-                                this.traitOrSynergy = "synergy"
-                                this.cardTypes = []
-                                this.rating = 3
-                                this.trait = SynergyTrait.any
-                                this.cardTraitsStore.reset()
-                                this.group = ""
-                                this.groupMax = ""
-                                this.primaryGroup = false
-                                this.notCardTraits = false
-                            }}
-                        >
-                            <Close/>
-                        </IconButton>
-                        <IconButton
-                            style={{marginRight: spacing(2)}}
-                            onClick={() => this.addTraitOrSyn()}
-                        >
-                            <Save/>
-                        </IconButton>
-                    </div>
-                </Grid>
-                <Grid item={true} xs={12}>
-                    <Button
-                        onClick={async () => {
-                            const cardName = this.cardName
-                            if (cardName) {
-                                const nextInfo = cardStore.findNextExtraInfoForCard(cardName)
-                                let resetWith
-                                if (nextInfo != null) {
-                                    resetWith = nextInfo
-                                } else {
-                                    const card = cardStore.fullCardFromCardName(cardName)!
-                                    resetWith = card!.extraCardInfo!
-                                }
-
-                                resetWith = Utils.jsonCopy(resetWith) as ExtraCardInfo
-                                resetWith.id = extraCardId
-
-                                reset(resetWith)
-                            }
-                        }}
-                    >
-                        Copy Card
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            this.addTraitOrSyn(SynergyTrait.protectsCreatures)
-                            this.addTraitOrSyn(SynergyTrait.protectsFromEffects)
-                            this.addTraitOrSyn(SynergyTrait.increasesCreaturePower)
-                        }}
-                    >
-                        Adds Power
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            this.addTraitOrSyn(SynergyTrait.protectsCreatures)
-                            this.addTraitOrSyn(SynergyTrait.protectsFromEffects)
-                            this.addTraitOrSyn(SynergyTrait.addsArmor)
-                        }}
-                    >
-                        Adds Armor
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            this.addTraitOrSyn(SynergyTrait.protectsCreatures)
-                            this.addTraitOrSyn(SynergyTrait.protectsFromEffects)
-                            this.addTraitOrSyn(SynergyTrait.preventsRemoval)
-                        }}
-                    >
-                        Stops Removal
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            this.addTraitOrSyn(SynergyTrait.protectsCreatures)
-                            this.addTraitOrSyn(SynergyTrait.preventsFighting)
-                        }}
-                    >
-                        Stops Fighting
-                    </Button>
-                </Grid>
-            </Grid>
-        )
-    }
 }

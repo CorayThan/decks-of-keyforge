@@ -817,14 +817,19 @@ data class SynTraitValuesForTrait(
                     typesMatch(it.value.trait, synergyValue.cardTypes, traitsCard?.allTypes(), it.value.cardTypes)
                 val playerMatch = playersMatch(synergyValue.player, it.value.player)
                 val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
-                val powerMatch = synergyValue.powerMatch(traitsCard?.power ?: -1, traitsCard?.cardType)
+
+                // If the synergy has a power range, does the traits card match that power range?
+                val synergyPowerMatch = synergyValue.powerMatch(traitsCard?.power ?: -1, traitsCard?.cardType)
+                // If the trait has a power range, does the synergizing card match that power range?
+                val traitPowerMatch = it.value.powerMatch(card.power, card.cardType)
+
                 // For matching traits on the synergy
                 val synergyTraitsMatch =
                     traitsOnSynergyMatch(synergyValue.cardTraits, traitsCard?.traits, synergyValue.notCardTraits)
                 // For matching traits on the trait
                 val traitsTraitMatch = traitsOnTraitMatch(it.value.cardTraits, card.traits, it.value.notCardTraits)
                 val match =
-                    typeMatch && playerMatch && houseMatch && powerMatch && synergyTraitsMatch && traitsTraitMatch
+                    typeMatch && playerMatch && houseMatch && synergyPowerMatch && traitPowerMatch && synergyTraitsMatch && traitsTraitMatch
 
                 // log.debug("\ntrait ${synergyValue.trait} match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
 

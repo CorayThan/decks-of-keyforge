@@ -158,6 +158,10 @@ export class Utils {
         return splitOnSlash[splitOnSlash.length - 1]
     }
 
+    static camelCaseToTitleCase = (convert: string) => {
+        const result = convert.replace(/([A-Z])/g, " $1")
+        return result.charAt(0).toUpperCase() + result.slice(1)
+    }
 
 }
 
