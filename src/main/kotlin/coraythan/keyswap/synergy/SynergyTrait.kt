@@ -75,6 +75,7 @@ enum class SynergyTrait {
 
     // Other Traits
     any,
+    makesTokens,
     preventsDamage,
     alpha,
     omega,
@@ -117,8 +118,6 @@ enum class SynergyTrait {
 
     lowExpectedAmber, // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
     // for deck: 18-=1/4, 17-=1/2, 16-=3/4, 14-=1
-
-    tokenCreation,
 
     // Special traits
     card,

@@ -1,4 +1,3 @@
-import { startCase } from "lodash"
 import { Utils } from "../config/Utils"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
 
@@ -8,18 +7,10 @@ const firstDeprecatedIndex = allSynergyTraits.indexOf(SynergyTrait.elusive)
 export const deprecatedTraits = allSynergyTraits.slice(firstDeprecatedIndex, allSynergyTraits.length)
 export const specialTraits = allSynergyTraits.slice(firstSpecialIndex, allSynergyTraits.length)
 
-export const noSynTraits = [SynergyTrait.card]
-
 export const validSynergies = (Utils.enumValues(SynergyTrait) as SynergyTrait[])
     .filter(traitValue => !deprecatedTraits.includes(traitValue as SynergyTrait))
 export const validTraits = (Utils.enumValues(SynergyTrait) as SynergyTrait[])
     .filter(traitValue => !specialTraits.includes(traitValue as SynergyTrait))
-
-export const traitOptions = validTraits.map(trait => ({label: startCase(trait).replace(" R ", " ??? "), value: trait}))
-export const synergyOptions = validSynergies.map(trait => ({
-    label: startCase(trait).replace(" R ", " ??? "),
-    value: trait
-}))
 
 export interface SynTraitDisplayGroup {
     groupName: string
@@ -67,7 +58,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         groupName: "Other",
         description: `Use "any" for a wild cart trait that matches anything applicable. Like all artifacts or all ` +
             "creatures with even power.",
-        traits: [SynergyTrait.any, SynergyTrait.preventsDamage, SynergyTrait.alpha, SynergyTrait.omega,
+        traits: [SynergyTrait.any, SynergyTrait.makesTokens, SynergyTrait.preventsDamage, SynergyTrait.alpha, SynergyTrait.omega,
             SynergyTrait.raisesTide, SynergyTrait.lowersTide],
     },
     {
@@ -85,7 +76,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
             "you should include the high version as a synergy, and low version as an antisynergy with normal " +
             "strength for a 0 to 100% synergy range.",
         synergyOnly: true,
-        traits: [SynergyTrait.tokenCreation, SynergyTrait.highTotalArmor, SynergyTrait.highTotalCreaturePower,
+        traits: [SynergyTrait.highTotalArmor, SynergyTrait.highTotalCreaturePower,
             SynergyTrait.lowTotalCreaturePower, SynergyTrait.highCreatureCount, SynergyTrait.lowCreatureCount,
             SynergyTrait.highExpectedAmber, SynergyTrait.lowExpectedAmber, SynergyTrait.hasMars],
     },
