@@ -230,6 +230,7 @@ data class AllianceDeck(
                     synergies = listOf()
                 )
             },
+            tokenCreationValues = synergies?.tokenCreationValues,
             metaScores = synergies?.metaScores ?: mapOf(),
             efficiencyBonus = synergies?.efficiencyBonus ?: 0.0,
             allianceHouses = allianceHouses.map {

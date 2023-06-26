@@ -7,6 +7,7 @@ import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.synergy.SynergyCombo
+import coraythan.keyswap.synergy.TokenCreationValues
 import java.time.LocalDate
 
 // It takes a long time to load all the crap in hibernate, so avoid that.
@@ -72,6 +73,7 @@ data class DeckSearchResult(
     val deckSaleInfo: List<DeckSaleInfo>? = null,
     val owners: List<String>? = null,
     val synergyDetails: List<SynergyCombo>? = null,
+    val tokenCreationValues: TokenCreationValues? = null,
     val dateAdded: LocalDate? = null,
     val twinId: String? = null,
     val tokenInfo: TokenInfo? = null,

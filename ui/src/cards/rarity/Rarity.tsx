@@ -62,6 +62,11 @@ export const rarityValuesArray: RarityValue[] = [
         img: evilTwin,
         imgDark: evilTwinDark
     },
+    {
+        rarity: Rarity.Token,
+        img: special,
+        imgDark: specialDark,
+    }
 ]
 
 export const MaverickIcon = observer(() => {

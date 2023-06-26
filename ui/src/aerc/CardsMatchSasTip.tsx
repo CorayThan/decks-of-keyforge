@@ -27,11 +27,9 @@ export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
         }
 
         const matchedCards = cards
-            .map(card => cardStore.fullCardFromCardName(card.cardTitle))
             .filter(card => card != null && matches(card as KCard))
 
         const matchedCards2 = matches2 == null ? [] : cards
-            .map(card => cardStore.fullCardFromCardName(card.cardTitle))
             .filter(card => card != null && matches2(card as KCard))
 
         return (

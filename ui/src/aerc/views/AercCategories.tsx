@@ -22,7 +22,8 @@ import { ScalingStealIcon } from "../../generic/icons/ScalingStealIcon"
 import { TideIcon } from "../../generic/icons/TideIcon"
 import { InfoIconList, InfoIconValue } from "../../generic/InfoIcon"
 import { HasAerc } from "../HasAerc"
-import { DeckType } from "../../generated-src/DeckType";
+import { DeckType } from "../../generated-src/DeckType"
+import { TokenIcon } from "../../generic/icons/TokenIcon"
 
 interface AercCatProps {
     deck: DeckSearchResult
@@ -233,6 +234,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
 
 const expansionSpecificCounts = (props: AercCatProps, width: number | undefined): InfoIconValue | undefined => {
     const {deck, cards} = props
+
     if (deck.expansion === Expansion.MASS_MUTATION) {
         return {
             icon: <MutantIcon width={width}/>,
@@ -265,6 +267,24 @@ const expansionSpecificCounts = (props: AercCatProps, width: number | undefined)
             }
         }
     }
+
+    if (deck.expansion === Expansion.WINDS_OF_EXCHANGE) {
+
+        const makesTokensCheck = (card: KCard) => {
+            return card.extraCardInfo?.traits?.find(trait => trait.trait === SynergyTrait.makesTokens) != null
+        }
+
+        return {
+            icon: <TokenIcon width={width}/>,
+            info: `${deck.tokenCreationValues?.tokensPerGame}`,
+            cardsTips: {
+                title: "Token Generation",
+                matches: makesTokensCheck,
+                cards,
+            }
+        }
+    }
+
     return undefined
 }
 

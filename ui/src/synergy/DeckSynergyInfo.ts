@@ -1,4 +1,5 @@
 import { SynergyCombo } from "../generated-src/SynergyCombo"
+import { TokenCreationValues } from "../generated-src/TokenCreationValues"
 
 export interface DeckSynergyInfo {
     rawAerc: number
@@ -19,4 +20,5 @@ export interface DeckSynergyInfo {
     other: number,
 
     metaScores: { [key: string]: number }
+    tokenCreationValues: TokenCreationValues
 }

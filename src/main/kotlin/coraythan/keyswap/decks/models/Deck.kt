@@ -240,6 +240,7 @@ data class Deck(
                     synergies = listOf()
                 )
             },
+            tokenCreationValues = synergies?.tokenCreationValues,
             metaScores = synergies?.metaScores ?: mapOf(),
             efficiencyBonus = synergies?.efficiencyBonus ?: 0.0,
 

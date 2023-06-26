@@ -48,9 +48,22 @@ data class DeckSynergyInfo(
 
         val metaScores: Map<String, Double>,
         val efficiencyBonus: Double,
+        val tokenCreationValues: TokenCreationValues?,
 ) {
     fun meta() = metaScores.map { it.value }.sum()
 }
+
+@GenerateTs
+data class TokenCreationValues(
+        val tokensPerGame: Double,
+        val tokensPerHouse: List<TokensPerGameForHouse>,
+)
+
+@GenerateTs
+data class TokensPerGameForHouse(
+        val house: House,
+        val tokensPerGame: Double,
+)
 
 @GenerateTs
 data class SynergyMatch(

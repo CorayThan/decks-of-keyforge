@@ -15,6 +15,7 @@ import { userDeckStore } from "../../userdeck/UserDeckStore"
 import { DeckType } from "../../generated-src/DeckType"
 import { AllianceHouseInfo } from "../../generated-src/AllianceHouseInfo"
 import { TokenInfo } from "../../generated-src/TokenInfo"
+import { TokenCreationValues } from "../../generated-src/TokenCreationValues"
 
 export interface DeckWithSynergyInfo {
     deck: DeckSearchResult
@@ -72,6 +73,7 @@ export interface DeckSearchResult {
     deckSaleInfo?: DeckSaleInfo[]
     owners?: string[]
     synergyDetails?: SynergyCombo[]
+    tokenCreationValues?: TokenCreationValues
     hasOwnershipVerification: boolean
     dateAdded?: string
 

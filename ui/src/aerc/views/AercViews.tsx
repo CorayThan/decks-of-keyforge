@@ -15,7 +15,8 @@ import {
     AercCategoryOther,
     AercCategorySpeed
 } from "./AercCategories"
-import { TimeUtils } from "../../config/TimeUtils";
+import { TimeUtils } from "../../config/TimeUtils"
+import { userStore } from "../../user/UserStore"
 
 export enum AercViewType {
     DECK,
@@ -62,7 +63,12 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
     const mobile = type === AercViewType.MOBILE_DECK
 
     const cards = deck.housesAndCards
-        .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
+        .flatMap(house => house.cards.map(simpleCard => {
+            if (userStore.displayFutureSas) {
+                return cardStore.findNextExtraInfoForCard(simpleCard.cardTitle) ?? cardStore.fullCardFromCardName(simpleCard.cardTitle)
+            }
+            return cardStore.fullCardFromCardName(simpleCard.cardTitle)
+        }))
         .filter(card => card != null) as KCard[]
 
     if (mobile) {
