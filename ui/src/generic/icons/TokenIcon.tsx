@@ -1,5 +1,5 @@
 import * as React from "react"
-import Creature from "./card-types/creature.svg"
+import Creature from "../imgs/token.svg"
 
 export const TokenIcon = (props: { width?: number, style?: React.CSSProperties }) => {
     return (

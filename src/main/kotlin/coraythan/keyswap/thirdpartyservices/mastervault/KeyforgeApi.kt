@@ -68,7 +68,7 @@ class KeyforgeApi(
         return if (useMasterVault || env == Env.dev) {
             keyforgeGetRequest(
                     KeyForgeDecksPageDto::class.java,
-                    "decks/?page=$page&page_size=$pageSize&search=&powerLevel=0,11&chains=0,24&ordering=$ordering" +
+                    "?page=$page&page_size=$pageSize&ordering=$ordering" +
                             (if (expansion == null) "" else "&expansion=$expansion") +
                             (if (withCards) "&links=cards" else "")
             )
@@ -87,7 +87,7 @@ class KeyforgeApi(
             KeyForgeDeckResponse(
                 keyforgeGetRequest(
                     KeyForgeDeckDto::class.java,
-                    "decks/$deckId/?links=cards"
+                    "/$deckId/?links=cards"
                 )
             )
         } else {
@@ -101,14 +101,14 @@ class KeyforgeApi(
     fun findDeck(deckId: String, withCards: Boolean = true): KeyForgeDeckDto? {
         return keyforgeGetRequest(
                 KeyForgeDeckDto::class.java,
-                "decks/$deckId${if (withCards) "/?links=cards" else ""}"
+                "/$deckId${if (withCards) "/?links=cards" else ""}"
         )
     }
 
     private fun <T> keyforgeGetRequest(returnType: Class<T>, url: String): T? {
         try {
             val decksEntity = restTemplate.exchange(
-                    "https://www.keyforgegame.com/api/$url",
+                    "https://www.keyforgegame.com/api/decks/v2$url",
                     HttpMethod.GET,
                     HttpEntity<Any?>(null, HttpHeaders().let {
                         it.set("cache-control", "no-cache")

@@ -35,7 +35,7 @@ import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.system.measureTimeMillis
 
-private const val lockImportNewDecksFor = "PT20S"
+private const val lockImportNewDecksFor = "PT1M"
 private const val lockUpdateRatings = "PT10S"
 
 var deckImportingUpToDate = false

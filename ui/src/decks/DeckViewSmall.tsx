@@ -6,7 +6,6 @@ import List from "@material-ui/core/List/List"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { AercForCombos } from "../aerc/AercForCombos"
 import { AercViewForDeck, AercViewType } from "../aerc/views/AercViews"
 import { deckListingStore } from "../auctions/DeckListingStore"
 import { cardStore } from "../cards/CardStore"
@@ -70,7 +69,7 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
         }
 
         const {deck, saleInfo, fullVersion, hideActions, style, fake, margin} = this.props
-        const {id, keyforgeId, name, wishlistCount, funnyCount, owners, twinId, tokenInfo} = deck
+        const {id, keyforgeId, name, wishlistCount, funnyCount, owners, twinId} = deck
         const alliance = deck.deckType === DeckType.ALLIANCE
 
         const compact = screenStore.smallDeckView()
@@ -134,18 +133,6 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                                         </Typography>
                                     </Box>
                                 </KeyLink>
-                                {tokenInfo && (
-                                    <Box display={"flex"} alignItems={"center"}>
-                                        <Typography variant={"subtitle1"}>Token: </Typography>
-                                        <Box mt={0.25}>
-                                            <CardAsLine
-                                                card={{cardTitle: tokenInfo.name}}
-                                                cardActualHouse={tokenInfo.house}
-                                                hideRarity={true}
-                                            />
-                                        </Box>
-                                    </Box>
-                                )}
                                 <DisplayAllCardsByHouse deck={deck} compact={compact} fake={!!fake}/>
                                 <OwnersList owners={ownersFiltered}/>
                                 <Collapse in={viewTags}>
@@ -388,7 +375,13 @@ const DisplayAllCardsByHouseCompact = observer((props: { deck: DeckSearchResult,
 
 const smallDeckViewCardLineWidth = 144
 
-const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[], compact?: boolean, deck: DeckSearchResult, fake: boolean }) => {
+const DisplayCardsInHouse = observer((props: {
+    house: House,
+    cards: SimpleCard[],
+    compact?: boolean,
+    deck: DeckSearchResult,
+    fake: boolean
+}) => {
     const {
         house,
         deck,
@@ -409,9 +402,7 @@ const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[]
             <Box display={"flex"} alignItems={compact ? "center" : undefined}
                  flexDirection={compact ? undefined : "column"}>
                 <Box flexGrow={1} mb={compact ? undefined : 1}>
-                    <AercForCombos combos={deck.synergyDetails?.filter(combo => combo.house === house)}>
-                        <HouseLabel house={house} title={true}/>
-                    </AercForCombos>
+                    <HouseLabel house={house} title={true} token={deck.tokenInfo} synergyDetails={deck.synergyDetails} narrow={!compact}/>
                 </Box>
                 {allianceHouse && (
                     <MiniDeckLink deck={allianceHouse} maxHeight={24}/>
@@ -473,7 +464,12 @@ const DisplayCardsInHouse = observer((props: { house: House, cards: SimpleCard[]
     )
 })
 
-const AddHouseToAlliance = observer((props: { deckId: string, deckName: string, house: House, expansion: Expansion }) => {
+const AddHouseToAlliance = observer((props: {
+    deckId: string,
+    deckName: string,
+    house: House,
+    expansion: Expansion
+}) => {
     const {deckId, deckName, house, expansion} = props
     return (
         <Button

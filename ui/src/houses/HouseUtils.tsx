@@ -12,6 +12,11 @@ import shadowsImg from "./imgs/shadows.png"
 import starAllianceImg from "./imgs/star-alliance.png"
 import unfathomableImg from "./imgs/unfathomable.png"
 import untamedImg from "./imgs/untamed.png"
+import { TokenInfo } from "../generated-src/TokenInfo"
+import { SynergyCombo } from "../generated-src/SynergyCombo"
+import { AercForCombos } from "../aerc/AercForCombos"
+import { CardAsLine } from "../cards/views/CardAsLine"
+import { Box } from "@material-ui/core"
 
 export interface HouseValue {
     house: House
@@ -84,16 +89,44 @@ export const houseValues: Map<House, HouseValue> = new Map(houseValuesArray.map(
     [houseValue.house, houseValue] as [House, HouseValue]
 )))
 
-export const HouseLabel = (props: { house: House, title?: boolean, width?: number, iconSize?: number }) => {
+export const HouseLabel = (props: {
+    house: House,
+    title?: boolean,
+    width?: number,
+    iconSize?: number,
+    token?: TokenInfo,
+    synergyDetails?: SynergyCombo[],
+    narrow?: boolean,
+}) => {
+    const {house, title, width, iconSize, token, synergyDetails, narrow} = props
     const value = houseValues.get(props.house)!
-    const houseSize = props.iconSize ? props.iconSize : 32
+    const houseSize = iconSize ?? 32
+
+    if (token != null && token.house === house) {
+        return (
+            <Box display={"flex"} alignItems={"center"} height={32}>
+                <AercForCombos combos={synergyDetails?.filter(combo => combo.house === house)}>
+                    <Box display={"flex"} alignItems={"center"} >
+                        <img alt={house} src={value.img}
+                             style={{width: houseSize, height: houseSize, marginRight: 8}}/>
+                        <Typography noWrap={false} variant={"body2"} style={{width}}>
+                            {value.displayName == null ? house : value.displayName}
+                        </Typography>
+                    </Box>
+                </AercForCombos>
+                <CardAsLine card={{cardTitle: token.name}} cardActualHouse={house} hideRarity={true} width={narrow? 104 : undefined}/>
+            </Box>
+        )
+    }
 
     return (
-        <div style={{display: "flex", alignItems: "center"}}>
-            <img alt={props.house} src={value.img} style={{width: houseSize, height: houseSize, marginRight: 8}}/>
-            <Typography noWrap={false} variant={props.title ? "subtitle1" : "body2"} style={{width: props.width}}>
-                {value.displayName == null ? props.house : value.displayName}
-            </Typography>
-        </div>
+        <AercForCombos combos={synergyDetails?.filter(combo => combo.house === house)}>
+            <Box display={"flex"} alignItems={"center"} height={32}>
+                <img alt={house} src={value.img} style={{width: houseSize, height: houseSize, marginRight: 8}}/>
+                <Typography noWrap={false} variant={title ? "subtitle1" : "body2"} style={{width}}>
+                    {value.displayName == null ? house : value.displayName}
+                </Typography>
+            </Box>
+        </AercForCombos>
     )
 }
