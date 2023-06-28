@@ -22,6 +22,7 @@ export interface HouseValue {
     house: House
     img: string
     displayName?: string
+    shortName?: string
 }
 
 export const houseValuesArray: HouseValue[] = [
@@ -61,12 +62,13 @@ export const houseValuesArray: HouseValue[] = [
     {
         house: House.StarAlliance,
         img: starAllianceImg,
-        displayName: "Star Alliance"
+        displayName: "Star Alliance",
+        shortName: "Star",
     },
     {
         house: House.Unfathomable,
         img: unfathomableImg,
-        displayName: "Unfathom"
+        displayName: "Unfathom",
     },
     {
         house: House.Untamed,
@@ -110,7 +112,7 @@ export const HouseLabel = (props: {
                         <img alt={house} src={value.img}
                              style={{width: houseSize, height: houseSize, marginRight: 8}}/>
                         <Typography noWrap={false} variant={"body2"} style={{width}}>
-                            {value.displayName == null ? house : value.displayName}
+                            {value.shortName ?? value.displayName ?? house}
                         </Typography>
                     </Box>
                 </AercForCombos>

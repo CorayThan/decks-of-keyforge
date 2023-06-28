@@ -57,6 +57,7 @@ import { AllianceDeckSearchPage } from "../alliancedecks/AllianceDeckSearchPage"
 import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils"
 import { DeckNameId } from "../decks/comparison/CompareDecks"
 import { DeckType } from "../generated-src/DeckType"
+import { CardHistoryPage } from "../cards/views/CardHistoryPage"
 
 class Routes {
 
@@ -100,6 +101,7 @@ class Routes {
     static messagePage = (id?: number) => `${Routes.messages}/${id == null ? ":id" : id}`
     static deckPage = (keyforgeDeckId?: string) => `${Routes.decks}/${keyforgeDeckId == null ? ":keyforgeDeckId" : keyforgeDeckId}`
     static cardPage = (cardName?: string) => `${Routes.cards}/${cardName == null ? ":cardName" : cardNameToCardNameKey(cardName)}`
+    static cardHistory = (cardName?: string) => `${Routes.cards}/history/${cardName ?? ":cardName"}`
     static tournamentPage = (id?: number) => `${Routes.tournaments}/${id == null ? ":id" : id}`
     static tournamentPrintables = (id?: number) => `${Routes.tournaments}/printables/${id == null ? ":id" : id}`
     static changePasswordPage = (resetCode?: string) => `/reset-password/${resetCode == null ? ":resetCode" : resetCode}`
@@ -314,6 +316,11 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.cardPage()}
                         component={CardPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.cardHistory()}
+                        component={CardHistoryPage}
                     />
                     <Route
                         exact={true}

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.vladmihalcea.hibernate.type.array.ListArrayType
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValue
 import org.hibernate.annotations.Parameter
@@ -24,6 +25,7 @@ data class CardNumberSetPairOld(
     private fun padded() = this.copy(cardNumber = cardNumber.padStart(3, '0'))
 }
 
+@GenerateTs
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @TypeDef(

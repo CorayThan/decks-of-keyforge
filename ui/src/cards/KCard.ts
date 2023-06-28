@@ -2,7 +2,6 @@ import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
 import { Utils } from "../config/Utils"
 import { activeSasExpansions } from "../expansions/Expansions"
-import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { CardType } from "../generated-src/CardType"
 import { Expansion } from "../generated-src/Expansion"
 import { House } from "../generated-src/House"
@@ -14,6 +13,7 @@ import { Wins } from "../generated-src/Wins"
 import { CsvData } from "../generic/CsvDownloadButton"
 import { statsStore } from "../stats/StatsStore"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
+import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
 
 export interface KCard {
     id: string

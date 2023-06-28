@@ -111,6 +111,16 @@ class ExtraCardInfoService(
         return id
     }
 
+    fun editHistoryForCard(infoIds: List<UUID>): List<CardEditHistory> {
+        return cardEditHistoryRepo.findAllByExtraCardInfoIdIn(infoIds)
+            .sortedBy { it.created }
+    }
+
+    fun publishedAERCs(cardName: String): List<ExtraCardInfo> {
+        return extraCardInfoRepo.findByCardName(cardName)
+            .sortedBy { it.version }
+    }
+
     private fun findNextOrCurrentInfo(info: ExtraCardInfo): ExtraCardInfo {
         val preExistingInfos = extraCardInfoRepo.findByCardName(info.cardName)
             .sortedBy { it.version }

@@ -8,7 +8,6 @@ import { IdbUtils } from "../config/IdbUtils"
 import { log, prettyJson, roundToHundreds, Utils } from "../config/Utils"
 import { Cap } from "../decks/search/ConstraintDropdowns"
 import { expansionInfos, expansionNumberForExpansion } from "../expansions/Expansions"
-import { ExtraCardInfo } from "../extracardinfo/ExtraCardInfo"
 import { Expansion } from "../generated-src/Expansion"
 import { Rarity } from "../generated-src/Rarity"
 import { statsStore } from "../stats/StatsStore"
@@ -16,6 +15,7 @@ import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
 import { cardNameToCardNameKey, CardNumberSetPair, CardUtils, CardWinRates, KCard, winPercentForCard } from "./KCard"
 import { CardType } from "../generated-src/CardType"
+import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
 
 export class CardStore {
     static readonly CONTEXT = HttpConfig.API + "/cards"
@@ -384,7 +384,7 @@ export class CardStore {
     @computed
     get aercUpdateDates(): string[] {
         if (this.allCards != null) {
-            const datesSet = new Set(this.allCards.map(card => card.extraCardInfo.publishedDate))
+            const datesSet = new Set(this.allCards.filter(card => card.extraCardInfo.publishedDate != null).map(card => card.extraCardInfo.publishedDate!))
             log.debug("Update dates: " + Array.from(datesSet.values()).sort().reverse())
             return Array.from(datesSet.values()).filter(date => date != null).sort().slice(1).reverse()
         }

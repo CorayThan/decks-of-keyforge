@@ -28,9 +28,9 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { uiStore } from "../ui/UiStore"
-import { ExtraCardInfo } from "./ExtraCardInfo"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
 import { CardTraitsViewAndEdit } from "./traitsynbuilder/CardTraitsViewAndEdit"
+import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
 
 interface UpdateExtraCardInfoPageProps extends RouteComponentProps<{ infoId: string }> {
 }

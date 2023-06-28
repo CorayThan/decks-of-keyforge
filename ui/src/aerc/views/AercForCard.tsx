@@ -7,6 +7,7 @@ import { roundToHundreds, roundToTens } from "../../config/Utils"
 import { CardType } from "../../generated-src/CardType"
 import { SynergyCombo } from "../../generated-src/SynergyCombo"
 import { userStore } from "../../user/UserStore"
+import { ExtraCardInfoUtils } from "../../extracardinfo/ExtraCardInfoUtils"
 
 export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: SynergyCombo }) => {
     const {card, short, realValue} = props
@@ -49,9 +50,9 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
                 synergizedScore={realValue && roundToTens(realValue.effectivePower / 10)}
                 name={short ? "P" : "Effective Power (P)"}
             />
-            {card.cardType === CardType.Creature && (
+            {(card.cardType === CardType.Creature || card.cardType === CardType.TokenCreature) && (
                 <AercScore
-                    score={0.4}
+                    score={ExtraCardInfoUtils.creatureBonus}
                     singleColumn={realValue != null}
                     name={short ? "CB" : "Creature Bonus"}
                 />
@@ -88,7 +89,7 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
             />
             {realValue == null ? (
                 <AercScore
-                    score={card.aercScore} max={card.aercScoreMax} name={"AERC"}
+                    score={ExtraCardInfoUtils.minAERC(card.cardType, info)} max={ExtraCardInfoUtils.maxAERC(card.cardType, info)} name={"AERC"}
                 />
             ) : (
                 <AercAercScore score={realValue.aercScore} synergy={realValue.netSynergy}/>

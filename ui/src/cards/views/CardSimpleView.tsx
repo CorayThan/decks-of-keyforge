@@ -1,4 +1,4 @@
-import { Divider } from "@material-ui/core"
+import { Box, Divider } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -15,13 +15,15 @@ import { GraySidebar } from "../../generic/GraySidebar"
 import { CardQualityIcon } from "../../generic/icons/CardQualityIcon"
 import { UnstyledLink } from "../../generic/UnstyledLink"
 import { HouseBanner } from "../../houses/HouseBanner"
-import { LinkButton } from "../../mui-restyled/LinkButton"
+import { LinkButton, LinkIconButton } from "../../mui-restyled/LinkButton"
 import { TraitBubble } from "../../synergy/TraitBubble"
 import { screenStore } from "../../ui/ScreenStore"
 import { userStore } from "../../user/UserStore"
 import { cardStore } from "../CardStore"
 import { CardWinsDisplay } from "../cardwins/CardWinsDisplay"
 import { CardUtils, findCardImageUrl, KCard } from "../KCard"
+import { ExtraCardInfo } from "../../generated-src/ExtraCardInfo"
+import HistoryIcon from "@material-ui/icons/History"
 
 interface CardSimpleViewProps {
     card: SimpleCard
@@ -60,6 +62,7 @@ interface CardViewProps {
     noLink?: boolean
     combo?: SynergyCombo
     displayHistory?: boolean
+    history?: ExtraCardInfo[]
 }
 
 export const CardView = observer((props: CardViewProps) => {
@@ -96,37 +99,73 @@ export const CardView = observer((props: CardViewProps) => {
                 <img alt={card.cardTitle} src={findCardImageUrl(card)}/>
             </div>
             <div style={{padding: spacing(2), width: "100%"}}>
-                <div style={{display: "flex", alignItems: "center"}}>
+                <Box display={"flex"} alignItems={"center"} maxWidth={sidebarProps.width}>
                     <CardQualityIcon quality={CardUtils.fakeRatingFromAerc(cardAerc)}/>
                     {noLink ? (
-                        <Typography color={"textPrimary"} variant={"h6"} style={{marginLeft: spacing(1), flexGrow: 1}}>{cardTitle}</Typography>
-                    ) : (
-                        <UnstyledLink
-                            to={Routes.cardPage(card.cardTitle)}
-                            style={{marginLeft: spacing(1), flexGrow: 1, color: "rgba(0, 0, 0, 0.87)"}}
+                        <Typography
+                            color={"textPrimary"} variant={"h6"}
+                            style={{marginLeft: spacing(1), flexGrow: 1}}
                         >
-                            <Typography color={"textPrimary"} variant={"h6"}>{cardTitle}</Typography>
-                        </UnstyledLink>
+                            {cardTitle}
+                        </Typography>
+                    ) : (
+                        <>
+                            <UnstyledLink
+                                to={Routes.cardPage(card.cardTitle)}
+                                style={{marginLeft: spacing(1), marginRight: spacing(1), color: "rgba(0, 0, 0, 0.87)"}}
+                            >
+                                <Typography
+                                    color={"textPrimary"}
+                                    variant={"h6"}
+                                >
+                                    {cardTitle}
+                                </Typography>
+                            </UnstyledLink>
+                            <LinkIconButton
+                                size={"small"}
+                                href={Routes.cardHistory(card.cardTitle)}
+                                newWindow={true}
+                            >
+                                <HistoryIcon style={{width: 20, height: 20}}/>
+                            </LinkIconButton>
+                            <Box flexGrow={1}/>
+                        </>
                     )}
                     <div style={{flexGrow: 1}}/>
                     <CardSetsFromCard card={card}/>
-                </div>
+                </Box>
                 {card.houses.length > 1 && (
-                    <HouseBanner houses={card.houses} size={24} style={{marginBottom: spacing(2), marginTop: spacing(1)}}/>
+                    <HouseBanner houses={card.houses} size={24}
+                                 style={{marginBottom: spacing(2), marginTop: spacing(1)}}/>
                 )}
                 <div style={{display: "flex"}}>
                     <Typography color={"textPrimary"} variant={"subtitle2"}>{cardType}</Typography>
                     <div style={{flexGrow: 1}}/>
-                    {amber > 0 ? <Typography color={"textPrimary"} variant={"subtitle2"}>{amber} aember</Typography> : null}
+                    {amber > 0 ?
+                        <Typography color={"textPrimary"} variant={"subtitle2"}>{amber} aember</Typography> : null}
                 </div>
                 <Typography color={"textPrimary"} variant={"body2"}>{cardText}</Typography>
                 <CardWinsDisplay card={card}/>
-                {futureCard && (
-                    <AercAndSynergies card={futureCard} combo={combo} title={"Future AERC"}/>
-                )}
-                <AercAndSynergies card={card} combo={combo} title={(previousCard || futureCard) && "Current AERC"}/>
-                {previousCard && (
-                    <AercAndSynergies card={previousCard} title={"Previous AERC"}/>
+                {props.history == null ? (
+                    <>
+                        {futureCard && (
+                            <AercAndSynergies card={futureCard} combo={combo} title={"Future AERC"}/>
+                        )}
+                        <AercAndSynergies card={card} combo={combo}
+                                          title={(previousCard || futureCard) && "Current AERC"}/>
+                        {previousCard && (
+                            <AercAndSynergies card={previousCard} title={"Previous AERC"}/>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        {props.history.map(info => (
+                            <AercAndSynergies
+                                card={{...card, extraCardInfo: info}}
+                                title={info.publishedDate == null ? "Future AERC" : `AERC history`}
+                            />
+                        ))}
+                    </>
                 )}
                 {userStore.contentCreator && (
                     <>
@@ -149,7 +188,8 @@ export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
     return (
         <div style={{display: "flex"}}>
             {sets.map((backendExpansion) => (
-                <ExpansionIcon size={16} expansion={backendExpansion} key={backendExpansion} style={{marginLeft: spacing(1)}}/>
+                <ExpansionIcon size={16} expansion={backendExpansion} key={backendExpansion}
+                               style={{marginLeft: spacing(1)}}/>
             ))}
         </div>
     )
@@ -188,14 +228,16 @@ const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: st
             <div style={{display: "flex", alignItems: "flex-end"}}>
                 <Typography color={"textPrimary"} variant={"h5"} style={{marginRight: spacing(2)}}>{title}</Typography>
                 {title && publishedDate && (
-                    <Typography color={"textPrimary"} variant={"subtitle2"}>{TimeUtils.formatDate(publishedDate)}</Typography>
+                    <Typography color={"textPrimary"}
+                                variant={"subtitle2"}>{TimeUtils.formatDate(publishedDate)}</Typography>
                 )}
             </div>
             <AercForCard card={card} realValue={combo}/>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
             {traits.length !== 0 ? <Typography color={"textPrimary"} variant={"subtitle1"}>Traits</Typography> : null}
             <CardTraits traits={traits}/>
-            {synergies.length !== 0 ? <Typography color={"textPrimary"} variant={"subtitle1"}>Synergies</Typography> : null}
+            {synergies.length !== 0 ?
+                <Typography color={"textPrimary"} variant={"subtitle1"}>Synergies</Typography> : null}
             <CardSynergies synergies={synergies}/>
         </>
     )
