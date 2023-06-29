@@ -68,37 +68,41 @@ data class DeckSynergyStats(
         if (!matches(trait.trait)) return null
 
         val vals = traits[trait.trait] ?: return 0
-        val divisor = when (trait.rating) {
+        val multiplier = when (trait.rating) {
             4 -> 2.0
             3 -> 1.0
             2 -> 0.5
             1 -> 0.25
+            -1 -> -0.25
+            -2 -> -0.5
+            -3 -> -1.0
+            -4 -> -2.0
             else -> throw IllegalStateException("Bad rating ${trait.rating} $trait")
         }
 
         when (trait.house) {
             SynTraitHouse.house -> {
                 val actual = houseStats[house]?.get(trait.trait)?.toDouble() ?: return 0
-                return calculatePercent(actual, vals.minHouse.toDouble(), vals.maxHouse.toDouble(), divisor)
+                return calculatePercent(actual, vals.minHouse.toDouble(), vals.maxHouse.toDouble(), multiplier)
             }
             SynTraitHouse.anyHouse -> {
                 val actual = deckStats[trait.trait]?.toDouble() ?: return 0
-                return calculatePercent(actual, vals.minDeck.toDouble(), vals.maxDeck.toDouble(), divisor)
+                return calculatePercent(actual, vals.minDeck.toDouble(), vals.maxDeck.toDouble(), multiplier)
             }
             else -> {
                 val actual = houseStats.filter { it.key != house }
                     .values.sumByDouble { it[trait.trait]?.toDouble() ?: 0.0 }
-                return calculatePercent(actual, (vals.minHouse * 2).toDouble(), (vals.maxHouse.toDouble() * 2), divisor)
+                return calculatePercent(actual, (vals.minHouse * 2).toDouble(), (vals.maxHouse.toDouble() * 2), multiplier)
             }
         }
     }
 
-    private fun calculatePercent(actual: Double, min: Double, max: Double, divisor: Double): Int {
+    private fun calculatePercent(actual: Double, min: Double, max: Double, multiplier: Double): Int {
         val range = max - min
         val actualMinusMin = actual - min
         val synPercent = (actualMinusMin * 100.0) / range
-        val finalPercent = synPercent / divisor
-        println("Inputs $actual $min $max $divisor $finalPercent")
+        val finalPercent = synPercent * multiplier
+        // println("Inputs $actual $min $max $divisor $finalPercent")
         return finalPercent.roundToInt()
     }
 
