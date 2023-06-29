@@ -5,6 +5,7 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.ExtraCardInfo
 import coraythan.keyswap.synergy.*
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.slf4j.LoggerFactory

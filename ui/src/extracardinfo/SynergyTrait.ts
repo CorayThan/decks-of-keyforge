@@ -72,12 +72,11 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
     },
     {
         groupName: "House and Deck Synergies",
-        description: "These traits are generated for each house and deck. When they include high and low versions " +
-            "you should include the high version as a synergy, and low version as an antisynergy with normal " +
-            "strength for a 0 to 100% synergy range.",
+        description: "These traits are generated for each house and deck and do not follow the normal rules of " +
+            "trait strengths.",
         synergyOnly: true,
-        traits: [SynergyTrait.highTotalArmor, SynergyTrait.highTotalCreaturePower,
-            SynergyTrait.lowTotalCreaturePower, SynergyTrait.highCreatureCount, SynergyTrait.lowCreatureCount,
+        traits: [SynergyTrait.creatureCount, SynergyTrait.tokenCount,
+            SynergyTrait.totalArmor, SynergyTrait.totalCreaturePower,
             SynergyTrait.highExpectedAmber, SynergyTrait.lowExpectedAmber, SynergyTrait.hasMars],
     },
 ]

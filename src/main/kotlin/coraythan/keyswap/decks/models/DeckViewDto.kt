@@ -11,8 +11,7 @@ data class HouseAndCards(
     val cards: List<SimpleCard>,
 )
 
-fun List<HouseAndCards>.addBonusIcons(bonusIcons: DeckBonusIcons?): List<HouseAndCards> {
-    if (bonusIcons == null) return this
+fun List<HouseAndCards>.addBonusIcons(bonusIcons: DeckBonusIcons): List<HouseAndCards> {
 
     return this.map { houseAndCards ->
         val cardIcons = bonusIcons.bonusIconHouses

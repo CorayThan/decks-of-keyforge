@@ -3,7 +3,7 @@ package coraythan.keyswap.synergies
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.ExtraCardInfo
-import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import org.junit.Assert

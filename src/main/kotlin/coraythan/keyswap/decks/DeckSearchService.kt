@@ -19,7 +19,7 @@ import coraythan.keyswap.now
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.patreon.levelAtLeast
 import coraythan.keyswap.stats.StatsService
-import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.tags.KTagRepo
 import coraythan.keyswap.tags.PublicityType
 import coraythan.keyswap.tokenize

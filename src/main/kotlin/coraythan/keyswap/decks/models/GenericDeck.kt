@@ -58,10 +58,10 @@ interface GenericDeck {
     val houses: List<House>
         get() = this.houseNamesString.split("|").map { House.valueOf(it) }
 
-    fun bonusIcons(): DeckBonusIcons? {
+    fun bonusIcons(): DeckBonusIcons {
         val toParse = this.bonusIconsString?.trim()
         if (toParse.isNullOrEmpty()) {
-            return null
+            return DeckBonusIcons()
         }
         return jacksonObjectMapper().readValue<DeckBonusIcons>(toParse)
     }

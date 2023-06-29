@@ -13,7 +13,7 @@ import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.doneRatingDecks
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
-import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.users.CurrentUserService
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory

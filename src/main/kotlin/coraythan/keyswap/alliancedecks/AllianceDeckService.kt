@@ -14,7 +14,7 @@ import coraythan.keyswap.decks.UserHolder
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.stats.StatsService
-import coraythan.keyswap.synergy.DeckSynergyService
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.tokenize
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser

@@ -351,3 +351,31 @@ data class BonusIconsCard(
     val bonusDamage: Int = 0,
     val bonusDraw: Int = 0,
 )
+
+data class CardWithBonusIcons(
+    val card: Card,
+    val bonusAember: Int = 0,
+    val bonusCapture: Int = 0,
+    val bonusDamage: Int = 0,
+    val bonusDraw: Int = 0,
+)
+
+fun List<Card>.withBonusIcons(icons: DeckBonusIcons): List<CardWithBonusIcons> {
+    if (icons.bonusIconHouses.isEmpty()) return this.map { CardWithBonusIcons(it) }
+    return this.groupBy { it.house }
+        .map { houseAndCards ->
+            val bonusIconsCards = icons.bonusIconHouses.first { it.house == houseAndCards.key }.bonusIconCards.toMutableList()
+            houseAndCards.value.map {
+                val bonusIcons = bonusIconsCards.find { cardIcons -> cardIcons.cardTitle == it.cardTitle }
+                bonusIconsCards.remove(bonusIcons)
+                CardWithBonusIcons(
+                    card = it,
+                    bonusAember = bonusIcons?.bonusAember ?: 0,
+                    bonusCapture = bonusIcons?.bonusCapture ?: 0,
+                    bonusDamage = bonusIcons?.bonusDamage ?: 0,
+                    bonusDraw = bonusIcons?.bonusDraw ?: 0,
+                )
+            }
+        }
+        .flatten()
+}

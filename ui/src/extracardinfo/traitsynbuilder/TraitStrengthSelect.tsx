@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography/Typography"
 import { SynTraitRatingValues } from "../../synergy/SynTraitValue"
 import React from "react"
 import { HelperText } from "../../generic/CustomTypographies"
+import { SynergyTrait } from "../../generated-src/SynergyTrait"
 
 export const TraitStrengthSelect = (props: { store: TraitBuilderStore }) => {
     const store = props.store
@@ -26,10 +27,14 @@ export const TraitStrengthSelect = (props: { store: TraitBuilderStore }) => {
                 <Box display={"grid"} gridTemplateColumns={"1fr 1fr 1fr 1fr"} gridGap={spacing(1)} my={2}>
                     {store.traitOrSynergy === "synergy" && (
                         <>
-                            <TraitStrengthButton name={"Extra Weak Antisynergy"} strength={-1} store={store} color={"secondary"}/>
-                            <TraitStrengthButton name={"Weak Antisynergy"} strength={-2} store={store} color={"secondary"}/>
-                            <TraitStrengthButton name={"Normal Antisynergy"} strength={-3} store={store} color={"secondary"}/>
-                            <TraitStrengthButton name={"Strong Antisynergy"} strength={-4} store={store} color={"secondary"}/>
+                            <TraitStrengthButton name={"Extra Weak Antisynergy"} strength={-1} store={store}
+                                                 color={"secondary"}/>
+                            <TraitStrengthButton name={"Weak Antisynergy"} strength={-2} store={store}
+                                                 color={"secondary"}/>
+                            <TraitStrengthButton name={"Normal Antisynergy"} strength={-3} store={store}
+                                                 color={"secondary"}/>
+                            <TraitStrengthButton name={"Strong Antisynergy"} strength={-4} store={store}
+                                                 color={"secondary"}/>
                         </>
                     )}
 
@@ -41,35 +46,82 @@ export const TraitStrengthSelect = (props: { store: TraitBuilderStore }) => {
                     </>
                 </Box>
 
-                <HelperText color={"textPrimary"} style={{marginBottom: spacing(1)}}>
-                    Remember the necessary matches to max out a Synergy + Trait pair.
-                </HelperText>
-                <Box display={"grid"} gridTemplateColumns={"1fr 1fr"} gridColumnGap={spacing(2)}
-                     gridRowGap={spacing(0.5)}>
-                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>Strong + Strong</Typography>
-                    <Typography>2 matches</Typography>
-                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>Normal + Strong</Typography>
-                    <Typography>3 matches</Typography>
-                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>
-                        Normal + Normal / Weak + Strong
-                    </Typography>
-                    <Typography>4 matches</Typography>
-                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>
-                        Weak + Normal / Extra weak + Strong
-                    </Typography>
-                    <Typography>6.7 matches</Typography>
-                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>
-                        Extra weak + Normal / Weak + Weak
-                    </Typography>
-                    <Typography>10 matches</Typography>
-                </Box>
+                <TraitStrengthDescription trait={store.trait}/>
 
             </DialogContent>
         </>
     )
 }
 
-export const TraitStrengthButton = (props: { name: string, strength: SynTraitRatingValues, store: TraitBuilderStore, color?: "secondary" }) => {
+const TraitStrengthDescription = (props: { trait?: SynergyTrait }) => {
+    const trait = props.trait
+    if (trait != null && [
+        SynergyTrait.creatureCount, SynergyTrait.tokenCount, SynergyTrait.bonusAmber, SynergyTrait.bonusCapture,
+        SynergyTrait.bonusDraw, SynergyTrait.bonusDamage, SynergyTrait.totalCreaturePower, SynergyTrait.totalArmor,
+    ].includes(trait)) {
+        return (
+            <>
+                <HelperText color={"textPrimary"} style={{marginBottom: spacing(1)}}>
+                    These traits go from 0 to 100% synergy with a normal strength synergy.<br/>
+                    They can go below 0% or above 100%.<br/>
+                    Synergy strength multiplies the value: Strong x2, Normal x1, Weak x0.5, Extra Weak x0.25.<br/>
+                    Out of house range is double in-house range.
+                </HelperText>
+                <Box
+                    display={"grid"}
+                    gridTemplateColumns={"1fr 2fr"}
+                    gridColumnGap={spacing(2)}
+                    gridRowGap={spacing(0.5)}
+                >
+                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>Creature Count</Typography>
+                    <Typography>Deck: 15-25, House: 3-10</Typography>
+                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>Token Count</Typography>
+                    <Typography>Deck or House: 0-25</Typography>
+                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>Enhanced Pips</Typography>
+                    <Typography>Deck: 0-30, House: 0-10</Typography>
+                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>Total Creature Power</Typography>
+                    <Typography>Deck: 45-90, House: 15-30</Typography>
+                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>Total Armor</Typography>
+                    <Typography>Deck: 0-10, House: 0-5</Typography>
+                </Box>
+            </>
+        )
+    }
+
+    return (
+        <>
+            <HelperText color={"textPrimary"} style={{marginBottom: spacing(1)}}>
+                Remember the necessary matches to max out a Synergy + Trait pair.
+            </HelperText>
+            <Box display={"grid"} gridTemplateColumns={"1fr 1fr"} gridColumnGap={spacing(2)}
+                 gridRowGap={spacing(0.5)}>
+                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Strong + Strong</Typography>
+                <Typography>2 matches</Typography>
+                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Normal + Strong</Typography>
+                <Typography>3 matches</Typography>
+                <Typography variant={"body2"} style={{fontWeight: "bold"}}>
+                    Normal + Normal / Weak + Strong
+                </Typography>
+                <Typography>4 matches</Typography>
+                <Typography variant={"body2"} style={{fontWeight: "bold"}}>
+                    Weak + Normal / Extra weak + Strong
+                </Typography>
+                <Typography>6.7 matches</Typography>
+                <Typography variant={"body2"} style={{fontWeight: "bold"}}>
+                    Extra weak + Normal / Weak + Weak
+                </Typography>
+                <Typography>10 matches</Typography>
+            </Box>
+        </>
+    )
+}
+
+export const TraitStrengthButton = (props: {
+    name: string,
+    strength: SynTraitRatingValues,
+    store: TraitBuilderStore,
+    color?: "secondary"
+}) => {
     return (
         <Button
             variant={"contained"}
