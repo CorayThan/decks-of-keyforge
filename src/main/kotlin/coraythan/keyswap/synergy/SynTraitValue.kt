@@ -102,7 +102,7 @@ data class SynTraitValue(
             powersString.isBlank() -> {
                 true
             }
-            cardType != CardType.Creature -> {
+            cardType != CardType.Creature && cardType != CardType.TokenCreature -> {
                 false
             }
             powersString == "even" -> {
@@ -154,16 +154,16 @@ data class SynTraitValue(
             nameEnhancer += " ${if (notCardTraits) "Non-" else ""}${cardTraits.joinToString(", ") { it.lowercase().replaceFirstChar { cap -> cap.uppercase() } }}"
         }
         if (cardTypes.isNotEmpty()) {
-            if (cardTypes.size == 1) {
-                nameEnhancer += " ${cardTypes[0]}s"
+            nameEnhancer += if (cardTypes.size == 1) {
+                " ${cardTypes[0]}s"
             } else {
-                nameEnhancer += " ${cardTypes.joinToString(" ") { "${it}s" }}"
+                " ${cardTypes.joinToString(" ") { "${it}s" }}"
             }
         }
-        if (name.contains("_R_")) {
-            name = name.startCase().replace("_ R_", nameEnhancer)
+        name = if (name.contains("_R_")) {
+            name.startCase().replace("_ R_", nameEnhancer)
         } else {
-            name = "${name.startCase()} $nameEnhancer"
+            "${name.startCase()} $nameEnhancer"
         }
         name = when (house) {
             SynTraitHouse.anyHouse -> ""
