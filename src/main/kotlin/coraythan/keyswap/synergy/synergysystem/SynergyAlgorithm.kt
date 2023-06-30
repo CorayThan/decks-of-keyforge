@@ -157,8 +157,6 @@ object DeckSynergyService {
         addHouseTraits(deck.houses, cards, traitsMap)
         addOutOfHouseTraits(deck.houses, cards, traitsMap)
 
-
-
         val synergyCombos: List<SynergyCombo> = cards
             .groupBy { Pair(it.cardTitle, it.house) }
             .map { cardsById ->
@@ -178,23 +176,7 @@ object DeckSynergyService {
                                 val matches = if (synergy.cardName == null) {
                                     traitsMap[synergyTrait]?.matches(card, synergy)
                                 } else {
-                                    val cardCount = when (synergy.house) {
-                                        SynTraitHouse.anyHouse -> cardsMap.map {
-                                            it.value.getOrDefault(
-                                                synergy.cardName,
-                                                0
-                                            )
-                                        }.sum()
-
-                                        SynTraitHouse.house -> cardsMap[card.house]?.get(synergy.cardName) ?: 0
-                                        else -> cardsMap.entries.filter { it.key != card.house }
-                                            .map { it.value.getOrDefault(synergy.cardName, 0) }.sum()
-                                    }
-                                    if (cardCount != 0) {
-                                        SynMatchInfo(mapOf(TraitStrength.NORMAL to if (card.cardTitle == synergy.cardName) cardCount - 1 else cardCount))
-                                    } else {
-                                        null
-                                    }
+                                    cardMatches(card, synergy, cardsMap)
                                 }
                                 if (matches == null) {
                                     0
@@ -427,6 +409,31 @@ object DeckSynergyService {
                 tokensPerHouse = tokenValues.tokensPerGamePerHouse.map { TokensPerGameForHouse(it.key, it.value) },
             )
         )
+    }
+
+    private fun cardMatches(card: Card, synergy: SynTraitValue, cardsMap: Map<House, Map<String, Int>>): SynMatchInfo? {
+        val cardCount = if (card.cardType == CardType.TokenCreature) 2 else when (synergy.house) {
+            SynTraitHouse.anyHouse -> cardsMap.map {
+                it.value.getOrDefault(
+                    synergy.cardName,
+                    0
+                )
+            }.sum()
+
+            SynTraitHouse.house -> cardsMap[card.house]?.get(synergy.cardName) ?: 0
+            else -> cardsMap.entries.filter { it.key != card.house }
+                .sumOf { it.value.getOrDefault(synergy.cardName, 0) }
+        }
+        val strength = if (card.cardType == CardType.TokenCreature) {
+            TraitStrength.STRONG
+        } else {
+            TraitStrength.NORMAL
+        }
+        return if (cardCount != 0) {
+            SynMatchInfo(mapOf(strength to if (card.cardTitle == synergy.cardName) cardCount - 1 else cardCount))
+        } else {
+            null
+        }
     }
 
     private fun calculateEfficiencyBonus(combos: List<SynergyCombo>, sas: Double): Double {

@@ -9,6 +9,7 @@ import { spacing } from "../../config/MuiConfig"
 import { SynTraitValue } from "../../generated-src/SynTraitValue"
 import { SynergyGroupSelect } from "./SynergyGroupSelect"
 import { TraitStrengthButton } from "./TraitStrengthSelect"
+import { HelperText } from "../../generic/CustomTypographies"
 
 export const CardSynergySelect = observer((props: { store: TraitBuilderStore, existingSynergies: SynTraitValue[] }) => {
     const {store, existingSynergies} = props
@@ -37,6 +38,15 @@ export const CardSynergySelect = observer((props: { store: TraitBuilderStore, ex
                     clearOnEscape={true}
                     size={"small"}
                 />
+
+                {cardNames.find(cardName => cardStore.allTokens.map(token => token.cardTitle).includes(cardName)) != null && (
+                    <Box mt={2}>
+                    <HelperText>
+                        Token Cards automatically find 2 strong matches.<br/>
+                        That means synergy will be: strong = 100%, normal = 66%, weak = 50%, extra weak, = 30%
+                    </HelperText>
+                    </Box>
+                )}
 
                 <Box display={"grid"} gridTemplateColumns={"1fr 1fr 1fr 1fr"} gridGap={spacing(1)} my={2}>
                     <TraitStrengthButton name={"Extra Weak Antisynergy"} strength={-1} store={store}

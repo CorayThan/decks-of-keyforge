@@ -72,7 +72,7 @@ const TraitStrengthDescription = (props: { trait?: SynergyTrait }) => {
                     <Typography variant={"body2"} style={{fontWeight: "bold"}}>Dangerous Play</Typography>
                     <Typography>Strong: 0%, Normal: 25%, Weak: 50%, Extra Weak: 75%</Typography>
                     <Typography variant={"body2"} style={{fontWeight: "bold"}}>Replays Self</Typography>
-                    <Typography>Strong: 4x, Normal: 3x, Weak: 2x, Extra Weak: 1.5x</Typography>
+                    <Typography>Strong: 2 replays, Normal: 1, Weak: 0.5, Extra Weak: 0.25</Typography>
                 </Box>
             </>
         )
