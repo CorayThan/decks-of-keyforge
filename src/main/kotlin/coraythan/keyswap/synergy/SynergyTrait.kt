@@ -81,6 +81,8 @@ enum class SynergyTrait {
     omega,
     raisesTide,
     lowersTide,
+    replaysSelf,
+    dangerousRandomPlay,
 
     // Automatically applied traits below here
 
@@ -137,7 +139,6 @@ enum class SynergyTrait {
     poison,
     deploy,
     ward,
-    dangerousRandomPlay,
     preventsFighting,
     protectsFromEffects,
     preventsRemoval,

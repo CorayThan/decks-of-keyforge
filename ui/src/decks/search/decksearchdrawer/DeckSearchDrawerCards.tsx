@@ -7,9 +7,8 @@ import { DeckCardSelect } from "../DeckCardSelect"
 import { DeckFilters } from "../DeckFilters"
 import { observer } from "mobx-react"
 import { cardStore } from "../../../cards/CardStore"
-import { DeckCardQuantity } from "../../../generated-src/DeckCardQuantity"
-import { log } from "../../../config/Utils"
-import { DeckTokenSelect } from "../DeckTokenSelect"
+import { DeckTokenCardSelect } from "../DeckTokenSelect"
+import { HelperText } from "../../../generic/CustomTypographies"
 
 export const DeckSearchDrawerCards = observer((props: { filters: DeckFilters }) => {
 
@@ -23,11 +22,6 @@ export const DeckSearchDrawerCards = observer((props: { filters: DeckFilters }) 
 
     const [initiallyOpen] = useState(!!(selectedCards && selectedCards.length) || !!(selectedTokens && selectedTokens.length))
 
-    log.info(`in render initially open is ${initiallyOpen}`)
-
-    const updateSelectedCards = (cards: DeckCardQuantity[]) => props.filters.cards = cards
-    const updateSelectedTokens = (tokens: string[]) => props.filters.tokens = tokens
-
     return (
         <SearchDrawerExpansionPanel
             initiallyOpen={initiallyOpen}
@@ -39,10 +33,7 @@ export const DeckSearchDrawerCards = observer((props: { filters: DeckFilters }) 
                 <DeckSearchDrawerCardsInternal
                     cards={cards}
                     tokens={tokens}
-                    selectedCards={selectedCards}
-                    selectedTokens={selectedTokens}
-                    updateSelectedCards={updateSelectedCards}
-                    updateSelectedTokens={updateSelectedTokens}
+                    filters={props.filters}
                 />
             )}
 
@@ -54,22 +45,21 @@ export const DeckSearchDrawerCards = observer((props: { filters: DeckFilters }) 
 interface DeckSearchDrawerCardsInternalProps {
     cards: string[]
     tokens: string[]
-    selectedCards: DeckCardQuantity[]
-    selectedTokens: string[]
-    updateSelectedCards: (cards: DeckCardQuantity[]) => void
-    updateSelectedTokens: (tokens: string[]) => void
+    filters: DeckFilters
 }
 
-const DeckSearchDrawerCardsInternal = (props: DeckSearchDrawerCardsInternalProps) => {
-    const {
-        cards, tokens, selectedCards, selectedTokens, updateSelectedCards, updateSelectedTokens
-    } = props
+const DeckSearchDrawerCardsInternal = observer((props: DeckSearchDrawerCardsInternalProps) => {
+    const {cards, tokens, filters} = props
 
     return (
         <Box>
-            <DeckTokenSelect tokenNames={tokens} selectedTokens={selectedTokens}
-                             updateSelectedTokens={updateSelectedTokens}/>
-            <DeckCardSelect cardNames={cards} selectedCards={selectedCards} updateSelectedCards={updateSelectedCards}/>
+            <Box mb={1}>
+                <HelperText>Select expansions for better performance</HelperText>
+            </Box>
+            <DeckTokenCardSelect tokenNames={tokens} filters={filters}/>
+            <Box marginTop={2}>
+                <DeckCardSelect cardNames={cards} filters={filters}/>
+            </Box>
         </Box>
     )
-}
+})

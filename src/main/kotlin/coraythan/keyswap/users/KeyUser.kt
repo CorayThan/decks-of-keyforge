@@ -9,6 +9,7 @@ import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.patreon.levelAtLeast
 import coraythan.keyswap.tags.KTag
 import coraythan.keyswap.users.search.UserSearchResult
 import java.time.LocalDateTime
@@ -219,7 +220,7 @@ data class KeyUser(
     }
 
     fun realPatreonTier(): PatreonRewardsTier? {
-        if (username == "Coraythan") return PatreonRewardsTier.ALWAYS_GENEROUS
+        if (username == "LegendOfElaina") return PatreonRewardsTier.ALWAYS_GENEROUS
         if (patreonTier == null && manualPatreonTier == null) return null
         if (patreonTier != null && manualPatreonTier == null) return patreonTier
         if (patreonTier == null) return manualPatreonTier
@@ -231,13 +232,13 @@ data class KeyUser(
     }
 
     fun contributedOrManual(): Boolean {
-        return username == "Coraythan"
+        return username == "LegendOfElaina"
                 || manualPatreonTier != null
                 || lifetimeSupportCents > 99
     }
 
     fun displayFutureSas() =
-        (this.type == UserType.ADMIN || this.type == UserType.CONTENT_CREATOR) && this.viewFutureSas
+        (this.realPatreonTier().levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) || this.type == UserType.CONTENT_CREATOR) && this.viewFutureSas
 
     override fun equals(other: Any?): Boolean {
         if (other is KeyUser) {

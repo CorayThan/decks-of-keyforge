@@ -55,6 +55,29 @@ export const TraitStrengthSelect = (props: { store: TraitBuilderStore }) => {
 
 const TraitStrengthDescription = (props: { trait?: SynergyTrait }) => {
     const trait = props.trait
+
+    if (trait != null && [SynergyTrait.dangerousRandomPlay, SynergyTrait.replaysSelf].includes(trait)) {
+        return (
+            <>
+                <HelperText color={"textPrimary"} style={{marginBottom: spacing(1)}}>
+                    Dangerous Random Play will increase the value of bonus pips on a card.<br/>
+                    Replays Self will increase the value of bonus pips on a card.
+                </HelperText>
+                <Box
+                    display={"grid"}
+                    gridTemplateColumns={"1fr 3fr"}
+                    gridColumnGap={spacing(2)}
+                    gridRowGap={spacing(0.5)}
+                >
+                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>Dangerous Play</Typography>
+                    <Typography>Strong: 0%, Normal: 25%, Weak: 50%, Extra Weak: 75%</Typography>
+                    <Typography variant={"body2"} style={{fontWeight: "bold"}}>Replays Self</Typography>
+                    <Typography>Strong: 4x, Normal: 3x, Weak: 2x, Extra Weak: 1.5x</Typography>
+                </Box>
+            </>
+        )
+    }
+
     if (trait != null && [
         SynergyTrait.creatureCount, SynergyTrait.tokenCount, SynergyTrait.bonusAmber, SynergyTrait.bonusCapture,
         SynergyTrait.bonusDraw, SynergyTrait.bonusDamage, SynergyTrait.totalCreaturePower, SynergyTrait.totalArmor,

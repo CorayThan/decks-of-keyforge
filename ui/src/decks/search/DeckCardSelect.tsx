@@ -3,21 +3,25 @@ import TextField from "@material-ui/core/TextField/TextField"
 import { Delete } from "@material-ui/icons"
 import { Autocomplete } from "@material-ui/lab"
 import * as React from "react"
-import { ChangeEvent, memo } from "react"
+import { ChangeEvent } from "react"
 import { spacing } from "../../config/MuiConfig"
 import { DeckCardQuantity } from "../../generated-src/DeckCardQuantity"
 import { House } from "../../generated-src/House"
 import { houseValuesArray } from "../../houses/HouseUtils"
 import { SelectedOptions } from "../../mui-restyled/SelectedOptions"
+import { DeckFilters } from "./DeckFilters"
+import { observer } from "mobx-react"
 
 export interface DeckCardSelectProps {
     cardNames: string[]
-    selectedCards: DeckCardQuantity[]
-    updateSelectedCards: (cards: DeckCardQuantity[]) => void
+    filters: DeckFilters
 }
 
-export const DeckCardSelect = memo((props: DeckCardSelectProps) => {
-    const {cardNames, selectedCards, updateSelectedCards} = props
+export const DeckCardSelect = observer((props: DeckCardSelectProps) => {
+    const {cardNames, filters} = props
+    const selectedCards = filters.cards.slice()
+
+    const updateSelectedCards = (cards: DeckCardQuantity[]) => props.filters.cards = cards
 
     return (
         <Box>

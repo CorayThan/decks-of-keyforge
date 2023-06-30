@@ -1,54 +1,31 @@
-import { Checkbox, FormControl, Input, InputLabel, ListItemText, MenuItem, Select } from "@material-ui/core"
 import * as React from "react"
-import { spacing } from "../../config/MuiConfig"
-import { log, prettyJson } from "../../config/Utils"
+import { ChangeEvent } from "react"
+import { DeckFilters } from "./DeckFilters"
+import { observer } from "mobx-react"
+import { Autocomplete } from "@material-ui/lab"
+import TextField from "@material-ui/core/TextField/TextField"
 
-export interface DeckCardSelectProps {
+export interface DeckTokenCardSelectProps {
     tokenNames: string[]
-    selectedTokens: string[]
-    updateSelectedTokens: (tokens: string[]) => void
+    filters: DeckFilters
 }
 
-export const DeckTokenSelect = (props: DeckCardSelectProps) => {
-    const {tokenNames, selectedTokens, updateSelectedTokens} = props
+export const DeckTokenCardSelect = observer((props: DeckTokenCardSelectProps) => {
+    const {tokenNames, filters} = props
+    const selectedTokens = filters.tokens.slice()
 
-    log.info(`Selected tokens is ${prettyJson(selectedTokens)}`)
-
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        updateSelectedTokens(event.target.value as string[])
-    }
+    const updateSelectedTokens = (tokens: string[]) => props.filters.tokens = tokens
 
     return (
-        <>
-            <FormControl style={{minWidth: 120, marginRight: spacing(2), marginBottom: spacing(2)}}>
-                <InputLabel shrink={selectedTokens.length !== 0} id={"tokenSelectInputLabelId"}>Token Creatures</InputLabel>
-                <Select
-                    id={"tokenSelectId"}
-                    labelId={"tokenSelectInputLabelId"}
-                    multiple={true}
-                    value={selectedTokens}
-                    onChange={handleChange}
-                    input={<Input/>}
-                    renderValue={(selected) => (selected as string[]).join(", ")}
-                    MenuProps={{
-                        PaperProps: {
-                            style: {
-                                maxHeight: 48 * 4.5 + 8,
-                                width: 250
-                            }
-                        }
-                    }}
-                >
-                    {tokenNames.map(token => {
-                        return (
-                            <MenuItem key={token} value={token}>
-                                <Checkbox checked={selectedTokens.indexOf(token) > -1}/>
-                                <ListItemText primary={token}/>
-                            </MenuItem>
-                        )
-                    })}
-                </Select>
-            </FormControl>
-        </>
+        <Autocomplete
+            multiple={true}
+            // @ts-ignore
+            options={tokenNames}
+            value={selectedTokens}
+            renderInput={(params) => <TextField {...params} label={"Any of these tokens"}/>}
+            onChange={(event: ChangeEvent<{}>, newValue: string[] | null) => {
+                updateSelectedTokens(newValue ?? [])
+            }}
+        />
     )
-}
+})

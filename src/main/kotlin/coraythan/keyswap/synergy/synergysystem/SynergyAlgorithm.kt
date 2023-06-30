@@ -12,6 +12,7 @@ import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addDec
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addHouseTraits
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addOutOfHouseTraits
 import coraythan.keyswap.synergy.synergysystem.MetaScoreAlgorithm.generateMetaScores
+import coraythan.keyswap.synergy.synergysystem.SelfEnhancementAlgorithm.generateSelfEnhancementCombos
 import coraythan.keyswap.synergy.synergysystem.TokenSynergyService.makeTokenValues
 import org.slf4j.LoggerFactory
 import java.math.RoundingMode
@@ -156,51 +157,7 @@ object DeckSynergyService {
         addHouseTraits(deck.houses, cards, traitsMap)
         addOutOfHouseTraits(deck.houses, cards, traitsMap)
 
-        val selfEnhancedCombos: List<SynergyCombo> = cards
-            .mapNotNull { card ->
-                var selfEnhancedCombo: SynergyCombo? = null
-                if (card.enhanced == true) {
-                    val syn = card.extraCardInfo?.synergies?.firstOrNull { it.trait == SynergyTrait.selfEnhanced }
-                    if (syn != null) {
-                        val value = when (syn.rating) {
-                            -4 -> -1.5
-                            -3 -> -1.0
-                            -2 -> -0.5
-                            -1 -> -0.25
-                            1 -> 0.25
-                            2 -> 0.5
-                            3 -> 1.0
-                            4 -> 1.5
-                            else -> throw IllegalStateException("Unexpected syn rating: ${syn.rating}")
-                        }
-                        selfEnhancedCombo = SynergyCombo(
-                            house = card.house,
-                            cardName = card.cardTitle + " Enhanced",
-                            synergies = listOf(SynergyMatch(syn, 100, setOf())),
-                            netSynergy = value,
-                            aercScore = value,
 
-                            amberControl = 0.0,
-                            expectedAmber = 0.0,
-                            artifactControl = 0.0,
-                            creatureControl = 0.0,
-                            efficiency = 0.0,
-                            recursion = 0.0,
-                            effectivePower = 0,
-
-                            disruption = 0.0,
-                            creatureProtection = 0.0,
-                            other = value,
-                            copies = 1,
-
-                            notCard = true
-                        )
-                    }
-                }
-                selfEnhancedCombo
-            }
-            .groupBy { it.cardName }
-            .map { it.value.first().copy(copies = it.value.size) }
 
         val synergyCombos: List<SynergyCombo> = cards
             .groupBy { Pair(it.cardTitle, it.house) }
@@ -409,27 +366,27 @@ object DeckSynergyService {
                     synStart = cardInfo.baseSynPercent
                 )
             }
-            .plus(selfEnhancedCombos)
+            .plus(generateSelfEnhancementCombos(cardsWithBonusIcons))
 
-        val a = synergyCombos.map { it.amberControl * it.copies }.sum()
-        val e = synergyCombos.map { it.expectedAmber * it.copies }.sum()
-        val r = synergyCombos.map { it.artifactControl * it.copies }.sum()
-        val c = synergyCombos.map { it.creatureControl * it.copies }.sum()
-        val f = synergyCombos.map { it.efficiency * it.copies }.sum()
-        val u = synergyCombos.map { it.recursion * it.copies }.sum()
-        val d = synergyCombos.map { it.disruption * it.copies }.sum()
-        val p = synergyCombos.map { it.effectivePower * it.copies }.sum()
-        val o = synergyCombos.map { it.other * it.copies }.sum()
-        val cp = synergyCombos.map { it.creatureProtection * it.copies }.sum()
+        val a = synergyCombos.sumOf { it.amberControl * it.copies }
+        val e = synergyCombos.sumOf { it.expectedAmber * it.copies }
+        val r = synergyCombos.sumOf { it.artifactControl * it.copies }
+        val c = synergyCombos.sumOf { it.creatureControl * it.copies }
+        val f = synergyCombos.sumOf { it.efficiency * it.copies }
+        val u = synergyCombos.sumOf { it.recursion * it.copies }
+        val d = synergyCombos.sumOf { it.disruption * it.copies }
+        val p = synergyCombos.sumOf { it.effectivePower * it.copies }
+        val o = synergyCombos.sumOf { it.other * it.copies }
+        val cp = synergyCombos.sumOf { it.creatureProtection * it.copies }
 
         val creatureCount =
             cards.filter { it.cardType == CardType.Creature }.size + (if (tokenValues == null) 0 else tokenValues.tokensPerGame.roundToInt())
         val powerValue = p.toDouble() / 10.0
 
         // Remember! When updating this also update Card
-        val synergyUnroundedRaw = synergyCombos.filter { it.netSynergy > 0 }.map { it.netSynergy * it.copies }.sum()
+        val synergyUnroundedRaw = synergyCombos.filter { it.netSynergy > 0 }.sumOf { it.netSynergy * it.copies }
 
-        val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.map { it.netSynergy * it.copies }.sum()
+        val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.sumOf { it.netSynergy * it.copies }
         val antisynergy = roundToInt(antiSynergyToRound, RoundingMode.HALF_UP).absoluteValue
         val preMetaSas = a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * 0.4)
 
@@ -475,13 +432,12 @@ object DeckSynergyService {
     private fun calculateEfficiencyBonus(combos: List<SynergyCombo>, sas: Double): Double {
         return combos
             .filter { it.efficiency > 0 }
-            .map { combo ->
+            .sumOf { combo ->
                 val f = combo.efficiency
-                val efficiencyBonus = (f * (((sas - combo.aercScore) / 35) * 0.4) / 0.75) - f
+                val efficiencyBonus = (f * (((sas - combo.aercScore) / 35) * 0.4) / PipValues.draw) - f
                 // log.info("FB $efficiencyBonus x copies ${combo.copies}")
                 efficiencyBonus * combo.copies
             }
-            .sum()
     }
 
 

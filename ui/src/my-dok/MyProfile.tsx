@@ -669,7 +669,8 @@ const EditUsername = () => {
             title={"Change your username?"}
             description={
                 "This will change your DoK username. If someone else takes your previous username, you will not be able to change back to it. " +
-                "All links to your decks will no longer work, and will need to use your new username."
+                "All links to your decks will no longer work, and will need to use your new username. Also links to " +
+                "your profile in previously created public tags and sold deck details will not work."
             }
             warning={"All your deck collection links will change!"}
             onConfirm={async (password) => {

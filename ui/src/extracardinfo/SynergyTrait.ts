@@ -58,17 +58,20 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         groupName: "Other",
         description: `Use "any" for a wild cart trait that matches anything applicable. Like all artifacts or all ` +
             "creatures with even power.",
-        traits: [SynergyTrait.any, SynergyTrait.makesTokens, SynergyTrait.preventsDamage, SynergyTrait.alpha, SynergyTrait.omega,
-            SynergyTrait.raisesTide, SynergyTrait.lowersTide],
+        traits: [SynergyTrait.any, SynergyTrait.makesTokens, SynergyTrait.preventsDamage, SynergyTrait.alpha,
+            SynergyTrait.omega, SynergyTrait.raisesTide, SynergyTrait.lowersTide],
+    },
+    {
+        groupName: "Single Card Enhancements",
+        description: "You can increase or reduce the value of pips on an individual card with Replays Self and " +
+            "Dangerous Random Play.",
+        traits: [SynergyTrait.replaysSelf, SynergyTrait.dangerousRandomPlay],
     },
     {
         groupName: "Enhancements",
-        description: `The system does not recognize specific enhancements on cards. "Enhanced" lets you synergize ` +
-            "with any applicable enhanced cards. Synergizing with bonus pips will synergize regardless of where " +
-            "they land.",
+        description: "You can synergize with bonus pips in a deck, house and/or out of house. ",
         synergyOnly: true,
-        traits: [SynergyTrait.enhanced, SynergyTrait.selfEnhanced, SynergyTrait.bonusAmber, SynergyTrait.bonusDraw,
-            SynergyTrait.bonusDamage, SynergyTrait.bonusCapture],
+        traits: [SynergyTrait.bonusAmber, SynergyTrait.bonusDraw, SynergyTrait.bonusDamage, SynergyTrait.bonusCapture],
     },
     {
         groupName: "House and Deck Synergies",

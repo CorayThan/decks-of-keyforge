@@ -358,7 +358,9 @@ data class CardWithBonusIcons(
     val bonusCapture: Int = 0,
     val bonusDamage: Int = 0,
     val bonusDraw: Int = 0,
-)
+) {
+    fun total() = bonusAember + bonusCapture + bonusDraw + bonusDamage
+}
 
 fun List<Card>.withBonusIcons(icons: DeckBonusIcons): List<CardWithBonusIcons> {
     if (icons.bonusIconHouses.isEmpty()) return this.map { CardWithBonusIcons(it) }
