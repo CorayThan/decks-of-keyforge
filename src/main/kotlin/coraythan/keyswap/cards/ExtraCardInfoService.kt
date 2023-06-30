@@ -120,6 +120,7 @@ class ExtraCardInfoService(
             ?: throw IllegalStateException("No extra card info with id $infoId")
         val preExistingInfos = extraCardInfoRepo.findByCardName(info.cardName)
         return editHistoryForCard(preExistingInfos.map { it.id })
+            .sortedByDescending { it.created }
             .map {
                 AercBlame(
                     editor = userRepo.findByIdOrNull(it.editorId)?.username ?: "User Id: ${it.editorId}",

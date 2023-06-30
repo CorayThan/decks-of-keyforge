@@ -31,16 +31,18 @@ export const AercBlameView = (props: { blame: AercBlame[] }) => {
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    {blames.map(blame => (
-                        <Box>
-                            <Typography variant={"subtitle1"}>Editor: {blame.editor}</Typography>
-                            <Typography variant={"subtitle1"}>On: {blame.editDate}</Typography>
-                            <Typography variant={"subtitle1"}>Prior Info</Typography>
-                            <Box maxWidth={600}>
-                                <JsonViewer value={JSON.parse(blame.priorValue)}/>
+                    <Box display={"flex"} flexDirection={"column"}>
+                        {blames.map(blame => (
+                            <Box>
+                                <Typography variant={"subtitle1"}>Editor: {blame.editor}</Typography>
+                                <Typography variant={"subtitle1"}>On: {blame.editDate}</Typography>
+                                <Typography variant={"subtitle1"}>Prior Info</Typography>
+                                <Box maxWidth={600}>
+                                    <JsonViewer value={JSON.parse(blame.priorValue)}/>
+                                </Box>
                             </Box>
-                        </Box>
-                    ))}
+                        ))}
+                    </Box>
                 </AccordionDetails>
             </Accordion>
         </Box>
