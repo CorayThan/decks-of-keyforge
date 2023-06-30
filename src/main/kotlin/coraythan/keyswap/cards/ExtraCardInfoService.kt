@@ -1,9 +1,12 @@
 package coraythan.keyswap.cards
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValueRepo
+import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.users.CurrentUserService
+import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -17,6 +20,7 @@ class ExtraCardInfoService(
     private val currentUserService: CurrentUserService,
     private val synTraitValueRepo: SynTraitValueRepo,
     private val cardEditHistoryRepo: CardEditHistoryRepo,
+    private val userRepo: KeyUserRepo,
     private val objectMapper: ObjectMapper,
 ) {
 
@@ -111,6 +115,20 @@ class ExtraCardInfoService(
         return id
     }
 
+    fun editHistoryForCardById(infoId: UUID, offset: Int): List<AercBlame> {
+        val info = extraCardInfoRepo.findByIdOrNull(infoId)
+            ?: throw IllegalStateException("No extra card info with id $infoId")
+        val preExistingInfos = extraCardInfoRepo.findByCardName(info.cardName)
+        return editHistoryForCard(preExistingInfos.map { it.id })
+            .map {
+                AercBlame(
+                    editor = userRepo.findByIdOrNull(it.editorId)?.username ?: "User Id: ${it.editorId}",
+                    editDate = it.created.toReadableStringWithOffsetMinutes(offset),
+                    priorValue = it.beforeEditExtraCardInfoJson,
+                )
+            }
+    }
+
     fun editHistoryForCard(infoIds: List<UUID>): List<CardEditHistory> {
         return cardEditHistoryRepo.findAllByExtraCardInfoIdIn(infoIds)
             .sortedBy { it.created }
@@ -128,3 +146,10 @@ class ExtraCardInfoService(
     }
 
 }
+
+@GenerateTs
+data class AercBlame(
+    val editor: String,
+    val editDate: String,
+    val priorValue: String,
+)

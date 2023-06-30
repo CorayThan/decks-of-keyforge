@@ -1,4 +1,5 @@
 import {
+    Box,
     Card,
     CardActions,
     FormControl,
@@ -13,8 +14,8 @@ import {
 import { ChevronLeft, ChevronRight } from "@material-ui/icons"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
-import React from "react"
-import { RouteComponentProps } from "react-router-dom"
+import React, { useEffect } from "react"
+import { useParams } from "react-router-dom"
 import { cardStore } from "../cards/CardStore"
 import { KCard } from "../cards/KCard"
 import { CardView } from "../cards/views/CardSimpleView"
@@ -31,42 +32,31 @@ import { uiStore } from "../ui/UiStore"
 import { extraCardInfoStore } from "./ExtraCardInfoStore"
 import { CardTraitsViewAndEdit } from "./traitsynbuilder/CardTraitsViewAndEdit"
 import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
+import { AercBlameView } from "./AercBlameView"
+import { AercBlame } from "../generated-src/AercBlame"
 
-interface UpdateExtraCardInfoPageProps extends RouteComponentProps<{ infoId: string }> {
-}
+export const UpdateExtraCardInfoPage = observer(() => {
 
-@observer
-export class UpdateExtraCardInfoPage extends React.Component<UpdateExtraCardInfoPageProps> {
+    const {infoId} = useParams<{ infoId: string }>()
 
-    componentDidMount(): void {
-        if (this.props.match.params.infoId) {
-            this.onUpdate(this.props.match.params.infoId)
-        }
-    }
-
-    componentDidUpdate(prevProps: UpdateExtraCardInfoPageProps): void {
-        if (prevProps.match.params.infoId && this.props.match.params.infoId != this.props.match.params.infoId) {
-            this.onUpdate(this.props.match.params.infoId)
-        }
-    }
-
-    onUpdate = (infoId: string) => {
+    useEffect(() => {
         extraCardInfoStore.findExtraCardInfo(infoId)
-    }
+        extraCardInfoStore.findAERCBlame(infoId)
+    }, [infoId])
 
-    render() {
-        const extraCardInfo = extraCardInfoStore.extraCardInfo
-        if (extraCardInfo == null || !cardStore.cardsLoaded) {
-            return <Loader/>
-        }
-        const card = cardStore.fullCardFromCardName(extraCardInfo.cardName)!
-        return <UpdateExtraCardInfo extraCardInfo={extraCardInfo} card={card}/>
+    const extraCardInfo = extraCardInfoStore.extraCardInfo
+    if (extraCardInfo == null || !cardStore.cardsLoaded) {
+        return <Loader/>
     }
-}
+    const card = cardStore.fullCardFromCardName(extraCardInfo.cardName)!
+    return <UpdateExtraCardInfo extraCardInfo={extraCardInfo} card={card}
+                                aercBlame={extraCardInfoStore.aercBlame ?? []}/>
+})
 
 interface UpdateExtraCardInfoProps {
     extraCardInfo: ExtraCardInfo
     card: KCard
+    aercBlame: AercBlame[]
 }
 
 @observer
@@ -261,7 +251,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     }
 
     render() {
-        const {card} = this.props
+        const {card, aercBlame} = this.props
         let nextId
         let prevId
         const filteredCards = cardStore.allCards
@@ -274,16 +264,17 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             }
         }
         return (
-            <div
-                style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "center"
-                }}
+            <Box
+                display={"flex"}
+                flexWrap={"wrap"}
+                justifyContent={"center"}
             >
-                <div>
+                <Box>
                     <CardView card={card}/>
-                </div>
+                    <Box m={2} maxWidth={624}>
+                        <AercBlameView blame={aercBlame}/>
+                    </Box>
+                </Box>
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(2), padding: spacing(2)}}>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>
@@ -475,7 +466,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                         </CardActions>
                     </Card>
                 </div>
-            </div>
+            </Box>
         )
     }
 }

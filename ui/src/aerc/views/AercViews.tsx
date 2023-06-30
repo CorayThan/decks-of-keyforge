@@ -17,6 +17,7 @@ import {
 } from "./AercCategories"
 import { TimeUtils } from "../../config/TimeUtils"
 import { userStore } from "../../user/UserStore"
+import { observer } from "mobx-react"
 
 export enum AercViewType {
     DECK,
@@ -24,7 +25,7 @@ export enum AercViewType {
     MINI_DECK
 }
 
-export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewType }) => {
+export const AercViewForDeck = observer((props: { deck: DeckSearchResult, type: AercViewType }) => {
     const {deck, type} = props
     const combos = deck.synergyDetails
 
@@ -148,4 +149,4 @@ export const AercViewForDeck = (props: { deck: DeckSearchResult, type: AercViewT
             )}
         </div>
     )
-}
+})

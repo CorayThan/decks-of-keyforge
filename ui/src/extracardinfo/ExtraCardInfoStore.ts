@@ -4,6 +4,7 @@ import { HttpConfig } from "../config/HttpConfig"
 import { messageStore } from "../ui/MessageStore"
 import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
 import { CardHistory } from "./CardHistory"
+import { AercBlame } from "../generated-src/AercBlame"
 
 export class ExtraCardInfoStore {
     static readonly CONTEXT = HttpConfig.API + "/extra-card-infos"
@@ -17,6 +18,9 @@ export class ExtraCardInfoStore {
 
     @observable
     cardEditHistory?: CardHistory
+
+    @observable
+    aercBlame?: AercBlame[]
 
     reset = () => {
         if (this.extraCardInfo) {
@@ -43,6 +47,12 @@ export class ExtraCardInfoStore {
         this.cardEditHistory = undefined
         const cardHistoryResponse: AxiosResponse<CardHistory> = await axios.get(`${ExtraCardInfoStore.CONTEXT}/historical/${cardName}`)
         this.cardEditHistory = cardHistoryResponse.data
+    }
+
+    findAERCBlame = async (infoId: string) => {
+        this.aercBlame = undefined
+        const cardHistoryResponse: AxiosResponse<AercBlame[]> = await axios.get(`${ExtraCardInfoStore.CONTEXT}/edit-history/${infoId}`)
+        this.aercBlame = cardHistoryResponse.data
     }
 
     constructor() {

@@ -40,6 +40,11 @@ class ExtraCardInfoEndpoints(
             editHistory,
         )
     }
+
+    @GetMapping("/edit-history/{extraInfoId}")
+    fun editHistory(@PathVariable extraInfoId: UUID, @RequestHeader(value = "Timezone") offsetMinutes: Int): List<AercBlame> {
+        return extraCardInfoService.editHistoryForCardById(extraInfoId, offsetMinutes)
+    }
 }
 
 data class CardHistory(
