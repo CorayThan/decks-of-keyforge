@@ -9,7 +9,7 @@ export class ExtraCardInfoUtils {
         return info.amberControl + info.artifactControl + info.creatureControl + info.creatureProtection
             + info.disruption + (info.effectivePower / 10) + info.efficiency
             + info.expectedAmber + info.other + info.recursion
-            + (type === CardType.Creature || type === CardType.TokenCreature ? ExtraCardInfoUtils.creatureBonus : 0)
+            + ((type === CardType.Creature || type === CardType.TokenCreature) ? ExtraCardInfoUtils.creatureBonus : 0)
     }
 
     static maxAERC = (type: CardType, info: ExtraCardInfo): number => {
@@ -17,6 +17,6 @@ export class ExtraCardInfoUtils {
             + (info.creatureControlMax ?? info.creatureControl) + (info.creatureProtectionMax ?? info.creatureProtection)
             + (info.disruptionMax ?? info.disruption) + ((info.efficiencyMax ?? info.effectivePower) / 10) + (info.efficiencyMax ?? info.efficiency)
             + (info.expectedAmberMax ?? info.expectedAmber) + (info.otherMax ?? info.other) + (info.recursionMax ?? info.recursion)
-            + (type === CardType.Creature || type === CardType.TokenCreature ? ExtraCardInfoUtils.creatureBonus : 0)
+            + ((type === CardType.Creature || type === CardType.TokenCreature) ? ExtraCardInfoUtils.creatureBonus : 0)
     }
 }

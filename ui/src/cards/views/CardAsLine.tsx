@@ -7,6 +7,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCard } from "../../aerc/views/AercForCard"
 import { spacing } from "../../config/MuiConfig"
+import { log, prettyJson } from "../../config/Utils"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
@@ -16,9 +17,10 @@ import { KeyButton } from "../../mui-restyled/KeyButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { cardStore } from "../CardStore"
 import { EnhancementType } from "../EnhancementType"
-import { CardUtils, KCard } from "../KCard"
+import { CardUtils, findCardImageUrl, KCard } from "../KCard"
 import { AnomalyIcon, LegacyIcon, MaverickIcon, RarityIcon } from "../rarity/Rarity"
-import { CardSimpleView, CardView } from "./CardSimpleView"
+import { CardSimpleView } from "./CardSimpleView"
+import { CardView } from "./CardView"
 
 interface CardAsLineProps {
     card: SimpleCard
@@ -27,6 +29,7 @@ interface CardAsLineProps {
     width?: number
     marginTop?: number
     hideRarity?: boolean
+    img?: boolean
     deck?: DeckSearchResult
 }
 
@@ -61,7 +64,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
     }
 
     render() {
-        const {card, cardActualHouse} = this.props
+        const {card, cardActualHouse, img, width} = this.props
 
         const fullCard = cardStore.fullCardFromCardName(card.cardTitle)
 
@@ -69,10 +72,20 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
             return <Typography>No card {card.cardTitle}</Typography>
         }
 
+        const realWidth = width ?? 100
+
         return (
             <div>
                 <div onClick={this.handleOpen}>
-                    <CardLine {...this.props} card={card} fullCard={fullCard}/>
+                    {img ? (
+                        <img
+                            alt={card.cardTitle}
+                            src={findCardImageUrl({cardTitle: card.cardTitle})}
+                            style={{width: realWidth, height: (realWidth * 420) / 300}}
+                        />
+                    ) : (
+                        <CardLine {...this.props} card={card} fullCard={fullCard}/>
+                    )}
                 </div>
                 <Dialog
                     open={this.open}
@@ -85,7 +98,8 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                         <CardSimpleView card={card} size={250} style={{margin: 4}}/>
                         <div style={{marginTop: spacing(2)}}>
-                            <AercForCard card={fullCard as KCard} realValue={findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)}/>
+                            <AercForCard card={fullCard as KCard}
+                                         realValue={findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)}/>
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>
@@ -119,7 +133,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
     }
 
     render() {
-        const {card, cardActualHouse} = this.props
+        const {card, cardActualHouse, width, img} = this.props
 
         if (!cardStore.cardsLoaded) {
             return null
@@ -131,6 +145,14 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
             return <Typography>Can't find card {card.cardTitle}</Typography>
         }
 
+        const imgWidth = width ?? 100
+
+        const synergies = findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)
+
+        if (card.cardTitle === "Berserker") {
+            log.info(`Found synergies for Berserker: ${prettyJson(synergies)}`)
+        }
+
         return (
             <div
                 onWheel={this.handlePopoverClose}
@@ -138,7 +160,15 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 onMouseEnter={this.handlePopoverOpen}
                 onMouseLeave={this.handlePopoverClose}
             >
-                <CardLine  {...this.props} card={this.props.card} fullCard={fullCard}/>
+                {img ? (
+                    <img
+                        alt={card.cardTitle}
+                        src={findCardImageUrl({cardTitle: card.cardTitle})}
+                        style={{width: imgWidth, height: (imgWidth * 420) / 300}}
+                    />
+                ) : (
+                    <CardLine  {...this.props} card={this.props.card} fullCard={fullCard}/>
+                )}
                 <Popover
                     style={{pointerEvents: "none"}}
                     open={this.popOpen}
@@ -156,7 +186,11 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                     disableRestoreFocus={true}
                     disableScrollLock={true}
                 >
-                    <CardView card={fullCard} combo={findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)}/>
+                    <CardView
+                        card={fullCard}
+                        combo={synergies}
+                        noLink={true}
+                    />
                 </Popover>
             </div>
         )
@@ -171,7 +205,7 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, dec
     return deck.synergyDetails.find(combo => combo.cardName === name && (house == null || combo.house === house))
 }
 
-const CardLine = observer((props: CardAsLineProps & {fullCard: KCard}) => {
+const CardLine = observer((props: CardAsLineProps & { fullCard: KCard }) => {
     const {card, fullCard, hideRarity, deck} = props
 
     const enhanced = CardUtils.bonusIconCount(card) > 0
@@ -210,7 +244,8 @@ const CardLine = observer((props: CardAsLineProps & {fullCard: KCard}) => {
             ) : (
                 <>
                     {card.maverick && <div style={{marginLeft: spacing(1)}}><MaverickIcon/></div>}
-                    {card.legacy && (deck?.expansion === null || deck?.expansion !== Expansion.UNCHAINED_2022) && <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div>}
+                    {card.legacy && (deck?.expansion === null || deck?.expansion !== Expansion.UNCHAINED_2022) &&
+                        <div style={{marginLeft: spacing(1)}}><LegacyIcon/></div>}
                 </>
             )}
         </div>

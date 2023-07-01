@@ -22,7 +22,7 @@ export class DeckTagsView extends React.Component<TagsViewProps> {
         }
 
         return (
-            <Box display={"flex"} flexWrap={"wrap"}>
+            <Box display={"flex"} flexWrap={"wrap"} style={{gap: spacing(1)}}>
                 {myTags.map(tag => {
                     const tagOnDeck = tagIdsOnDeck.includes(tag.id)
                     if (!tagOnDeck && tag.archived) {
@@ -34,7 +34,6 @@ export class DeckTagsView extends React.Component<TagsViewProps> {
                             tag={tag}
                             active={tagOnDeck}
                             deckId={deckId}
-                            style={{margin: spacing(1, 1, 0, 0)}}
                         />
                     )
                 })}

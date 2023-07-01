@@ -3,7 +3,7 @@ import React, { useEffect } from "react"
 import { extraCardInfoStore } from "../../extracardinfo/ExtraCardInfoStore"
 import { Box } from "@material-ui/core"
 import { uiStore } from "../../ui/UiStore"
-import { CardView } from "./CardSimpleView"
+import { CardView } from "./CardView"
 import { observer } from "mobx-react"
 import { Loader } from "../../mui-restyled/Loader"
 

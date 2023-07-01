@@ -8,7 +8,7 @@ import { CsvDownloadButton } from "../../generic/CsvDownloadButton"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
 import { CardUtils, KCard } from "../KCard"
-import { CardSetsFromCard, CardSynergies, CardTraits } from "./CardSimpleView"
+import { CardSetsFromCard, CardSynergies, CardTraits } from "./CardSupplementalViews"
 
 export const CardTableView = observer((props: { cards: KCard[] }) => {
     return (

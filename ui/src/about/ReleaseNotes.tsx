@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.16"
+export const latestVersion = "6.17"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,25 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.17"}
+                    date={"7/1/2023"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "SAS Preview Mode",
+                            note: "$6+ per month patrons can now preview the WIP SAS scores for WoE and more " +
+                                "by toggling it on in their user profile! These scores are going to fluctuate " +
+                                "a lot and shouldn't be considered fully baked SAS scores as yet."
+                        },
+                        {
+                            highlight: "Revised Deck View??",
+                            note: "Not sure how many years it has been since I've done this, but I've revised " +
+                                "the main deck view! Hope folks like the revision. I think it displays information " +
+                                "better and with less repetition"
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.16"}
                     date={"6/22/2023"}

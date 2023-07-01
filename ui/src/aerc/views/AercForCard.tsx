@@ -12,6 +12,10 @@ import { ExtraCardInfoUtils } from "../../extracardinfo/ExtraCardInfoUtils"
 export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: SynergyCombo }) => {
     const {card, short, realValue} = props
     const info = card.extraCardInfo
+    let effectivePower = info.effectivePower
+    if (effectivePower === 0 && card.cardType === CardType.Creature || card.cardType === CardType.TokenCreature) {
+        effectivePower = card.power
+    }
     return (
         <div style={{display: "grid", gridTemplateColumns: "6fr 4fr 2fr"}}>
             {userStore.contentCreator && cardStore.nextAdaptiveScore(card.cardTitle) !== 0 && (
@@ -45,7 +49,7 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
                 name={short ? "C" : "Creature Control (C)"}
             />
             <AercScore
-                score={roundToTens(info.effectivePower / 10)}
+                score={roundToTens((effectivePower) / 10)}
                 max={info.effectivePowerMax != null ? roundToTens(info.effectivePowerMax / 10) : undefined}
                 synergizedScore={realValue && roundToTens(realValue.effectivePower / 10)}
                 name={short ? "P" : "Effective Power (P)"}

@@ -15,8 +15,8 @@ import { CardFilters } from "./CardFilters"
 import { CardsSearchDrawer } from "./CardsSearchDrawer"
 import { cardStore } from "./CardStore"
 import { KCard } from "./KCard"
-import { CardView } from "./views/CardSimpleView"
 import { CardTableView } from "./views/CardTableView"
+import { CardView } from "./views/CardView"
 
 export class CardSearchPage extends React.Component<RouteComponentProps<{}>> {
 

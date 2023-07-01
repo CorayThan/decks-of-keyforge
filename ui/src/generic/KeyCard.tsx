@@ -3,6 +3,7 @@ import { blue } from "@material-ui/core/colors"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing, themeStore } from "../config/MuiConfig"
+import { Box } from "@material-ui/core"
 
 export const KeyCard = observer((props: {
     topContents: React.ReactNode,
@@ -22,23 +23,23 @@ export const KeyCard = observer((props: {
     if (rightContents) {
         return (
             <Card style={{margin: margin ?? spacing(2), ...style}} {...rest}>
-                <div style={{display: "flex"}}>
-                    <div>
-                            <div style={{backgroundColor, padding: spacing(1), ...topContentsStyle}}>
-                                {topContents}
-                            </div>
+                <Box style={{display: "flex"}}>
+                    <Box>
+                        <Box display={"flex"} style={{backgroundColor, padding: spacing(1), ...topContentsStyle}}>
+                            {topContents}
+                        </Box>
                         {children}
-                    </div>
+                    </Box>
                     {rightContents}
-                </div>
+                </Box>
             </Card>
         )
     }
     return (
         <Card style={{margin: margin ?? spacing(2), ...style}} {...rest}>
-                <div style={{backgroundColor, padding: spacing(1), ...topContentsStyle}}>
-                    {topContents}
-                </div>
+            <Box display={"flex"} style={{backgroundColor, padding: spacing(1), ...topContentsStyle}}>
+                {topContents}
+            </Box>
             {children}
         </Card>
     )

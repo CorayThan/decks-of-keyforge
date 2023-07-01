@@ -12,10 +12,12 @@ export const OrganizedPlayStats = (props: { deck: DeckSearchResult, style?: Reac
     }
 
     return (
-        <LargeValueIconsRow values={[
-            {value: powerLevel ?? 0, iconSrc: PowerLevel, tooltip: "Power Level"},
-            {value: chains ?? 0, iconSrc: Chain, tooltip: "Chains"},
-            {value: `${wins ?? 0} / ${losses ?? 0}`, tooltip: "Organized Play Wins / Losses"},
-        ]}/>
+        <LargeValueIconsRow
+            values={[
+                {value: powerLevel ?? 0, iconSrc: PowerLevel, tooltip: "Power Level"},
+                {value: chains ?? 0, iconSrc: Chain, tooltip: "Chains"},
+                {value: `${wins ?? 0} / ${losses ?? 0}`, tooltip: "Organized Play Wins / Losses"},
+            ]}
+        />
     )
 }

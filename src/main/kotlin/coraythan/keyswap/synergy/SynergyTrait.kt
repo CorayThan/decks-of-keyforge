@@ -162,10 +162,10 @@ enum class SynergyTrait {
 
     companion object {
         fun fromTrait(trait: String): SynergyTrait? {
-            try {
-                return valueOf(trait.lowercase())
+            return try {
+                valueOf(trait.lowercase())
             } catch (e: IllegalArgumentException) {
-                return null
+                null
             }
         }
     }

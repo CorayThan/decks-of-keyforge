@@ -10,7 +10,7 @@ import { uiStore } from "../../ui/UiStore"
 import { userStore } from "../../user/UserStore"
 import { cardStore } from "../CardStore"
 import { KCard } from "../KCard"
-import { CardView } from "./CardSimpleView"
+import { CardView } from "./CardView"
 
 interface CardPageProps extends RouteComponentProps<{ cardName: string }> {
 }

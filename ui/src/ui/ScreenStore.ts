@@ -43,7 +43,7 @@ export class ScreenStore {
     smallDeckView = () => screenStore.screenWidth < 768
 
     smallScreenDeckWidth = 328
-    wideScreenDeckHeight = 612
+    wideScreenDeckHeight = 618
 
     displayDeckSaleInfoSeparately = () => this.screenWidth < 1080
 

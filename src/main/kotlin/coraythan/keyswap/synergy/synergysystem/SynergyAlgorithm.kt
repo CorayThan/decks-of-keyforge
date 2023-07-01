@@ -101,10 +101,10 @@ object DeckSynergyService {
 
         val traitsMap = mutableMapOf<SynergyTrait, MatchSynergiesToTraits>()
 
-        val cardsMap: Map<House, Map<String, Int>> = cards
+        val cardsMap: Map<House, Map<String, CardToMatchInfo>> = cards
             .groupBy { it.house }
             .map { cardsByHouse ->
-                cardsByHouse.key to cardsByHouse.value.groupBy { it.cardTitle }.map { it.key to it.value.size }.toMap()
+                cardsByHouse.key to cardsByHouse.value.groupBy { it.cardTitle }.map { it.key to CardToMatchInfo(it.value.size, it.value.first().cardType) }.toMap()
             }
             .toMap()
 
@@ -411,20 +411,19 @@ object DeckSynergyService {
         )
     }
 
-    private fun cardMatches(card: Card, synergy: SynTraitValue, cardsMap: Map<House, Map<String, Int>>): SynMatchInfo? {
-        val cardCount = if (card.cardType == CardType.TokenCreature) 2 else when (synergy.house) {
-            SynTraitHouse.anyHouse -> cardsMap.map {
-                it.value.getOrDefault(
-                    synergy.cardName,
-                    0
-                )
-            }.sum()
+    private fun cardMatches(card: Card, synergy: SynTraitValue, cardsMap: Map<House, Map<String, CardToMatchInfo>>): SynMatchInfo? {
+        val matches: List<CardToMatchInfo> = when (synergy.house) {
+            SynTraitHouse.anyHouse -> cardsMap.mapNotNull {
+                it.value[synergy.cardName]
+            }
 
-            SynTraitHouse.house -> cardsMap[card.house]?.get(synergy.cardName) ?: 0
+            SynTraitHouse.house -> listOfNotNull(cardsMap[card.house]?.get(synergy.cardName))
             else -> cardsMap.entries.filter { it.key != card.house }
-                .sumOf { it.value.getOrDefault(synergy.cardName, 0) }
+                .mapNotNull { it.value[synergy.cardName] }
         }
-        val strength = if (card.cardType == CardType.TokenCreature) {
+        val targetType = matches.firstOrNull()?.type
+        val cardCount = if (targetType == CardType.TokenCreature) 2 else matches.sumBy { it.quantity }
+        val strength = if (targetType == CardType.TokenCreature) {
             TraitStrength.STRONG
         } else {
             TraitStrength.NORMAL
@@ -449,6 +448,11 @@ object DeckSynergyService {
 
 
 }
+
+data class CardToMatchInfo(
+    val quantity: Int,
+    val type: CardType,
+)
 
 data class SynergizedValue(val value: Double, val synergy: Double)
 
