@@ -331,7 +331,7 @@ object DeckSynergyService {
                         .sortedBy { it.trait.synergyGroup },
                     netSynergy = synergyValues.sum(),
                     aercScore = synergizedValues.map { it.value }
-                        .sum() + (if (card.cardType == CardType.Creature) 0.4 else 0.0),
+                        .sum() + (card.cardType.creatureBonus()),
 
                     amberControl = aValue.value,
                     expectedAmber = eValue.value,
@@ -362,7 +362,7 @@ object DeckSynergyService {
         val cp = synergyCombos.sumOf { it.creatureProtection * it.copies }
 
         val creatureCount =
-            cards.filter { it.cardType == CardType.Creature }.size + (if (tokenValues == null) 0 else tokenValues.tokensPerGame.roundToInt())
+            cards.filter { it.cardType == CardType.Creature }.size + (tokenValues?.tokensPerGame?.roundToInt() ?: 0)
         val powerValue = p.toDouble() / 10.0
 
         // Remember! When updating this also update Card
@@ -370,7 +370,7 @@ object DeckSynergyService {
 
         val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.sumOf { it.netSynergy * it.copies }
         val antisynergy = roundToInt(antiSynergyToRound, RoundingMode.HALF_UP).absoluteValue
-        val preMetaSas = a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * 0.4)
+        val preMetaSas = a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * StaticAercValues.creatureBonus)
 
         val efficiencyBonus = calculateEfficiencyBonus(synergyCombos, preMetaSas)
 
@@ -381,8 +381,6 @@ object DeckSynergyService {
 
         val newSas = (preMetaSas + metaScore + efficiencyBonus).roundToInt()
         val rawAerc = newSas + antisynergy - synergy - metaScore.roundToInt()
-
-        // log.info("a: $a e $e r $r c $c f $f u $u p $powerValue d $d cp $cp o $o creature value ${(creatureCount.toDouble() * 0.4)} meta: $metaScore FB: $efficiencyBonus PreMetaSAS: $preMetaSas SAS: $newSas")
 
         return DeckSynergyInfo(
             synergyRating = synergy,
@@ -440,7 +438,7 @@ object DeckSynergyService {
             .filter { it.efficiency > 0 }
             .sumOf { combo ->
                 val f = combo.efficiency
-                val efficiencyBonus = (f * (((sas - combo.aercScore) / 35) * 0.4) / PipValues.draw) - f
+                val efficiencyBonus = (f * (((sas - combo.aercScore) / 35) * 0.4) / StaticAercValues.draw) - f
                 // log.info("FB $efficiencyBonus x copies ${combo.copies}")
                 efficiencyBonus * combo.copies
             }

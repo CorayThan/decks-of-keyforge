@@ -99,11 +99,13 @@ export class DeckViewSmall extends React.Component<DeckViewSmallProps> {
                         <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
                             <CardContent style={{paddingBottom: 0, width: compact ? undefined : 544}}>
                                 <DisplayAllCardsByHouse deck={deck} compact={compact} fake={!!fake}/>
-                                <Box display={"flex"} justifyContent={"flexEnd"}>
+                                <Box display={"flex"} flexDirection={"column"} mt={1}>
                                     <OwnersList owners={ownersFiltered}/>
-                                    <Collapse in={viewTags}>
-                                        <DeckTagsView deckId={deck.id}/>
-                                    </Collapse>
+                                    <Box mt={viewTags ? 1 : 0}>
+                                        <Collapse in={viewTags}>
+                                            <DeckTagsView deckId={deck.id}/>
+                                        </Collapse>
+                                    </Box>
                                 </Box>
                                 <Collapse in={viewNotes}>
                                     <InlineDeckNote id={deck.id}/>
@@ -231,7 +233,7 @@ const DisplayCardsInHouse = observer((props: {
                         house={house}
                         title={true}
                         synergyDetails={deck.synergyDetails}
-                        iconSize={44}
+                        iconSize={compact ? undefined : 44}
                     />
                 </Box>
                 {allianceHouse && (

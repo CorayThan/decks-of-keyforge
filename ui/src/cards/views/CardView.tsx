@@ -27,12 +27,14 @@ interface CardViewProps {
     simple?: boolean
     noLink?: boolean
     combo?: SynergyCombo
+    extraCombos?: SynergyCombo[]
     displayHistory?: boolean
+    copies?: number
     history?: ExtraCardInfo[]
 }
 
 export const CardView = observer((props: CardViewProps) => {
-    const {card, simple, noLink, combo, displayHistory} = props
+    const {card, simple, noLink, combo, displayHistory, copies} = props
     if (simple) {
         return <CardSimpleView card={card}/>
     }
@@ -115,10 +117,10 @@ export const CardView = observer((props: CardViewProps) => {
                 {props.history == null ? (
                     <>
                         {futureCard && (
-                            <AercAndSynergies card={futureCard} combo={combo} title={"Future AERC"}/>
+                            <AercAndSynergies card={futureCard} combo={combo} title={"Future AERC"} copies={copies}/>
                         )}
                         <AercAndSynergies card={card} combo={combo}
-                                          title={(previousCard || futureCard) && "Current AERC"}/>
+                                          title={(previousCard || futureCard) && "Current AERC"} copies={copies}/>
                         {previousCard && (
                             <AercAndSynergies card={previousCard} title={"Previous AERC"}/>
                         )}
@@ -149,8 +151,8 @@ export const CardView = observer((props: CardViewProps) => {
     )
 })
 
-const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: string }) => {
-    const {card, combo, title} = props
+const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: string, copies?: number }) => {
+    const {card, combo, title, copies} = props
     const extraCardInfo = card.extraCardInfo
     const {traits, synergies, publishedDate} = extraCardInfo
     return (
@@ -163,7 +165,7 @@ const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: st
                                 variant={"subtitle2"}>{TimeUtils.formatDate(publishedDate)}</Typography>
                 )}
             </div>
-            <AercForCard card={card} realValue={combo}/>
+            <AercForCard card={card} realValue={combo} copies={copies}/>
             <Divider style={{marginTop: spacing(1), marginBottom: spacing(1)}}/>
             {traits.length !== 0 ? <Typography color={"textPrimary"} variant={"subtitle1"}>Traits</Typography> : null}
             <CardTraits traits={traits}/>

@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Box, Typography } from "@material-ui/core"
 import * as React from "react"
 import { cardStore } from "../../cards/CardStore"
 import { KCard } from "../../cards/KCard"
@@ -9,8 +9,8 @@ import { SynergyCombo } from "../../generated-src/SynergyCombo"
 import { userStore } from "../../user/UserStore"
 import { ExtraCardInfoUtils } from "../../extracardinfo/ExtraCardInfoUtils"
 
-export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: SynergyCombo }) => {
-    const {card, short, realValue} = props
+export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: SynergyCombo, copies?: number }) => {
+    const {card, short, realValue, copies} = props
     const info = card.extraCardInfo
     let effectivePower = info.effectivePower
     if (effectivePower === 0 && card.cardType === CardType.Creature || card.cardType === CardType.TokenCreature) {
@@ -97,6 +97,17 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
                 />
             ) : (
                 <AercAercScore score={realValue.aercScore} synergy={realValue.netSynergy}/>
+            )}
+            {copies != null && realValue?.aercScore != null && (
+                <>
+                    <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
+                        AERC for {copies} tokens:
+                    </Typography>
+                    <Box/>
+                    <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
+                        {roundToHundreds(copies * realValue.aercScore)}
+                    </Typography>
+                </>
             )}
         </div>
     )

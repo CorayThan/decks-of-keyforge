@@ -8,6 +8,7 @@ import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
 import coraythan.keyswap.roundToTwoSigDig
 import coraythan.keyswap.synergy.SynTraitValue
+import coraythan.keyswap.synergy.synergysystem.StaticAercValues
 import java.time.ZonedDateTime
 import javax.persistence.*
 
@@ -76,6 +77,9 @@ data class Card(
             power + armor
         }
 
+    val effectivePowerAercScore: Double
+        get() = this.effectivePower.toDouble() / 10.0
+
     val aercScoreAverage: Double
         get() {
             val max = aercScoreMax
@@ -97,8 +101,8 @@ data class Card(
                         cardInfo.disruption +
                         cardInfo.creatureProtection +
                         cardInfo.other +
-                        this.effectivePower.toDouble() / 10 +
-                        (if (this.cardType == CardType.Creature) 0.4 else 0.0)
+                        this.effectivePowerAercScore +
+                        this.cardType.creatureBonus()
             }
         }
 
@@ -118,11 +122,11 @@ data class Card(
                         (cardInfo.otherMax ?: cardInfo.other) +
                         (cardInfo.expectedAmberMax ?: cardInfo.expectedAmber) +
                         (if (cardInfo.effectivePowerMax == null) {
-                            this.effectivePower.toDouble() / 10
+                            this.effectivePowerAercScore
                         } else {
                             cardInfo.effectivePowerMax / 10
                         }) +
-                        (if (this.cardType == CardType.Creature) 0.4 else 0.0)
+                        this.cardType.creatureBonus()
 
                 if (maxAerc == this.aercScore) {
                     null
@@ -196,6 +200,8 @@ enum class CardType {
     Creature,
     Upgrade,
     TokenCreature;
+
+    fun creatureBonus() = if (this == TokenCreature || this == Creature) StaticAercValues.creatureBonus else 0.0
 }
 
 @GenerateTs

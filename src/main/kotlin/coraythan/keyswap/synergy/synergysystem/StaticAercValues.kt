@@ -1,6 +1,7 @@
 package coraythan.keyswap.synergy.synergysystem
 
-object PipValues {
+object StaticAercValues {
+    val creatureBonus = 0.4
     val damage = 0.25
     val capture = 0.33
     val draw = 0.75

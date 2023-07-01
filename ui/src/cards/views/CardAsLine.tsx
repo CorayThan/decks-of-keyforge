@@ -30,6 +30,7 @@ interface CardAsLineProps {
     marginTop?: number
     hideRarity?: boolean
     img?: boolean
+    copies?: number
     deck?: DeckSearchResult
 }
 
@@ -133,7 +134,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
     }
 
     render() {
-        const {card, cardActualHouse, width, img} = this.props
+        const {card, cardActualHouse, width, img, copies} = this.props
 
         if (!cardStore.cardsLoaded) {
             return null
@@ -190,6 +191,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                         card={fullCard}
                         combo={synergies}
                         noLink={true}
+                        copies={copies}
                     />
                 </Popover>
             </div>
