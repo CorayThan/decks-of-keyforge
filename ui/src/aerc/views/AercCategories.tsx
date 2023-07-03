@@ -268,19 +268,40 @@ const expansionSpecificCounts = (props: AercCatProps, width: number | undefined)
         }
     }
 
-    if (deck.expansion === Expansion.WINDS_OF_EXCHANGE) {
+    if (deck.expansion === Expansion.WINDS_OF_EXCHANGE || deck.expansion === Expansion.UNCHAINED_2022) {
 
-        const makesTokensCheck = (card: KCard) => {
-            return card.extraCardInfo?.traits?.find(trait => trait.trait === SynergyTrait.makesTokens) != null
-        }
+        const makesTokensFakeCombos = cards
+            .map(card => {
+                const makesTokens = card.extraCardInfo?.traits?.find(trait => trait.trait === SynergyTrait.makesTokens)
+                if (makesTokens == null) {
+                    return null
+                }
+                let value = 0
+                if (makesTokens.rating === 1) {
+                    value = 1
+                } else if (makesTokens.rating === 2) {
+                    value = 1.5
+                } else if (makesTokens.rating === 3) {
+                    value = 2
+                } else if (makesTokens.rating === 4) {
+                    value = 3
+                }
+                return {
+                    other: value,
+                    cardName: card.cardTitle,
+                    copies: 1,
+
+                }
+            })
+            .filter(combo => combo != null) as SynergyCombo[]
 
         return {
             icon: <TokenIcon width={width}/>,
             info: `${deck.tokenCreationValues?.tokensPerGame}`,
-            cardsTips: {
+            combosTips: {
                 title: "Token Generation",
-                matches: makesTokensCheck,
-                cards,
+                combos: makesTokensFakeCombos,
+                accessor: combo => combo.other,
             }
         }
     }

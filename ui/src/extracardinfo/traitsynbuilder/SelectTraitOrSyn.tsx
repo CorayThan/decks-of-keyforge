@@ -1,6 +1,6 @@
 import { observer } from "mobx-react"
 import { TraitBuilderStore } from "./TraitBuilderStore"
-import { synergyAndTraitGroups, SynTraitDisplayGroup } from "../SynergyTrait"
+import { synergyAndTraitGroups, SynTraitDisplayGroup } from "../SynergyTraitUtils"
 import { Box, Button, DialogContent, DialogTitle, TextField } from "@material-ui/core"
 import { Utils } from "../../config/Utils"
 import { grey } from "@material-ui/core/colors"

@@ -44,6 +44,7 @@ enum class SynergyTrait {
     playsFromOtherHouse,
     shufflesDiscard,
     mills,
+    revealsTopDeck,
 
     // Disruption
     discardsCards,
@@ -93,11 +94,6 @@ enum class SynergyTrait {
     bonusDamage,
     bonusCapture,
 
-    upgradeCount, // for house or deck: 1+ = 1/4 2+ = 1/2 3+ = 3/4 4+ = 1
-    highArtifactCount, // 4=0, 5=1/4, 6=1/2, 7=3/4, 8+=1
-    lowArtifactCount, // 4=0, 3=1/4, 2=1/2, 1=3/4, 0=1
-
-
     // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4 +=1
     hasMars,
 
@@ -134,6 +130,10 @@ enum class SynergyTrait {
     lowCreatureCount, // for house: =>6=0, 5=1/4, 4=1/2, 3=3/4, 2,1,0=1
     // for deck: 16-=1/4, 15-=1/2, 14-=3/4, 13-=1
 
+    upgradeCount, // for house or deck: 1+ = 1/4 2+ = 1/2 3+ = 3/4 4+ = 1
+    highArtifactCount, // 4=0, 5=1/4, 6=1/2, 7=3/4, 8+=1
+    lowArtifactCount, // 4=0, 3=1/4, 2=1/2, 1=3/4, 0=1
+
     elusive,
     skirmish,
     poison,
@@ -152,7 +152,6 @@ enum class SynergyTrait {
     usableArtifact,
     staticArtifact,
     reorderDeck,
-    revealsTopDeck,
     revealsBottomDeck,
     controls,
     inAllHouses,

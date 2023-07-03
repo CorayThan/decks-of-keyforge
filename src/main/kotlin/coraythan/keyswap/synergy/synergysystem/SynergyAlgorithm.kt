@@ -99,6 +99,8 @@ object DeckSynergyService {
         val cardsWithBonusIcons = cards.withBonusIcons(deck.bonusIcons())
         val deckStats = DeckSynergyStats.createStats(deck, cardsWithBonusIcons, tokenValues)
 
+        log.info("Found deck stats: $deckStats")
+
         val traitsMap = mutableMapOf<SynergyTrait, MatchSynergiesToTraits>()
 
         val cardsMap: Map<House, Map<String, CardToMatchInfo>> = cards

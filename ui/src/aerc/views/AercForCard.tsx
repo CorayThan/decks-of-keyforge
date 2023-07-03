@@ -13,7 +13,7 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
     const {card, short, realValue, copies} = props
     const info = card.extraCardInfo
     let effectivePower = info.effectivePower
-    if (effectivePower === 0 && card.cardType === CardType.Creature || card.cardType === CardType.TokenCreature) {
+    if (effectivePower === 0 && (card.cardType === CardType.Creature || card.cardType === CardType.TokenCreature)) {
         effectivePower = card.power
     }
     return (
