@@ -12,6 +12,7 @@ import coraythan.keyswap.keyforgeevents.tournaments.TournamentService
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
+import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
@@ -24,12 +25,13 @@ val maxApiRequests = 25
 @RestController
 @RequestMapping("/public-api")
 class PublicApiEndpoints(
-        private val publicApiService: PublicApiService,
-        private val statsService: StatsService,
-        private val cardService: CardService,
-        private val keyUserRepo: KeyUserRepo,
-        private val currentUserService: CurrentUserService,
-        private val tournamentService: TournamentService,
+    private val publicApiService: PublicApiService,
+    private val statsService: StatsService,
+    private val cardService: CardService,
+    private val keyUserRepo: KeyUserRepo,
+    private val currentUserService: CurrentUserService,
+    private val tournamentService: TournamentService,
+    private val publishedSasVersionService: PublishedSasVersionService,
 ) {
 
     @Scheduled(fixedDelayString = "PT1M")
@@ -54,10 +56,11 @@ class PublicApiEndpoints(
     @GetMapping("/v3/decks/{id}")
     fun findDeckSimple3(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: String): SimpleDeckResponse {
 
+        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
         this.rateLimit(apiKey)
 
         val deck = publicApiService.findDeckSimple(id)
-        return SimpleDeckResponse(deck ?: Nothing())
+        return SimpleDeckResponse(deck ?: Nothing(), publishedAercVersion)
     }
 
     @CrossOrigin
@@ -68,7 +71,8 @@ class PublicApiEndpoints(
 
         val user = publicApiService.userForApiKey(apiKey)
         log.info("Deck stats request from user ${user.email}")
-        return statsService.findCurrentStats() ?: throw BadRequestException("Sorry, deck statistics are not available at this time.")
+        return statsService.findCurrentStats()
+            ?: throw BadRequestException("Sorry, deck statistics are not available at this time.")
     }
 
     @CrossOrigin
@@ -121,9 +125,9 @@ class PublicApiEndpoints(
                 if (realMaxRequests + 1 == requests) log.warn("The user $userEmail sent too many requests.")
                 if (!dontRateLimitEmails.contains(userEmail)) {
                     throw RateExceededException(
-                            "You've sent too many requests in the last minute. You've sent $requests in the last minute. Decks of KeyForge has been taken down " +
-                                    "by this type of activity in the past. If you need to know the SAS for all decks, I provide a CSV file you should use for " +
-                                    "that purpose. Otherwise, please contact me on discord, or at decksofkeyforge@gmail.com"
+                        "You've sent too many requests in the last minute. You've sent $requests in the last minute. Decks of KeyForge has been taken down " +
+                                "by this type of activity in the past. If you need to know the SAS for all decks, I provide a CSV file you should use for " +
+                                "that purpose. Otherwise, please contact me on discord, or at decksofkeyforge@gmail.com"
                     )
                 }
             }

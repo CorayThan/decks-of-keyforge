@@ -1,8 +1,10 @@
-package coraythan.keyswap.cards
+package coraythan.keyswap.cards.extrainfo
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.vladmihalcea.hibernate.type.array.ListArrayType
+import coraythan.keyswap.cards.CardNumberSetPair
+import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now

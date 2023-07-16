@@ -1,9 +1,13 @@
-package coraythan.keyswap.cards
+package coraythan.keyswap.cards.extrainfo
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.CardEditHistory
+import coraythan.keyswap.cards.CardEditHistoryRepo
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
 import coraythan.keyswap.synergy.SynTraitValueRepo
+import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
@@ -21,6 +25,7 @@ class ExtraCardInfoService(
     private val synTraitValueRepo: SynTraitValueRepo,
     private val cardEditHistoryRepo: CardEditHistoryRepo,
     private val userRepo: KeyUserRepo,
+    private val publishedSasVersionService: PublishedSasVersionService,
     private val objectMapper: ObjectMapper,
 ) {
 
@@ -36,7 +41,7 @@ class ExtraCardInfoService(
 
         if (extraCardInfoRepo.existsByCardName(card.cardTitle)) error("There's already extra info for ${card.cardTitle}")
 
-        val currentVersion = publishedAercVersion
+        val currentVersion = publishedSasVersionService.latestSasVersion()
 
         val info = ExtraCardInfo(
             cardName = card.cardTitle,
@@ -56,7 +61,7 @@ class ExtraCardInfoService(
 
         val info = sourceInfo.nullMaxes()
 
-        val currentVersion = publishedAercVersion
+        val currentVersion = publishedSasVersionService.latestSasVersion()
         val nextVersion = currentVersion + 1
 
         val latestExtraInfo = findNextOrCurrentInfo(info)

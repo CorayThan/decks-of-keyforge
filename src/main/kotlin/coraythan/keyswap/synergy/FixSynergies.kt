@@ -2,7 +2,7 @@ package coraythan.keyswap.synergy
 
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.ExtraCardInfoRepo
+import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class FixSynergies(
-        private val repo: SynTraitValueRepo,
-        private val extraCardInfoRepo: ExtraCardInfoRepo,
-        private val cardRepo: CardRepo
+    private val repo: SynTraitValueRepo,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 

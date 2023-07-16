@@ -1,6 +1,7 @@
 package coraythan.keyswap.cards
 
 import coraythan.keyswap.House
+import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.decks.models.SimpleCard
 import coraythan.keyswap.expansions.Expansion

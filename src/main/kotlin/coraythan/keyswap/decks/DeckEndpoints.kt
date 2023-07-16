@@ -1,7 +1,6 @@
 package coraythan.keyswap.decks
 
 import coraythan.keyswap.Api
-import coraythan.keyswap.cards.publishedAercVersion
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.collectionstats.CollectionStats
 import coraythan.keyswap.decks.compare.DeckCompareService
@@ -120,7 +119,7 @@ class DeckEndpoints(
 
 data class SimpleDeckResponse(
         val deck: Any,
-        val sasVersion: Int = publishedAercVersion
+        val sasVersion: Int
 )
 
 class Nothing()

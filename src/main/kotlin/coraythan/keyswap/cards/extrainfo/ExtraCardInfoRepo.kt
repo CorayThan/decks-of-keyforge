@@ -1,4 +1,4 @@
-package coraythan.keyswap.cards
+package coraythan.keyswap.cards.extrainfo
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying

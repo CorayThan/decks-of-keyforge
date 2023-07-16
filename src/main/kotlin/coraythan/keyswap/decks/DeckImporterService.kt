@@ -8,13 +8,13 @@ import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.decks.pastsas.PastSasService
-import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyInfo
+import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
@@ -36,7 +36,7 @@ import kotlin.math.absoluteValue
 import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT1M"
-private const val lockUpdateRatings = "PT10S"
+private const val lockUpdateRatings = "PT30S"
 
 var deckImportingUpToDate = false
 
@@ -54,6 +54,7 @@ class DeckImporterService(
     private val cardRepo: CardRepo,
     private val pastSasService: PastSasService,
     private val postProcessDecksService: PostProcessDecksService,
+    private val publishedSasVersionService: PublishedSasVersionService,
     @Value("\${env}")
     private val env: Env,
 ) {
@@ -154,11 +155,11 @@ class DeckImporterService(
                     // If next page is null, we know we are done
                     nextDeckPage = deckRatingProgressService.nextPage() ?: break
 
-                    val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING)
+                    val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING, true)
                     quantFound += deckResults.decks.size
 
                     val rated: List<Pair<Deck, DeckSynergyInfo>> = deckResults.decks.mapNotNull {
-                        val deckSynergiesPair = rateDeck(it, majorRevision)
+                        val deckSynergiesPair = rateDeck(it, publishedSasVersionService.majorVersion())
                         val rated = deckSynergiesPair.first.copy(lastUpdate = ZonedDateTime.now())
                         if (rated.ratingsEqual(it)) {
                             null
@@ -351,6 +352,7 @@ class DeckImporterService(
     }
 
     fun rateDeck(deck: Deck, majorRevision: Boolean = false): Pair<Deck, DeckSynergyInfo> {
+        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
         val cards = cardService.cardsForDeck(deck)
         val token = cardService.tokenForDeck(deck)
         val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards, token)

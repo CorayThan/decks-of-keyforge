@@ -1,6 +1,6 @@
 package coraythan.keyswap.decks.models
 
-import coraythan.keyswap.cards.publishedAercVersion
+import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
@@ -12,14 +12,14 @@ import javax.persistence.Id
 @Entity
 data class DeckRatingProgress(
 
-        val version: Int,
+    val version: Int,
 
-        val currentPage: Int = 0,
+    val currentPage: Int = 0,
 
-        val completeDateTime: ZonedDateTime? = null,
+    val completeDateTime: ZonedDateTime? = null,
 
-        @Id
-        val id: UUID = UUID.randomUUID()
+    @Id
+    val id: UUID = UUID.randomUUID()
 )
 
 interface DeckRatingProgressRepo : CrudRepository<DeckRatingProgress, UUID> {
@@ -30,12 +30,14 @@ var doneRatingDecks: Boolean = true
 
 @Service
 class DeckRatingProgressService(
-        private val repo: DeckRatingProgressRepo
+    private val repo: DeckRatingProgressRepo,
+    private val publishedSasVersionService: PublishedSasVersionService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun nextPage(): Int? {
+        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
         val progress = repo.findByVersion(publishedAercVersion) ?: repo.save(DeckRatingProgress(publishedAercVersion))
         return if (progress.completeDateTime == null) {
             doneRatingDecks = false
@@ -47,6 +49,7 @@ class DeckRatingProgressService(
     }
 
     fun revPage() {
+        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
         val preexisting = repo.findByVersion(publishedAercVersion)
         if (preexisting != null) {
             val nextPage = preexisting.currentPage + 1
@@ -56,6 +59,7 @@ class DeckRatingProgressService(
     }
 
     fun complete() {
+        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
         doneRatingDecks = true
         val preexisting = repo.findByVersion(publishedAercVersion)
         if (preexisting != null) {

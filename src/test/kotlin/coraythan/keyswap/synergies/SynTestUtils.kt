@@ -3,7 +3,7 @@ package coraythan.keyswap.synergies
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.ExtraCardInfo
+import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.expansions.Expansion

@@ -58,7 +58,7 @@ class DeckPageService(
         deckPageRepo.save(DeckPage(currentPage, type))
     }
 
-    fun decksForPage(currentPage: Int, type: DeckPageType): DeckPageResult {
+    fun decksForPage(currentPage: Int, type: DeckPageType, latestFirst: Boolean = false): DeckPageResult {
         val idStart = currentPage.toLong() * type.quantity
         val idEnd = idEndForPage(currentPage, type)
         log.info("Deck $type id start $idStart end $idEnd")
@@ -67,6 +67,13 @@ class DeckPageService(
                 .and(deckQ.id.between(idStart, idEnd))
         val results =  query.selectFrom(deckQ)
                 .where(predicate)
+                .let {
+                    if (latestFirst) {
+                        it.orderBy(deckQ.importDateTime.desc())
+                    } else {
+                        it
+                    }
+                }
                 .fetch()
 
         val hasMore = if (results.isEmpty()) deckRepo.existsByIdGreaterThan(idEnd) else true

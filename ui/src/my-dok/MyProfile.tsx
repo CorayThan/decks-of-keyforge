@@ -212,10 +212,6 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
         }
         const discordTrimmed = this.discord.trim()
         const discord = discordTrimmed.length === 0 ? undefined : discordTrimmed
-        if (discord != null && !discord.includes("#")) {
-            messageStore.setWarningMessage(`Please include a valid discord user id, e.g. "CorayThan#9734"`)
-            return
-        }
 
         const tcoUsernameTrimmed = this.tcoUsername.trim()
         const tcoUsername = tcoUsernameTrimmed.length === 0 ? undefined : tcoUsernameTrimmed

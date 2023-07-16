@@ -1,6 +1,7 @@
 package coraythan.keyswap.cards
 
 import coraythan.keyswap.House
+import coraythan.keyswap.cards.extrainfo.CardNumberSetPairOld
 import coraythan.keyswap.expansions.Expansion
 
 data class CardIds(

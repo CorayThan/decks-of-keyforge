@@ -1,6 +1,7 @@
-package coraythan.keyswap.cards
+package coraythan.keyswap.cards.extrainfo
 
 import coraythan.keyswap.Api
+import coraythan.keyswap.cards.*
 import coraythan.keyswap.config.BadRequestException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

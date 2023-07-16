@@ -3,6 +3,7 @@ package coraythan.keyswap.thirdpartyservices.mastervault
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.*
+import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.expansions.Expansion
 
 @JsonIgnoreProperties(ignoreUnknown = true)

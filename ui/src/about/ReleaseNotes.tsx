@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.17"
+export const latestVersion = "6.18"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,30 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.18"}
+                    date={"7/16/2023"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "V1 SAS for WoE Released!",
+                            note: "The first version of SAS for WoE is officially being released today! " +
+                                "I've gotten help from a small group of folks on the DoK Discord server. " +
+                                "In no particular order: JFilipeg, Big Z, Siaka, r0gershrubber, ashepelev, " +
+                                "Player Hurp and quickdraw3457 all helped create and refine this release!"
+                        },
+                        {
+                            highlight: "Future SAS Plans",
+                            note: "I'm planning on doing a few more improvements to SAS in general and WoE SAS " +
+                                "in particular before updates go relatively quiet until the next set. " +
+                                "I'm planning on improving the scores for cards that get better with big capture " +
+                                "values. Improving estimated token generation. And it's a bit ambitious, but if " +
+                                "I can find time, creating a score to evaluate a deck's ability to generate a large " +
+                                "board of reapers in one or more houses (particularly valuable when you can spam " +
+                                "tokens)."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.17"}
                     date={"7/1/2023"}

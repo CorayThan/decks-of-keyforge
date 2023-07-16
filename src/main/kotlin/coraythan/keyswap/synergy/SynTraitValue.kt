@@ -3,7 +3,7 @@ package coraythan.keyswap.synergy
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.ExtraCardInfo
+import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generatets.TsIgnore
 import coraythan.keyswap.generatets.TsOptional
@@ -14,48 +14,48 @@ import javax.persistence.*
 @GenerateTs
 @Entity
 data class SynTraitValue(
-        @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
         val trait: SynergyTrait,
-        val rating: Int = 3,
-        @Enumerated(EnumType.STRING)
+    val rating: Int = 3,
+    @Enumerated(EnumType.STRING)
         val house: SynTraitHouse = SynTraitHouse.anyHouse,
 
-        @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
         val player: SynTraitPlayer = SynTraitPlayer.ANY,
 
-        @Transient
+    @Transient
         @JsonIgnore
         val cardTypesInitial: List<CardType>? = listOf(),
 
-        @TsIgnore
+    @TsIgnore
         var cardTypesString: String = "",
-        /**
+    /**
          * Creature power expression, one of:
          *
          * ['odd','even','2-5','2 or less','3+','3,5,7']
          */
         var powersString: String = "",
-        @TsIgnore
+    @TsIgnore
         var cardTraitsString: String = "",
-        val notCardTraits: Boolean = false,
+    val notCardTraits: Boolean = false,
 
-        @TsIgnore
+    @TsIgnore
         @JsonIgnoreProperties("traits")
         @ManyToOne
         val traitInfo: ExtraCardInfo? = null,
 
-        @TsIgnore
+    @TsIgnore
         @JsonIgnoreProperties("synergies")
         @ManyToOne
         val synergyInfo: ExtraCardInfo? = null,
 
-        val cardName: String? = null,
+    val cardName: String? = null,
 
-        val synergyGroup: String? = null,
-        val synergyGroupMax: Int? = null,
-        val primaryGroup: Boolean = false,
+    val synergyGroup: String? = null,
+    val synergyGroupMax: Int? = null,
+    val primaryGroup: Boolean = false,
 
-        @TsOptional
+    @TsOptional
         @Id
         val id: UUID = UUID.randomUUID()
 ) : Comparable<SynTraitValue> {

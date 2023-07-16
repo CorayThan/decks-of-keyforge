@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.cards.cardwins.CardWinsService
+import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
+import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
+import coraythan.keyswap.cards.extrainfo.ExtraCardInfoService
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.decks.models.HouseAndCards
@@ -11,6 +14,7 @@ import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.TraitStrength
+import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeCard
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -19,10 +23,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-
-// Manually update this when publishing a new version of AERC. Also rerates all decks
-val publishedAercVersion = 42
-val majorRevision = false
 
 @Transactional
 @Service
@@ -33,6 +33,7 @@ class CardService(
     private val cardWinsService: CardWinsService,
     private val versionService: CardsVersionService,
     private val currentUserService: CurrentUserService,
+    private val publishedSasVersionService: PublishedSasVersionService,
     private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -54,6 +55,8 @@ class CardService(
 
     fun publishNextInfo() {
         log.info("Publishing next extra info started")
+
+        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
 
         try {
             val currentInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
@@ -96,6 +99,7 @@ class CardService(
 
     fun loadExtraInfo() {
         log.info("Loading extra info started")
+        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
         try {
             this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
 

@@ -176,16 +176,16 @@ export class LandingPage extends React.Component<{}> {
                     <Box style={{flexGrow: 1}}>
 
                         <AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>
-                            <Typography variant={"h5"} gutterBottom={true}>
-                                WoE be to those who Seek the SAS
-                            </Typography>
-                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                The Architects of SAS are hard at work building SAS and AERC scores for Winds of Exchange! You should
-                                expect scores to be released around early July, but no deadline has been set yet.
-                            </Typography>
-                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                I'm also planning on building a feature for $6+ patrons to preview SAS scores as they are built.
-                            </Typography>
+                            {/*<Typography variant={"h5"} gutterBottom={true}>*/}
+                            {/*    WoE be to those who Seek the SAS*/}
+                            {/*</Typography>*/}
+                            {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
+                            {/*    The Architects of SAS are hard at work building SAS and AERC scores for Winds of Exchange! You should*/}
+                            {/*    expect scores to be released around early July, but no deadline has been set yet.*/}
+                            {/*</Typography>*/}
+                            {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
+                            {/*    I'm also planning on building a feature for $6+ patrons to preview SAS scores as they are built.*/}
+                            {/*</Typography>*/}
                             <Typography variant={"h5"} gutterBottom={true}>
                                 DoKvelopments
                             </Typography>
