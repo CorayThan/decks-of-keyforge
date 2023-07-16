@@ -297,7 +297,7 @@ const expansionSpecificCounts = (props: AercCatProps, width: number | undefined)
 
         return {
             icon: <TokenIcon width={width}/>,
-            info: `${deck.tokenCreationValues?.tokensPerGame}`,
+            info: `${deck.tokenCreationValues?.tokensPerGame ?? 0}`,
             combosTips: {
                 title: "Token Generation",
                 combos: makesTokensFakeCombos,

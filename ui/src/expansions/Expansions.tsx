@@ -39,6 +39,7 @@ export const activeSasExpansions = [
     Expansion.MASS_MUTATION,
     Expansion.DARK_TIDINGS,
     Expansion.WORLDS_COLLIDE,
+    Expansion.WINDS_OF_EXCHANGE,
     Expansion.UNCHAINED_2022,
 ]
 
