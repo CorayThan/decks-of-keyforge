@@ -38,6 +38,8 @@ export const activeSasExpansions = [
     Expansion.WORLDS_COLLIDE,
     Expansion.MASS_MUTATION,
     Expansion.DARK_TIDINGS,
+    Expansion.WORLDS_COLLIDE,
+    Expansion.UNCHAINED_2022,
 ]
 
 export const activeCardExpansions = [

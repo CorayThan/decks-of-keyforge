@@ -93,7 +93,7 @@ class DeckImporterService(
                         break
                     } else if (decks.data.any {
                             // Only import decks from these sets
-                            !activeExpansions.map { expansion -> expansion.expansionNumber }.contains(it.expansion)
+                            !activeExpansions.flatMap { expansion -> expansion.expansionNumbers }.contains(it.expansion)
                         }) {
 
                         log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}")
@@ -220,9 +220,13 @@ class DeckImporterService(
         val cards = deckBuilderData.cards.flatMap { entry ->
             entry.value.map {
                 val card: Card =
-                    cardService.findByExpansionCardName(deckBuilderData.expansion.expansionNumber, it.name, it.enhanced)
+                    cardService.findByExpansionCardName(
+                        deckBuilderData.expansion.primaryExpansion,
+                        it.name,
+                        it.enhanced
+                    )
                         ?: cardService.findByCardName(it.name)
-                        ?: throw BadRequestException("Couldn't find card with expansion ${deckBuilderData.expansion.expansionNumber} name $it and house ${entry.key}")
+                        ?: throw BadRequestException("Couldn't find card with expansion ${deckBuilderData.expansion} name $it and house ${entry.key}")
 
                 card.copy(house = entry.key)
             }
@@ -230,7 +234,7 @@ class DeckImporterService(
         return Deck(
             keyforgeId = UUID.randomUUID().toString(),
             name = deckBuilderData.name,
-            expansion = deckBuilderData.expansion.expansionNumber,
+            expansion = deckBuilderData.expansion.primaryExpansion,
             tokenNumber = if (deckBuilderData.tokenTitle == null) null else TokenCard.ordinalByCardTitle(deckBuilderData.tokenTitle),
         ) to cards
     }
@@ -261,6 +265,7 @@ class DeckImporterService(
                                 try {
                                     val deckWithCards = keyforgeApi.findDeck(keyforgeDeck.id, true)
                                         ?: error("No deck for ${keyforgeDeck.id} in KeyForge API")
+
                                     cardService.importNewCards(deckWithCards._linked.cards!!)
 
                                     dbCard = cardRepo.findByIdOrNull(it)
@@ -271,6 +276,9 @@ class DeckImporterService(
                                         e
                                     )
                                     return savedCount
+                                } catch (e: Exception) {
+                                    log.error("Exception importing deck ${keyforgeDeck.id}")
+                                    throw e
                                 }
                             }
                             val cardServiceCard = cardService.findByCardName(dbCard.cardTitle)

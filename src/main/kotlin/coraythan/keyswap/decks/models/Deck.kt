@@ -29,6 +29,7 @@ data class Deck(
 
     override val name: String,
     override val expansion: Int,
+    val originalExpansionNumber: Int? = null,
     val powerLevel: Int = 0,
     val chains: Int = 0,
     val wins: Int = 0,

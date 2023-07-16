@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.expansions.Expansion
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeDeck(
@@ -58,7 +59,8 @@ data class KeyForgeDeck(
     fun toDeck() = Deck(
         keyforgeId = id,
         name = name,
-        expansion = expansion,
+        expansion = Expansion.forExpansionNumber(expansion).primaryExpansion,
+        originalExpansionNumber = expansion,
         powerLevel = power_level,
         chains = chains,
         wins = wins,
