@@ -56,9 +56,9 @@ const DeckSearchDrawerCardsInternal = observer((props: DeckSearchDrawerCardsInte
             <Box mb={1}>
                 <HelperText>Select expansions for better performance</HelperText>
             </Box>
-            <DeckTokenCardSelect tokenNames={tokens} filters={filters}/>
+            <DeckCardSelect cardNames={cards} filters={filters}/>
             <Box marginTop={2}>
-                <DeckCardSelect cardNames={cards} filters={filters}/>
+                <DeckTokenCardSelect tokenNames={tokens} filters={filters}/>
             </Box>
         </Box>
     )
