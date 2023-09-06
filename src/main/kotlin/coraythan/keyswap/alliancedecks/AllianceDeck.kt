@@ -114,10 +114,15 @@ data class AllianceDeck(
             return true
         }
 
-        fun uniqueHousesId(housesAndDeckIds: List<Pair<House, String>>): String {
+        fun uniqueHousesId(housesAndDeckIds: List<Pair<House, String>>, tokenName: String?): String {
             val sorted = housesAndDeckIds.sortedBy { it.first }
             val toJoin = sorted.map { "${it.first}::${it.second}" }
-            return toJoin.joinToString("&&")
+            val houses = toJoin.joinToString("&&")
+            return if (tokenName == null) {
+                houses
+            } else {
+                "$houses&($tokenName)"
+            }
         }
 
         fun fromDeck(deck: Deck, cards: List<Card>, discoverer: KeyUser): AllianceDeck {

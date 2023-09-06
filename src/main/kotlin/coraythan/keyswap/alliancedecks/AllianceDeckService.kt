@@ -59,6 +59,12 @@ class AllianceDeckService(
         val deckThree = deckRepo.findByKeyforgeId(toSave.houseThreeDeckId)
             ?: throw BadRequestException("No deck for ${toSave.houseThreeDeckId}")
 
+        if (toSave.tokenName == null) {
+            if (deckOne.tokenNumber != null || deckTwo.tokenNumber != null || deckThree.tokenNumber != null) {
+                throw BadRequestException("No token provided when a deck includes a token.")
+            }
+        }
+
         val allianceName = combineDeckNames(
             listOf(
                 Pair(toSave.houseOne, deckOne.name),
@@ -72,7 +78,8 @@ class AllianceDeckService(
                 Pair(toSave.houseOne, toSave.houseOneDeckId),
                 Pair(toSave.houseTwo, toSave.houseTwoDeckId),
                 Pair(toSave.houseThree, toSave.houseThreeDeckId),
-            )
+            ),
+            toSave.tokenName
         )
 
         log.info("Save unique alliance deck houses decks id: $allianceDeckUniqueKey")
