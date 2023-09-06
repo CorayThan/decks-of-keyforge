@@ -19,6 +19,8 @@ import woe from "./imgs/woe.svg"
 import woeDark from "./imgs/woe-dark.svg"
 import uc from "./imgs/uc.svg"
 import ucDark from "./imgs/uc-dark.svg"
+import vm from "./imgs/vm23.svg"
+import vmDark from "./imgs/vm23-dark.svg"
 
 export const ExpansionIcon = observer((props: { expansion: Expansion, size?: number, white?: boolean, style?: React.CSSProperties }) => {
 
@@ -52,6 +54,10 @@ export const ExpansionIcon = observer((props: { expansion: Expansion, size?: num
         case Expansion.UNCHAINED_2022:
             lightSrc = uc
             darkSrc = ucDark
+            break
+        case Expansion.VAULT_MASTERS_2023:
+            lightSrc = vm
+            darkSrc = vmDark
             break
         case Expansion.ANOMALY_EXPANSION:
             lightSrc = anomaly

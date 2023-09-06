@@ -288,8 +288,13 @@ const DisplayCardsInHouse = observer((props: {
             {keyLocalStorage.genericStorage.buildAllianceDeck && !fake && !alliance && (
                 <>
                     <Divider style={{marginTop: spacing(1), marginBottom: spacing(0.5)}}/>
-                    <AddHouseToAlliance deckId={deck.keyforgeId} deckName={deck.name} house={house}
-                                        expansion={deck.expansion}/>
+                    <AddHouseToAlliance
+                        deckId={deck.keyforgeId}
+                        deckName={deck.name}
+                        house={house}
+                        expansion={deck.expansion}
+                        tokenName={deck.tokenInfo?.name}
+                    />
                 </>
             )}
         </List>
@@ -300,18 +305,19 @@ const AddHouseToAlliance = observer((props: {
     deckId: string,
     deckName: string,
     house: House,
-    expansion: Expansion
+    expansion: Expansion,
+    tokenName?: string
 }) => {
-    const {deckId, deckName, house, expansion} = props
+    const {deckId, deckName, house, expansion, tokenName} = props
     return (
         <Button
             onClick={() => {
-                keyLocalStorage.addAllianceHouse(deckId, deckName, house, expansion)
+                keyLocalStorage.addAllianceHouse(deckId, deckName, house, expansion, tokenName)
             }}
             disabled={
-                keyLocalStorage.allianceDeckHouses.length > 2 ||
-                keyLocalStorage.allianceDeckHouses.find(allianceDeck => allianceDeck.house === house) != null ||
-                keyLocalStorage.allianceDeckHouses.find(allianceDeck => allianceDeck.expansion !== expansion) != null
+                keyLocalStorage.allianceDeckSaveInfo.houses.length > 2 ||
+                keyLocalStorage.allianceDeckSaveInfo.houses.find(allianceDeck => allianceDeck.house === house) != null ||
+                keyLocalStorage.allianceDeckSaveInfo.houses.find(allianceDeck => allianceDeck.expansion !== expansion) != null
             }
         >
             Add to Alliance

@@ -1,33 +1,50 @@
-import { Box, Button, FormControlLabel, IconButton, List, ListItem, Paper, Switch, Typography } from "@material-ui/core"
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    IconButton,
+    List,
+    ListItem, MenuItem,
+    Paper,
+    Switch,
+    TextField,
+    Typography
+} from "@material-ui/core"
 import { Clear } from "@material-ui/icons"
 import { observer } from "mobx-react"
 import React from "react"
-import { useHistory } from "react-router-dom";
-import { keyLocalStorage } from "../config/KeyLocalStorage";
-import { userStore } from "../user/UserStore";
-import { theme, themeStore } from "../config/MuiConfig";
-import { PatronButton } from "../thirdpartysites/patreon/PatronButton";
-import { HouseImage } from "../houses/HouseBanner";
-import { screenStore } from "../ui/ScreenStore";
-import { KeyButton } from "../mui-restyled/KeyButton";
-import { allianceDeckStore } from "./AllianceDeckStore";
-import { Routes } from "../config/Routes";
-import { House } from "../generated-src/House";
-import { Expansion } from "../generated-src/Expansion";
-import { ExpansionIcon } from "../expansions/ExpansionIcon";
-import { userDeckStore } from "../userdeck/UserDeckStore";
+import { useHistory } from "react-router-dom"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { userStore } from "../user/UserStore"
+import { theme, themeStore } from "../config/MuiConfig"
+import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
+import { HouseImage } from "../houses/HouseBanner"
+import { screenStore } from "../ui/ScreenStore"
+import { KeyButton } from "../mui-restyled/KeyButton"
+import { allianceDeckStore } from "./AllianceDeckStore"
+import { Routes } from "../config/Routes"
+import { House } from "../generated-src/House"
+import { Expansion } from "../generated-src/Expansion"
+import { ExpansionIcon } from "../expansions/ExpansionIcon"
+import { userDeckStore } from "../userdeck/UserDeckStore"
+import { log, prettyJson } from "../config/Utils"
 
 export const AllianceDeckPopover = observer(() => {
 
     const history = useHistory()
 
-    const decks = keyLocalStorage.allianceDeckHouses
+    const decks = keyLocalStorage.allianceDeckSaveInfo.houses
     const createAllianceDeck = keyLocalStorage.genericStorage.buildAllianceDeck
     if (!createAllianceDeck || decks.length === 0) {
         return null
     }
 
     const patron = userStore.patron
+    const tokenNames = decks
+        .filter(deck => deck.tokenName != null)
+        .map(deck => deck.tokenName!)
+
+    log.info(`Found tokenNames: ${prettyJson(tokenNames)}`)
 
     return (
         <Box style={{
@@ -70,6 +87,22 @@ export const AllianceDeckPopover = observer(() => {
                         </ListItem>
                     ))}
                 </List>
+                {tokenNames.length > 0 && (
+                    <Box mx={2} mb={2}>
+                        <TextField
+                            select={true}
+                            label="Token"
+                            value={keyLocalStorage.allianceDeckSaveInfo.tokenName}
+                            onChange={(event) => keyLocalStorage.setAllianceToken(event.target.value)}
+                        >
+                            {tokenNames.map((tokenName) => (
+                                <MenuItem key={tokenName} value={tokenName}>
+                                    {tokenName}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Box>
+                )}
                 <Box>
                     <Box ml={2} display={"flex"} alignItems={"flex-start"}>
                         <Box mr={2}><ExpansionIcon expansion={decks[0].expansion} size={32}/></Box>
@@ -122,9 +155,15 @@ export const AllianceDeckPopover = observer(() => {
     )
 })
 
+export interface AllianceDeckSaveInfo {
+    houses: AllianceDeckNameId[]
+    tokenName?: string
+}
+
 export interface AllianceDeckNameId {
     deckId: string
     deckName: string
     house: House
     expansion: Expansion
+    tokenName?: string
 }

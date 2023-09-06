@@ -93,7 +93,7 @@ class DeckImporterService(
                         break
                     } else if (decks.data.any {
                             // Only import decks from these sets
-                            !activeExpansions.flatMap { expansion -> expansion.expansionNumbers }.contains(it.expansion)
+                            !activeExpansions.map { expansion -> expansion.expansionNumber }.contains(it.expansion)
                         }) {
 
                         log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}")
@@ -221,7 +221,7 @@ class DeckImporterService(
             entry.value.map {
                 val card: Card =
                     cardService.findByExpansionCardName(
-                        deckBuilderData.expansion.primaryExpansion,
+                        deckBuilderData.expansion.expansionNumber,
                         it.name,
                         it.enhanced
                     )
@@ -234,7 +234,7 @@ class DeckImporterService(
         return Deck(
             keyforgeId = UUID.randomUUID().toString(),
             name = deckBuilderData.name,
-            expansion = deckBuilderData.expansion.primaryExpansion,
+            expansion = deckBuilderData.expansion.expansionNumber,
             tokenNumber = if (deckBuilderData.tokenTitle == null) null else TokenCard.ordinalByCardTitle(deckBuilderData.tokenTitle),
         ) to cards
     }

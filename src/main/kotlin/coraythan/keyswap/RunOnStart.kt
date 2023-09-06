@@ -63,8 +63,8 @@ class RunOnStart(
     }
 
     private fun downloadAllNewCardImages() {
-        val findDecks = cardRepo.findByExpansion(Expansion.WINDS_OF_EXCHANGE.primaryExpansion)
-            .plus(cardRepo.findByExpansion(Expansion.ANOMALY_EXPANSION.primaryExpansion))
+        val findDecks = cardRepo.findByExpansion(Expansion.WINDS_OF_EXCHANGE.expansionNumber)
+            .plus(cardRepo.findByExpansion(Expansion.ANOMALY_EXPANSION.expansionNumber))
             .filter { it.frontImage.contains("mastervault-storage-prod.s3") }
             .distinctBy { it.cardTitle }
 

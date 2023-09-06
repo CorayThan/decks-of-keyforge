@@ -97,7 +97,7 @@ class TheoreticalDeckService(
     private fun theoryDeckToRealDeck(theoryDeck: TheoreticalDeck): DeckWithSynergyInfo {
         val deck = Deck(
             name = theoryDeck.deckName ?: "The One that Theoretically Exists",
-            expansion = theoryDeck.expansion ?: Expansion.CALL_OF_THE_ARCHONS.primaryExpansion,
+            expansion = theoryDeck.expansion ?: Expansion.CALL_OF_THE_ARCHONS.expansionNumber,
             keyforgeId = theoryDeck.id.toString(),
             cardIds = theoryDeck.cardIds,
             houseNamesString = theoryDeck.houseNamesString

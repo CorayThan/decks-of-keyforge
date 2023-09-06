@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.18"
+export const latestVersion = "6.19"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,22 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.19"}
+                    date={"9/6/2023"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Tokens for Alliance Decks",
+                            note: "You can now select a token when building alliance decks!"
+                        },
+                        {
+                            highlight: "Vault Masters 2023",
+                            note: "It should now be possible to import new Vault Masters decks " +
+                                "as well as new decks with Mavericks."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.18"}
                     date={"7/16/2023"}

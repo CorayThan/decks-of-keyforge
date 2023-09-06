@@ -3,8 +3,10 @@ package coraythan.keyswap.thirdpartyservices.mastervault
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
-import coraythan.keyswap.decks.models.*
-import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.decks.models.BonusIconHouse
+import coraythan.keyswap.decks.models.BonusIconsCard
+import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.DeckBonusIcons
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeDeck(
@@ -27,7 +29,8 @@ data class KeyForgeDeck(
             )
         }
 
-        val icons: MutableList<Pair<String, List<String>>> = this.bonus_icons.map { it.card_id to it.bonus_icons }.toMutableList()
+        val icons: MutableList<Pair<String, List<String>>> =
+            this.bonus_icons.map { it.card_id to it.bonus_icons }.toMutableList()
 
         return DeckBonusIcons(
             bonusIconHouses = houses
@@ -59,8 +62,7 @@ data class KeyForgeDeck(
     fun toDeck() = Deck(
         keyforgeId = id,
         name = name,
-        expansion = Expansion.forExpansionNumber(expansion).primaryExpansion,
-        originalExpansionNumber = expansion,
+        expansion = expansion,
         powerLevel = power_level,
         chains = chains,
         wins = wins,

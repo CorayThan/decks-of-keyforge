@@ -228,7 +228,7 @@ class StatsService(
             }
 
             decks
-                .filter { statsEntity.expansion == null || statsEntity.expansion.primaryExpansion == it.expansion }
+                .filter { statsEntity.expansion == null || statsEntity.expansion.expansionNumber == it.expansion }
                 .forEach { ratedDeck ->
                     val cards = cardService.cardsForDeck(ratedDeck)
                     val token = cardService.tokenForDeck(ratedDeck)
@@ -351,7 +351,7 @@ class StatsService(
         ))
             .plus(Expansion.values().map {
                 GlobalStatsWithExpansion(
-                    null, it.primaryExpansion,
+                    null, it.expansionNumber,
                     (deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(it)
                         ?.toDeckStatistics() ?: DeckStatistics())
                         .toGlobalStats()

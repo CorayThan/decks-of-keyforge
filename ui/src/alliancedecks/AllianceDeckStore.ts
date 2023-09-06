@@ -65,7 +65,8 @@ export class AllianceDeckStore implements DeckStoreInterface {
 
     saveAllianceDeck = async () => {
         this.savingDeck = true
-        const [deckOne, deckTwo, deckThree] = keyLocalStorage.allianceDeckHouses
+        const deck = keyLocalStorage.allianceDeckSaveInfo
+        const [deckOne, deckTwo, deckThree] = deck.houses
         const allianceDeckSaveInfo: AllianceDeckHouses = {
             houseOne: deckOne!.house,
             houseOneDeckId: deckOne!.deckId,
@@ -74,6 +75,7 @@ export class AllianceDeckStore implements DeckStoreInterface {
             houseThree: deckThree!.house,
             houseThreeDeckId: deckThree!.deckId,
             owned: keyLocalStorage.genericStorage.addAllianceToMyAlliances !== false,
+            tokenName: deck.tokenName,
         }
         const response: AxiosResponse<string> = await axios.post(`${AllianceDeckStore.SECURE_CONTEXT}`, allianceDeckSaveInfo)
 

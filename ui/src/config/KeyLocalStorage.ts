@@ -1,10 +1,10 @@
-import {makeObservable, observable} from "mobx"
-import {DeckNameId} from "../decks/comparison/CompareDecks"
-import {ListingInfo} from "../generated-src/ListingInfo"
-import {log} from "./Utils"
-import {House} from "../generated-src/House";
-import { Expansion } from "../generated-src/Expansion";
-import { AllianceDeckNameId } from "../alliancedecks/AllianceDeckPopover";
+import { makeObservable, observable } from "mobx"
+import { DeckNameId } from "../decks/comparison/CompareDecks"
+import { ListingInfo } from "../generated-src/ListingInfo"
+import { log } from "./Utils"
+import { House } from "../generated-src/House"
+import { Expansion } from "../generated-src/Expansion"
+import { AllianceDeckNameId, AllianceDeckSaveInfo } from "../alliancedecks/AllianceDeckPopover"
 
 enum Keys {
     AUTH = "AUTH",
@@ -69,7 +69,7 @@ class KeyLocalStorage {
     decksToCompare: DeckNameId[] = []
 
     @observable
-    allianceDeckHouses: AllianceDeckNameId[] = []
+    allianceDeckSaveInfo: AllianceDeckSaveInfo = {houses: []}
 
     private localStorage = window.localStorage
 
@@ -166,21 +166,38 @@ class KeyLocalStorage {
     }
 
     clearAllianceDeck = () => {
-        this.allianceDeckHouses = []
+        this.allianceDeckSaveInfo = {houses: []}
         this.localStorage.removeItem(Keys.ALLIANCE_DECKS)
     }
 
     removeAllianceHouse = (id: string) => {
-        if (this.allianceDeckHouses.find(existingDeck => existingDeck.deckId === id) != null) {
-            this.allianceDeckHouses = this.allianceDeckHouses.filter(deck => deck.deckId !== id)
-            this.localStorage.setItem(Keys.ALLIANCE_DECKS, JSON.stringify(this.allianceDeckHouses))
+        const removeHouse = this.allianceDeckSaveInfo.houses.find(existingDeck => existingDeck.deckId === id)
+        if (removeHouse != null) {
+            this.allianceDeckSaveInfo.houses = this.allianceDeckSaveInfo.houses.filter(deck => deck.deckId !== id)
+
+            if (removeHouse.tokenName != null &&
+                this.allianceDeckSaveInfo.tokenName === removeHouse.tokenName &&
+                this.allianceDeckSaveInfo.houses.filter(deck => deck.tokenName === removeHouse.tokenName).length === 0
+            ) {
+                this.allianceDeckSaveInfo.tokenName = undefined
+            }
+
+            this.localStorage.setItem(Keys.ALLIANCE_DECKS, JSON.stringify(this.allianceDeckSaveInfo))
         }
     }
 
-    addAllianceHouse = (deckId: string, deckName: string, house: House, expansion: Expansion) => {
-        const allianceDeckNameId: AllianceDeckNameId = {deckId, deckName, house, expansion}
-        this.allianceDeckHouses.push(allianceDeckNameId)
-        this.localStorage.setItem(Keys.ALLIANCE_DECKS, JSON.stringify(this.allianceDeckHouses))
+    addAllianceHouse = (deckId: string, deckName: string, house: House, expansion: Expansion, tokenName?: string) => {
+        const allianceDeckNameId: AllianceDeckNameId = {deckId, deckName, house, expansion, tokenName}
+        if (this.allianceDeckSaveInfo.tokenName == null && tokenName != null) {
+            this.allianceDeckSaveInfo.tokenName = tokenName
+        }
+        this.allianceDeckSaveInfo.houses.push(allianceDeckNameId)
+        this.localStorage.setItem(Keys.ALLIANCE_DECKS, JSON.stringify(this.allianceDeckSaveInfo))
+    }
+
+    setAllianceToken = (tokenName: string) => {
+        this.allianceDeckSaveInfo.tokenName = tokenName
+        this.localStorage.setItem(Keys.ALLIANCE_DECKS, JSON.stringify(this.allianceDeckSaveInfo))
     }
 
     updateGenericStorage = (updates: GenericStorage) => {
@@ -243,7 +260,7 @@ class KeyLocalStorage {
         const allianceDecks = this.localStorage.getItem(Keys.ALLIANCE_DECKS)
         if (allianceDecks != null && allianceDecks.length > 0) {
             try {
-                this.allianceDeckHouses = JSON.parse(allianceDecks) as AllianceDeckNameId[]
+                this.allianceDeckSaveInfo = JSON.parse(allianceDecks) as AllianceDeckSaveInfo
             } catch (e) {
                 log.error("Couldn't read alliances " + allianceDecks)
                 this.localStorage.removeItem(Keys.ALLIANCE_DECKS)

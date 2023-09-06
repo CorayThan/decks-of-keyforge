@@ -157,6 +157,7 @@ data class AllianceDeck(
                 bonusIconsString = deck.bonusIconsString,
                 discoverer = discoverer,
                 validAlliance = determineIfValid(cards),
+                tokenNumber = deck.tokenNumber,
             )
         }
     }
