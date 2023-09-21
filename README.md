@@ -101,18 +101,17 @@ Find it in downloads
 
 Run the `load-cards.cmd` with the Reload Cards run config.
 
-```
+```powershell
 set PGPASSWORD=password
 pg_dump -h keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com -U coraythan -F c -a -t card_traits -t card_identifier -t extra_card_info -t card -t syn_trait_value -f .\scripts\extra-info.dump keyswap
 
 set PGPASSWORD=postgres
 psql -U postgres -d keyswap -f .\scripts\truncate-card-tables.sql
 pg_restore -h localhost -U postgres -d keyswap .\scripts\extra-info.dump
-
 ```
 
 ## Kill long queries stuff
-```
+```postgresql
 SELECT pg_cancel_backend(pg_stat_activity.pid)
 from pg_stat_activity
 
@@ -144,7 +143,9 @@ Copy Creator's Access Token into the auth header
 
 Delete `*.png` in `/card-imgs/`. Uncomment line in RunOnStart. Run app. In `/card-imgs/` run:
 
-`.\pngquant.exe --ext=.png --force 256 *.png`
+```powershell
+.\pngquant.exe --ext=.png --force 256 *.png
+```
 
 upload to S3 public with headers: `Cache-Control: max-age=31536000`
 
@@ -154,7 +155,7 @@ Change `ddl-auto` in `application.yml` to `update`. `show-sql` to true. Run. Cop
 
 ## copy db and reload it
 
-```
+```powershell
 set PGPASSWORD=password
 pg_dump --host keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com --username coraythan --format c --no-unlogged-table-data --file .\scripts\full-db.dump keyswap
 
@@ -162,4 +163,15 @@ set PGPASSWORD=postgres
 pg_restore -h localhost -U postgres --clean --if-exists --no-tablespaces --no-privileges --no-owner -d keyswap .\scripts\full-db.dump
 ```
 
-To update passwords run: `update key_user set password = 'hash-from-db-for-password-to-make-all-passwords';`
+To update passwords run: 
+```postgresql
+UPDATE key_user
+SET password = '$2a$10$N3UlNyYNgndwUQgYos1hq.jwIL.K4utk14pYtZki2Otc3Ii7WdvuW';
+```
+The password for all users will be "password".
+
+In `/src/main/resources/appliaction-nocommit.yml` Set the following values:
+
+```yaml
+jwt-secret: ${JWT_SECRET:7f310842a0b446a99eb3da6b8b99efa57f310842a0b446a99eb3da6b8b99efa5}
+```

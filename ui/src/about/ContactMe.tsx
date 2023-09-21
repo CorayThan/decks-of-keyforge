@@ -64,7 +64,7 @@ export class ContactMe extends React.Component {
                 </AboutGridItem>
                 <AboutGridItem>
                     <InfoListCard title={"Legal Stuff"} infos={[
-                        "Decks of KeyForge is not associated with KeyForge or Fantasy Flight Games.",
+                        "Decks of KeyForge is not associated with KeyForge or Ghost Galaxy the creators of KeyForge.",
                         "You sell, trade, and purchase decks at your own risk. We do not verify the authenticity or trustworthiness of any sellers, " +
                         "buyers, or transactions.",
                         "The SAS rating system is a copyrighted property of Decks of KeyForge, but I'm always interested in hearing about ways you'd " +

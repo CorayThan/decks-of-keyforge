@@ -74,7 +74,8 @@ export const AercCategoryExtras = (props: AercCatProps) => {
             icon: <KeyCheatIcon width={width}/>,
             info: deck.keyCheatCount ?? 0,
             cardsTips: {
-                matches: card => CardUtils.cardMatchesFriendlyTrait(card, SynergyTrait.forgesKeys),
+                matches: card => CardUtils.cardMatchesFriendlyTrait(card, SynergyTrait.forgesKeys) ||
+                    CardUtils.cardMatchesFriendlyTrait(card, SynergyTrait.forgesKeysWithoutAember),
                 cards,
                 title: "Key Cheat Cards"
             }

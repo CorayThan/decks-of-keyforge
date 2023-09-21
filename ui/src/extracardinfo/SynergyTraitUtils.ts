@@ -24,7 +24,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         groupName: "Aember and Keys",
         traits: [SynergyTrait.stealsAmber, SynergyTrait.capturesAmber, SynergyTrait.increasesKeyCost,
             SynergyTrait.scalingAmberControl, SynergyTrait.exalt, SynergyTrait.putsAmberOnTarget,
-            SynergyTrait.removesCapturedAmber, SynergyTrait.forgesKeys],
+            SynergyTrait.removesCapturedAmber, SynergyTrait.forgesKeys, SynergyTrait.forgesKeysWithoutAember],
     },
     {
         groupName: "Board Control",

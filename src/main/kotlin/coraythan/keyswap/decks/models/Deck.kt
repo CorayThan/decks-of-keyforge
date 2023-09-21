@@ -200,8 +200,10 @@ data class Deck(
                 ) == true
             }?.size
                 ?: 0).zeroToNull(),
-            keyCheatCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size
-                ?: 0).zeroToNull(),
+            keyCheatCount = (cards?.filter {
+                it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true ||
+                        it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeysWithoutAember) == true
+            }?.size ?: 0).zeroToNull(),
             rawAmber = rawAmber,
             totalArmor = totalArmor.zeroToNull(),
 
@@ -304,11 +306,8 @@ data class Deck(
 
         return this.copy(
             cardNames = cardNames,
-            rawAmber = newCardsList.map {
-                it.amber + (it.extraCardInfo?.enhancementAmber ?: 0)
-            }.sum(),
-            totalPower = newCardsList.map { it.power }.sum(),
-            totalArmor = newCardsList.map { it.armor }.sum(),
+            totalPower = newCardsList.sumOf { it.power },
+            totalArmor = newCardsList.sumOf { it.armor },
             creatureCount = newCardsList.filter { it.cardType == CardType.Creature }.size,
             actionCount = newCardsList.filter { it.cardType == CardType.Action }.size,
             artifactCount = newCardsList.filter { it.cardType == CardType.Artifact }.size,
@@ -366,7 +365,8 @@ fun List<Card>.withBonusIcons(icons: DeckBonusIcons): List<CardWithBonusIcons> {
     if (icons.bonusIconHouses.isEmpty()) return this.map { CardWithBonusIcons(it) }
     return this.groupBy { it.house }
         .map { houseAndCards ->
-            val bonusIconsCards = icons.bonusIconHouses.first { it.house == houseAndCards.key }.bonusIconCards.toMutableList()
+            val bonusIconsCards =
+                icons.bonusIconHouses.first { it.house == houseAndCards.key }.bonusIconCards.toMutableList()
             houseAndCards.value.map {
                 val bonusIcons = bonusIconsCards.find { cardIcons -> cardIcons.cardTitle == it.cardTitle }
                 bonusIconsCards.remove(bonusIcons)

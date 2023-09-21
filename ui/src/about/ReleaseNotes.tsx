@@ -1760,7 +1760,10 @@ export class ReleaseNotes extends React.Component {
                 ]}/>
                 <ReleaseNote releaseNumber={"1.0"} date={"1/19/2019"} releaseNotes={[
                     <div style={{display: "flex", justifyContent: "center", width: "100%"}}>
-                        <img alt={"Key of Darkness"} src={`https://cdn.keyforgegame.com/media/card_front/en/341_273_VHRR6QWG3C3_en.png`}/>
+                        <img
+                            alt={"Key of Darkness"}
+                            src={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/key-of-darkness.png"}
+                        />
                     </div>
                 ]}/>
             </AboutGridItem>

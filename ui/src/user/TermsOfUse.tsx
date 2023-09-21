@@ -179,7 +179,7 @@ export const TermsOfUse = () => {
                         or the limitation of some damages, and if these laws apply to you, some or all of the disclaimers and limitations above may not apply
                         to you and you may have additional rights.
 
-                        KeyForge is a trademark of Fantasy Flight Games, which does not endorse DoK, and is not associated with DoK in any way shape or form.
+                        KeyForge is a trademark of Ghost Galaxy, which does not endorse DoK, and is not associated with DoK in any way shape or form.
                     </WhiteSpaceTypography>
 
                     <TermsHeader>

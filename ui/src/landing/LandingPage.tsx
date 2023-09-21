@@ -245,9 +245,8 @@ export class LandingPage extends React.Component<{}> {
                                 Disclaimers
                             </LandingPageTitle>
                             <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
-                                DoK (a.k.a. decksofkeyforge.com) is not associated with or endorsed by Fantasy Flight
-                                Games, the producers of KeyForge, in any
-                                way.
+                                DoK (a.k.a. decksofkeyforge.com) is not associated with or endorsed by Ghost Galaxy,
+                                the producers of KeyForge, in any way.
                             </Typography>
                             <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
                                 DoK is owned and operated by Graylake LLC. For questions or comments check out

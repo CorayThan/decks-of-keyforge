@@ -9,12 +9,6 @@ enum class TraitStrength(val value: Int) {
     EXTRA_WEAK(1)
 }
 
-fun Set<String>.toSynergies(): List<SynergyTrait> {
-    return this.mapNotNull {
-        SynergyTrait.fromTrait(it)
-    }
-}
-
 @GenerateTs
 enum class SynergyTrait {
 
@@ -27,6 +21,7 @@ enum class SynergyTrait {
     putsAmberOnTarget,
     removesCapturedAmber,
     forgesKeys,
+    forgesKeysWithoutAember,
 
     // Board Control
     destroys,

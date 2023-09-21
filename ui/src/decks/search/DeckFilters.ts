@@ -30,6 +30,7 @@ export class  DeckFilters {
             .value("forSaleInCountry")
             .value("sortDirection")
             .value("owner")
+            .value("previousOwner")
             .value("teamDecks")
             .value("withOwners")
             .value("myFavorites")
