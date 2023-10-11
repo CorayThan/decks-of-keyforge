@@ -6,23 +6,22 @@ import com.querydsl.core.types.dsl.ComparableExpressionBase
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
-import coraythan.keyswap.House
+import coraythan.keyswap.*
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.QDeckListing
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.TokenCard
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.Expansion
-import coraythan.keyswap.now
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.patreon.levelAtLeast
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.tags.KTagRepo
 import coraythan.keyswap.tags.PublicityType
-import coraythan.keyswap.tokenize
 import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.userdeck.OwnedDeckService
 import coraythan.keyswap.userdeck.QDeckNote
@@ -30,10 +29,13 @@ import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
 import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.persistence.EntityManager
+
+private const val lockCountDecks = "PT24H"
 
 @Transactional
 @Service
@@ -53,41 +55,56 @@ class DeckSearchService(
     private val query = JPAQueryFactory(entityManager)
 
     var deckCount: Long? = null
+    var deckCountByExpansion: Map<Expansion, Long>? = null
+
+    @Scheduled(
+        fixedDelayString = lockCountDecks,
+        initialDelayString = SchedulingConfig.countDecksIntialDelay
+    )
+    fun countDecks() {
+        log.info("$scheduledStart count decks.")
+
+        deckCount = deckRepo.count()
+        deckCountByExpansion = Expansion.values().associateWith { expansion ->
+            deckRepo.countByExpansion(expansion.expansionNumber)
+        }
+
+        log.info("$scheduledStop count decks.")
+    }
 
     fun countFilters(filters: DeckFilters): DeckCount {
 
         val count: Long
         val preExistingCount = deckCount
-        if (preExistingCount != null && filtersAreEqualForCount(filters)
+        val preExistingCountMap = deckCountByExpansion
+        if (preExistingCount != null && preExistingCountMap != null && filtersAreEqualForCount(filters)
             && filters.sort != DeckSortOptions.CHAINS && filters.sort != DeckSortOptions.POWER_LEVEL
         ) {
-            count = preExistingCount
+            count = if (filters.expansions == defaultFilters.expansions) {
+                preExistingCount
+            } else {
+                filters.expansions.sumOf {
+                    preExistingCountMap[Expansion.forExpansionNumber(it)] ?: 0
+                }
+            }
         } else {
 
             val userHolder = UserHolder(null, currentUserService, userService)
             val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
 
-            if (filtersAreEqualForCount(filters) && filters.sort != DeckSortOptions.CHAINS && filters.sort != DeckSortOptions.POWER_LEVEL) {
-
-                count = deckRepo.count()
-                deckCount = count
-
-            } else {
-
-                val deckQ = QDeck.deck
-                count = query
-                    .select(deckQ.id)
-                    .from(deckQ)
-                    .where(predicate)
-                    .limit(
-                        if (
-                            filters.forSale == true || filters.forTrade || filters.forAuction
-                        ) 10000 else 1000
-                    )
-                    .fetch()
-                    .count()
-                    .toLong()
-            }
+            val deckQ = QDeck.deck
+            count = query
+                .select(deckQ.id)
+                .from(deckQ)
+                .where(predicate)
+                .limit(
+                    if (
+                        filters.forSale == true || filters.forTrade || filters.forAuction
+                    ) 20000 else 1000
+                )
+                .fetch()
+                .count()
+                .toLong()
         }
 
         return DeckCount(
@@ -231,7 +248,10 @@ class DeckSearchService(
 
     private fun filtersAreEqualForCount(filters: DeckFilters) = filters.copy(
         sort = defaultFilters.sort,
-        sortDirection = defaultFilters.sortDirection
+        sortDirection = defaultFilters.sortDirection,
+        expansions = defaultFilters.expansions,
+        page = defaultFilters.page,
+        pageSize = defaultFilters.pageSize,
     ) == defaultFilters
 
     fun deckFilterPredicate(
