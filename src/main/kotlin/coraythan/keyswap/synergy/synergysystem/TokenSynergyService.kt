@@ -13,7 +13,7 @@ object TokenSynergyService {
 
         val cardsByHouse: Map<House, List<Card>> = cards.groupBy { it.house }
         val traitsByHouse: Map<House, List<SynTraitValue>> = cardsByHouse.map { cardsByHouseEntry -> cardsByHouseEntry.key to cardsByHouseEntry.value.mapNotNull { it.extraCardInfo?.traits }.flatten() }.toMap()
-        val makesTokenStrengthsByHouse: Map<House, Double> = traitsByHouse.map { it.key to it.value.sumByDouble { traitToTokenCreationValue(it) } }.toMap()
+        val makesTokenStrengthsByHouse: Map<House, Double> = traitsByHouse.map { it.key to it.value.sumOf { traitToTokenCreationValue(it) } }.toMap()
 
         return TokenValues(
             tokensPerGamePerHouse = makesTokenStrengthsByHouse,

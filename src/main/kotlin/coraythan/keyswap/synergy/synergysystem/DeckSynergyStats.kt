@@ -60,13 +60,13 @@ data class DeckSynergyStats(
                         CardType.Creature
                     ) == true
                 },
-                SynergyTrait.bonusAmber to inputCards.sumBy { it.card.amber + it.bonusAember },
-                SynergyTrait.bonusCapture to inputCards.sumBy { it.bonusCapture },
-                SynergyTrait.bonusDamage to inputCards.sumBy { it.bonusDamage },
-                SynergyTrait.bonusDraw to inputCards.sumBy { it.bonusDraw },
-                SynergyTrait.totalCreaturePower to inputCards.sumBy { it.card.power },
+                SynergyTrait.bonusAmber to inputCards.sumOf { it.card.amber + it.bonusAember },
+                SynergyTrait.bonusCapture to inputCards.sumOf { it.bonusCapture },
+                SynergyTrait.bonusDamage to inputCards.sumOf { it.bonusDamage },
+                SynergyTrait.bonusDraw to inputCards.sumOf { it.bonusDraw },
+                SynergyTrait.totalCreaturePower to inputCards.sumOf { it.card.power },
                 SynergyTrait.tokenCount to tokensCount,
-                SynergyTrait.totalArmor to inputCards.sumBy { it.card.armor }
+                SynergyTrait.totalArmor to inputCards.sumOf { it.card.armor }
             )
         }
     }
@@ -100,7 +100,7 @@ data class DeckSynergyStats(
 
             else -> {
                 val actual = houseStats.filter { it.key != house }
-                    .values.sumByDouble { it[trait.trait]?.toDouble() ?: 0.0 }
+                    .values.sumOf { it[trait.trait]?.toDouble() ?: 0.0 }
                 return calculatePercent(
                     actual,
                     (vals.minHouse * 2).toDouble(),

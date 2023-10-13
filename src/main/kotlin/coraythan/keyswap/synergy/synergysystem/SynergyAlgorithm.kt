@@ -1,6 +1,5 @@
 package coraythan.keyswap.synergy.synergysystem
 
-import com.google.common.math.DoubleMath.roundToInt
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
@@ -172,7 +171,7 @@ object DeckSynergyService {
 
                         // First check if the synergy matches a deck stat. If not then calculate a cards based trait
                         val synPercent = deckStats.synPercent(synergy, cardsById.key.second)
-                            ?: TraitStrength.values().sumOf { strength ->
+                            ?: TraitStrength.entries.sumOf { strength ->
                                 val matches = if (synergy.cardName == null) {
                                     traitsMap[synergyTrait]?.matches(card, synergy)
                                 } else {
@@ -369,7 +368,7 @@ object DeckSynergyService {
         val synergyUnroundedRaw = synergyCombos.filter { it.netSynergy > 0 }.sumOf { it.netSynergy * it.copies }
 
         val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.sumOf { it.netSynergy * it.copies }
-        val antisynergy = roundToInt(antiSynergyToRound, RoundingMode.HALF_UP).absoluteValue
+        val antisynergy = antiSynergyToRound.roundToInt().absoluteValue
         val preMetaSas = a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * StaticAercValues.creatureBonus)
 
         val efficiencyBonus = calculateEfficiencyBonus(synergyCombos, preMetaSas)
@@ -420,7 +419,7 @@ object DeckSynergyService {
                 .mapNotNull { it.value[synergy.cardName] }
         }
         val targetType = matches.firstOrNull()?.type
-        val cardCount = if (targetType == CardType.TokenCreature) 2 else matches.sumBy { it.quantity }
+        val cardCount = if (targetType == CardType.TokenCreature) 2 else matches.sumOf { it.quantity }
         val strength = if (targetType == CardType.TokenCreature) {
             TraitStrength.STRONG
         } else {

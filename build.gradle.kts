@@ -1,33 +1,20 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
-buildscript {
-
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-allopen")
-        classpath("org.jetbrains.kotlin:kotlin-noarg")
-    }
-}
-
 plugins {
-    val kotlinVersion = "1.7.10"
+    val kotlinVersion = "1.9.10"
 
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("kapt") version kotlinVersion
 
-    id("org.springframework.boot") version "2.4.5"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.springframework.boot") version "2.7.16"
+    id("io.spring.dependency-management") version "1.0.15.RELEASE"
 }
 
 group = "coraythan"
-version = "553"
+version = "554"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -61,7 +48,7 @@ repositories {
 }
 
 tasks.register<JavaExec>("genTs") {
-    main = "coraythan.keyswap.generatets.TsGenerator"
+    mainClass.set("coraythan.keyswap.generatets.TsGenerator")
     classpath = sourceSets["main"].runtimeClasspath
 }
 
@@ -85,7 +72,7 @@ tasks.withType<Test> {
 
 dependencies {
 
-    val queryDslVersion = "4.4.0"
+    val queryDslVersion = "5.0.0"
     val jjwtVersion = "0.11.2"
     val shedlockVersion = "4.23.0"
 

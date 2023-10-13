@@ -11,7 +11,6 @@ import javax.persistence.*
 @Entity
 data class DeckStatisticsEntity(
 
-    @Lob
     val deckStats: String,
 
     val deckStatsJson: String,

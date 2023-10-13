@@ -65,7 +65,7 @@ class DeckSearchService(
         log.info("$scheduledStart count decks.")
 
         deckCount = deckRepo.count()
-        deckCountByExpansion = Expansion.values().associateWith { expansion ->
+        deckCountByExpansion = Expansion.entries.associateWith { expansion ->
             deckRepo.countByExpansion(expansion.expansionNumber)
         }
 
@@ -292,7 +292,7 @@ class DeckSearchService(
             if (filters.houses.size < 4) {
                 filters.houses.forEach { predicate.and(deckQ.houseNamesString.like("%$it%")) }
             } else {
-                val excludeHouses = House.values().filter { !filters.houses.contains(it) }
+                val excludeHouses = House.entries.filter { !filters.houses.contains(it) }
                 excludeHouses.forEach { predicate.and(deckQ.houseNamesString.notLike("%$it%")) }
             }
         }
@@ -470,14 +470,12 @@ class DeckSearchService(
             )
         }
 
-        filters.tokens
-
         filters.cards.forEach {
             when {
                 it.mav == true -> {
                     predicate.andAnyOf(
                         *it.cardNames.flatMap { cardName ->
-                            House.values().toSet().minus(cardService.findByCardName(cardName)!!.house)
+                            House.entries.toSet().minus(cardService.findByCardName(cardName)!!.house)
                                 .map { otherHouse ->
                                     deckQ.cardNames.like("%~$cardName${otherHouse}~%")
                                 }
