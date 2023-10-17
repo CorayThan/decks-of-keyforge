@@ -26,7 +26,7 @@ class CardCountsTest {
                                     artifactControl = 0.5,
                                     artifactControlMax = 1.5,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.any, cardTypesInitial = listOf(CardType.Artifact), rating = -2)
+                                            SynTraitValue(SynergyTrait.any, cardTypes = listOf(CardType.Artifact), rating = -2)
                                     )
                             )
                     )

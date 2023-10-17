@@ -49,8 +49,8 @@ class CardTraitsTest {
                                 effectivePower = 6,
                                 effectivePowerMax = 12.0,
                                 synergies = listOf(
-                                        SynTraitValue(SynergyTrait.any, 3, cardTraitsString = "NIFFLE"),
-                                        SynTraitValue(SynergyTrait.any, 3, cardTraitsString = "BEAST")
+                                        SynTraitValue(SynergyTrait.any, 3, cardTraits = listOf("NIFFLE")),
+                                        SynTraitValue(SynergyTrait.any, 3, cardTraits = listOf("BEAST"))
                                 )
                         )
                 )
@@ -89,7 +89,7 @@ class CardTraitsTest {
                                     expectedAmber = 0.0,
                                     expectedAmberMax = 4.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.replays, 3, cardTypesInitial = listOf(CardType.Creature))
+                                            SynTraitValue(SynergyTrait.replays, 3, cardTypes = listOf(CardType.Creature))
                                     )
                             )
                     )
@@ -104,10 +104,10 @@ class CardTraitsTest {
                                     other = 0.0,
                                     otherMax = 4.0,
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.replays, 3, cardTraitsString = "NIFFLE", cardTypesInitial = listOf(CardType.Creature)),
+                                            SynTraitValue(SynergyTrait.replays, 3, cardTraits = listOf("NIFFLE"), cardTypes = listOf(CardType.Creature)),
                                     ),
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.any, 3, cardTraitsString = "NIFFLE", cardTypesInitial = listOf(CardType.Creature)),
+                                            SynTraitValue(SynergyTrait.any, 3, cardTraits = listOf("NIFFLE"), cardTypes = listOf(CardType.Creature)),
                                     )
                             )
                     )
@@ -165,9 +165,9 @@ class CardTraitsTest {
                                             SynTraitValue(
                                                     SynergyTrait.uses,
                                                     4,
-                                                    cardTypesInitial = listOf(CardType.Creature),
+                                                    cardTypes = listOf(CardType.Creature),
                                                     house = SynTraitHouse.continuous,
-                                                    cardTraitsString = "MUTANT"
+                                                    cardTraits = listOf("MUTANT")
                                             )
                                     )
                             )

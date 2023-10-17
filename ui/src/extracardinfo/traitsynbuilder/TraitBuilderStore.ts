@@ -86,8 +86,8 @@ export class TraitBuilderStore {
             const vals = trait.trait
             this.rating = vals.rating as SynTraitRatingValues
             this.house = vals.house
-            this.cardTypes = vals.cardTypes
-            this.cardTraits = vals.cardTraits
+            this.cardTypes = vals.cardTypes ?? []
+            this.cardTraits = vals.cardTraits ?? []
             this.notCardTraits = vals.notCardTraits
             this.powersString = vals.powersString
             this.player = vals.player

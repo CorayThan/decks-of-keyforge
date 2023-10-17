@@ -22,7 +22,7 @@ export const synTraitName = (traitValue: SynTraitValue) => {
     if (player && player != SynTraitPlayer.ANY) {
         nameEnhancer += ` ${startCase(player.toLowerCase())}`
     }
-    if (cardTraits.length > 0) {
+    if (cardTraits != null && cardTraits.length > 0) {
         nameEnhancer += ` ${notCardTraits ? "Non-" : ""}${startCase(cardTraits.join(", ").toLowerCase())}`
     }
     if (cardTypes && cardTypes.length > 0) {

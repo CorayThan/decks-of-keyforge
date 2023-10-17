@@ -26,7 +26,7 @@ class PlayerMatchTest {
                                     disruption = 1.5,
                                     disruptionMax = 2.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.destroys, cardTypesInitial = listOf(CardType.Creature), rating = 3, player = SynTraitPlayer.ENEMY)
+                                            SynTraitValue(SynergyTrait.destroys, cardTypes = listOf(CardType.Creature), rating = 3, player = SynTraitPlayer.ENEMY)
                                     )
                             )
                     )
@@ -38,7 +38,7 @@ class PlayerMatchTest {
                             cardTitle = "Gateway to Dis",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.destroys, cardTypesInitial = listOf(CardType.Creature), rating = 3)
+                                            SynTraitValue(SynergyTrait.destroys, cardTypes = listOf(CardType.Creature), rating = 3)
                                     )
                             )
                     )
@@ -50,7 +50,7 @@ class PlayerMatchTest {
                             cardTitle = "Obsidian Forge",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
-                                            SynTraitValue(SynergyTrait.destroys, player = SynTraitPlayer.FRIENDLY, cardTypesInitial = listOf(CardType.Creature), rating = 3)
+                                            SynTraitValue(SynergyTrait.destroys, player = SynTraitPlayer.FRIENDLY, cardTypes = listOf(CardType.Creature), rating = 3)
                                     )
                             )
                     )

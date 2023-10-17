@@ -314,7 +314,7 @@ class BasicSynsTest {
                                             SynTraitValue(
                                                     SynergyTrait.any,
                                                     -1,
-                                                    cardTypesInitial = listOf(CardType.Creature),
+                                                    cardTypes = listOf(CardType.Creature),
                                                     powersString = "3+"
                                             ),
                                     ),

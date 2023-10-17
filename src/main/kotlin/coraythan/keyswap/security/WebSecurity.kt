@@ -29,7 +29,7 @@ class WebSecurity(
         http
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers("/**/secured/**").authenticated()
+                    .requestMatchers("/*/secured/*").authenticated()
                     .anyRequest().permitAll()
             }
             .csrf { csrf -> csrf.disable() }
@@ -51,8 +51,7 @@ class WebSecurity(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("https://decksofkeyforge.com")
-        configuration.allowedMethods = listOf("GET", "HEAD", "POST")
+        configuration.applyPermitDefaultValues()
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
         return source

@@ -35,7 +35,7 @@ class UseSynsTest {
                             house = House.Dis,
                             cardTitle = "dominator bauble",
                             extraCardInfo = ExtraCardInfo(
-                                    traits = listOf(SynTraitValue(SynergyTrait.uses, house = SynTraitHouse.outOfHouse, cardTypesInitial = listOf(CardType.Creature)))
+                                    traits = listOf(SynTraitValue(SynergyTrait.uses, house = SynTraitHouse.outOfHouse, cardTypes = listOf(CardType.Creature)))
                             )
                     )
             )
@@ -45,7 +45,7 @@ class UseSynsTest {
                             house = House.Dis,
                             cardTitle = "hand of dis",
                             extraCardInfo = ExtraCardInfo(
-                                    traits = listOf(SynTraitValue(SynergyTrait.destroys, player = SynTraitPlayer.ENEMY, cardTypesInitial = listOf(CardType.Creature)))
+                                    traits = listOf(SynTraitValue(SynergyTrait.destroys, player = SynTraitPlayer.ENEMY, cardTypes = listOf(CardType.Creature)))
                             )
                     )
             )
