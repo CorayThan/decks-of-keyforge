@@ -5,11 +5,11 @@ import coraythan.keyswap.TimeUtils
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.users.KeyUser
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.ManyToOne
 
 @Entity
 data class AuctionBid(

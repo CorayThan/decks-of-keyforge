@@ -1,11 +1,9 @@
-package coraythan.keyswap.keyforgeevents.tournamentdecks
+package coraythan.keyswap.keyforgeevents.tournaments
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.keyforgeevents.tournaments.PairingStrategy
-import coraythan.keyswap.keyforgeevents.tournaments.Tournament
+import jakarta.persistence.*
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
-import javax.persistence.*
 
 @Entity
 data class TournamentRound(
@@ -26,7 +24,8 @@ data class TournamentRound(
         val timeExtendedMinutes: Int? = null,
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1,
 )
 

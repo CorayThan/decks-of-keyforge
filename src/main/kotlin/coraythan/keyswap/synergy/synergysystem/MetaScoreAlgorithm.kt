@@ -18,7 +18,7 @@ object MetaScoreAlgorithm {
         val artifactDestroyTraits = destroys
             .filter {
                 it.value.player != SynTraitPlayer.FRIENDLY &&
-                        (it.value.cardTypes.contains(CardType.Artifact) || it.value.cardTypes.isEmpty())
+                        (it.value.cardTypes?.contains(CardType.Artifact) == true || it.value.cardTypes.isNullOrEmpty())
             }
         val artifactPurgeTraits = purges
             .filter {

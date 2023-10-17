@@ -7,7 +7,7 @@ import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
-import coraythan.keyswap.keyforgeevents.tournamentdecks.TournamentDeck
+import coraythan.keyswap.keyforgeevents.tournaments.TournamentDeck
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.SynTraitPlayer
@@ -16,10 +16,9 @@ import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.tags.DeckTag
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.userdeck.*
-import org.hibernate.annotations.Type
+import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.ZonedDateTime
-import javax.persistence.*
 
 @Entity
 data class Deck(
@@ -76,9 +75,6 @@ data class Deck(
     val funnyCount: Int = 0,
     val evilTwin: Boolean? = false,
 
-    // Json of card ids for performance loading decks, loading cards from cache
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
     override val cardIds: String = "",
     override val tokenNumber: Int? = null,
 
@@ -138,7 +134,8 @@ data class Deck(
     val refreshedBonusIcons: Boolean? = true,
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+    @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     val id: Long = -1
 ) : GenericDeck {
 

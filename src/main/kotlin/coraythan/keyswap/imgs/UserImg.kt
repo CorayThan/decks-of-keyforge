@@ -2,12 +2,12 @@ package coraythan.keyswap.imgs
 
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.nowLocal
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Id
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.Id
 
 @GenerateTs
 @Entity

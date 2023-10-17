@@ -8,8 +8,8 @@ import coraythan.keyswap.decks.DeckFilters
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.users.KeyUser
+import jakarta.persistence.*
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class SaleNotificationQuery(
@@ -28,6 +28,7 @@ data class SaleNotificationQuery(
         val forSale: Boolean? = false,
         val forTrade: Boolean = false,
         val forAuction: Boolean = false,
+        @Column(columnDefinition = "INT4")
         val forSaleInCountry: Country? = null,
 
         @ElementCollection
@@ -47,7 +48,8 @@ data class SaleNotificationQuery(
         val precedence: Int = 1000,
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1
 ) {
     fun toDto(): SaleNotificationQueryDto {
@@ -127,11 +129,13 @@ data class SaleNotificationQueryDto(
 data class SaleNotificationConstraint(
 
         val property: String,
+        @Column(columnDefinition = "INT4")
         val cap: Cap,
         val value: Double,
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1
 )
 
@@ -141,11 +145,13 @@ data class SaleNotificationDeckCardQuantity(
         @ElementCollection
         val cardNames: List<String>,
         val quantity: Int,
+        @Column(columnDefinition = "INT4")
         val house: House? = null,
         val mav: Boolean? = null,
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1
 )
 

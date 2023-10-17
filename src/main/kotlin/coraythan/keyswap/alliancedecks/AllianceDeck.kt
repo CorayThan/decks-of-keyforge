@@ -1,20 +1,21 @@
 package coraythan.keyswap.alliancedecks
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.*
+import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.now
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.SynTraitPlayer
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.users.KeyUser
-import org.hibernate.annotations.Type
+import coraythan.keyswap.zeroToNull
+import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class AllianceDeck(
@@ -54,8 +55,7 @@ data class AllianceDeck(
     val createdDateTime: ZonedDateTime? = now(),
 
     // Json of card ids for performance loading decks, loading cards from cache
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "TEXT")
     override val cardIds: String = "",
     override val tokenNumber: Int? = null,
 
@@ -248,6 +248,6 @@ data class AllianceDeck(
             },
             dateAdded = dateAdded,
             discoveredBy = discoverer.username,
-            )
+        )
     }
 }

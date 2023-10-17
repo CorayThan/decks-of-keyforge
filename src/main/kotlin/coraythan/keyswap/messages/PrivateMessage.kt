@@ -5,10 +5,10 @@ import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.SimpleDeckSearchResult
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.users.KeyUser
+import jakarta.persistence.*
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class PrivateMessage(
@@ -37,6 +37,7 @@ data class PrivateMessage(
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO, generator = "message_id_sequence")
+        @SequenceGenerator(name = "message_id_sequence", allocationSize = 1)
         val id: Long = -1,
 ) {
     fun toDto(user: KeyUser, otherUser: KeyUser): PrivateMessageDto {
@@ -71,5 +72,4 @@ data class PrivateMessage(
 
 interface PrivateMessageRepo : CrudRepository<PrivateMessage, Long> {
     fun countByToIdAndViewedIsNullAndRecipientHiddenIsFalse(toId: UUID): Long
-    fun findByReplyToId(replyToId: Long): List<PrivateMessage>
 }

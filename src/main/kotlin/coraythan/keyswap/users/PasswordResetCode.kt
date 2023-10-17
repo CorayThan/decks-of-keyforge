@@ -1,5 +1,7 @@
 package coraythan.keyswap.users
 
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -7,8 +9,6 @@ import org.springframework.stereotype.Service
 import java.security.SecureRandom
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
 
 @Entity
 data class PasswordResetCode(
@@ -49,14 +49,6 @@ class PasswordResetCodeService(
     }
 
     fun passwordResetCodeByCode(code: String) = passwordResetCodeRepo.findByIdOrNull(code)
-
-    fun emailForVerification(code: String): String? {
-        val dbCode = passwordResetCodeRepo.findById(code)
-        if (dbCode.isPresent) {
-            return dbCode.get().email
-        }
-        return null
-    }
 
     fun delete(resetCode: String) = passwordResetCodeRepo.deleteById(resetCode)
 }

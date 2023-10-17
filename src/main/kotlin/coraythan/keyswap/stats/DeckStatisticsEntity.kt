@@ -3,15 +3,16 @@ package coraythan.keyswap.stats
 import com.fasterxml.jackson.module.kotlin.readValue
 import coraythan.keyswap.KeyswapApplication
 import coraythan.keyswap.expansions.Expansion
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Id
 import org.springframework.data.repository.CrudRepository
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class DeckStatisticsEntity(
-
-    val deckStats: String,
 
     val deckStatsJson: String,
 
@@ -28,7 +29,6 @@ data class DeckStatisticsEntity(
 
     companion object {
         fun fromDeckStatistics(deckStats: DeckStatistics, expansion: Expansion? = null) = DeckStatisticsEntity(
-            KeyswapApplication.objectMapper.writeValueAsString(deckStats),
             KeyswapApplication.objectMapper.writeValueAsString(deckStats),
             expansion = expansion
         )

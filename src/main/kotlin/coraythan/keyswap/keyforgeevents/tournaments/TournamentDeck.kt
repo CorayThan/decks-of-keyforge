@@ -1,9 +1,9 @@
-package coraythan.keyswap.keyforgeevents.tournamentdecks
+package coraythan.keyswap.keyforgeevents.tournaments
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.decks.models.Deck
+import jakarta.persistence.*
 import org.springframework.data.repository.CrudRepository
-import javax.persistence.*
 
 @Entity
 data class TournamentDeck(
@@ -19,14 +19,14 @@ data class TournamentDeck(
         val tourneyId: Long,
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1,
 )
 
 interface TournamentDeckRepo : CrudRepository<TournamentDeck, Long> {
     fun findByTourneyId(tourneyId: Long): List<TournamentDeck>
     fun findByParticipantId(participantId: Long): List<TournamentDeck>
-    fun existsByTourneyId(tourneyId: Long): Boolean
     fun deleteByParticipantId(participantId: Long)
     fun deleteAllByTourneyId(tourneyId: Long)
 }

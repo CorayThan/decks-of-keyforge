@@ -2,11 +2,11 @@ package coraythan.keyswap.cards
 
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.nowLocal
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
 
 @GenerateTs
 @Entity

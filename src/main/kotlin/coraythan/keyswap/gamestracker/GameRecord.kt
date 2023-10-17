@@ -1,13 +1,11 @@
 package coraythan.keyswap.gamestracker
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.toReadableStringWithOffsetMinutes
-import java.time.LocalDate
+import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class GameRecord(
@@ -18,7 +16,7 @@ data class GameRecord(
 
     @OneToMany(
         fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL,],
+        cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
     @JoinColumn(name = "recordId")

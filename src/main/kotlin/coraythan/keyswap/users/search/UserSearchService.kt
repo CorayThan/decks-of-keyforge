@@ -14,6 +14,7 @@ import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
 import coraythan.keyswap.users.QKeyUser
+import jakarta.persistence.EntityManager
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.Instant
-import javax.persistence.EntityManager
 import kotlin.system.measureTimeMillis
 
 const val lockUpdateUserSearchStatsFor = "PT1M"

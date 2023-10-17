@@ -365,7 +365,7 @@ class CardService(
                             (SynTraitValue(
                                 trait = SynergyTrait.good,
                                 house = SynTraitHouse.anyHouse,
-                                cardTypesInitial = listOf(it.cardType),
+                                cardTypes = listOf(it.cardType),
                                 rating = when {
                                     it.aercScoreAverage >= 3.5 -> TraitStrength.STRONG.value
                                     it.aercScoreAverage >= 3 -> TraitStrength.NORMAL.value

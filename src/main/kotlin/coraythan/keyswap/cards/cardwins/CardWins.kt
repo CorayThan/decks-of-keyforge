@@ -1,11 +1,11 @@
 package coraythan.keyswap.cards.cardwins
 
 import coraythan.keyswap.expansions.Expansion
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Id
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.Id
 
 @Entity
 data class CardWins(

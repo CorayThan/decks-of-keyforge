@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.users.KeyUser
+import jakarta.persistence.*
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class OwnedDeck(
@@ -26,7 +26,8 @@ data class OwnedDeck(
         val added: LocalDateTime = nowLocal(),
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1
 )
 

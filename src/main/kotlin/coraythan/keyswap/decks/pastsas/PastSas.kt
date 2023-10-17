@@ -1,12 +1,9 @@
 package coraythan.keyswap.decks.models
 
 import coraythan.keyswap.generatets.GenerateTs
+import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
 @GenerateTs
 @Entity
@@ -35,7 +32,8 @@ data class PastSas(
         val updateDateTime: LocalDateTime = LocalDateTime.now(),
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1
 ) {
     val updateDate: LocalDate

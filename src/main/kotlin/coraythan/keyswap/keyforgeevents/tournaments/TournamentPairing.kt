@@ -1,11 +1,8 @@
-package coraythan.keyswap.keyforgeevents.tournamentdecks
+package coraythan.keyswap.keyforgeevents.tournaments
 
 import coraythan.keyswap.generatets.GenerateTs
+import jakarta.persistence.*
 import org.springframework.data.repository.CrudRepository
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
 @Entity
 data class TournamentPairing(
@@ -28,7 +25,8 @@ data class TournamentPairing(
         val tcoLink: String? = null,
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1,
 )
 

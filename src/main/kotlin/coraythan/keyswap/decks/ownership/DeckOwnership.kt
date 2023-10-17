@@ -2,9 +2,9 @@ package coraythan.keyswap.decks.ownership
 
 import coraythan.keyswap.thirdpartyservices.S3Service
 import coraythan.keyswap.users.KeyUser
+import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
-import javax.persistence.*
 
 @Entity
 data class DeckOwnership(
@@ -18,7 +18,8 @@ data class DeckOwnership(
         val uploadDateTime: LocalDateTime = LocalDateTime.now(),
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1
 ) {
     val uploadDate: LocalDate

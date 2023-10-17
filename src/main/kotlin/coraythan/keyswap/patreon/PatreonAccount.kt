@@ -2,10 +2,10 @@ package coraythan.keyswap.patreon
 
 import com.patreon.PatreonOAuth
 import coraythan.keyswap.now
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
 
 @Entity
 data class PatreonAccount(

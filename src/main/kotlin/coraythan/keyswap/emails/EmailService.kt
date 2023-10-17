@@ -10,6 +10,7 @@ import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.users.*
+import jakarta.mail.internet.InternetAddress
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
@@ -17,7 +18,6 @@ import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
 import java.util.*
-import javax.mail.internet.InternetAddress
 
 @Service
 class EmailService(
@@ -357,7 +357,7 @@ class EmailService(
     fun sendOfferMessage(offerId: UUID, message: String) {
 
         val emailSender = currentUserService.loggedInUserOrUnauthorized()
-        val offer = offerRepo.findByIdOrNull(offerId) ?: throw IllegalStateException("No offer for ${offerId}")
+        val offer = offerRepo.findByIdOrNull(offerId) ?: throw IllegalStateException("No offer for $offerId")
 
         val isOfferRecipient = offer.recipient.id == emailSender.id
         val isOfferSender = offer.sender.id == emailSender.id
@@ -374,7 +374,7 @@ class EmailService(
         val senderUsername = emailSender.username
         val senderEmail = emailSender.primaryEmail
 
-        log.info("message: ${message}")
+        log.info("message: $message")
 
         val messageStart = """
             $senderUsername has sent you a message about ${if (isOfferSender) "their" else "your"} offer of ${offer.offerDetailsReadable()} 

@@ -1,10 +1,10 @@
 package coraythan.keyswap.synergy.publishsas
 
 import coraythan.keyswap.now
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
 
 @Entity
 data class PublishedSasVersion(

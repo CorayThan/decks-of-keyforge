@@ -326,10 +326,9 @@ class StatsService(
 
                 }
 
-            val deckStats = DeckStatisticsEntity.fromDeckStatistics(stats).deckStats
+            val deckStats = DeckStatisticsEntity.fromDeckStatistics(stats).deckStatsJson
             deckStatisticsRepo.save(
                 statsEntity.copy(
-                    deckStats = deckStats,
                     deckStatsJson = deckStats
                 ),
             )
@@ -349,7 +348,7 @@ class StatsService(
                     it.copy(aercDatas = it.aercDatas.sortedBy { it.house })
                 }
         ))
-            .plus(Expansion.values().map {
+            .plus(Expansion.entries.map {
                 GlobalStatsWithExpansion(
                     null, it.expansionNumber,
                     (deckStatisticsRepo.findFirstByCompleteDateTimeNotNullAndExpansionOrderByVersionDesc(it)

@@ -1,13 +1,13 @@
 package coraythan.keyswap.decks.models
 
 import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
 
 @Entity
 data class DeckRatingProgress(

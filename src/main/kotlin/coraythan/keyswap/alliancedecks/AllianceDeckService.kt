@@ -19,12 +19,12 @@ import coraythan.keyswap.tokenize
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
+import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.persistence.EntityManager
 
 @Transactional
 @Service
@@ -153,7 +153,7 @@ class AllianceDeckService(
             OwnedAllianceDeck(
                 owner = user,
                 deck = allianceDeckRepo.findByIdOrNull(allianceDeckId)
-                    ?: throw BadRequestException("No alliance deck for ${allianceDeckId}"),
+                    ?: throw BadRequestException("No alliance deck for $allianceDeckId"),
                 teamId = user.teamId,
             )
         )
@@ -286,7 +286,7 @@ class AllianceDeckService(
             if (filters.houses.size < 4) {
                 filters.houses.forEach { predicate.and(deckQ.houseNamesString.like("%$it%")) }
             } else {
-                val excludeHouses = House.values().filter { !filters.houses.contains(it) }
+                val excludeHouses = House.entries.filter { !filters.houses.contains(it) }
                 excludeHouses.forEach { predicate.and(deckQ.houseNamesString.notLike("%$it%")) }
             }
         }

@@ -122,7 +122,7 @@ object DeckSynergyService {
                             SynTraitValue(
                                 SynergyTrait.enhanced,
                                 rating = 3,
-                                cardTypesInitial = card.allTypes().toList()
+                                cardTypes = card.allTypes().toList()
                             )
                         )
                     } else {
@@ -132,7 +132,7 @@ object DeckSynergyService {
             cardAllTraits
                 .forEach { traitValue ->
                     traitsMap.addTrait(traitValue, card, card.house)
-                    if (traitValue.trait == SynergyTrait.uses && (traitValue.cardTypes.isEmpty() || traitValue.cardTypes.contains(
+                    if (traitValue.trait == SynergyTrait.uses && (traitValue.cardTypes.isNullOrEmpty() || traitValue.cardTypes.contains(
                             CardType.Creature
                         ))
                     ) {

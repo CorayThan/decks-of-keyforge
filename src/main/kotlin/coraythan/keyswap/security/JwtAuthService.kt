@@ -8,6 +8,8 @@ import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.SignatureException
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -17,21 +19,19 @@ import java.time.Duration
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Service
 class JwtAuthService(
-        @Value("\${jwt-secret}")
-        private val jwtSecret: String
+    @Value("\${jwt-secret}")
+    private val jwtSecret: String
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    private val jwtParser = Jwts.parserBuilder()
-            .setSigningKey(jwtSecret.toByteArray())
-            .build()
     private val jwtSigningKey = Keys.hmacShaKeyFor(jwtSecret.toByteArray())
+    private val jwtParser = Jwts.parser()
+        .verifyWith(jwtSigningKey)
+        .build()
 
     companion object {
         private val EXPIRE_AFTER: Duration = Duration.ofDays(7)
@@ -49,38 +49,38 @@ class JwtAuthService(
     fun expiration(duration: Duration): Date = Date.from(now().plus(duration).toInstant())
 
     fun addJwtToResponse(
-            res: HttpServletResponse, username: String,
-            authorities: Collection<GrantedAuthority>?
+        res: HttpServletResponse, username: String,
+        authorities: Collection<GrantedAuthority>?
     ) {
 
         val tokenBuilder = Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(TimeUtils.nowAsDate())
+            .subject(username)
+            .issuedAt(TimeUtils.nowAsDate())
 
-        if (authorities == null || authorities.isEmpty()) throw RuntimeException("No authorities available!")
+        if (authorities.isNullOrEmpty()) throw RuntimeException("No authorities available!")
 
         val role = authorities.iterator().next()
         val date = expiration(EXPIRE_AFTER)
 
-        tokenBuilder.setExpiration(date)
-                .signWith(jwtSigningKey)
-                .claim(ROLE, role)
+        tokenBuilder.expiration(date)
+            .signWith(jwtSigningKey)
+            .claim(ROLE, role)
 
         val token = tokenBuilder.compact()
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token)
     }
 
     fun getAuthenticationFromJwt(
-            req: HttpServletRequest,
-            res: HttpServletResponse
+        req: HttpServletRequest,
+        res: HttpServletResponse
     ): UsernamePasswordAuthenticationToken? {
 
         val token = req.getHeader(HEADER_STRING)
         if (token != null) {
             try {
                 val body: Claims = jwtParser
-                        .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                        .body
+                    .parseSignedClaims(token.replace(TOKEN_PREFIX, ""))
+                    .payload
 
                 val userType = UserType.valueOf(body.get(ROLE, String::class.java))
 

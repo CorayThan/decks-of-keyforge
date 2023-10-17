@@ -2,10 +2,9 @@ package coraythan.keyswap.alliancedecks
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
+import jakarta.persistence.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
-import javax.persistence.*
 
 @Entity
 data class AllianceHouse(
@@ -22,7 +21,8 @@ data class AllianceHouse(
     val allianceDeck: AllianceDeck,
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+    @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     val id: Long = -1
 )
 

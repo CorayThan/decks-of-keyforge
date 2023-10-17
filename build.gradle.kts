@@ -9,12 +9,12 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("kapt") version kotlinVersion
 
-    id("org.springframework.boot") version "2.7.16"
-    id("io.spring.dependency-management") version "1.0.15.RELEASE"
+    id("org.springframework.boot") version "3.1.4"
+    id("io.spring.dependency-management") version "1.1.3"
 }
 
 group = "coraythan"
-version = "554"
+version = "555"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -73,8 +73,8 @@ tasks.withType<Test> {
 dependencies {
 
     val queryDslVersion = "5.0.0"
-    val jjwtVersion = "0.11.2"
-    val shedlockVersion = "4.23.0"
+    val jjwtVersion = "0.12.2"
+    val shedlockVersion = "5.8.0"
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -83,26 +83,26 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.9.1")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
     implementation("org.flywaydb:flyway-core")
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
-    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("org.logback-extensions:logback-ext-loggly:0.1.5")
     implementation("com.patreon:patreon:0.4.2")
-    implementation("com.amazonaws:aws-java-sdk-s3:1.12.296")
+    implementation("com.amazonaws:aws-java-sdk-s3:1.12.565")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
-    implementation("com.vladmihalcea:hibernate-types-52:2.10.4")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-62:3.6.0")
     implementation("com.querydsl:querydsl-core:$queryDslVersion")
-    implementation("com.querydsl:querydsl-jpa:$queryDslVersion")
-    kapt("com.querydsl:querydsl-apt:$queryDslVersion:jpa")
+    implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta")
+    kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta")
 
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

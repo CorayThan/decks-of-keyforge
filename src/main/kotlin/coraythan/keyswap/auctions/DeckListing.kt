@@ -11,10 +11,10 @@ import coraythan.keyswap.now
 import coraythan.keyswap.tags.KTag
 import coraythan.keyswap.userdeck.DeckCondition
 import coraythan.keyswap.users.KeyUser
+import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class DeckListing(
@@ -62,7 +62,7 @@ data class DeckListing(
     @Enumerated(EnumType.STRING)
     val language: DeckLanguage,
 
-
+    @Column(columnDefinition = "INT4")
     val condition: DeckCondition,
     val redeemed: Boolean = true,
     val externalLink: String? = null,

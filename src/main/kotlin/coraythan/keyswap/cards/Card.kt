@@ -10,8 +10,8 @@ import coraythan.keyswap.now
 import coraythan.keyswap.roundToTwoSigDig
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.synergysystem.StaticAercValues
+import jakarta.persistence.*
 import java.time.ZonedDateTime
-import javax.persistence.*
 
 @Entity
 data class Card(

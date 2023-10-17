@@ -1,9 +1,9 @@
 package coraythan.keyswap.messages
 
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import org.springframework.data.repository.CrudRepository
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
 
 @Entity
 data class BlockedUser(
@@ -15,6 +15,5 @@ data class BlockedUser(
 )
 
 interface BlockedUserRepo : CrudRepository<BlockedUser, Long> {
-        fun findByBlockedById(blockedBy: UUID): List<BlockedUser>
         fun existsByBlockIdAndBlockedById(blockedId: UUID, blockedById: UUID): Boolean
 }

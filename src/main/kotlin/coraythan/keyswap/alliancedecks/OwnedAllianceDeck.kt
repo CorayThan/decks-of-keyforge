@@ -3,9 +3,9 @@ package coraythan.keyswap.alliancedecks
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.users.KeyUser
+import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class OwnedAllianceDeck(
@@ -22,6 +22,7 @@ data class OwnedAllianceDeck(
     val added: LocalDateTime = nowLocal(),
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+    @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
     val id: Long = -1
 )

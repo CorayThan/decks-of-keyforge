@@ -11,12 +11,12 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.nowLocal
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
+import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import javax.persistence.EntityManager
 
 @Service
 @Transactional

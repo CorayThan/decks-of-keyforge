@@ -1,8 +1,6 @@
 package coraythan.keyswap.synergy
 
-import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,24 +16,28 @@ class FixSynergies(
         log.info("Start fix all synergies")
 
         var fixed = 0
+        var notFixed = 0
         val allTraits = repo.findAll()
         allTraits.forEach {
-            val updated = when (it.trait) {
-
-                SynergyTrait.goodPlay ->
-                    if (it.cardTypes.isEmpty()) {
-                        it.copy(cardTypesInitial = listOf(CardType.Creature))
-                    } else {
-                        null
-                    }
-                else -> null
-            }
-            if (updated != null) {
+            val updated = it.copy(
+                cardTraits = if (it.cardTraitsString.isEmpty()) listOf() else it.cardTraitsString.split("-"),
+                cardTypes = if (it.cardTypesString.isEmpty()) listOf() else it.cardTypesString.split("-")
+                    .mapNotNull {
+                        if (it.isNotBlank()) {
+                            CardType.valueOf(it)
+                        } else {
+                            null
+                        }
+                    },
+            )
+            if (it != updated) {
                 fixed++
                 repo.save(updated)
+            } else {
+                notFixed++
             }
         }
-        log.info("Done fix all synergies: $fixed")
+        log.info("Done fix all synergies: $fixed not fixed: $notFixed")
     }
 
 }

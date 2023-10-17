@@ -13,6 +13,7 @@ import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
 import coraythan.keyswap.users.search.lockUpdateUserSearchStatsFor
+import jakarta.persistence.EntityManager
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
-import javax.persistence.EntityManager
 
 @Service
 @Transactional

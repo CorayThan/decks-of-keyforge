@@ -4,12 +4,12 @@ import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.QDeck
+import jakarta.persistence.*
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.persistence.*
 
 enum class DeckPageType(val quantity: Int) {
     IMPORT(10),

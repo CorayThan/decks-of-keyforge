@@ -1,8 +1,8 @@
 package coraythan.keyswap.teams
 
 import coraythan.keyswap.users.KeyUser
+import jakarta.persistence.*
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class Team(

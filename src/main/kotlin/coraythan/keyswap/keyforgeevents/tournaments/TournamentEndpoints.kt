@@ -3,7 +3,6 @@ package coraythan.keyswap.keyforgeevents.tournaments
 import coraythan.keyswap.Api
 import coraythan.keyswap.keyforgeevents.KeyForgeEventDto
 import coraythan.keyswap.keyforgeevents.KeyForgeEventFilters
-import coraythan.keyswap.keyforgeevents.tournamentdecks.TournamentPairingPlayers
 import org.springframework.web.bind.annotation.*
 
 @RestController

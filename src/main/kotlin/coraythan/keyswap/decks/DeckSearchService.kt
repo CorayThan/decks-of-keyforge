@@ -28,12 +28,12 @@ import coraythan.keyswap.userdeck.QDeckNote
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
+import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.persistence.EntityManager
 
 private const val lockCountDecks = "PT24H"
 
@@ -328,9 +328,7 @@ class DeckSearchService(
         }
 
         if (filters.notes.isNotBlank()) {
-            val username = if (filters.notesUser.isNotBlank()) {
-                filters.notesUser
-            } else {
+            val username = filters.notesUser.ifBlank {
                 userHolder.user?.username
             } ?: throw IllegalArgumentException("No notes user for notes.")
 
@@ -611,7 +609,7 @@ class DeckSearchService(
             .split("\\W+".toRegex())
             .filter { it.length > 2 }
 
-        val toUse = if (tokenized.isEmpty()) listOf(trimmed) else tokenized
+        val toUse = tokenized.ifEmpty { listOf(trimmed) }
         toUse.forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
 
         return query.selectFrom(deckQ)

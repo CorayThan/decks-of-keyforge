@@ -25,7 +25,7 @@ data class MatchSynergiesToTraits(
             .filter {
                 val traitsCard = it.card
                 val typeMatch =
-                    typesMatch(it.value.trait, synergyValue.cardTypes, traitsCard?.allTypes(), it.value.cardTypes)
+                    typesMatch(it.value.trait, synergyValue.cardTypes ?: listOf(), traitsCard?.allTypes(), it.value.cardTypes ?: listOf())
                 val playerMatch = playersMatch(synergyValue.player, it.value.player)
                 val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
 
@@ -36,9 +36,9 @@ data class MatchSynergiesToTraits(
 
                 // For matching traits on the synergy
                 val synergyTraitsMatch =
-                    traitsOnSynergyMatch(synergyValue.cardTraits, traitsCard?.traits, synergyValue.notCardTraits)
+                    traitsOnSynergyMatch(synergyValue.cardTraits ?: listOf(), traitsCard?.traits, synergyValue.notCardTraits)
                 // For matching traits on the trait
-                val traitsTraitMatch = traitsOnTraitMatch(it.value.cardTraits, card.traits, it.value.notCardTraits)
+                val traitsTraitMatch = traitsOnTraitMatch(it.value.cardTraits ?: listOf(), card.traits, it.value.notCardTraits)
                 val match =
                     typeMatch && playerMatch && houseMatch && synergyPowerMatch && traitPowerMatch && synergyTraitsMatch && traitsTraitMatch
 

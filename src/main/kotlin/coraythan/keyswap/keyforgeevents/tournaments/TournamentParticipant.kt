@@ -1,11 +1,10 @@
-package coraythan.keyswap.keyforgeevents.tournamentparticipants
+package coraythan.keyswap.keyforgeevents.tournaments
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import coraythan.keyswap.keyforgeevents.tournaments.Tournament
 import coraythan.keyswap.roundToTwoSigDig
+import jakarta.persistence.*
 import org.springframework.data.repository.CrudRepository
 import java.util.*
-import javax.persistence.*
 
 @Entity
 data class TournamentParticipant(
@@ -26,7 +25,8 @@ data class TournamentParticipant(
         val verified: Boolean = false,
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
+        @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
         val id: Long = -1,
 )
 
@@ -41,15 +41,15 @@ interface TournamentParticipantRepo : CrudRepository<TournamentParticipant, Long
 }
 
 data class ParticipantStats(
-        val participant: TournamentParticipant,
-        val wins: Int = 0,
-        val losses: Int = 0,
-        val byes: Int = 0,
-        var strengthOfSchedule: Double = 0.0,
-        var extendedStrengthOfSchedule: Double = 0.0,
-        val score: Int = 0,
-        val opponentsScore: Int = 0,
-        val dropped: Boolean = false,
+    val participant: TournamentParticipant,
+    val wins: Int = 0,
+    val losses: Int = 0,
+    val byes: Int = 0,
+    var strengthOfSchedule: Double = 0.0,
+    var extendedStrengthOfSchedule: Double = 0.0,
+    val score: Int = 0,
+    val opponentsScore: Int = 0,
+    val dropped: Boolean = false,
 ) {
     fun totalSosScore() = (wins * 100 + strengthOfSchedule * 10 + extendedStrengthOfSchedule).roundToTwoSigDig()
 }

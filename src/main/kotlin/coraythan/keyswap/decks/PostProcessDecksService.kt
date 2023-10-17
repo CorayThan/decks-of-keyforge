@@ -7,6 +7,8 @@ import coraythan.keyswap.decks.models.DeckSearchResult
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import org.slf4j.LoggerFactory
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -15,8 +17,6 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Id
 
 private const val lockPostProcessDecksFor = "PT3M"
 

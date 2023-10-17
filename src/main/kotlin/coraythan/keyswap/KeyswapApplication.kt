@@ -7,9 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import net.javacrumbs.shedlock.core.LockProvider
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock
@@ -24,6 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.client.RestTemplate
+import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
@@ -60,36 +59,32 @@ class KeyswapApplication() {
             }
             val dateDeser = object : StdDeserializer<LocalDate>(LocalDate::class.java) {
                 override fun deserialize(jp: JsonParser, ctxt: DeserializationContext): LocalDate =
-                        LocalDate.parse(jp.readValueAs(String::class.java))
+                    LocalDate.parse(jp.readValueAs(String::class.java))
             }
 
             return builder
-                    .modulesToInstall(
-                            JavaTimeModule()
-                                    .addSerializer(zonedDateTimeSer)
-                                    .addSerializer(dateTimeSer)
-                                    .addSerializer(dateSer)
-                                    .addDeserializer(LocalDate::class.java, dateDeser)
-                    )
-                    .build()
+                .modulesToInstall(
+                    JavaTimeModule()
+                        .addSerializer(zonedDateTimeSer)
+                        .addSerializer(dateTimeSer)
+                        .addSerializer(dateSer)
+                        .addDeserializer(LocalDate::class.java, dateDeser)
+                )
+                .build()
         }
     }
 
     @Bean
-    fun restTemplate(builder: RestTemplateBuilder): RestTemplate = builder.build()
+    fun restTemplate(builder: RestTemplateBuilder): RestTemplate = builder
+        .setConnectTimeout(Duration.ofSeconds(30))
+        .setReadTimeout(Duration.ofSeconds(30))
+        .build()
 
     @Bean
     fun bCryptPasswordEncoder() = BCryptPasswordEncoder()
 
     @Bean
     fun objectMapper(builder: Jackson2ObjectMapperBuilder) = configureJackson(builder)
-
-    @Bean
-    fun yamlMapper(): YAMLMapper {
-        val mapper = YAMLMapper()
-        mapper.registerModule(KotlinModule())
-        return mapper
-    }
 
     @Bean
     fun lockProvider(dataSource: DataSource): LockProvider {
@@ -100,7 +95,7 @@ class KeyswapApplication() {
     fun threadPoolTaskScheduler(): TaskScheduler {
         val threadPoolTaskScheduler = ThreadPoolTaskScheduler()
         threadPoolTaskScheduler.poolSize = 3
-        threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");
+        threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler")
         return threadPoolTaskScheduler
     }
 
