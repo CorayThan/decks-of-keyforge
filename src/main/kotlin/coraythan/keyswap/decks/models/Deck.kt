@@ -16,7 +16,9 @@ import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.tags.DeckTag
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.userdeck.*
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.*
+import org.hibernate.annotations.Type
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
@@ -79,6 +81,10 @@ data class Deck(
     override val tokenNumber: Int? = null,
 
     override val cardNames: String = "",
+
+    @Type(JsonBinaryType::class)
+    @Column(columnDefinition = "json")
+    val cards: Map<House, List<CardInDeck>>? = mapOf(),
 
     override val houseNamesString: String = "",
 
@@ -378,3 +384,14 @@ fun List<Card>.withBonusIcons(icons: DeckBonusIcons): List<CardWithBonusIcons> {
         }
         .flatten()
 }
+
+data class CardInDeck(
+    val cardTitle: String,
+    val maverick: Boolean = false,
+    val legacy: Boolean = false,
+    val anomaly: Boolean = false,
+    val bonusAember: Int = 0,
+    val bonusCapture: Int = 0,
+    val bonusDamage: Int = 0,
+    val bonusDraw: Int = 0,
+)

@@ -209,7 +209,13 @@ class StatsService(
 
     private fun updateStats(statsEntities: List<DeckStatisticsEntity>, decks: List<Deck>) {
         statsEntities.forEach { statsEntity ->
-            val stats = statsEntity.toDeckStatistics()
+            val stats: DeckStatistics
+            try {
+                stats = statsEntity.toDeckStatistics()
+            } catch (e: Exception) {
+                log.error("Couldn't parse statistics entity to Deck Statistics: $statsEntity")
+                throw e
+            }
 
             if (statsEntity.expansion == null) {
                 val datasToInclude = activeExpansions.map {

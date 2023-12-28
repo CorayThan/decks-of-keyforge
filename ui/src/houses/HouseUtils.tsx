@@ -3,6 +3,8 @@ import * as React from "react"
 import { House } from "../generated-src/House"
 import brobnarImg from "./imgs/brobnar.png"
 import disImg from "./imgs/dis.png"
+import keyrakenImg from "./imgs/keyraken.png"
+import geistoidImg from "./imgs/geistoid.png"
 import ekwidonImg from "./imgs/ekwidon.png"
 import logosImg from "./imgs/logos.png"
 import marsImg from "./imgs/mars.png"
@@ -34,6 +36,10 @@ export const houseValuesArray: HouseValue[] = [
     {
         house: House.Ekwidon,
         img: ekwidonImg
+    },
+    {
+        house: House.Geistoid,
+        img: geistoidImg
     },
     {
         house: House.Logos,
@@ -70,6 +76,10 @@ export const houseValuesArray: HouseValue[] = [
         house: House.Untamed,
         img: untamedImg
     },
+    {
+        house: House.Keyraken,
+        img: keyrakenImg,
+    },
 ]
     .map(value => {
         if (value.displayName == null) {
@@ -102,8 +112,11 @@ export const HouseLabel = (props: {
         <AercForCombos combos={synergyDetails?.filter(combo => combo.house === house)}>
             <Box display={"flex"} alignItems={"center"} height={32}>
                 <img alt={house} src={value.img} style={{width: houseSize, height: houseSize, marginRight: 8}}/>
-                <Typography noWrap={false} variant={title ? "h5" : "body2"}
-                            style={{width, fontSize: title ? "1.25rem" : undefined}}>
+                <Typography
+                    noWrap={false}
+                    variant={title ? "h5" : "body2"}
+                    style={{width, fontSize: title ? "1.25rem" : undefined}}
+                >
                     {value.displayName == null ? house : value.displayName}
                 </Typography>
             </Box>

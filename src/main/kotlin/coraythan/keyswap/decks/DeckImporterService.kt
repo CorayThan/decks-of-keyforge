@@ -8,6 +8,7 @@ import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.decks.pastsas.PastSasService
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
@@ -86,14 +87,17 @@ class DeckImporterService(
                 if (pagesRequested != 0) Thread.sleep(3000)
                 log.info("Importing decks, making page request $currentPage")
                 try {
-                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = true, withCards = true)
+                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = false, withCards = true)
                     if (decks == null) {
                         deckImportingUpToDate = true
                         log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
                         break
                     } else if (decks.data.any {
                             // Only import decks from these sets
-                            !activeExpansions.map { expansion -> expansion.expansionNumber }.contains(it.expansion)
+                            // this.log.info("Active expansions is: ${activeExpansions.toString()}")
+                            !activeExpansions.map { expansion ->
+                                expansion.expansionNumber
+                            }.contains(it.expansion)
                         }) {
 
                         log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}")
@@ -110,7 +114,7 @@ class DeckImporterService(
 
                         if (decksToSaveCount < keyforgeApiDeckPageSize || results < keyforgeApiDeckPageSize) {
                             deckImportingUpToDate = true
-                            log.info("Stopped getting decks, decks to save was $decksToSaveCount, added was $results < $keyforgeApiDeckPageSize")
+                            log.info("Stopped getting decks, decks to save was $decksToSaveCount, added was $results < $keyforgeApiDeckPageSize. Expansions: ${decks.data.map { it.toDeck().expansionEnum }.toSortedSet()}")
                             break
                         }
                     }
@@ -126,6 +130,49 @@ class DeckImporterService(
                     "Pages requested $pagesRequested It took ${importDecksDuration / 1000} seconds."
         )
         deckSearchService.countFilters(DeckFilters())
+    }
+
+    @Scheduled(fixedDelayString = "PT1M", initialDelayString = "PT10M")
+    fun updateCardsInDecks() {
+        val toUpdate = deckRepo.findTop1000ByRefreshedBonusIconsIsTrueOrNull()
+        if (toUpdate.isEmpty()) {
+            log.info("Done updating cards in deck")
+            return
+        } else {
+            log.info("Updating cards in decks: ${deckRepo.countByRefreshedBonusIconsIsTrueOrNull()} remaining to update.")
+        }
+
+        toUpdate.forEach { deck ->
+            val cards = cardService.cardsForDeck(deck).withBonusIcons(deck.bonusIcons())
+
+            val cardsMap = cards
+                .groupBy { it.card.house }
+                .map { houseOfCards ->
+                    houseOfCards.key to houseOfCards.value
+                        .map { cardWithIcons ->
+                            val card = cardWithIcons.card
+                            val isLegacy =
+                                !(card.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum } ?: true)
+                            CardInDeck(
+                                cardTitle = card.cardTitle,
+                                maverick = card.maverick,
+                                legacy = isLegacy,
+                                anomaly = card.anomaly,
+                                bonusAember = cardWithIcons.bonusAember,
+                                bonusCapture = cardWithIcons.bonusCapture,
+                                bonusDamage = cardWithIcons.bonusDamage,
+                                bonusDraw = cardWithIcons.bonusDraw,
+                            )
+                        }
+                }.toMap()
+
+            deckRepo.save(
+                deck.copy(
+                    refreshedBonusIcons = false,
+                    cards = cardsMap
+                )
+            )
+        }
     }
 
     // Rev publishAercVersion to rerate decks
@@ -197,6 +244,11 @@ class DeckImporterService(
         } else {
             val deck = keyforgeApi.findDeckToImport(deckId)?.deck
             if (deck != null) {
+                val expansion = Expansion.forExpansionNumber(deck.data.expansion)
+                if (!activeExpansions.contains(expansion)) {
+                    throw BadRequestException("$expansion is not yet enabled for import in DoK.")
+                }
+
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
                 cardService.importNewCards(deck._linked.cards ?: error("No linked cards for importing deck"))
                 return try {

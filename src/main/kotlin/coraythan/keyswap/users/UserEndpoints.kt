@@ -14,7 +14,6 @@ const val users = "users"
 @RequestMapping("${Api.base}/$users")
 class UserEndpoints(
         private val userService: KeyUserService,
-        private val currentUserService: CurrentUserService,
         val apiKeys: SecretApiKeyValidator
 ) {
 
@@ -22,7 +21,7 @@ class UserEndpoints(
     fun findUsersByUsername(@PathVariable name: String) = userService.findUsersByUsername(name)
 
     @GetMapping("/secured/your-user")
-    fun findYourUser() = currentUserService.loggedInUserDto()
+    fun findYourUser() = userService.findYourUser()
 
     @PostMapping("/register")
     fun register(@RequestBody user: UserRegistration) = userService.register(user)

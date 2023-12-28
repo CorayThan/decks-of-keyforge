@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.19"
+export const latestVersion = "6.20"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,24 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.20"}
+                    date={"12/27/2023"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Working towards Grim Reminders and Menagerie",
+                            note: "I'm making progress towards getting Grim Reminders and Menagerie decks importing " +
+                                "to DoK, but they aren't ready to import to DoK quite yet."
+                        },
+                        {
+                            highlight: "Under the covers improvements",
+                            note: "I'm working towards improving some of the nuts and bolts of how DoK works with " +
+                                "decks and cards to improve the site and make it easier for other developers to " +
+                                "help with the site."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.19"}
                     date={"9/6/2023"}

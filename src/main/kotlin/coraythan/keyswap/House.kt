@@ -7,6 +7,8 @@ enum class House(val masterVaultValue: String) {
     Brobnar("Brobnar"),
     Dis("Dis"),
     Ekwidon("Ekwidon"),
+    Geistoid("Geistoid"),
+    Keyraken("Keyraken"),
     Logos("Logos"),
     Mars("Mars"),
     Sanctum("Sanctum"),
@@ -18,7 +20,7 @@ enum class House(val masterVaultValue: String) {
 
     companion object {
         fun fromMasterVaultValue(value: String): House? {
-            return values().find { it.masterVaultValue == value }
+            return entries.find { it.masterVaultValue == value }
         }
     }
 }

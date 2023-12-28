@@ -17,7 +17,11 @@ import { UserProfileUpdate } from "../generated-src/UserProfileUpdate"
 import { UserRegistration } from "../generated-src/UserRegistration"
 import { UserType } from "../generated-src/UserType"
 import { tagStore } from "../tags/TagStore"
-import { findPatronRewardLevel, patronForSaleLimit, patronNotificationLimit } from "../thirdpartysites/patreon/PatreonRewardsTier"
+import {
+    findPatronRewardLevel,
+    patronForSaleLimit,
+    patronNotificationLimit
+} from "../thirdpartysites/patreon/PatreonRewardsTier"
 import { messageStore } from "../ui/MessageStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
 
@@ -249,6 +253,12 @@ export class UserStore {
 
     logout = () => {
         this.loginInProgress = false
+        this.agreeingToTerms = false
+        this.userProfile = undefined
+        this.changingPassword = false
+        this.verifyingEmail = false
+        this.emailVerificationSuccessful = undefined
+
         this.setUser(undefined)
         userDeckStore.reset()
         deckStore.refreshDeckSearch()

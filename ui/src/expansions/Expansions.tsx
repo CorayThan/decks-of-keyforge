@@ -21,6 +21,8 @@ export enum ExpansionNumber {
     WOE = 600,
     UC22 = 601,
     VM23 = 609,
+    GR = 700,
+    MN24 = 722,
 }
 
 export const activeExpansions = [
@@ -30,8 +32,10 @@ export const activeExpansions = [
     Expansion.MASS_MUTATION,
     Expansion.DARK_TIDINGS,
     Expansion.WINDS_OF_EXCHANGE,
+    Expansion.GRIM_REMINDERS,
     Expansion.UNCHAINED_2022,
     Expansion.VAULT_MASTERS_2023,
+    Expansion.MENAGERIE_2024,
 ]
 
 export const activeSasExpansions = [
@@ -54,6 +58,7 @@ export const activeCardExpansions = [
     ExpansionNumber.MM,
     ExpansionNumber.DT,
     ExpansionNumber.WOE,
+    ExpansionNumber.GR,
 ]
 
 export const activeCardLinksExpansions = [
@@ -63,6 +68,7 @@ export const activeCardLinksExpansions = [
     Expansion.MASS_MUTATION,
     Expansion.DARK_TIDINGS,
     Expansion.WINDS_OF_EXCHANGE,
+    Expansion.GRIM_REMINDERS,
 ]
 
 export const possibleCardExpansionsForExpansion = (exp: ExpansionNumber): ExpansionNumber[] => {
@@ -86,6 +92,8 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.WOE, name: "Winds of Exchange", abbreviation: "WoE", backendEnum: Expansion.WINDS_OF_EXCHANGE},
     {expansionNumber: ExpansionNumber.UC22, name: "Unchained 2022", abbreviation: "UC22", backendEnum: Expansion.UNCHAINED_2022},
     {expansionNumber: ExpansionNumber.VM23, name: "Vault Masters 2023", abbreviation: "VM23", backendEnum: Expansion.VAULT_MASTERS_2023},
+    {expansionNumber: ExpansionNumber.GR, name: "Grim Reminders", abbreviation: "GR", backendEnum: Expansion.GRIM_REMINDERS},
+    {expansionNumber: ExpansionNumber.MN24, name: "Menagerie 2024", abbreviation: "MN24", backendEnum: Expansion.MENAGERIE_2024},
 ]
 
 export const activeExpansionInfos: ExpansionInfo[] = expansionInfos.filter(info => activeExpansions.includes(info.backendEnum))

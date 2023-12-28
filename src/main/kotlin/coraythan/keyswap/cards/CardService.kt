@@ -10,6 +10,7 @@ import coraythan.keyswap.cards.extrainfo.ExtraCardInfoService
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.decks.models.HouseAndCards
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
@@ -378,7 +379,7 @@ class CardService(
                     }
                 )
 
-            val numberSetPair = CardNumberSetPair(it.expansionEnum, it.cardNumber)
+            val numberSetPair = CardNumberSetPair(Expansion.forExpansionNumber(it.expansion), it.cardNumber)
             val realExtraInfo = extraInfo[it.cardTitle.cleanCardName()] ?: error("no extra info for ${it.cardTitle}")
 
             val extraSynergies = realExtraInfo.traits

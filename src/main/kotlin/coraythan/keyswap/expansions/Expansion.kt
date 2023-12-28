@@ -12,15 +12,25 @@ enum class Expansion(val expansionNumber: Int, val readable: String, val houses:
     MASS_MUTATION(479, "MM", setOf(House.StarAlliance, House.Dis, House.Logos, House.Saurian, House.Sanctum, House.Shadows, House.Untamed), false),
     DARK_TIDINGS(496, "DT", setOf(House.StarAlliance, House.Unfathomable, House.Logos, House.Saurian, House.Sanctum, House.Shadows, House.Untamed), false),
     WINDS_OF_EXCHANGE(600, "WoE", setOf(House.Brobnar, House.Ekwidon, House.Mars, House.Saurian, House.Sanctum, House.StarAlliance, House.Unfathomable), true),
-    UNCHAINED_2022(601, "UC22", House.values().toSet(), true),
-    VAULT_MASTERS_2023(609, "VM23", House.values().toSet(), true);
+    UNCHAINED_2022(601, "UC22", setOf(
+        House.Brobnar, House.Dis, House.Logos, House.Mars, House.Sanctum, House.Shadows, House.Untamed,
+        House.StarAlliance, House.Saurian, House.Ekwidon, House.Unfathomable
+    ), true),
+    VAULT_MASTERS_2023(609, "VM23", setOf(House.Brobnar, House.Mars, House.Logos, House.Untamed, House.Dis, House.StarAlliance, House.Saurian), true),
+    GRIM_REMINDERS(700, "GR", setOf(
+        House.Brobnar, House.Ekwidon, House.Geistoid, House.Mars, House.StarAlliance, House.Unfathomable, House.Untamed,
+    ), false),
+    MENAGERIE_2024(722, "MN24", setOf(
+        House.Brobnar, House.Dis, House.Ekwidon, House.Geistoid, House.Mars, House.Sanctum, House.Saurian,
+        House.Shadows, House.StarAlliance, House.Unfathomable, House.Untamed,
+    ), true);
 
     companion object {
-        fun forExpansionNumber(expansionNumber: Int?) = values().find { it.expansionNumber == expansionNumber }
+        fun forExpansionNumber(expansionNumber: Int?) = entries.find { it.expansionNumber == expansionNumber }
                 ?: throw IllegalStateException("No expansion for number $expansionNumber")
 
-        fun realExpansionValues() = values().filter { it != ANOMALY_EXPANSION }
-        fun expansionsWithTokens() = values().filter { it.hasTokens }
+        fun realExpansionValues() = entries.filter { it != ANOMALY_EXPANSION }
+        fun expansionsWithTokens() = entries.filter { it.hasTokens }
     }
 }
 

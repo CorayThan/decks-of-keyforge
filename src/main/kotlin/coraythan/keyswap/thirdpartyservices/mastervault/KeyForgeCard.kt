@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.*
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
-import coraythan.keyswap.expansions.Expansion
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeCard(
@@ -30,7 +29,6 @@ data class KeyForgeCard(
     fun toCard(extraInfoMap: Map<String, ExtraCardInfo>): Card? {
         val powerNumber = power?.toIntOrNull() ?: 0
         val armorNumber = armor?.toIntOrNull() ?: 0
-        val expansionEnum = Expansion.forExpansionNumber(expansion)
         val realCardType = theirCardTypeToReasonableOne(card_type) ?: return null
         val realRarity = theirRarityToReasonableOne(rarity) ?: return null
         val cardTitleFixed = if (realRarity == Rarity.EvilTwin) {
@@ -39,9 +37,24 @@ data class KeyForgeCard(
             card_title
         }
         return Card(
-            id, cardTitleFixed, House.fromMasterVaultValue(house)!!, realCardType, front_image, card_text, amber, powerNumber, power
-                ?: "", armorNumber, armor ?: "", realRarity, flavor_text,
-            card_number, expansion, expansionEnum, is_maverick, is_anomaly,
+            id,
+            cardTitleFixed,
+            House.fromMasterVaultValue(house)!!,
+            realCardType,
+            front_image,
+            card_text,
+            amber,
+            powerNumber,
+            power
+                ?: "",
+            armorNumber,
+            armor ?: "",
+            realRarity,
+            flavor_text,
+            card_number,
+            expansion,
+            is_maverick,
+            is_anomaly,
             extraCardInfo = extraInfoMap[cardTitleFixed.cleanCardName()],
             traits = traits?.uppercase()?.split(" • ")?.toSet() ?: setOf(),
             big = card_type == "Creature1" || card_type == "Creature2",

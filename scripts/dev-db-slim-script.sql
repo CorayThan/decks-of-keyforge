@@ -9,7 +9,7 @@ FROM owned_deck od USING key_user ku
 WHERE ku.id = od.owner_id
   AND ku.allow_users_to_see_deck_ownership = FALSE;
 DELETE
-FROM owned_alliance_deck od USING key_user ku
+FROM owned_alliance_deck od USING key_user ku 
 WHERE ku.id = od.owner_id
   AND ku.allow_users_to_see_deck_ownership = FALSE;
 UPDATE key_user ku
@@ -39,51 +39,47 @@ WHERE NOT owned_deck.deck_id IN (SELECT deck.id
                                  LIMIT 50000);
 
 --BEGIN SLIM DECKS
-DROP TABLE IF EXISTS
-    deck_ids_to_delete;
-CREATE TEMPORARY TABLE deck_ids_to_delete
-(
-    id BIGINT
-);
-
-INSERT INTO deck_ids_to_delete (id)
-SELECT deck.id
-FROM deck
-         LEFT JOIN owned_deck ON deck.id = owned_deck.deck_id
-WHERE owned_deck.id IS NULL;
-
-DELETE
-FROM past_sas
-    USING deck_ids_to_delete
-WHERE past_sas.deck_id = deck_ids_to_delete.id;
-
-DELETE
-FROM deck_tag
-    USING deck_ids_to_delete
-WHERE deck_tag.deck_id = deck_ids_to_delete.id;
-
-DELETE
-FROM deck_listing
-    USING deck_ids_to_delete
-WHERE deck_listing.deck_id = deck_ids_to_delete.id;
-
-DELETE
-FROM deck_ownership
-    USING deck_ids_to_delete
-WHERE deck_ownership.deck_id = deck_ids_to_delete.id;
-
-DELETE
-FROM deck_ids_to_delete
-    USING alliance_house
-WHERE deck_ids_to_delete.id = alliance_house.deck_id;
-
-DELETE
-FROM deck_ids_to_delete
-    USING tournament_deck
-WHERE deck_ids_to_delete.id = tournament_deck.deck_id;
-
-DELETE
-FROM deck
-    USING deck_ids_to_delete
-WHERE deck.id = deck_ids_to_delete.id;
+-- DROP TABLE IF EXISTS
+--     deck_ids_to_delete;
+-- CREATE TEMPORARY TABLE deck_ids_to_delete
+-- (
+--     id BIGINT
+-- );
+--
+-- INSERT INTO deck_ids_to_delete (id)
+-- SELECT deck.id
+-- FROM deck
+--          LEFT JOIN owned_deck ON deck.id = owned_deck.deck_id
+-- WHERE owned_deck.id IS NULL;
+--
+--
+-- DELETE
+-- FROM deck_tag
+--     USING deck_ids_to_delete
+-- WHERE deck_tag.deck_id = deck_ids_to_delete.id;
+--
+-- DELETE
+-- FROM deck_listing
+--     USING deck_ids_to_delete
+-- WHERE deck_listing.deck_id = deck_ids_to_delete.id;
+--
+-- DELETE
+-- FROM deck_ownership
+--     USING deck_ids_to_delete
+-- WHERE deck_ownership.deck_id = deck_ids_to_delete.id;
+--
+-- DELETE
+-- FROM deck_ids_to_delete
+--     USING alliance_house
+-- WHERE deck_ids_to_delete.id = alliance_house.deck_id;
+--
+-- DELETE
+-- FROM deck_ids_to_delete
+--     USING tournament_deck
+-- WHERE deck_ids_to_delete.id = tournament_deck.deck_id;
+--
+-- DELETE
+-- FROM deck
+--     USING deck_ids_to_delete
+-- WHERE deck.id = deck_ids_to_delete.id;
 --END SLIM DECKS

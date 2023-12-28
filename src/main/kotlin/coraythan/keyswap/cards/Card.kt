@@ -34,8 +34,6 @@ data class Card(
     val flavorText: String? = null,
     val cardNumber: String,
     val expansion: Int,
-    @Enumerated(EnumType.STRING)
-    val expansionEnum: Expansion,
     val maverick: Boolean,
     val anomaly: Boolean,
     val enhanced: Boolean? = null,

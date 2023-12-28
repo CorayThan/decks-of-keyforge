@@ -59,6 +59,10 @@ class KeyUserService(
         }
     }
 
+    fun findYourUser(): KeyUserDto {
+        return currentUserService.loggedInUserOrUnauthorized().toDto()
+    }
+
     fun register(userRegInfo: UserRegistration): KeyUser {
 
         check(userRegInfo.password.length > 7) {
