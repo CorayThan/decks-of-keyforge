@@ -132,44 +132,25 @@ class DeckImporterService(
         deckSearchService.countFilters(DeckFilters())
     }
 
-    @Scheduled(fixedDelayString = "PT1M", initialDelayString = "PT10M")
+    var cardsInDeckUpdatedCount = 0
+
+    @Scheduled(fixedDelayString = "PT15S", initialDelayString = "PT1M")
     fun updateCardsInDecks() {
-        val toUpdate = deckRepo.findTop1000ByRefreshedBonusIconsIsTrueOrNull()
+        val toUpdate = deckRepo.findTop100ByRefreshedBonusIconsIsTrueOrNull()
         if (toUpdate.isEmpty()) {
             log.info("Done updating cards in deck")
             return
         } else {
-            log.info("Updating cards in decks: ${deckRepo.countByRefreshedBonusIconsIsTrueOrNull()} remaining to update.")
+            log.info("Updating cards in decks: $cardsInDeckUpdatedCount updated so far.")
+//            log.info("Updating cards in decks: ${deckRepo.countByRefreshedBonusIconsIsTrueOrNull()} remaining to update.")
         }
 
         toUpdate.forEach { deck ->
-            val cards = cardService.cardsForDeck(deck).withBonusIcons(deck.bonusIcons())
-
-            val cardsMap = cards
-                .groupBy { it.card.house }
-                .map { houseOfCards ->
-                    houseOfCards.key to houseOfCards.value
-                        .map { cardWithIcons ->
-                            val card = cardWithIcons.card
-                            val isLegacy =
-                                !(card.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum } ?: true)
-                            CardInDeck(
-                                cardTitle = card.cardTitle,
-                                maverick = card.maverick,
-                                legacy = isLegacy,
-                                anomaly = card.anomaly,
-                                bonusAember = cardWithIcons.bonusAember,
-                                bonusCapture = cardWithIcons.bonusCapture,
-                                bonusDamage = cardWithIcons.bonusDamage,
-                                bonusDraw = cardWithIcons.bonusDraw,
-                            )
-                        }
-                }.toMap()
-
+            cardsInDeckUpdatedCount++
             deckRepo.save(
                 deck.copy(
                     refreshedBonusIcons = false,
-                    cards = cardsMap
+                    cards = this.cardsForDeck(deck)
                 )
             )
         }
@@ -411,10 +392,16 @@ class DeckImporterService(
         return ratedDeck
     }
 
-    fun rateDeck(deck: Deck, majorRevision: Boolean = false): Pair<Deck, DeckSynergyInfo> {
+    fun rateDeck(inputDeck: Deck, majorRevision: Boolean = false): Pair<Deck, DeckSynergyInfo> {
         val publishedAercVersion = publishedSasVersionService.latestSasVersion()
-        val cards = cardService.cardsForDeck(deck)
-        val token = cardService.tokenForDeck(deck)
+        val cards = cardService.cardsForDeck(inputDeck)
+        val cardsMap = this.cardsForDeck(inputDeck)
+        val token = cardService.tokenForDeck(inputDeck)
+
+        val deck = inputDeck.copy(
+            cards = cardsMap
+        )
+
         val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards, token)
         val bonusDraw = deck.bonusIcons().bonusIconHouses.flatMap { it.bonusIconCards }.sumOf { it.bonusDraw }
         val bonusCapture = deck.bonusIcons().bonusIconHouses.flatMap { it.bonusIconCards }.sumOf { it.bonusCapture }
@@ -450,5 +437,30 @@ class DeckImporterService(
                 antisynergyRating = deckSynergyInfo.antisynergyRating.absoluteValue
             ), deckSynergyInfo
         )
+    }
+
+    private fun cardsForDeck(deck: Deck): Map<House, List<CardInDeck>> {
+        val cards = cardService.cardsForDeck(deck).withBonusIcons(deck.bonusIcons())
+
+        return cards
+            .groupBy { it.card.house }
+            .map { houseOfCards ->
+                houseOfCards.key to houseOfCards.value
+                    .map { cardWithIcons ->
+                        val card = cardWithIcons.card
+                        val isLegacy =
+                            !(card.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum } ?: true)
+                        CardInDeck(
+                            cardTitle = card.cardTitle,
+                            maverick = card.maverick,
+                            legacy = isLegacy,
+                            anomaly = card.anomaly,
+                            bonusAember = cardWithIcons.bonusAember,
+                            bonusCapture = cardWithIcons.bonusCapture,
+                            bonusDamage = cardWithIcons.bonusDamage,
+                            bonusDraw = cardWithIcons.bonusDraw,
+                        )
+                    }
+            }.toMap()
     }
 }

@@ -137,7 +137,7 @@ data class Deck(
 
     val twinId: String? = null,
 
-    val refreshedBonusIcons: Boolean? = true,
+    val refreshedBonusIcons: Boolean? = false,
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
