@@ -134,9 +134,9 @@ class DeckImporterService(
 
     var cardsInDeckUpdatedCount = 0
 
-    @Scheduled(fixedDelayString = "PT15S", initialDelayString = "PT1M")
+    @Scheduled(fixedDelayString = "PT30S", initialDelayString = "PT1M")
     fun updateCardsInDecks() {
-        val toUpdate = deckRepo.findTop100ByRefreshedBonusIconsIsTrueOrNull()
+        val toUpdate = deckRepo.findTop50ByRefreshedBonusIconsIsTrueOrNull()
         if (toUpdate.isEmpty()) {
             log.info("Done updating cards in deck")
             return
