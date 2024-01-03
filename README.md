@@ -123,7 +123,7 @@ SELECT
   query,
   state
 FROM pg_stat_activity
-WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes'; 
+WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes' 
 LIMIT 10;
 ```
 

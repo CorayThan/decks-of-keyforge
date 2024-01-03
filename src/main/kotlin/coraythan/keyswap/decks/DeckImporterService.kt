@@ -134,89 +134,90 @@ class DeckImporterService(
 
     var cardsInDeckUpdatedCount = 0
 
-    @Scheduled(fixedDelayString = "PT30S", initialDelayString = "PT1M")
-    fun updateCardsInDecks() {
-        val toUpdate = deckRepo.findTop50ByRefreshedBonusIconsIsTrueOrNull()
-        if (toUpdate.isEmpty()) {
-            log.info("Done updating cards in deck")
-            return
-        } else {
-            log.info("Updating cards in decks: $cardsInDeckUpdatedCount updated so far.")
-//            log.info("Updating cards in decks: ${deckRepo.countByRefreshedBonusIconsIsTrueOrNull()} remaining to update.")
-        }
-
-        toUpdate.forEach { deck ->
-            cardsInDeckUpdatedCount++
-            deckRepo.save(
-                deck.copy(
-                    refreshedBonusIcons = false,
-                    cards = this.cardsForDeck(deck)
-                )
-            )
-        }
-    }
+    // Broken need to find a new way
+    // @Scheduled(fixedDelayString = "PT5M", initialDelayString = "PT1M")
+//    fun updateCardsInDecks() {
+//        val toUpdate = deckRepo.findTop50ByRefreshedBonusIconsIsTrueOrNull()
+//        if (toUpdate.isEmpty()) {
+//            log.info("Done updating cards in deck")
+//            return
+//        } else {
+//            log.info("Updating cards in decks: $cardsInDeckUpdatedCount updated so far.")
+////            log.info("Updating cards in decks: ${deckRepo.countByRefreshedBonusIconsIsTrueOrNull()} remaining to update.")
+//        }
+//
+//        toUpdate.forEach { deck ->
+//            cardsInDeckUpdatedCount++
+//            deckRepo.save(
+//                deck.copy(
+//                    refreshedBonusIcons = false,
+//                    cards = this.cardsForDeck(deck)
+//                )
+//            )
+//        }
+//    }
 
     // Rev publishAercVersion to rerate decks
-    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksInitialDelay)
-    fun rateDecks() {
-
-        if (env == Env.qa) {
-            log.info("QA environment, skip rating decks.")
-            return
-        }
-
-        try {
-
-            // If next page is null, we know we are done
-            var nextDeckPage = deckRatingProgressService.nextPage() ?: return
-            var quantFound = 0
-            var quantRerated = 0
-
-            log.info("$scheduledStart rate decks.")
-
-            val maxToRate = DeckPageType.RATING.quantity * (if (env == Env.dev) 10 else 1)
-
-            val millisTaken = measureTimeMillis {
-
-                while (quantRerated < maxToRate && quantFound < 100000) {
-
-                    // If next page is null, we know we are done
-                    nextDeckPage = deckRatingProgressService.nextPage() ?: break
-
-                    val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING, true)
-                    quantFound += deckResults.decks.size
-
-                    val rated: List<Pair<Deck, DeckSynergyInfo>> = deckResults.decks.mapNotNull {
-                        val deckSynergiesPair = rateDeck(it, publishedSasVersionService.majorVersion())
-                        val rated = deckSynergiesPair.first.copy(lastUpdate = ZonedDateTime.now())
-                        if (rated.ratingsEqual(it)) {
-                            null
-                        } else {
-                            Pair(rated, deckSynergiesPair.second)
-                        }
-                    }
-                    quantRerated += rated.size
-                    if (rated.isNotEmpty()) {
-                        deckRepo.saveAll(rated.map { it.first })
-                        pastSasService.createAll(rated)
-                    }
-                    deckRatingProgressService.revPage()
-
-                    if (!deckResults.moreResults) {
-                        deckRatingProgressService.complete()
-                        statsService.startNewDeckStats()
-                        log.info("Done rating decks!")
-                        break
-                    }
-                    log.info("Got next page, quant rerated $quantRerated found $quantFound max $maxToRate")
-                }
-            }
-
-            log.info("$scheduledStop Took $millisTaken ms to rate decks. Page: $nextDeckPage Found: $quantFound Rerated: $quantRerated.")
-        } catch (e: Throwable) {
-            log.error("$scheduledException rating decks", e)
-        }
-    }
+//    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksInitialDelay)
+//    fun rateDecks() {
+//
+//        if (env == Env.qa) {
+//            log.info("QA environment, skip rating decks.")
+//            return
+//        }
+//
+//        try {
+//
+//            // If next page is null, we know we are done
+//            var nextDeckPage = deckRatingProgressService.nextPage() ?: return
+//            var quantFound = 0
+//            var quantRerated = 0
+//
+//            log.info("$scheduledStart rate decks.")
+//
+//            val maxToRate = DeckPageType.RATING.quantity * (if (env == Env.dev) 10 else 1)
+//
+//            val millisTaken = measureTimeMillis {
+//
+//                while (quantRerated < maxToRate && quantFound < 100000) {
+//
+//                    // If next page is null, we know we are done
+//                    nextDeckPage = deckRatingProgressService.nextPage() ?: break
+//
+//                    val deckResults = deckPageService.decksForPage(nextDeckPage, DeckPageType.RATING, true)
+//                    quantFound += deckResults.decks.size
+//
+//                    val rated: List<Pair<Deck, DeckSynergyInfo>> = deckResults.decks.mapNotNull {
+//                        val deckSynergiesPair = rateDeck(it, publishedSasVersionService.majorVersion())
+//                        val rated = deckSynergiesPair.first.copy(lastUpdate = ZonedDateTime.now())
+//                        if (rated.ratingsEqual(it)) {
+//                            null
+//                        } else {
+//                            Pair(rated, deckSynergiesPair.second)
+//                        }
+//                    }
+//                    quantRerated += rated.size
+//                    if (rated.isNotEmpty()) {
+//                        deckRepo.saveAll(rated.map { it.first })
+//                        pastSasService.createAll(rated)
+//                    }
+//                    deckRatingProgressService.revPage()
+//
+//                    if (!deckResults.moreResults) {
+//                        deckRatingProgressService.complete()
+//                        statsService.startNewDeckStats()
+//                        log.info("Done rating decks!")
+//                        break
+//                    }
+//                    log.info("Got next page, quant rerated $quantRerated found $quantFound max $maxToRate")
+//                }
+//            }
+//
+//            log.info("$scheduledStop Took $millisTaken ms to rate decks. Page: $nextDeckPage Found: $quantFound Rerated: $quantRerated.")
+//        } catch (e: Throwable) {
+//            log.error("$scheduledException rating decks", e)
+//        }
+//    }
 
     fun importDeck(deckId: String): Long? {
         val preExistingDeck = deckRepo.findByKeyforgeId(deckId)
