@@ -178,7 +178,7 @@ class PatreonService(
                 tierIds.any { PatreonRewardsTier.SUPPORT_SOPHISTICATION.tierIds.contains(it) } -> PatreonRewardsTier.SUPPORT_SOPHISTICATION
                 tierIds.any { PatreonRewardsTier.NOTICE_BARGAINS.tierIds.contains(it) } -> PatreonRewardsTier.NOTICE_BARGAINS
                 else -> {
-                    if (tierIds.isNotEmpty()) log.warn("Couldn't find patreon tier for member with id $patreonId tiers $tierIds member: $member")
+                    if (tierIds.isNotEmpty()) log.warn("Couldn't find patreon tier for member with id $patreonId tiers $tierIds email $ member: $member")
                     null
                 }
             }
@@ -190,7 +190,7 @@ class PatreonService(
                 keyForgeEventService.updatePromotedEventsForUser(user)
             }
         }
-        if (patreonCampaign.meta.pagination.cursors != null) {
+        if (patreonCampaign.meta?.pagination?.cursors != null) {
             log.info("Next page of patreon campaign members.")
             this.refreshCampaignInfo(token, patreonCampaign.meta.pagination.cursors.next)
         }

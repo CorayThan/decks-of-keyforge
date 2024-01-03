@@ -12,7 +12,7 @@ data class PatreonUserData(
 
 data class PatreonCampaigns(
         val data: List<PatreonCampaignMember>,
-        val meta: PatreonCampaignsMeta
+        val meta: PatreonCampaignsMeta?
 )
 
 data class PatreonCampaignsMeta(
