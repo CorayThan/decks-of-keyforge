@@ -148,7 +148,9 @@ class PatreonService(
         return savedCreatorAccount
     }
 
-    fun refreshCampaignInfo(token: String, nextPage: String? = null) {
+    fun refreshCampaignInfo(token: String, total: Int = 0, nextPage: String? = null) {
+
+        var runningTotal = total
 
         val paging = if (nextPage == null) "" else "&page[cursor]=$nextPage"
 
@@ -189,10 +191,15 @@ class PatreonService(
                 userRepo.updatePatronTierAndLifetimeSupportCents(bestTier, lifetimeSupportCents, storeName, user.id)
                 keyForgeEventService.updatePromotedEventsForUser(user)
             }
+            if (user != null) {
+                runningTotal++
+            }
         }
-        if (patreonCampaign.meta?.pagination?.cursors != null) {
+        if (patreonCampaign.meta?.pagination?.cursors?.next != null) {
             log.info("Next page of patreon campaign members.")
-            this.refreshCampaignInfo(token, patreonCampaign.meta.pagination.cursors.next)
+            this.refreshCampaignInfo(token, runningTotal, patreonCampaign.meta.pagination.cursors.next)
+        } else {
+            log.info("Patreon Paging complete no next cursor available. Resolved $runningTotal patrons.")
         }
     }
 }

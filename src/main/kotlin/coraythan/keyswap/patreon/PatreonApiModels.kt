@@ -24,7 +24,7 @@ data class PatreonPagination(
 )
 
 data class PatreonNext(
-        val next: String
+        val next: String?
 )
 
 data class PatreonCampaignMember(
