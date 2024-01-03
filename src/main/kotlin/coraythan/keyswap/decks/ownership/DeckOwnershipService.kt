@@ -36,7 +36,7 @@ class DeckOwnershipService(
 
         val deckOwnership = DeckOwnership(deckId, currentUser, key)
         deckOwnershipRepo.save(deckOwnership)
-        deckRepo.save(deck.copy(hasOwnershipVerification = true))
+        deckRepo.updateHasOwnershipVerification(deck.id, true)
 
         deckListingRepo.findBySellerIdAndDeckId(currentUser.id, deckId)
                 .forEach {
@@ -52,7 +52,7 @@ class DeckOwnershipService(
 
         if (!deckOwnershipRepo.existsByDeckId(deckId)) {
             val deck = deckRepo.findByIdOrNull(deckId) ?: throw IllegalStateException("No deck with id $deckId")
-            deckRepo.save(deck.copy(hasOwnershipVerification = false))
+            deckRepo.updateHasOwnershipVerification(deck.id, false)
         }
         deckListingRepo.findBySellerIdAndDeckId(currentUser.id, deckId)
                 .forEach {

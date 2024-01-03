@@ -62,19 +62,19 @@ class DeckImporterService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @Transactional(propagation = Propagation.NEVER)
-    @Scheduled(
-        fixedDelayString = lockImportNewDecksFor,
-        initialDelayString = SchedulingConfig.importNewDecksInitialDelay
-    )
-    @SchedulerLock(
-        name = "importNewDecks",
-        lockAtLeastFor = lockImportNewDecksFor,
-        lockAtMostFor = lockImportNewDecksFor
-    )
+//    @Scheduled(
+//        fixedDelayString = lockImportNewDecksFor,
+//        initialDelayString = SchedulingConfig.importNewDecksInitialDelay
+//    )
+//    @SchedulerLock(
+//        name = "importNewDecks",
+//        lockAtLeastFor = lockImportNewDecksFor,
+//        lockAtMostFor = lockImportNewDecksFor
+//    )
     fun importNewDecks() {
         log.info("$scheduledStart new deck import.")
 
-        val deckCountBeforeImport = deckRepo.estimateRowCount()
+        // val deckCountBeforeImport = deckRepo.estimateRowCount()
 
         deckImportingUpToDate = false
         var decksAdded = 0
@@ -124,9 +124,9 @@ class DeckImporterService(
                 }
             }
         }
-        val deckCountNow = deckRepo.count()
+        val deckCountNow = deckRepo.estimateRowCount()
         log.info(
-            "$scheduledStop Added $decksAdded decks. Total decks: $deckCountNow. Decks added by counts ${deckCountNow - deckCountBeforeImport} " +
+            "$scheduledStop Added $decksAdded decks. Total decks: $deckCountNow.  " +
                     "Pages requested $pagesRequested It took ${importDecksDuration / 1000} seconds."
         )
         deckSearchService.countFilters(DeckFilters())

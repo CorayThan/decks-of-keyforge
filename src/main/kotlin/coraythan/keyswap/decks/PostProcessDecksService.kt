@@ -31,7 +31,8 @@ class PostProcessDecksService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedDelayString = lockPostProcessDecksFor, initialDelayString = SchedulingConfig.postProcessDecksDelay)
+    // todo reenable this
+    // @Scheduled(fixedDelayString = lockPostProcessDecksFor, initialDelayString = SchedulingConfig.postProcessDecksDelay)
     fun postProcessDecks() {
         log.info("$scheduledStart post process decks.")
 

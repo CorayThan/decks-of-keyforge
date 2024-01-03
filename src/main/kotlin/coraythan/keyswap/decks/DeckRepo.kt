@@ -2,8 +2,10 @@ package coraythan.keyswap.decks
 
 import coraythan.keyswap.decks.models.Deck
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.querydsl.QuerydslPredicateExecutor
+import org.springframework.data.repository.query.Param
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional
@@ -23,10 +25,15 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
     fun countByExpansion(expansion: Int): Long
 
     @Query(
-        value = "SELECT * FROM deck d WHERE (d.refreshed_bonus_icons IS NULL OR d.refreshed_bonus_icons = true) LIMIT 50",
+        value = "SELECT * FROM deck d WHERE (d.refreshed_bonus_icons IS NULL OR d.refreshed_bonus_icons = TRUE) LIMIT 50",
         nativeQuery = true
     )
     fun findTop50ByRefreshedBonusIconsIsTrueOrNull(): List<Deck>
+
     @Query(value = "SELECT COUNT(d) FROM Deck d WHERE (d.refreshedBonusIcons IS NULL OR d.refreshedBonusIcons = true)")
     fun countByRefreshedBonusIconsIsTrueOrNull(): Long
+
+    @Modifying
+    @Query("UPDATE Deck d SET d.hasOwnershipVerification = :updateOwnershipVerification WHERE d.id = :id")
+    fun updateHasOwnershipVerification(@Param(value = "id") id: Long, @Param(value = "updateOwnershipVerification") updateOwnershipVerification: Boolean)
 }
