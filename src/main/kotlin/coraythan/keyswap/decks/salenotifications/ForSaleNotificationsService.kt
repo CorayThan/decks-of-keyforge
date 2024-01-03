@@ -108,7 +108,6 @@ class ForSaleNotificationsService(
                 title = query.title,
                 forSale = query.forSale,
                 forTrade = query.forTrade,
-                forAuction = query.forAuction,
                 forSaleInCountry = query.forSaleInCountry,
                 expansions = query.expansions,
                 constraints = query.constraints.map {

@@ -1,9 +1,13 @@
 import { makeObservable, observable } from "mobx"
 import * as React from "react"
-import { SortOption } from "../../decks/selects/DeckSortSelect"
 import { KeySelect, SelectedStore } from "../../mui-restyled/KeySelect"
 
-const cardSortOptions: SortOption[] = [
+export interface CardSortOption {
+    name: string
+    value: string
+}
+
+const cardSortOptions: CardSortOption[] = [
     {value: "SET_NUMBER", name: "Set Number"},
     {value: "AERC", name: "Total Aerc"},
     {value: "RELATIVE_WIN_RATE", name: "Relative Win Rate"},
@@ -15,9 +19,14 @@ const cardSortOptions: SortOption[] = [
     {value: "ARTIFACT_CONTROL", name: "Artifact Control"},
 ]
 
-export class CardSortSelect extends React.Component<{store: CardSortSelectStore}> {
+export class CardSortSelect extends React.Component<{ store: CardSortSelectStore }> {
     render() {
-        return (<KeySelect name={"Sort By"} options={cardSortOptions.map(option => option.name)} selected={this.props.store}/>)
+        return (
+            <KeySelect
+                name={"Sort By"} options={cardSortOptions.map(option => option.name)}
+                selected={this.props.store}
+            />
+        )
     }
 }
 

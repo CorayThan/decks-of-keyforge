@@ -10,6 +10,7 @@ import { userStore } from "../../user/UserStore"
 import { defaultSort } from "../selects/DeckSortSelect"
 import { queryParamsFromObject, SearchFiltersBuilder } from "../../config/SearchFiltersBuilder"
 import { SortDirection } from "../../generated-src/SortDirection"
+import { DeckSortOptions } from "../../generated-src/DeckSortOptions"
 
 export class  DeckFilters {
     static forSale = () => {
@@ -34,8 +35,6 @@ export class  DeckFilters {
             .value("teamDecks")
             .value("withOwners")
             .value("myFavorites")
-            .value("completedAuctions")
-            .value("forAuction")
             .value("forTrade")
             .value("notForSale")
             .value("forSale")
@@ -104,7 +103,7 @@ export class  DeckFilters {
     notesUser = ""
     page = 0
     @observable
-    sort: string = defaultSort.value
+    sort: DeckSortOptions = defaultSort.value
     @observable
     titleQl = false
     @observable
@@ -114,13 +113,9 @@ export class  DeckFilters {
     @observable
     forTrade = false
     @observable
-    forAuction = false
-    @observable
     withOwners = false
     @observable
     teamDecks = false
-    @observable
-    completedAuctions = false
     @observable
     forSaleInCountry?: string
     @observable
@@ -150,8 +145,6 @@ export class  DeckFilters {
         this.forSale = undefined
         this.notForSale = false
         this.forTrade = false
-        this.forAuction = false
-        this.completedAuctions = false
         this.forSaleInCountry = undefined
         this.myFavorites = false
         this.cards = []
@@ -193,13 +186,6 @@ export class  DeckFilters {
         this.myFavorites = event.target.checked
     }
 
-    handleCompletedAuctionsUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.completedAuctions = event.target.checked
-        this.forSale = undefined
-        this.forTrade = false
-        this.forAuction = false
-    }
-
     cleaned = () => {
         const cloned = clone(this)
         cloned.cards = cloned.cards.filter(card => card.cardNames.length > 0 && card.cardNames[0].length > 0)
@@ -211,7 +197,7 @@ export class  DeckFilters {
     }
 
     get isForSaleOrTrade() {
-        return this.forTrade || this.forAuction || this.forSale
+        return this.forTrade || this.forSale
     }
 }
 

@@ -1,0 +1,16 @@
+DROP INDEX antisynergy_rating_idx;
+DROP INDEX deck_anomaly_count_idx;
+DROP INDEX deck_auction_end_idx;
+DROP INDEX deck_auction_ended_on_idx;
+DROP INDEX deck_chains_desc_idx;
+DROP INDEX deck_enhancements_added;
+DROP INDEX deck_funny_desc_id_idx;
+DROP INDEX deck_listed_on_idx;
+DROP INDEX deck_pl_desc_idx;
+DROP INDEX deck_refreshed_bonus_icons;
+DROP INDEX deck_token_number_idx;
+DROP INDEX deck_wishlist_desc_id_idx;
+DROP INDEX evil_twin_deck_idx;
+DROP INDEX for_auction_idx;
+DROP INDEX funny_count_idx;
+DROP INDEX wishlist_count_idx;

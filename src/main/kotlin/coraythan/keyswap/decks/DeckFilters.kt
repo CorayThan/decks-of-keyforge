@@ -19,8 +19,6 @@ interface DeckQuery {
     val notForSale: Boolean
     val forSale: Boolean?
     val forTrade: Boolean
-    val forAuction: Boolean
-    val completedAuctions: Boolean
     val forSaleInCountry: Country?
     val myFavorites: Boolean
     val expansions: List<Int>
@@ -53,8 +51,6 @@ data class DeckFilters(
     override val notForSale: Boolean = false,
     override val forSale: Boolean? = null,
     override val forTrade: Boolean = false,
-    override val forAuction: Boolean = false,
-    override val completedAuctions: Boolean = false,
     override val forSaleInCountry: Country? = null,
     override val myFavorites: Boolean = false,
     override val expansions: List<Int> = listOf(),
@@ -86,17 +82,10 @@ data class DeckCardQuantity(
         val mav: Boolean? = null
 )
 
+@GenerateTs
 enum class DeckSortOptions {
     ADDED_DATE,
     SAS_RATING,
-    POWER_LEVEL,
-    CHAINS,
-    FUNNIEST,
-    MOST_WISHLISTED,
-    NAME,
-    RECENTLY_LISTED,
-    ENDING_SOONEST,
-    COMPLETED_RECENTLY
 }
 
 @GenerateTs

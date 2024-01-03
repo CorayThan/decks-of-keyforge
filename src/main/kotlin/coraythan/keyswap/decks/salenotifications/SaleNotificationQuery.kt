@@ -27,6 +27,7 @@ data class SaleNotificationQuery(
 
         val forSale: Boolean? = false,
         val forTrade: Boolean = false,
+        // Deprecated
         val forAuction: Boolean = false,
         @Column(columnDefinition = "INT4")
         val forSaleInCountry: Country? = null,
@@ -61,7 +62,6 @@ data class SaleNotificationQuery(
                 title,
                 forSale,
                 forTrade,
-                forAuction,
                 forSaleInCountry,
                 expansions,
                 constraints.map { Constraint(it.property, it.cap, it.value) },
@@ -93,7 +93,6 @@ data class SaleNotificationQueryDto(
 
         val forSale: Boolean? = null,
         val forTrade: Boolean = false,
-        val forAuction: Boolean = false,
         val forSaleInCountry: Country? = null,
 
         val expansions: List<Int> = listOf(),
@@ -116,7 +115,6 @@ data class SaleNotificationQueryDto(
             title = title,
             forSale = forSale,
             forTrade = forTrade,
-            forAuction = forAuction,
             forSaleInCountry = forSaleInCountry,
             expansions = expansions,
             constraints = constraints,

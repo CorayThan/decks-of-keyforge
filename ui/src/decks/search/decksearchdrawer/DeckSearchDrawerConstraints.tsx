@@ -5,12 +5,10 @@ import { ConstraintDropdowns, FiltersConstraintsStore } from "../ConstraintDropd
 
 interface DeckSearchDrawerConstraintsProps {
     store: FiltersConstraintsStore
-    forSale: boolean
-    forTrade: boolean
 }
 
 export const DeckSearchDrawerConstraints = memo((props: DeckSearchDrawerConstraintsProps) => {
-    const {store, forSale, forTrade} = props
+    const {store} = props
 
     const constraintOptions = [
         "amberControl",
@@ -24,28 +22,13 @@ export const DeckSearchDrawerConstraints = memo((props: DeckSearchDrawerConstrai
         "bonusAmber",
         "bonusCapture",
         "bonusDraw",
-        "aercScore",
-        "synergyRating",
-        "antisynergyRating",
         "sasRating",
         "creatureCount",
         "actionCount",
         "artifactCount",
         "upgradeCount",
-        "powerLevel",
-        "chains",
         "maverickCount",
     ]
-    const hideMinMaxConstraintOptions = [
-        "listedWithinDays"
-    ]
-
-    if (forSale) {
-        constraintOptions.unshift("buyItNow")
-    }
-    if (forSale || forTrade) {
-        constraintOptions.unshift("listedWithinDays")
-    }
 
     return (
         <SearchDrawerExpansionPanel
@@ -55,7 +38,6 @@ export const DeckSearchDrawerConstraints = memo((props: DeckSearchDrawerConstrai
             <ConstraintDropdowns
                 store={store}
                 properties={constraintOptions}
-                hideMinMax={hideMinMaxConstraintOptions}
             />
         </SearchDrawerExpansionPanel>
     )

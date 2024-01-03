@@ -90,11 +90,12 @@ export class OfferButton extends React.Component<OfferButtonProps> {
     render() {
         const {currencySymbol, sellerUsername, deckName, style} = this.props
         const soldByMe = sellerUsername === userStore.username
+        const loggedIn = userStore.loggedIn()
         const disabled = !userStore.loggedIn() || soldByMe
         const title = (soldByMe ? "View Offers" : "Make Offer")
         return (
             <div style={style}>
-                <Button variant={"outlined"} color={"primary"} onClick={this.open}>
+                <Button variant={"outlined"} color={"primary"} onClick={this.open} disabled={!loggedIn}>
                     {title}
                 </Button>
                 <Dialog

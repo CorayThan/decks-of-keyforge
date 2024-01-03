@@ -14,8 +14,8 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
 import { userDeckStore } from "../userdeck/UserDeckStore"
-import { BidPlacementResult } from "./BidPlacementResult"
 import { deckStore } from "../decks/DeckStore";
+import { BidPlacementResult } from "./BidPlacementResult"
 
 export class DeckListingStore {
     static readonly CONTEXT = HttpConfig.API + "/deck-listings"

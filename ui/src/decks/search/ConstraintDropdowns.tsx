@@ -53,13 +53,12 @@ export class FiltersConstraintsStore {
 export interface ConstraintDropdownsProps {
     store: FiltersConstraintsStore
     properties: string[]
-    hideMinMax?: string[]
 }
 
 @observer
 export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProps> {
     render() {
-        const {store, properties, hideMinMax} = this.props
+        const {store, properties} = this.props
         return (
             <div style={{width: "100%"}}>
                 {store.constraints.map((constraint, idx) => (
@@ -82,24 +81,22 @@ export class ConstraintDropdowns extends React.Component<ConstraintDropdownsProp
                             </IconButton>
                         </div>
                         <div style={{display: "flex", alignItems: "center", marginBottom: spacing(1)}}>
-                            {hideMinMax != null && hideMinMax.includes(constraint.property) ? null : (
-                                <TextField
-                                    select={true}
-                                    value={constraint.cap}
-                                    onChange={event => constraint.cap = event.target.value as Cap}
-                                    style={{marginRight: spacing(2), width: 104}}
-                                >
-                                    <MenuItem value={Cap.MIN}>
-                                        Min
-                                    </MenuItem>
-                                    <MenuItem value={Cap.MAX}>
-                                        Max
-                                    </MenuItem>
-                                    <MenuItem value={Cap.EQUALS}>
-                                        Equals
-                                    </MenuItem>
-                                </TextField>
-                            )}
+                            <TextField
+                                select={true}
+                                value={constraint.cap}
+                                onChange={event => constraint.cap = event.target.value as Cap}
+                                style={{marginRight: spacing(2), width: 104}}
+                            >
+                                <MenuItem value={Cap.MIN}>
+                                    Min
+                                </MenuItem>
+                                <MenuItem value={Cap.MAX}>
+                                    Max
+                                </MenuItem>
+                                <MenuItem value={Cap.EQUALS}>
+                                    Equals
+                                </MenuItem>
+                            </TextField>
                             <TextField
                                 value={constraint.value}
                                 type={"number"}

@@ -14,7 +14,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.20"
+export const latestVersion = "6.21"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -42,6 +42,38 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.21"}
+                    date={"1/3/2024"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Working on stability issues",
+                            note: "The site has had an unusual amount of downtime lately. As more and more decks " +
+                                "get added to KeyForge, updating the list of decks and providing a fast, stable " +
+                                "search feature only gets more challenging. To improve site stability and speed I've " +
+                                "had to remove some deck search options, as every search ability imposes a " +
+                                "cost on database performance. As such I've removed the following search options:"
+                        },
+                        {note: "Antisynergy & Synergy"},
+                        {note: "Chains & Power Level"},
+                        {note: "Funny & Wishlist"},
+                        {
+                            highlight: "Additional site simplifications",
+                            note: "I've also removed a few features that were seeing little to no use by users. " +
+                                "You can still list decks for sale with offers or a buy it now price, but " +
+                                "the site no longer allows listing decks as auctions. I've also removed the " +
+                                "community event calendar."
+                        },
+                        {
+                            highlight: "Future Improvements",
+                            note: "I'm working to improve the basic way the site handles decks and cards to optimize " +
+                                "the service and add Grim Reminders and Menagerie. This will also make sure the site " +
+                                "can perform SAS updates quickly without degraded service. This is a lot of work, " +
+                                "but I'll get it done as soon as I can."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.20"}
                     date={"12/27/2023"}

@@ -30,12 +30,7 @@ class DeckSearchDrawerStore {
     updateValues = (filters: DeckFilters) => {
         this.selectedExpansions = new SelectedOrExcludedExpansions(filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum))
         this.selectedHouses = new SelectedOrExcludedHouses(filters.houses, filters.excludeHouses)
-        this.selectedSortStore = new DeckSortSelectStore(
-            filters.forTrade || (filters.forSale === true),
-            filters.forAuction && !(filters.forTrade || filters.forSale),
-            filters.completedAuctions,
-            filters.sort
-        )
+        this.selectedSortStore = new DeckSortSelectStore(filters.sort)
         this.constraintsStore = new FiltersConstraintsStore(filters.constraints)
     }
 }

@@ -5,7 +5,7 @@ import List from "@material-ui/core/List/List"
 import ListItem from "@material-ui/core/ListItem/ListItem"
 import TextField from "@material-ui/core/TextField/TextField"
 import Typography from "@material-ui/core/Typography"
-import { BarChart, Close, Delete, ViewList, ViewModule } from "@material-ui/icons"
+import { BarChart, Close, ViewList, ViewModule } from "@material-ui/icons"
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab"
 import * as History from "history"
 import { computed, makeObservable, observable } from "mobx"
@@ -17,10 +17,9 @@ import { SortDirectionView } from "../../../components/SortDirectionView"
 import { keyLocalStorage } from "../../../config/KeyLocalStorage"
 import { spacing } from "../../../config/MuiConfig"
 import { MyDokSubPaths, Routes } from "../../../config/Routes"
-import { log, Utils } from "../../../config/Utils"
+import { Utils } from "../../../config/Utils"
 import { ExpansionSelectOrExclude } from "../../../expansions/ExpansionSelectOrExclude"
 import { PatreonRewardsTier } from "../../../generated-src/PatreonRewardsTier"
-import { AuctionDeckIcon } from "../../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../../generic/icons/TradeDeckIcon"
 import { HouseSelectOrExclude } from "../../../houses/HouseSelectOrExclude"
@@ -34,7 +33,7 @@ import { UserLink } from "../../../user/UserLink"
 import { userStore } from "../../../user/UserStore"
 import { deckStore } from "../../DeckStore"
 import { CreateForSaleQuery } from "../../salenotifications/CreateForSaleQuery"
-import { DeckSorts, DeckSortSelect } from "../../selects/DeckSortSelect"
+import { DeckSortSelect } from "../../selects/DeckSortSelect"
 import { DeckFilters } from "../DeckFilters"
 import { DownloadDeckResults } from "../DownloadDeckResults"
 import { DeckSearchDrawerCards } from "./DeckSearchDrawerCards"
@@ -70,14 +69,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
         const filters = this.makeFilters()
 
-        if (!filters.forSale && !filters.forTrade && !filters.forAuction && !filters.myFavorites && !filters.owner) {
-            // search is broad, so disable bad searches
-            if (filters.sort === "NAME") {
-                messageStore.setWarningMessage("To use the name sort please check for sale, for trade, my decks, or my favorites.")
-                return
-            }
-        }
-
         if (analyze) {
             this.props.history.push(Routes.analyzeDeckSearch(filters))
         } else {
@@ -106,16 +97,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
         filters.forSale = forSale
         if (forSale === false) {
             filters.forTrade = false
-            filters.forAuction = false
-        }
-        this.handleOtherValuesForSaleOrTrade()
-    }
-
-    updateForAuction = (forAuction: boolean) => {
-        const filters = this.props.filters
-        filters.forAuction = forAuction
-        if (forAuction && filters.forSale === false) {
-            filters.forSale = undefined
         }
         this.handleOtherValuesForSaleOrTrade()
     }
@@ -148,19 +129,10 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
     private handleOtherValuesForSaleOrTrade = () => {
         const filters = this.props.filters
-        if (!(filters.forSale || filters.forTrade || filters.forAuction)) {
+        if (!(filters.forSale || filters.forTrade)) {
             filters.forSaleInCountry = undefined
         }
-        deckSearchDrawerStore.selectedSortStore.forSaleOrTrade = filters.forSale || filters.forTrade
-        deckSearchDrawerStore.selectedSortStore.forAuction = filters.forAuction
-        deckSearchDrawerStore.selectedSortStore.completedAuctions = false
-        filters.completedAuctions = false
         filters.notForSale = false
-
-        if (!deckSearchDrawerStore.selectedSortStore.sortIsValid()) {
-            log.debug("Sort not defined")
-            filters.sort = DeckSorts.sas
-        }
     }
 
     constructor(props: DecksSearchDrawerProps) {
@@ -195,11 +167,9 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
             owner,
             forSale,
             forTrade,
-            forAuction,
             forSaleInCountry,
             notes,
             notesUser,
-            completedAuctions,
             teamDecks,
             withOwners,
             handleMyPreviouslyOwnedDecksUpdate,
@@ -213,10 +183,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
 
         let myCountry: string | undefined
         if (!!(userStore.country
-            && (forSale || forTrade || forAuction))) {
+            && (forSale || forTrade))) {
             myCountry = userStore.country
         }
-        const showLoginForCountry = !myCountry && (forSale || forTrade || forAuction)
+        const inMyCountryChecked = myCountry != null && forSaleInCountry === myCountry
+        const showLoginForCountry = !myCountry && (forSale || forTrade)
         const showMyDecks = userStore.loggedIn()
         const showDecksOwner = !!owner && owner !== userStore.username
 
@@ -229,7 +200,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                     <List dense={true}>
                         <ListItem>
                             <TextField
-                                label={titleQl ? 'Exact Match Deck Name' : "Deck Name"}
+                                label={titleQl ? "Exact Match Deck Name" : "Deck Name"}
                                 onChange={handleTitleUpdate}
                                 value={title}
                                 fullWidth={!screenStore.screenSizeXs()}
@@ -284,35 +255,13 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         label={(
                                             <div style={{display: "flex", alignItems: "center"}}>
                                                 <SellDeckIcon/>
-                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>For
-                                                    Sale</Typography>
+                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>
+                                                    For Sale
+                                                </Typography>
                                             </div>
                                         )}
                                         style={{width: 136}}
                                     />
-                                    <div style={{display: "flex"}}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={myCountry != null && forSaleInCountry === myCountry}
-                                                    onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
-                                                    disabled={!myCountry}
-                                                />
-                                            }
-                                            label={<Typography variant={"body2"}>In My Country</Typography>}
-                                            style={{width: 136}}
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.props.filters.forSale === false}
-                                                    onChange={(event) => this.updateForSale(event.target.checked ? false : undefined)}
-                                                />
-                                            }
-                                            label={<Typography variant={"body2"}>Not For Sale</Typography>}
-                                            style={{width: 136}}
-                                        />
-                                    </div>
                                     {showDecksOwner && (
                                         <div style={{display: "flex", alignItems: "center"}}>
                                             <UserLink username={owner}/>
@@ -343,26 +292,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             ))}
                                         </>
                                     )}
-                                    {showLoginForCountry ? (
-                                        <div style={{display: "flex"}}>
-                                            <KeyLink
-                                                to={userStore.loggedIn() ? MyDokSubPaths.profile : Routes.registration}>
-                                                <Typography variant={"body2"}>
-                                                    Select your country
-                                                </Typography>
-                                            </KeyLink>
-                                            <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>
-                                                to filter decks by country
-                                            </Typography>
-                                        </div>
-                                    ) : null}
-                                    {this.props.filters.notForSale ? (
-                                        <div style={{display: "flex", alignItems: "center"}}>
-                                            <Typography>Not for sale</Typography>
-                                            <IconButton onClick={() => this.props.filters.notForSale = false}><Delete
-                                                fontSize={"small"}/></IconButton>
-                                        </div>
-                                    ) : null}
                                 </FormGroup>
                             </div>
                         </ListItem>
@@ -370,28 +299,39 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                             <div>
                                 <SearchDrawerExpansionPanel
                                     initiallyOpen={
-                                        forAuction || forTrade || myFavorites || completedAuctions || teamDecks
+                                        inMyCountryChecked
+                                        || forTrade || myFavorites || teamDecks
                                         || withOwners || owners.length > 0
                                     }
                                     title={"Extra Options"}
                                 >
                                     <div style={{display: "flex", flexWrap: "wrap", flexGrow: 1}}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.props.filters.forAuction}
-                                                    onChange={(event) => this.updateForAuction(event.target.checked)}
-                                                />
-                                            }
-                                            label={(
-                                                <div style={{display: "flex", alignItems: "center"}}>
-                                                    <AuctionDeckIcon style={{minWidth: 18}}/>
-                                                    <Typography style={{marginLeft: spacing(1)}}
-                                                                variant={"body2"}>Auctions</Typography>
-                                                </div>
-                                            )}
-                                            style={{width: 136}}
-                                        />
+                                        <div style={{display: "flex"}}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={inMyCountryChecked}
+                                                        onChange={(event) => this.props.filters.forSaleInCountry = event.target.checked ? myCountry : undefined}
+                                                        disabled={!myCountry}
+                                                    />
+                                                }
+                                                label={<Typography variant={"body2"}>In My Country</Typography>}
+                                                style={{width: 136}}
+                                            />
+                                        </div>
+                                        {showLoginForCountry ? (
+                                            <div style={{display: "flex"}}>
+                                                <KeyLink
+                                                    to={userStore.loggedIn() ? MyDokSubPaths.profile : Routes.registration}>
+                                                    <Typography variant={"body2"}>
+                                                        Select your country
+                                                    </Typography>
+                                                </KeyLink>
+                                                <Typography variant={"body2"} style={{marginLeft: spacing(1)}}>
+                                                    to filter decks by country
+                                                </Typography>
+                                            </div>
+                                        ) : null}
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
@@ -417,19 +357,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                                 />
                                             }
                                             label={<Typography variant={"body2"}>My Favorites</Typography>}
-                                            style={{width: 136}}
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={this.props.filters.completedAuctions}
-                                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                        this.props.filters.handleCompletedAuctionsUpdate(event)
-                                                        deckSearchDrawerStore.selectedSortStore.completedAuctions = this.props.filters.completedAuctions
-                                                    }}
-                                                />
-                                            }
-                                            label={<Typography variant={"body2"}>Past Auctions</Typography>}
                                             style={{width: 136}}
                                         />
                                         {userStore.patron && userStore.hasTeam && (
@@ -525,8 +452,6 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 </SearchDrawerExpansionPanel>
                                 <DeckSearchDrawerConstraints
                                     store={deckSearchDrawerStore.constraintsStore}
-                                    forSale={!!forSale}
-                                    forTrade={forTrade}
                                 />
                                 <DeckSearchDrawerCards
                                     filters={this.props.filters}
@@ -556,7 +481,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 <CreateForSaleQuery
                                     noDisplay={
                                         !userStore.deckNotificationsAllowed
-                                        || (!this.props.filters.forSale && !this.props.filters.forTrade && !this.props.filters.forAuction)
+                                        || (!this.props.filters.forSale && !this.props.filters.forTrade)
                                         || this.props.filters.owner === userStore.username
                                     }
                                     filters={this.makeFilters}

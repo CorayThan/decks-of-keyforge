@@ -5,11 +5,9 @@ import { KeyDrawer } from "../components/KeyDrawer"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
-import { DeckSorts } from "../decks/selects/DeckSortSelect"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
 import { activeCardLinksExpansions, activeExpansions, expansionInfoMap } from "../expansions/Expansions"
 import { UnstyledLink } from "../generic/UnstyledLink"
-import { PromotedKeyForgeEvents } from "../keyforgeevents/PromotedKeyForgeEvents"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
@@ -27,24 +25,10 @@ import { AnnouncementPaper } from "../generic/AnnouncementPaper"
 import { LinkNewWindow } from "../mui-restyled/KeyLink"
 
 const topSas = new DeckFilters()
-const topChains = new DeckFilters()
-topChains.sort = DeckSorts.chains
-const topPowerLevel = new DeckFilters()
-topPowerLevel.sort = DeckSorts.powerLevel
-const topFunny = new DeckFilters()
-topFunny.sort = DeckSorts.funniest
-const topWishlisted = new DeckFilters()
-topWishlisted.sort = DeckSorts.wishlisted
 
 const forSale = DeckFilters.forSale()
-
-const auctions = new DeckFilters()
-auctions.forAuction = true
-auctions.sort = DeckSorts.endingSoonest
-
-const completedAuctions = new DeckFilters()
-completedAuctions.completedAuctions = true
-completedAuctions.sort = DeckSorts.completedRecently
+const forTrade = new DeckFilters()
+forTrade.forSale = true
 
 const worstSas = new DeckFilters()
 worstSas.sortDirection = SortDirection.ASC
@@ -135,7 +119,7 @@ export class LandingPage extends React.Component<{}> {
                             </ListSubheader>
                             <Box display={"flex"} flexWrap={"wrap"}>
                                 <DeckSearchLink name={"For Sale"} filters={forSale} style={{marginBottom: spacing(2)}}/>
-                                <DeckSearchLink name={"Auctions"} filters={auctions}
+                                <DeckSearchLink name={"Trades"} filters={forTrade}
                                                 style={{marginBottom: spacing(2)}}/>
                             </Box>
 
@@ -162,15 +146,6 @@ export class LandingPage extends React.Component<{}> {
                                     )
                                 })}
                             </div>
-                            <Divider/>
-                            <ListSubheader>
-                                Fun Searches
-                            </ListSubheader>
-                            <Box display={"flex"} flexWrap={"wrap"}>
-                                <DeckSearchLink name={"Reversal"} filters={worstSas}
-                                                style={{marginBottom: spacing(2)}}/>
-                                <DeckSearchLink name={"Funny"} filters={topFunny} style={{marginBottom: spacing(2)}}/>
-                            </Box>
                         </List>
                     </KeyDrawer>
                     <Box style={{flexGrow: 1}}>
@@ -190,12 +165,14 @@ export class LandingPage extends React.Component<{}> {
                                 DoKvelopments
                             </Typography>
                             <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                DoK is now a <LinkNewWindow href={"https://github.com/CorayThan/decks-of-keyforge"}>public github repository</LinkNewWindow> and an open source code base!
+                                DoK is now a <LinkNewWindow href={"https://github.com/CorayThan/decks-of-keyforge"}>public
+                                github repository</LinkNewWindow> and an open source code base!
                             </Typography>
                             <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
                                 If you're a skilled TypeScript + React or Kotlin + Spring Boot developer and want
                                 to donate some time to the KeyForge
-                                community, <LinkNewWindow href={decksOfKeyForgeDiscord}>join the DoK Discord</LinkNewWindow>!
+                                community, <LinkNewWindow href={decksOfKeyForgeDiscord}>join the DoK
+                                Discord</LinkNewWindow>!
                                 I'm building a small team to maintain DoK and add new features.
                             </Typography>
                         </AnnouncementPaper>
@@ -203,16 +180,9 @@ export class LandingPage extends React.Component<{}> {
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                                 <DeckSearchLink name={"Search"} filters={topSas} style={{marginTop: spacing(2)}}/>
                                 <DeckSearchLink name={"For Sale"} filters={forSale} style={{marginTop: spacing(2)}}/>
-                                <DeckSearchLink name={"Auctions"} filters={auctions} style={{marginTop: spacing(2)}}/>
                             </div>
                         ) : null}
                         <FeaturedSellersView/>
-                        <Box m={4}>
-                            <LandingPageTitle link={Routes.events} linkName={"View All"}>
-                                Featured Events
-                            </LandingPageTitle>
-                            <PromotedKeyForgeEvents/>
-                        </Box>
                         <div style={{marginLeft: spacing(2)}}>
                             <div style={{marginLeft: spacing(2)}}>
                                 {/*<LastTwoArticles/>*/}
@@ -276,7 +246,12 @@ export class LandingPage extends React.Component<{}> {
     }
 }
 
-export const LandingPageTitle = observer((props: { children: string, marginTop?: number, linkName?: string, link?: string }) => {
+export const LandingPageTitle = observer((props: {
+    children: string,
+    marginTop?: number,
+    linkName?: string,
+    link?: string
+}) => {
     return (
         <Box display={"flex"} alignItems={"flex-start"} mb={2} mt={props.marginTop ?? 4}>
             <Typography
@@ -298,21 +273,3 @@ export const LandingPageTitle = observer((props: { children: string, marginTop?:
         </Box>
     )
 })
-
-
-// const LastTwoArticles = () => {
-//     return (
-//         <>
-//             <UnstyledLink to={Routes.articles}>
-//                 <Typography
-//                     variant={"h4"}
-//                     color={"primary"}
-//                     style={{marginBottom: spacing(4), marginTop: spacing(4)}}
-//                 >
-//                     Articles
-//                 </Typography>
-//             </UnstyledLink>
-//             {latestTwoArticles.map((article: Article, idx: number) => <ArticleView article={article} key={idx} snippet={true}/>)}
-//         </>
-//     )
-// }

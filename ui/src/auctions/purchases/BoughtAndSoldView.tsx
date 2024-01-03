@@ -56,7 +56,7 @@ export const BoughtAndSoldView = observer(() => {
                 For standard deck sales you can report a purchase from the three vertical dots on the bottom of a deck you have marked as owned.
             </HelperText>
             <HelperText style={{marginBottom: spacing(1)}}>
-                Auction and offer sales will be automatically recorded with buyer and seller.
+                Offer sales will be automatically recorded with buyer and seller.
             </HelperText>
             <HelperText>
                 If a buyer or seller has already created a sale or purchase in the past week for this deck with the same price they will automatically be

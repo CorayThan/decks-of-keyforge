@@ -29,7 +29,6 @@ import { DokIcon } from "../generic/icons/DokIcon"
 import { CreateTheoreticalDeck } from "../importdeck/theoretical/CreateTheoreticalDeck"
 import { ViewMyTheoreticalDecks } from "../importdeck/theoretical/ViewMyTheoreticalDecks"
 import { ViewTheoreticalDeck } from "../importdeck/theoretical/ViewTheoreticalDeck"
-import { KeyForgeEventsPage } from "../keyforgeevents/KeyForgeEventsPage"
 import { TournamentPage } from "../keyforgeevents/tournaments/TournamentPage"
 import { TournamentPrintables } from "../keyforgeevents/tournaments/TournamentPrintables"
 import { TournamentSearchPage } from "../keyforgeevents/tournaments/TournamentSearchPage"
@@ -64,7 +63,6 @@ class Routes {
     static landing = ""
     static users = "/users"
     static community = "/community"
-    static events = "/events"
     static myDok = "/my-dok"
     static tournaments = "/tournaments"
     static messages = "/messages"
@@ -110,7 +108,6 @@ class Routes {
     static usersDecks = () => `/decks?owner=${userStore.username}`
     static analyzeUsersDecks = () => `/analyze-collection?owner=${userStore.username}`
     static teamDecks = () => `/decks?teamDecks=true`
-    static usersDecksNotForSale = () => `/decks?owner=${userStore.username}&forSale=false`
     static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
     static userContent = (key: string) => `https://dok-user-content.s3-us-west-2.amazonaws.com/${key}`
     static compareDecksWithIds = (decks: DeckNameId[]) => {
@@ -383,10 +380,6 @@ const KeyRouter = observer(() => {
                     <Route
                         path={Routes.users}
                         component={UserSearchPage}
-                    />
-                    <Route
-                        path={Routes.events}
-                        component={KeyForgeEventsPage}
                     />
                     <Route
                         path={Routes.thirdPartyTools}
