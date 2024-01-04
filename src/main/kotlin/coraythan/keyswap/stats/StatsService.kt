@@ -107,12 +107,12 @@ class StatsService(
         """.trimIndent()
     }
 
-    @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
-    @SchedulerLock(
-        name = "updateStatisticsVersion",
-        lockAtLeastFor = lockStatsVersionUpdate,
-        lockAtMostFor = lockStatsVersionUpdate
-    )
+//    @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
+//    @SchedulerLock(
+//        name = "updateStatisticsVersion",
+//        lockAtLeastFor = lockStatsVersionUpdate,
+//        lockAtMostFor = lockStatsVersionUpdate
+//    )
     fun startNewDeckStats(): String {
 
         if (env == Env.qa) {
@@ -162,8 +162,8 @@ class StatsService(
         }
     }
 
-    @Scheduled(fixedDelayString = lockUpdateStats, initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
-    @SchedulerLock(name = "updateStatistics", lockAtLeastFor = lockUpdateStats, lockAtMostFor = lockUpdateStats)
+//    @Scheduled(fixedDelayString = lockUpdateStats, initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
+//    @SchedulerLock(name = "updateStatistics", lockAtLeastFor = lockUpdateStats, lockAtMostFor = lockUpdateStats)
     fun updateStatsForDecks() {
         try {
 

@@ -24,15 +24,6 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
 
     fun countByExpansion(expansion: Int): Long
 
-    @Query(
-        value = "SELECT * FROM deck d WHERE (d.refreshed_bonus_icons IS NULL OR d.refreshed_bonus_icons = TRUE) LIMIT 50",
-        nativeQuery = true
-    )
-    fun findTop50ByRefreshedBonusIconsIsTrueOrNull(): List<Deck>
-
-    @Query(value = "SELECT COUNT(d) FROM Deck d WHERE (d.refreshedBonusIcons IS NULL OR d.refreshedBonusIcons = true)")
-    fun countByRefreshedBonusIconsIsTrueOrNull(): Long
-
     @Modifying
     @Query("UPDATE Deck d SET d.hasOwnershipVerification = :updateOwnershipVerification WHERE d.id = :id")
     fun updateHasOwnershipVerification(@Param(value = "id") id: Long, @Param(value = "updateOwnershipVerification") updateOwnershipVerification: Boolean)

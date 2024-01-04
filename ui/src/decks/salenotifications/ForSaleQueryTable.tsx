@@ -13,7 +13,6 @@ import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { expansionInfoMapNumbers } from "../../expansions/Expansions"
 import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQueryDto"
-import { AuctionDeckIcon } from "../../generic/icons/AuctionDeckIcon"
 import { SellDeckIcon } from "../../generic/icons/SellDeckIcon"
 import { TradeDeckIcon } from "../../generic/icons/TradeDeckIcon"
 import { HouseBanner } from "../../houses/HouseBanner"
@@ -81,7 +80,6 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                     <TableCell>
                                         {query.forSale ? <SellDeckIcon style={{marginRight: spacing(1)}}/> : null}
                                         {query.forTrade ? <TradeDeckIcon style={{marginRight: spacing(1)}}/> : null}
-                                        {query.forAuction ? <AuctionDeckIcon style={{marginRight: spacing(1)}}/> : null}
                                     </TableCell>
                                     {small ? null : (
                                         <>
@@ -95,7 +93,8 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                             </TableCell>
                                             <TableCell>
                                                 {query.constraints.map((constraint) => (
-                                                    <div style={{display: "flex"}} key={constraint.property + constraint.cap + constraint.value}>
+                                                    <div style={{display: "flex"}}
+                                                         key={constraint.property + constraint.cap + constraint.value}>
                                                         <Typography>
                                                             {startCase(constraint.property)}
                                                             {constraint.property === "listedWithinDays" ? " " : (constraint.cap === "MAX" ? " < " : " > ")}
