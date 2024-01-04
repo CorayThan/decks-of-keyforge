@@ -399,9 +399,10 @@ class DeckImporterService(
         val cardsMap = this.cardsForDeck(inputDeck)
         val token = cardService.tokenForDeck(inputDeck)
 
-        val deck = inputDeck.copy(
-            cards = cardsMap
-        )
+        val deck = inputDeck
+//            .copy(
+//            cards = cardsMap
+//        )
 
         val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards, token)
         val bonusDraw = deck.bonusIcons().bonusIconHouses.flatMap { it.bonusIconCards }.sumOf { it.bonusDraw }

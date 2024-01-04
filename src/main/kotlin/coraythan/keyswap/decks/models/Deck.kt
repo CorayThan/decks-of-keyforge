@@ -82,9 +82,9 @@ data class Deck(
 
     override val cardNames: String = "",
 
-    @Type(JsonBinaryType::class)
-    @Column(columnDefinition = "json")
-    val cards: Map<House, List<CardInDeck>>? = mapOf(),
+//    @Type(JsonBinaryType::class)
+//    @Column(columnDefinition = "json")
+//    val cards: Map<House, List<CardInDeck>>? = mapOf(),
 
     override val houseNamesString: String = "",
 
