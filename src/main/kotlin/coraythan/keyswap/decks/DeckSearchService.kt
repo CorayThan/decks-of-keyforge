@@ -382,7 +382,7 @@ class DeckSearchService(
                 )
             )
         } else if (filters.forSale == true) {
-            predicate.and(deckQ.forTrade.isTrue)
+            predicate.and(deckQ.forSale.isTrue)
         } else if (filters.forTrade) {
             predicate.and(deckQ.forTrade.isTrue)
         }
