@@ -5,12 +5,10 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.*
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.Env
-import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.decks.pastsas.PastSasService
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
-import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
@@ -20,7 +18,6 @@ import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
 import coraythan.keyswap.thirdpartyservices.mastervault.keyforgeApiDeckPageSize
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.hibernate.exception.ConstraintViolationException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -31,7 +28,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
-import java.time.ZonedDateTime
 import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.system.measureTimeMillis
@@ -48,6 +44,8 @@ class DeckImporterService(
     private val cardService: CardService,
     private val deckSearchService: DeckSearchService,
     private val deckRepo: DeckRepo,
+    private val deckSearchValues1Repo: DeckSearchValues1Repo,
+    private val deckSearchValues2Repo: DeckSearchValues2Repo,
     private val deckPageService: DeckPageService,
     private val deckRatingProgressService: DeckRatingProgressService,
     private val statsService: StatsService,
@@ -114,7 +112,11 @@ class DeckImporterService(
 
                         if (decksToSaveCount < keyforgeApiDeckPageSize || results < keyforgeApiDeckPageSize) {
                             deckImportingUpToDate = true
-                            log.info("Stopped getting decks, decks to save was $decksToSaveCount, added was $results < $keyforgeApiDeckPageSize. Expansions: ${decks.data.map { it.toDeck().expansionEnum }.toSortedSet()}")
+                            log.info(
+                                "Stopped getting decks, decks to save was $decksToSaveCount, added was $results < $keyforgeApiDeckPageSize. Expansions: ${
+                                    decks.data.map { it.toDeck().expansionEnum }.toSortedSet()
+                                }"
+                            )
                             break
                         }
                     }
@@ -131,31 +133,6 @@ class DeckImporterService(
         )
         deckSearchService.countFilters(DeckFilters())
     }
-
-    var cardsInDeckUpdatedCount = 0
-
-    // Broken need to find a new way
-    // @Scheduled(fixedDelayString = "PT5M", initialDelayString = "PT1M")
-//    fun updateCardsInDecks() {
-//        val toUpdate = deckRepo.findTop50ByRefreshedBonusIconsIsTrueOrNull()
-//        if (toUpdate.isEmpty()) {
-//            log.info("Done updating cards in deck")
-//            return
-//        } else {
-//            log.info("Updating cards in decks: $cardsInDeckUpdatedCount updated so far.")
-////            log.info("Updating cards in decks: ${deckRepo.countByRefreshedBonusIconsIsTrueOrNull()} remaining to update.")
-//        }
-//
-//        toUpdate.forEach { deck ->
-//            cardsInDeckUpdatedCount++
-//            deckRepo.save(
-//                deck.copy(
-//                    refreshedBonusIcons = false,
-//                    cards = this.cardsForDeck(deck)
-//                )
-//            )
-//        }
-//    }
 
     // Rev publishAercVersion to rerate decks
 //    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksInitialDelay)
@@ -369,6 +346,8 @@ class DeckImporterService(
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, token: Card?): Deck {
         val ratedDeck = validateAndRateDeck(deck, houses, cardsList, token)
         val saved = deckRepo.save(ratedDeck)
+        deckSearchValues1Repo.save(DeckSearchValues1(ratedDeck))
+        deckSearchValues2Repo.save(DeckSearchValues2(ratedDeck))
 
         postProcessDecksService.addPostProcessDeck(saved)
         return saved

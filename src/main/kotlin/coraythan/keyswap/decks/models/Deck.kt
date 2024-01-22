@@ -64,7 +64,7 @@ data class Deck(
     override val aercScore: Double = 0.0,
     override val previousSasRating: Int? = 0,
     override val previousMajorSasRating: Int? = 0,
-    override val aercVersion: Int? = 0,
+    override val aercVersion: Int = 0,
     override val sasRating: Int = 0,
     override val synergyRating: Int = 0,
     override val antisynergyRating: Int = 0,

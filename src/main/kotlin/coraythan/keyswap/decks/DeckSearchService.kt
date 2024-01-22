@@ -91,6 +91,7 @@ class DeckSearchService(
             val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
 
             val deckQ = QDeck.deck
+//            val deckQ = QDeckSearchValues1.deckSearchValues1
             count = query
                 .select(deckQ.id)
                 .from(deckQ)
@@ -118,6 +119,7 @@ class DeckSearchService(
         val userHolder = UserHolder(null, currentUserService, userService)
         val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
         val deckQ = QDeck.deck
+//            val deckQ = QDeckSearchValues1.deckSearchValues1
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
@@ -132,6 +134,7 @@ class DeckSearchService(
 //        log.info("Filter decks for deck search 2")
 
         val deckResults = query.selectFrom(deckQ)
+//            .innerJoin(deckQ.deck).fetchJoin()
             .where(predicate)
             .limit(filters.pageSize)
             .offset(filters.page * filters.pageSize)
@@ -143,6 +146,8 @@ class DeckSearchService(
                 }
             }
             .fetch()
+
+        //val deckResults = dsvResults.map { it.deck }
 
 //        log.info("Filter decks for deck search 3")
 
@@ -236,6 +241,8 @@ class DeckSearchService(
         sortOptions: DeckSortOptions? = null
     ): BooleanBuilder {
         val deckQ = QDeck.deck
+//        val deckQ = QDeckSearchValues1.deckSearchValues1
+//        val ownedDecksQ = QOwnedDeck.ownedDeck
         val predicate = BooleanBuilder()
 
         if (filters.expansions.isNotEmpty()) {
@@ -337,6 +344,16 @@ class DeckSearchService(
 
             if (allOwners.size == 1 && allOwners[0].id == userHolder.user?.id) {
                 // it's me
+
+//                predicate.and(
+//                    deckQ.deckId.eqAny(
+//                        JPAExpressions
+//                            .select(ownedDecksQ.deckId)
+//                            .from(ownedDecksQ)
+//                            .where(ownedDecksQ.owner.id.eq(userHolder.user?.id))
+//                    )
+//                )
+
                 predicate.and(deckQ.ownedDecks.any().owner.id.eq(userHolder.user?.id))
             } else if (filters.teamDecks) {
                 // team decks
@@ -361,6 +378,16 @@ class DeckSearchService(
                 )
             } else {
                 // just find the publicly owned ones
+
+//                predicate.and(
+//                    deckQ.deckId.eqAny(
+//                        JPAExpressions
+//                            .select(ownedDecksQ.deckId)
+//                            .from(ownedDecksQ)
+//                            .where(ownedDecksQ.owner.id.`in`(visibleUsers.map { it.id }))
+//                    )
+//                )
+
                 predicate.and(deckQ.ownedDecks.any().owner.id.`in`(visibleUsers.map { it.id }))
             }
         }

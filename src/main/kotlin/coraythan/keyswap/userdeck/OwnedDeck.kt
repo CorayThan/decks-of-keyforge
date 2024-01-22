@@ -18,8 +18,12 @@ data class OwnedDeck(
         val owner: KeyUser,
 
         @JsonIgnoreProperties("ownedDecks")
-        @ManyToOne
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "deck_id", insertable = false, updatable = false)
         val deck: Deck,
+
+        @Column(name = "deck_id", nullable = false)
+        val deckId: Long,
 
         val teamId: UUID?,
 
@@ -39,7 +43,7 @@ interface OwnedDeckRepo : CrudRepository<OwnedDeck, Long> {
         fun findByDeckId(deckId: Long): List<OwnedDeck>
         fun findByDeckIdAndTeamId(deckId: Long, teamId: UUID): List<OwnedDeck>
 
-        @Query("SELECT ownedDeck FROM OwnedDeck ownedDeck WHERE ownedDeck.deck.id = ?1 AND ownedDeck.owner.username IN ?2")
+        @Query("SELECT ownedDeck FROM OwnedDeck ownedDeck WHERE ownedDeck.deckId = ?1 AND ownedDeck.owner.username IN ?2")
         fun findByDeckIdAndOwnedByIn(deckId: Long, ownerUsernames: List<String>): List<OwnedDeck>
 
         @Modifying

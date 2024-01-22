@@ -116,6 +116,7 @@ class UserDeckService(
             ownedDeckRepo.save(OwnedDeck(
                     owner = user,
                     deck = deck,
+                    deckId = deck.id,
                     teamId = teamId,
             ))
         } else {

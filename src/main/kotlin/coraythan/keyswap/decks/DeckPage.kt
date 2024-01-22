@@ -10,13 +10,15 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 enum class DeckPageType(val quantity: Int) {
     IMPORT(10),
     STATS(10000),
     RATING(500),
     WINS(25),
-    LOSSES(25)
+    LOSSES(25),
+    SEARCH_VALUES(5000),
 }
 
 @Entity
@@ -61,11 +63,13 @@ class DeckPageService(
     fun decksForPage(currentPage: Int, type: DeckPageType, latestFirst: Boolean = false): DeckPageResult {
         val idStart = currentPage.toLong() * type.quantity
         val idEnd = idEndForPage(currentPage, type)
-        log.info("Deck $type id start $idStart end $idEnd")
-        val deckQ = QDeck.deck
-        val predicate = BooleanBuilder()
+        val results: List<Deck>
+
+        val searchMs = measureTimeMillis {
+            val deckQ = QDeck.deck
+            val predicate = BooleanBuilder()
                 .and(deckQ.id.between(idStart, idEnd))
-        val results =  query.selectFrom(deckQ)
+            results = query.selectFrom(deckQ)
                 .where(predicate)
                 .let {
                     if (latestFirst) {
@@ -75,6 +79,9 @@ class DeckPageService(
                     }
                 }
                 .fetch()
+        }
+
+        log.info("Deck $type id start $idStart end $idEnd took ${searchMs}ms to find ${results.size} decks. latestFirst: $latestFirst")
 
         val hasMore = if (results.isEmpty()) deckRepo.existsByIdGreaterThan(idEnd) else true
         return DeckPageResult(
