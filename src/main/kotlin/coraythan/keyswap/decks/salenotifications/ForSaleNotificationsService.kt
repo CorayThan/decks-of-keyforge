@@ -5,7 +5,6 @@ import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.UserHolder
-import coraythan.keyswap.decks.models.QDeck
 import coraythan.keyswap.emails.EmailService
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.patreon.levelAtLeast
@@ -26,12 +25,12 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class ForSaleNotificationsService(
-        private val saleNotificationQueryRepo: SaleNotificationQueryRepo,
-        private val currentUserService: CurrentUserService,
-        private val userService: KeyUserService,
-        private val deckSearchService: DeckSearchService,
-        private val deckRepo: DeckRepo,
-        private val emailService: EmailService
+    private val saleNotificationQueryRepo: SaleNotificationQueryRepo,
+    private val currentUserService: CurrentUserService,
+    private val userService: KeyUserService,
+    private val deckSearchService: DeckSearchService,
+    private val deckRepo: DeckRepo,
+    private val emailService: EmailService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -52,19 +51,19 @@ class ForSaleNotificationsService(
                 val deckId = listingInfo.deckId!!
                 val deck = deckRepo.findByIdOrNull(deckId)!!
                 val toSend: List<SaleNotificationQueryDto> = queries!!
-                        .filter { queryMatchesDeck(it, deckId) }
-                        .groupBy { it.userId }
-                        .values.toList()
-                        .map { it.first() }
+                    .filter { queryMatchesDeck(it, deckId) }
+                    .groupBy { it.userId }
+                    .values.toList()
+                    .map { it.first() }
 
                 log.debug("Checking for sending")
                 toSend.forEach {
                     log.debug("Sending for sale email ${it.name} to ${it.userId} deck id: ${listingInfo.deckId}")
                     emailService.sendDeckListedNotification(
-                            it.userId,
-                            listingInfo,
-                            deck,
-                            it.name,
+                        it.userId,
+                        listingInfo,
+                        deck,
+                        it.name,
                         sellerUsername
                     )
                 }
@@ -102,31 +101,31 @@ class ForSaleNotificationsService(
 
 
         val toSave = SaleNotificationQuery(
-                name = query.name,
-                houses = query.houses,
-                excludeHouses = query.excludeHouses,
-                title = query.title,
-                forSale = query.forSale,
-                forTrade = query.forTrade,
-                forSaleInCountry = query.forSaleInCountry,
-                expansions = query.expansions,
-                constraints = query.constraints.map {
-                    SaleNotificationConstraint(
-                            it.property,
-                            it.cap,
-                            it.value
-                    )
-                },
-                cards = query.cards.map {
-                    SaleNotificationDeckCardQuantity(
-                            it.cardNames,
-                            it.quantity,
-                            it.house,
-                            it.mav
-                    )
-                },
-                owner = query.owner,
-                user = user,
+            name = query.name,
+            houses = query.houses,
+            excludeHouses = query.excludeHouses,
+            title = query.title,
+            forSale = query.forSale,
+            forTrade = query.forTrade,
+            forSaleInCountry = query.forSaleInCountry,
+            expansions = query.expansions,
+            constraints = query.constraints.map {
+                SaleNotificationConstraint(
+                    it.property,
+                    it.cap,
+                    it.value
+                )
+            },
+            cards = query.cards.map {
+                SaleNotificationDeckCardQuantity(
+                    it.cardNames,
+                    it.quantity,
+                    it.house,
+                    it.mav
+                )
+            },
+            owner = query.owner,
+            user = user,
         )
         saleNotificationQueryRepo.save(toSave)
 
@@ -139,22 +138,20 @@ class ForSaleNotificationsService(
         if (queryEntity.name.contains("Test Query")) {
             log.info("For sale query is $query")
         }
-        val predicate = deckSearchService.deckFilterPredicate(query, userHolder)
-                .and(QDeck.deck.id.eq(deckId))
-        return deckRepo.exists(predicate)
+        return deckSearchService.deckExistsForFilters(query, userHolder, deckId)
     }
 
     private fun reloadQueries() {
         this.queries = saleNotificationQueryRepo.findAll()
-                .filter { it.user.realPatreonTier().levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) }
-                .map { it.toDto() }
-                .sortedBy { it.precedence }
+            .filter { it.user.realPatreonTier().levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) }
+            .map { it.toDto() }
+            .sortedBy { it.precedence }
     }
 
     fun findAllForUser(): List<SaleNotificationQueryDto> {
         val currentUser = currentUserService.loggedInUserOrUnauthorized()
         return saleNotificationQueryRepo.findByUserId(currentUser.id).map { it.toDto() }
-                .sortedWith(compareBy({it.precedence}, {it.name.lowercase()}))
+            .sortedWith(compareBy({ it.precedence }, { it.name.lowercase() }))
     }
 
     fun findCountForUser(): Long {

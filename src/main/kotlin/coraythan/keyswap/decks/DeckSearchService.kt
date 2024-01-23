@@ -243,10 +243,30 @@ class DeckSearchService(
         pageSize = defaultFilters.pageSize,
     ) == defaultFilters
 
+    fun deckExistsForFilters(
+        filters: DeckQuery,
+        userHolder: UserHolder,
+        deckId: Long,
+    ): Boolean {
+        val deckQ = QDeckSearchValues1.deckSearchValues1
+        val predicate = deckFilterPredicate(filters, userHolder)
+        predicate.and(deckQ.deckId.eq(deckId))
+
+        val count = query
+            .select(deckQ.id)
+            .from(deckQ)
+            .limit(1)
+            .where(predicate)
+            .fetch()
+            .count()
+
+        return count > 0
+    }
+
     fun deckFilterPredicate(
         filters: DeckQuery,
         userHolder: UserHolder,
-        sortOptions: DeckSortOptions? = null
+        sortOptions: DeckSortOptions? = null,
     ): BooleanBuilder {
         val deckQ = QDeckSearchValues1.deckSearchValues1
         val ownedDecksQ = QOwnedDeck.ownedDeck
