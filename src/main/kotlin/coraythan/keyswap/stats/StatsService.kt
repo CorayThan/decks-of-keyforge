@@ -4,21 +4,18 @@ import coraythan.keyswap.*
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.config.Env
-import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.decks.DeckPageService
 import coraythan.keyswap.decks.DeckPageType
 import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.decks.addWinsLosses
 import coraythan.keyswap.decks.models.Deck
-import coraythan.keyswap.decks.models.doneRatingDecks
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
+import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.users.CurrentUserService
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.roundToInt
@@ -35,6 +32,7 @@ class StatsService(
     private val cardService: CardService,
     private val deckStatisticsRepo: DeckStatisticsRepo,
     private val deckPageService: DeckPageService,
+    private val sasVersionService: SasVersionService,
     @Value("\${env}")
     private val env: Env,
 ) {
@@ -107,7 +105,7 @@ class StatsService(
         """.trimIndent()
     }
 
-//    @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
+    //    @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
 //    @SchedulerLock(
 //        name = "updateStatisticsVersion",
 //        lockAtLeastFor = lockStatsVersionUpdate,
@@ -123,7 +121,7 @@ class StatsService(
         try {
 
             log.info("$scheduledStart start new deck stats.")
-            if (!doneRatingDecks) {
+            if (sasVersionService.isUpdating()) {
                 log.info("Skipping stats update as decks are being rated.")
                 return "Deck rating in progress, no new stats"
             }
@@ -162,7 +160,7 @@ class StatsService(
         }
     }
 
-//    @Scheduled(fixedDelayString = lockUpdateStats, initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
+    //    @Scheduled(fixedDelayString = lockUpdateStats, initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
 //    @SchedulerLock(name = "updateStatistics", lockAtLeastFor = lockUpdateStats, lockAtMostFor = lockUpdateStats)
     fun updateStatsForDecks() {
         try {

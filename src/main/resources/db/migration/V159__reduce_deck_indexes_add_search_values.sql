@@ -2,7 +2,7 @@ DROP INDEX IF EXISTS deck_power_level_idx;
 DROP INDEX IF EXISTS completed_auction_idx;
 CREATE INDEX IF NOT EXISTS deck_listed_on_idx ON deck (listed_on DESC, id);
 
-CREATE TABLE IF NOT EXISTS deck_search_values1
+CREATE TABLE deck_search_values1
 (
     id                  int8      NOT NULL,
 
@@ -46,12 +46,10 @@ CREATE TABLE IF NOT EXISTS deck_search_values1
     PRIMARY KEY (id)
 );
 
-ALTER TABLE IF EXISTS deck_search_values1
-    DROP CONSTRAINT IF EXISTS deck_search_values_1_deck_fk;
 ALTER TABLE
-    IF EXISTS deck_search_values_1
+    deck_search_values1
     ADD
-        CONSTRAINT deck_search_values_1_deck_fk FOREIGN KEY (deck_id) REFERENCES deck;
+        CONSTRAINT deck_search_values1_deck_fk FOREIGN KEY (deck_id) REFERENCES deck;
 
 CREATE SEQUENCE IF NOT EXISTS deck_search_values_1_sequence START 1 INCREMENT 1;
 
@@ -100,10 +98,8 @@ CREATE TABLE IF NOT EXISTS deck_search_values2
     PRIMARY KEY (id)
 );
 
-ALTER TABLE IF EXISTS deck_search_values2
-    DROP CONSTRAINT IF EXISTS deck_search_values_2_deck_fk;
 ALTER TABLE
-    IF EXISTS deck_search_values_2
+    deck_search_values2
     ADD
         CONSTRAINT deck_search_values_2_deck_fk FOREIGN KEY (deck_id) REFERENCES deck;
 

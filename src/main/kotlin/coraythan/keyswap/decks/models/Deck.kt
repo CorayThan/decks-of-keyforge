@@ -16,9 +16,7 @@ import coraythan.keyswap.synergy.containsTrait
 import coraythan.keyswap.tags.DeckTag
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.userdeck.*
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.*
-import org.hibernate.annotations.Type
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
@@ -223,7 +221,7 @@ data class Deck(
             aercScore = synergies?.rawAerc ?: aercScore.toInt(),
             previousSasRating = previousSasRating ?: sasRating,
             previousMajorSasRating = previousMajorSasRating,
-            aercVersion = aercVersion ?: 12,
+            aercVersion = aercVersion,
             sasRating = synergies?.sasRating ?: sasRating,
             synergyRating = synergies?.synergyRating ?: synergyRating,
             antisynergyRating = synergies?.antisynergyRating ?: antisynergyRating,

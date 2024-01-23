@@ -1,9 +1,12 @@
-package coraythan.keyswap.decks
+package coraythan.keyswap.sasupdate
 
+import coraythan.keyswap.decks.DeckPageService
+import coraythan.keyswap.decks.DeckPageType
+import coraythan.keyswap.decks.DeckSearchValues1Repo
+import coraythan.keyswap.decks.DeckSearchValues2Repo
 import coraythan.keyswap.decks.models.DeckSearchValues1
 import coraythan.keyswap.decks.models.DeckSearchValues2
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.system.measureTimeMillis
@@ -13,7 +16,6 @@ import kotlin.system.measureTimeMillis
 class DeckSasUpdateService(
     private val deckSearchValues1Repo: DeckSearchValues1Repo,
     private val deckSearchValues2Repo: DeckSearchValues2Repo,
-    private val deckRepo: DeckRepo,
     private val deckPageService: DeckPageService,
 ) {
 
@@ -21,18 +23,9 @@ class DeckSasUpdateService(
 
     var deckSearchValuesUpdateCount = 0
 
-//    @Scheduled(fixedDelayString = "PT1H", initialDelayString = "PT20S")
-    fun addAndDropIndexes() {
-        log.info("Began adding dsv1 indexes.")
-        val msAddingIndexes = measureTimeMillis {
-            deckSearchValues1Repo.addIndexes()
-        }
-        log.info("Adding deck search value 1 indexes took ${msAddingIndexes}ms")
-    }
-
     var dsv1Count = -1L
 
-     @Scheduled(fixedDelayString = "PT1S", initialDelayString = "PT15S")
+    // @Scheduled(fixedDelayString = "PT1S", initialDelayString = "PT15S")
     fun updateDeckSearchValuesInDecks() {
         val currentPage: Int
         val deckCount: Int

@@ -9,11 +9,11 @@ import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.decks.pastsas.PastSasService
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
+import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.DeckSynergyInfo
-import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -47,13 +46,12 @@ class DeckImporterService(
     private val deckSearchValues1Repo: DeckSearchValues1Repo,
     private val deckSearchValues2Repo: DeckSearchValues2Repo,
     private val deckPageService: DeckPageService,
-    private val deckRatingProgressService: DeckRatingProgressService,
     private val statsService: StatsService,
     private val objectMapper: ObjectMapper,
     private val cardRepo: CardRepo,
     private val pastSasService: PastSasService,
     private val postProcessDecksService: PostProcessDecksService,
-    private val publishedSasVersionService: PublishedSasVersionService,
+    private val sasVersionService: SasVersionService,
     @Value("\${env}")
     private val env: Env,
 ) {
@@ -373,7 +371,7 @@ class DeckImporterService(
     }
 
     fun rateDeck(inputDeck: Deck, majorRevision: Boolean = false): Pair<Deck, DeckSynergyInfo> {
-        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
+        val publishedAercVersion = sasVersionService.findSasVersion()
         val cards = cardService.cardsForDeck(inputDeck)
         val cardsMap = this.cardsForDeck(inputDeck)
         val token = cardService.tokenForDeck(inputDeck)

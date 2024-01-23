@@ -9,10 +9,10 @@ import coraythan.keyswap.decks.Nothing
 import coraythan.keyswap.decks.SimpleDeckResponse
 import coraythan.keyswap.keyforgeevents.tournaments.TournamentInfo
 import coraythan.keyswap.keyforgeevents.tournaments.TournamentService
+import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.stats.StatsService
-import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
@@ -31,7 +31,7 @@ class PublicApiEndpoints(
     private val keyUserRepo: KeyUserRepo,
     private val currentUserService: CurrentUserService,
     private val tournamentService: TournamentService,
-    private val publishedSasVersionService: PublishedSasVersionService,
+    private val sasVersionService: SasVersionService,
 ) {
 
     @Scheduled(fixedDelayString = "PT1M")
@@ -56,7 +56,7 @@ class PublicApiEndpoints(
     @GetMapping("/v3/decks/{id}")
     fun findDeckSimple3(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: String): SimpleDeckResponse {
 
-        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
+        val publishedAercVersion = sasVersionService.findSasVersion()
         this.rateLimit(apiKey)
 
         val deck = publicApiService.findDeckSimple(id)

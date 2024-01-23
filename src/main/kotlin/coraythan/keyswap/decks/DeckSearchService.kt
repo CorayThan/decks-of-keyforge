@@ -18,13 +18,13 @@ import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.patreon.levelAtLeast
+import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.tags.KTagRepo
 import coraythan.keyswap.tags.PublicityType
-import coraythan.keyswap.userdeck.OwnedDeckRepo
-import coraythan.keyswap.userdeck.OwnedDeckService
-import coraythan.keyswap.userdeck.QDeckNote
+import coraythan.keyswap.tags.QDeckTag
+import coraythan.keyswap.userdeck.*
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
@@ -49,6 +49,7 @@ class DeckSearchService(
     private val entityManager: EntityManager,
     private val ownedDeckRepo: OwnedDeckRepo,
     private val ownedDeckService: OwnedDeckService,
+    private val sasVersionService: SasVersionService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
@@ -72,6 +73,15 @@ class DeckSearchService(
         log.info("$scheduledStop count decks.")
     }
 
+//    private fun currentDeckSearchValues(): EntityPathBase<out DeckSearchValues> {
+//        when (sasVersionService.findActiveSasSearchTable()) {
+//            ActiveSasSearchTable.DSV1 ->
+//                return QDeckSearchValues1.deckSearchValues1
+//            ActiveSasSearchTable.DSV2 ->
+//                return QDeckSearchValues2.deckSearchValues2
+//        }
+//    }
+
     fun countFilters(filters: DeckFilters): DeckCount {
 
         val count: Long
@@ -90,8 +100,7 @@ class DeckSearchService(
             val userHolder = UserHolder(null, currentUserService, userService)
             val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
 
-            val deckQ = QDeck.deck
-//            val deckQ = QDeckSearchValues1.deckSearchValues1
+            val deckQ = QDeckSearchValues1.deckSearchValues1
             count = query
                 .select(deckQ.id)
                 .from(deckQ)
@@ -118,8 +127,7 @@ class DeckSearchService(
 
         val userHolder = UserHolder(null, currentUserService, userService)
         val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
-        val deckQ = QDeck.deck
-//            val deckQ = QDeckSearchValues1.deckSearchValues1
+        val deckQ = QDeckSearchValues1.deckSearchValues1
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
@@ -133,8 +141,8 @@ class DeckSearchService(
 
 //        log.info("Filter decks for deck search 2")
 
-        val deckResults = query.selectFrom(deckQ)
-//            .innerJoin(deckQ.deck).fetchJoin()
+        val dsvResults = query.selectFrom(deckQ)
+            .innerJoin(deckQ.deck).fetchJoin()
             .where(predicate)
             .limit(filters.pageSize)
             .offset(filters.page * filters.pageSize)
@@ -147,7 +155,7 @@ class DeckSearchService(
             }
             .fetch()
 
-        //val deckResults = dsvResults.map { it.deck }
+        val deckResults = dsvResults.map { it.deck }
 
 //        log.info("Filter decks for deck search 3")
 
@@ -240,9 +248,9 @@ class DeckSearchService(
         userHolder: UserHolder,
         sortOptions: DeckSortOptions? = null
     ): BooleanBuilder {
-        val deckQ = QDeck.deck
-//        val deckQ = QDeckSearchValues1.deckSearchValues1
-//        val ownedDecksQ = QOwnedDeck.ownedDeck
+        val deckQ = QDeckSearchValues1.deckSearchValues1
+        val ownedDecksQ = QOwnedDeck.ownedDeck
+        val tagQ = QDeckTag.deckTag
         val predicate = BooleanBuilder()
 
         if (filters.expansions.isNotEmpty()) {
@@ -289,18 +297,45 @@ class DeckSearchService(
         if (filters.teamDecks) {
             val teamId = userHolder.user?.teamId
             if (teamId != null) {
-                predicate.and(deckQ.ownedDecks.any().teamId.eq(teamId))
+                predicate.and(
+                    deckQ.deckId.eqAny(
+                        JPAExpressions
+                            .select(ownedDecksQ.deckId)
+                            .from(ownedDecksQ)
+                            .where(ownedDecksQ.teamId.eq(teamId))
+                    )
+                )
             }
         }
 
         filters.tags.forEach {
             canAccessTag(it, userHolder.user?.id)
-            predicate.and(deckQ.tags.any().tag.id.eq(it))
+
+            predicate.and(
+                deckQ.deckId.eqAny(
+                    JPAExpressions
+                        .select(tagQ.deck.id)
+                        .from(tagQ)
+                        .where(tagQ.id.eq(it))
+                )
+            )
+
+            //predicate.and(deckQ.deck.tags.any().tag.id.eq(it))
         }
 
         filters.notTags.forEach {
             canAccessTag(it, userHolder.user?.id)
-            predicate.andNot(deckQ.tags.any().tag.id.eq(it))
+
+            predicate.andNot(
+                deckQ.deckId.eqAny(
+                    JPAExpressions
+                        .select(tagQ.deck.id)
+                        .from(tagQ)
+                        .where(tagQ.id.eq(it))
+                )
+            )
+
+//            predicate.andNot(deckQ.deck.tags.any().tag.id.eq(it))
         }
 
         if (filters.notes.isNotBlank()) {
@@ -311,12 +346,11 @@ class DeckSearchService(
             val trimmed = filters.notes.lowercase().trim()
             val deckNoteQ = QDeckNote.deckNote
             predicate.and(
-                deckQ.deckNotes.any().`in`(
-                    JPAExpressions.selectFrom(deckNoteQ)
-                        .where(
-                            deckNoteQ.user.username.eq(username),
-                            deckNoteQ.notes.containsIgnoreCase(trimmed)
-                        )
+                deckQ.deckId.eqAny(
+                    JPAExpressions
+                        .select(deckNoteQ.deck.id)
+                        .from(deckNoteQ)
+                        .where(deckNoteQ.user.username.eq(username).and(deckNoteQ.notes.containsIgnoreCase(trimmed)))
                 )
             )
         }
@@ -325,7 +359,15 @@ class DeckSearchService(
             val user = userHolder.user
             if (userHolder.user?.username == filters.previousOwner && user != null) {
                 // it's me
-                predicate.and(deckQ.previouslyOwnedDecks.any().previousOwner.eq(user))
+                val previouslyOwnedDeckQ = QPreviouslyOwnedDeck.previouslyOwnedDeck
+                predicate.and(
+                    deckQ.deckId.eqAny(
+                        JPAExpressions
+                            .select(previouslyOwnedDeckQ.deck.id)
+                            .from(previouslyOwnedDeckQ)
+                            .where(previouslyOwnedDeckQ.previousOwner.id.eq(userHolder.user?.id))
+                    )
+                )
             } else {
                 throw UnauthorizedException("You cannot view other users' previously owned decks.")
             }
@@ -344,31 +386,35 @@ class DeckSearchService(
 
             if (allOwners.size == 1 && allOwners[0].id == userHolder.user?.id) {
                 // it's me
-
-//                predicate.and(
-//                    deckQ.deckId.eqAny(
-//                        JPAExpressions
-//                            .select(ownedDecksQ.deckId)
-//                            .from(ownedDecksQ)
-//                            .where(ownedDecksQ.owner.id.eq(userHolder.user?.id))
-//                    )
-//                )
-
-                predicate.and(deckQ.ownedDecks.any().owner.id.eq(userHolder.user?.id))
+                predicate.and(
+                    deckQ.deckId.eqAny(
+                        JPAExpressions
+                            .select(ownedDecksQ.deckId)
+                            .from(ownedDecksQ)
+                            .where(ownedDecksQ.owner.id.eq(userHolder.user?.id))
+                    )
+                )
             } else if (filters.teamDecks) {
                 // team decks
                 val myTeamId = userHolder.user?.teamId
                 if (myTeamId == null || allOwners.any { it.teamId != myTeamId }) {
                     throw UnauthorizedException("You must be logged in and share teams with the searched user to see their decks.")
                 }
-                predicate.and(deckQ.ownedDecks.any().owner.id.`in`(allOwners.map { it.id }))
+                predicate.and(
+                    deckQ.deckId.eqAny(
+                        JPAExpressions
+                            .select(ownedDecksQ.deckId)
+                            .from(ownedDecksQ)
+                            .where(ownedDecksQ.owner.id.`in`(allOwners.map { it.id }))
+                    )
+                )
 
             } else if (allOwners.size == 1 && !allOwners[0].allowUsersToSeeDeckOwnership) {
                 // One user search and not public, show for sale
 
                 val deckListingQ = QDeckListing.deckListing
                 predicate.and(
-                    deckQ.auctions.any().`in`(
+                    deckQ.deck.auctions.any().`in`(
                         JPAExpressions.selectFrom(deckListingQ)
                             .where(
                                 deckListingQ.seller.id.eq(allOwners[0].id),
@@ -379,23 +425,29 @@ class DeckSearchService(
             } else {
                 // just find the publicly owned ones
 
-//                predicate.and(
-//                    deckQ.deckId.eqAny(
-//                        JPAExpressions
-//                            .select(ownedDecksQ.deckId)
-//                            .from(ownedDecksQ)
-//                            .where(ownedDecksQ.owner.id.`in`(visibleUsers.map { it.id }))
-//                    )
-//                )
-
-                predicate.and(deckQ.ownedDecks.any().owner.id.`in`(visibleUsers.map { it.id }))
+                predicate.and(
+                    deckQ.deckId.eqAny(
+                        JPAExpressions
+                            .select(ownedDecksQ.deckId)
+                            .from(ownedDecksQ)
+                            .where(ownedDecksQ.owner.id.`in`(visibleUsers.map { it.id }))
+                    )
+                )
             }
         }
 
         if (filters.myFavorites) {
             val favsUserId = userHolder.user?.id
             if (favsUserId != null) {
-                predicate.and(deckQ.favoritedDecks.any().user.id.eq(favsUserId))
+                val favoritedDecksQ = QFavoritedDeck.favoritedDeck
+                predicate.and(
+                    deckQ.deckId.eqAny(
+                        JPAExpressions
+                            .select(favoritedDecksQ.deck.id)
+                            .from(favoritedDecksQ)
+                            .where(favoritedDecksQ.user.id.eq(favsUserId))
+                    )
+                )
             }
         }
 
@@ -403,26 +455,26 @@ class DeckSearchService(
             predicate.and(
                 BooleanBuilder().andAnyOf(
                     *listOfNotNull(
-                        deckQ.forTrade.isTrue,
-                        deckQ.forSale.isTrue
+                        deckQ.deck.forTrade.isTrue,
+                        deckQ.deck.forSale.isTrue
                     ).toTypedArray()
                 )
             )
         } else if (filters.forSale == true) {
-            predicate.and(deckQ.forSale.isTrue)
+            predicate.and(deckQ.deck.forSale.isTrue)
         } else if (filters.forTrade) {
-            predicate.and(deckQ.forTrade.isTrue)
+            predicate.and(deckQ.deck.forTrade.isTrue)
         }
 
         if ((filters.forSale == true || filters.forTrade) && filters.forSaleInCountry != null) {
             val preferredCountries = userHolder.user?.preferredCountries
             if (preferredCountries.isNullOrEmpty()) {
                 predicate.and(
-                    deckQ.auctions.any().forSaleInCountry.eq(filters.forSaleInCountry)
+                    deckQ.deck.auctions.any().forSaleInCountry.eq(filters.forSaleInCountry)
                 )
             } else {
                 predicate.andAnyOf(*preferredCountries.map {
-                    deckQ.auctions.any().forSaleInCountry.eq(it)
+                    deckQ.deck.auctions.any().forSaleInCountry.eq(it)
                 }.toTypedArray())
             }
         }
@@ -434,10 +486,10 @@ class DeckSearchService(
                     it.property
                 }
                 if (property == "listedWithinDays") {
-                    predicate.and(deckQ.auctions.any().dateListed.gt(now().minusDays(it.value.toLong())))
+                    predicate.and(deckQ.deck.auctions.any().dateListed.gt(now().minusDays(it.value.toLong())))
                 } else {
                     val pathToVal = if (property == "buyItNow") {
-                        Expressions.path(Double::class.java, deckQ.auctions.any(), property)
+                        Expressions.path(Double::class.java, deckQ.deck.auctions.any(), property)
                     } else {
                         Expressions.path(Double::class.java, deckQ, property)
                     }
@@ -494,7 +546,7 @@ class DeckSearchService(
         if (filters.tournamentIds.isNotEmpty()) {
             predicate.andAnyOf(
                 *filters.tournamentIds.map {
-                    deckQ.tournamentDecks.any().tourneyId.eq(it)
+                    deckQ.deck.tournamentDecks.any().tourneyId.eq(it)
                 }.toTypedArray()
             )
         }

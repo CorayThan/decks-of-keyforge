@@ -2,8 +2,8 @@ package coraythan.keyswap.decks.pastsas
 
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.PastSas
+import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.synergy.DeckSynergyInfo
-import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.roundToInt
@@ -12,7 +12,7 @@ import kotlin.math.roundToInt
 @Service
 class PastSasService(
     private val pastSasRepo: PastSasRepo,
-    private val publishedSasVersionService: PublishedSasVersionService,
+    private val sasVersionService: SasVersionService,
 ) {
 
     fun findByDeckId(id: Long) = pastSasRepo.findByDeckId(id)
@@ -25,7 +25,7 @@ class PastSasService(
     }
 
     private fun convertToPastSas(deck: Deck, synergies: DeckSynergyInfo): PastSas {
-        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
+        val publishedAercVersion = sasVersionService.findSasVersion()
         return PastSas(
             deckId = deck.id,
 

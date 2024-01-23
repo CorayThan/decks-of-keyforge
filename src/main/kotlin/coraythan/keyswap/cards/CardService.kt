@@ -11,11 +11,11 @@ import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.decks.models.HouseAndCards
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.TraitStrength
-import coraythan.keyswap.synergy.publishsas.PublishedSasVersionService
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeCard
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
@@ -34,7 +34,7 @@ class CardService(
     private val cardWinsService: CardWinsService,
     private val versionService: CardsVersionService,
     private val currentUserService: CurrentUserService,
-    private val publishedSasVersionService: PublishedSasVersionService,
+    private val sasVersionService: SasVersionService,
     private val objectMapper: ObjectMapper
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -57,7 +57,7 @@ class CardService(
     fun publishNextInfo() {
         log.info("Publishing next extra info started")
 
-        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
+        val publishedAercVersion = sasVersionService.findSasVersion()
 
         try {
             val currentInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
@@ -100,7 +100,7 @@ class CardService(
 
     fun loadExtraInfo() {
         log.info("Loading extra info started")
-        val publishedAercVersion = publishedSasVersionService.latestSasVersion()
+        val publishedAercVersion = sasVersionService.findSasVersion()
         try {
             this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
 
