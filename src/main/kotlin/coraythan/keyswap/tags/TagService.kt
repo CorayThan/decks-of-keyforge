@@ -51,7 +51,7 @@ class TagService(
         }
     }
 
-    fun createTag(createTag: CreateTag): KTag {
+    fun createTag(createTag: CreateTag): TagDto {
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
         if (createTag.public == PublicityType.PUBLIC) {
             currentUserService.hasContributed()
@@ -64,7 +64,7 @@ class TagService(
                 createTag.public,
                 archived = createTag.archived,
             )
-        )
+        ).toDto(0)
     }
 
     fun updateTagPublicityType(id: Long, publicityType: PublicityType) {

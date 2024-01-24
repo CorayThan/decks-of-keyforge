@@ -39,6 +39,15 @@ export const AdminPanelView = observer(() => {
                     <KeyButton
                         variant={"contained"}
                         color={"secondary"}
+                        onClick={adminStore.publishNewSas}
+                    >
+                        Publish New SAS Version
+                    </KeyButton>
+                </Box>
+                <Box pt={0} p={2}>
+                    <KeyButton
+                        variant={"contained"}
+                        color={"secondary"}
                         onClick={adminStore.startNewStats}
                     >
                         Start New Stats

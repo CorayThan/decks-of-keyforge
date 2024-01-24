@@ -32,7 +32,6 @@ import kotlin.math.absoluteValue
 import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT1M"
-private const val lockUpdateRatings = "PT30S"
 
 var deckImportingUpToDate = false
 
@@ -43,8 +42,8 @@ class DeckImporterService(
     private val cardService: CardService,
     private val deckSearchService: DeckSearchService,
     private val deckRepo: DeckRepo,
-    private val deckSearchValues1Repo: DeckSearchValues1Repo,
-    private val deckSearchValues2Repo: DeckSearchValues2Repo,
+    private val deckSasValuesSearchableRepo: DeckSasValuesSearchableRepo,
+    private val deckSasValuesUpdatableRepo: DeckSasValuesUpdatableRepo,
     private val deckPageService: DeckPageService,
     private val statsService: StatsService,
     private val objectMapper: ObjectMapper,
@@ -76,7 +75,7 @@ class DeckImporterService(
         var decksAdded = 0
         var pagesRequested = 0
         val importDecksDuration = measureTimeMillis {
-            var currentPage = deckPageService.findCurrentPage()
+            var currentPage = deckPageService.findCurrentPage(DeckPageType.IMPORT)
 
             val maxPageRequests = 20
             while (pagesRequested < maxPageRequests) {
@@ -326,7 +325,7 @@ class DeckImporterService(
         if (currentPage != null && deck.count() >= keyforgeApiDeckPageSize) {
             val nextPage = currentPage + 1
             log.info("Updating next deck page to $nextPage")
-            deckPageService.setCurrentPage(nextPage)
+            deckPageService.setCurrentPage(nextPage, DeckPageType.IMPORT)
         }
         return savedCount
     }
@@ -344,8 +343,8 @@ class DeckImporterService(
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, token: Card?): Deck {
         val ratedDeck = validateAndRateDeck(deck, houses, cardsList, token)
         val saved = deckRepo.save(ratedDeck)
-        deckSearchValues1Repo.save(DeckSearchValues1(ratedDeck))
-        deckSearchValues2Repo.save(DeckSearchValues2(ratedDeck))
+        deckSasValuesSearchableRepo.save(DeckSasValuesSearchable(ratedDeck))
+        deckSasValuesUpdatableRepo.save(DeckSasValuesUpdatable(ratedDeck))
 
         postProcessDecksService.addPostProcessDeck(saved)
         return saved

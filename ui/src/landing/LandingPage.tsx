@@ -13,7 +13,7 @@ import { Loader } from "../mui-restyled/Loader"
 import { FeaturedSellersView } from "../sellers/FeaturedSellersView"
 import { statsStore } from "../stats/StatsStore"
 import { WinRateBar } from "../stats/WinRateStatsView"
-import { decksOfKeyForgeDiscord, DiscordButton } from "../thirdpartysites/discord/DiscordButton"
+import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { GithubTicketsButton } from "../thirdpartysites/github/GithubTicketsButton"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { screenStore } from "../ui/ScreenStore"
@@ -22,7 +22,6 @@ import { AlliancesSearchLink, DeckSearchLink, LandingPageLink } from "./DeckSear
 import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils"
 import { SortDirection } from "../generated-src/SortDirection"
 import { AnnouncementPaper } from "../generic/AnnouncementPaper"
-import { LinkNewWindow } from "../mui-restyled/KeyLink"
 
 const topSas = new DeckFilters()
 
@@ -161,19 +160,34 @@ export class LandingPage extends React.Component<{}> {
                             {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
                             {/*    I'm also planning on building a feature for $6+ patrons to preview SAS scores as they are built.*/}
                             {/*</Typography>*/}
+                            {/*<Typography variant={"h5"} gutterBottom={true}>*/}
+                            {/*    DoKvelopments*/}
+                            {/*</Typography>*/}
+                            {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
+                            {/*    DoK is now a <LinkNewWindow href={"https://github.com/CorayThan/decks-of-keyforge"}>public*/}
+                            {/*    github repository</LinkNewWindow> and an open source code base!*/}
+                            {/*</Typography>*/}
+                            {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
+                            {/*    If you're a skilled TypeScript + React or Kotlin + Spring Boot developer and want*/}
+                            {/*    to donate some time to the KeyForge*/}
+                            {/*    community, <LinkNewWindow href={decksOfKeyForgeDiscord}>join the DoK*/}
+                            {/*    Discord</LinkNewWindow>!*/}
+                            {/*    I'm building a small team to maintain DoK and add new features.*/}
+                            {/*</Typography>*/}
+
                             <Typography variant={"h5"} gutterBottom={true}>
-                                DoKvelopments
+                                Grim Reminders
                             </Typography>
                             <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                DoK is now a <LinkNewWindow href={"https://github.com/CorayThan/decks-of-keyforge"}>public
-                                github repository</LinkNewWindow> and an open source code base!
+                                I am hard at work making improvements to Decks of KeyForge that will allow the site
+                                to continue publishing SAS updates and importing new decks while the number of decks
+                                in KeyForge continues to grow.
                             </Typography>
                             <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                If you're a skilled TypeScript + React or Kotlin + Spring Boot developer and want
-                                to donate some time to the KeyForge
-                                community, <LinkNewWindow href={decksOfKeyForgeDiscord}>join the DoK
-                                Discord</LinkNewWindow>!
-                                I'm building a small team to maintain DoK and add new features.
+                                My goal is to have this complete and get Grim Reminders decks without SAS importing
+                                into the site this week. But depending on how it goes it could run into next week.
+                                After that it will take a couple weeks for me and the team that helps me create SAS
+                                ratings to rate all the cards and release SAS for GR.
                             </Typography>
                         </AnnouncementPaper>
                         {screenStore.screenSizeSm() ? (

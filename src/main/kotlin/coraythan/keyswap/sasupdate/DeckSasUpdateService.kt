@@ -1,76 +1,157 @@
 package coraythan.keyswap.sasupdate
 
-import coraythan.keyswap.decks.DeckPageService
-import coraythan.keyswap.decks.DeckPageType
-import coraythan.keyswap.decks.DeckSearchValues1Repo
-import coraythan.keyswap.decks.DeckSearchValues2Repo
-import coraythan.keyswap.decks.models.DeckSearchValues1
-import coraythan.keyswap.decks.models.DeckSearchValues2
+import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.config.SchedulingConfig
+import coraythan.keyswap.decks.*
+import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
+import coraythan.keyswap.now
+import coraythan.keyswap.users.CurrentUserService
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.system.measureTimeMillis
 
+private const val lockUpdateRatings = "PT10S"
+private const val lockCheckToPublishSAS = "PT6H"
+
 @Transactional
 @Service
 class DeckSasUpdateService(
-    private val deckSearchValues1Repo: DeckSearchValues1Repo,
-    private val deckSearchValues2Repo: DeckSearchValues2Repo,
+    private val deckSasValuesUpdatableRepo: DeckSasValuesUpdatableRepo,
     private val deckPageService: DeckPageService,
+    private val sasVersionService: SasVersionService,
+    private val cardService: CardService,
+    private val deckImporterService: DeckImporterService,
+    private val sasVersionRepo: SasVersionRepo,
+    private val currentUserService: CurrentUserService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    var deckSearchValuesUpdateCount = 0
+    fun publishNewSasUpdate(): Int {
+        currentUserService.adminOrUnauthorized()
+        val nextVersion = sasVersionService.findSasVersion() + 1
+        log.info("SAS Update: Publishing $nextVersion of SAS.")
+        cardService.publishNextInfo(nextVersion)
+        deckPageService.setCurrentPage(0, DeckPageType.RATING)
 
-    var dsv1Count = -1L
-
-    // @Scheduled(fixedDelayString = "PT1S", initialDelayString = "PT15S")
-    fun updateDeckSearchValuesInDecks() {
-        val currentPage: Int
-        val deckCount: Int
-        val toUpdate: List<DeckSearchValues1>
-        val toUpdate2: List<DeckSearchValues2>
-        val moreDecks: Boolean
-
-        val msTakenCounting = measureTimeMillis {
-
-            if (dsv1Count < 1L) {
-                dsv1Count = deckSearchValues1Repo.count()
-            }
-            if (dsv1Count == 0L) {
-                deckPageService.setCurrentPage(0, DeckPageType.SEARCH_VALUES)
-            }
-        }
-        val msTakenFindingDecks = measureTimeMillis {
-            currentPage = deckPageService.findCurrentPage(DeckPageType.SEARCH_VALUES)
-            val deckResults = deckPageService.decksForPage(currentPage, DeckPageType.SEARCH_VALUES)
-            deckCount = deckResults.decks.size
-            toUpdate = deckResults.decks
-                .map { DeckSearchValues1(it) }
-            toUpdate2 = deckResults.decks
-                .map { DeckSearchValues2(it) }
-            moreDecks = deckResults.moreResults
+        val updatingSasVersion = sasVersionRepo.findFirstBySasUpdateCompletedTimestampNullOrderByIdDesc()
+        val updating = sasVersionService.isUpdating()
+        if (updating || updatingSasVersion != null) {
+            throw IllegalStateException(
+                "Cannot start SAS update when one is currently underway. updating $updating " +
+                        "config: $updatingSasVersion"
+            )
         }
 
-        val msTakenSaving = measureTimeMillis {
-            if (toUpdate.isNotEmpty()) {
-                deckSearchValues1Repo.saveAll(toUpdate)
-                deckSearchValues2Repo.saveAll(toUpdate2)
-                dsv1Count += toUpdate.size
-            }
-            if (moreDecks) {
-                deckPageService.setCurrentPage(currentPage + 1, DeckPageType.SEARCH_VALUES)
-            }
+        val currentConfig = sasVersionRepo.findFirstBySasUpdateCompletedTimestampNotNullOrderByIdDesc()
+
+        val nextSearchTable = when (currentConfig.activeUpdateTable) {
+            SasVersionTableForUpdates.DSV1 -> SasVersionTableForUpdates.DSV2
+            SasVersionTableForUpdates.DSV2 -> SasVersionTableForUpdates.DSV1
         }
 
-        log.info(
-            "Updating deck search values. Found $deckCount decks from page $currentPage. " +
-                    "Created ${toUpdate.size} search values. " +
-                    "$dsv1Count search values created in total. " +
-                    "Took ${msTakenCounting + msTakenFindingDecks + msTakenSaving} overall. " +
-                    "Counting time: $msTakenCounting finding time: $msTakenFindingDecks saving time: $msTakenSaving"
+        val nextConfig = SasVersion(
+            activeUpdateTable = nextSearchTable,
+            version = nextVersion,
         )
+
+        when (nextSearchTable) {
+            SasVersionTableForUpdates.DSV1 -> deckSasValuesUpdatableRepo.dropIndexesFromTable1()
+            SasVersionTableForUpdates.DSV2 -> deckSasValuesUpdatableRepo.dropIndexesFromTable2()
+        }
+
+        sasVersionRepo.save(nextConfig)
+        sasVersionService.setUpdatingAndSasVersion(true, nextVersion, false)
+
+        log.info("SAS Update: Published next version of SAS with config $nextConfig")
+        return nextVersion
+    }
+
+    @SchedulerLock(
+        name = "updateSasRatings",
+        lockAtLeastFor = lockUpdateRatings,
+        lockAtMostFor = lockUpdateRatings
+    )
+    @Scheduled(fixedDelayString = lockUpdateRatings, initialDelayString = SchedulingConfig.rateDecksInitialDelay)
+    fun continueUpdatingSasValues() {
+        if (sasVersionService.isUpdating() && !sasVersionService.isReadyToActivateNewVersion()) {
+
+            val currentPage: Int
+            val dsvForPage: DeckSasUpdatableValuesResult
+            val updatedDsv: List<DeckSasValuesUpdatable>
+            val msToUpdateSAS = measureTimeMillis {
+
+                currentPage = deckPageService.findCurrentPage(DeckPageType.RATING)
+                dsvForPage = deckPageService.deckSasUpdatableValuesForPage(currentPage, DeckPageType.RATING)
+
+                updatedDsv = dsvForPage.decks
+                    .mapNotNull {
+                        val ratedDeck = deckImporterService.rateDeck(it.deck)
+                        val ratingsEqual = it.sasValuesChanged(ratedDeck.first)
+                        if (ratingsEqual) null else it
+                    }
+
+                deckSasValuesUpdatableRepo.saveAll(updatedDsv)
+            }
+
+            if (!dsvForPage.moreResults) {
+
+                val sasVersion = this.sasVersionRepo.findFirstBySasUpdateCompletedTimestampNullOrderByIdDesc() ?: throw IllegalStateException("SAS Update: No in progress SAS version to set scores as ready in")
+                if (!sasVersion.sasScoresUpdated) {
+                    log.info("SAS Update: Updating sas version to scores updated true")
+                    this.sasVersionRepo.save(sasVersion.copy(sasScoresUpdated = true))
+                }
+
+                this.sasVersionService.setReadyToActivateNewVersion(true)
+                log.info("SAS Update: Ready to Activate New Version. Page $currentPage update complete. Updated ${updatedDsv.size}. ${msToUpdateSAS}ms to update.")
+            } else {
+                deckPageService.setCurrentPage(currentPage + 1, DeckPageType.RATING)
+                log.info("SAS Update: Page $currentPage update complete. Checked update for ${dsvForPage.decks.size}. Updated ${updatedDsv.size}. ${msToUpdateSAS}ms to update. Continuing to update")
+            }
+        }
+    }
+
+    @SchedulerLock(
+        name = "activateNewSas",
+        lockAtLeastFor = lockCheckToPublishSAS,
+        lockAtMostFor = lockCheckToPublishSAS
+    )
+    @Scheduled(
+        fixedDelayString = lockCheckToPublishSAS,
+        initialDelayString = SchedulingConfig.publishNewSasInitialDelay
+    )
+    fun activateSasUpdate() {
+
+        val updatingSasVersion =
+            sasVersionRepo.findFirstBySasUpdateCompletedTimestampNullAndSasScoresUpdatedTrueOrderByIdDesc()
+        log.info("SAS Update: Check if time to activate new SAS version with $updatingSasVersion")
+
+        if (updatingSasVersion != null) {
+            log.info("SAS Update: Found complete SAS update to activate. $updatingSasVersion")
+
+            when (updatingSasVersion.activeUpdateTable) {
+                SasVersionTableForUpdates.DSV1 -> deckSasValuesUpdatableRepo.addIndexesToTable1()
+                SasVersionTableForUpdates.DSV2 -> deckSasValuesUpdatableRepo.addIndexesToTable2()
+            }
+
+            log.info("SAS Update: Added Indexes")
+
+            val updated = sasVersionRepo.save(
+                updatingSasVersion.copy(
+                    sasUpdateCompletedTimestamp = now(),
+                )
+            )
+
+            deckSasValuesUpdatableRepo.swapSearchAndUpdateTables()
+
+            sasVersionService.setUpdatingAndSasVersion(false, updatingSasVersion.version, false)
+
+            log.info("SAS Update: Complete! Switched from $updatingSasVersion to $updated")
+        }
+
     }
 
 }

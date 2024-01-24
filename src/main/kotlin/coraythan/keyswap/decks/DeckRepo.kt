@@ -20,8 +20,6 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
     )
     fun estimateRowCount(): Long
 
-    fun existsByIdGreaterThan(idGreaterThan: Long): Boolean
-
     fun countByExpansion(expansion: Int): Long
 
     @Modifying

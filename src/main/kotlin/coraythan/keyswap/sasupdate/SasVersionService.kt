@@ -1,8 +1,5 @@
 package coraythan.keyswap.sasupdate
 
-import coraythan.keyswap.decks.DeckSearchValues1Repo
-import coraythan.keyswap.decks.DeckSearchValues2Repo
-import coraythan.keyswap.now
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -12,54 +9,35 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class SasVersionService(
     private val repo: SasVersionRepo,
-    private val deckSearchValues1Repo: DeckSearchValues1Repo,
-    private val deckSearchValues2Repo: DeckSearchValues2Repo,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    private lateinit var activeConfig: ActiveSasSearchTable
     private var sasVersion: Int = -1
     private var updating = false
+    private var readyToActivateNewVersion = false
 
     @PostConstruct
     fun activateConfiguration() {
-        val activeSasConfiguration = repo.findFirstByOrderByIdDesc()
+        val activeSasVersionConfiguration = repo.findFirstBySasUpdateCompletedTimestampNotNullOrderByIdDesc()
+        val updatingSasVersion = repo.findFirstBySasUpdateCompletedTimestampNullOrderByIdDesc()
         log.info(
-            "Active SAS Configuration set as ${activeSasConfiguration.activeSearchTable}. " +
-                    "SAS Update started at: ${activeSasConfiguration.createdTimestamp} " +
-                    "completed: ${activeSasConfiguration.sasUpdateCompletedTimestamp}"
+            "Active SAS Config $activeSasVersionConfiguration " +
+                    "Updating SAS Config: $updatingSasVersion"
         )
-        updateSasConfigValues(activeSasConfiguration)
+        this.updating = updatingSasVersion != null
+        this.sasVersion = activeSasVersionConfiguration.version
+        this.readyToActivateNewVersion = updatingSasVersion != null && updatingSasVersion.sasScoresUpdated
     }
 
-    fun sasUpdateCompleteSwapSearchTables(swapTo: ActiveSasSearchTable) {
+    fun setUpdatingAndSasVersion(updating: Boolean, sasVersion: Int, readyToUpdate: Boolean) {
+        this.updating = updating
+        this.sasVersion = sasVersion
+        this.readyToActivateNewVersion = readyToUpdate
+    }
 
-        log.info("SAS Update: Swapping to active search table: $swapTo")
-        val activeSasUpdateConfig = repo.findFirstByOrderByIdDesc()
-        if (activeSasUpdateConfig.activeSearchTable == swapTo) {
-            throw IllegalStateException("Cannot swap to $swapTo while already using that table $activeSasUpdateConfig")
-        }
-
-        if (swapTo == ActiveSasSearchTable.DSV1) {
-            deckSearchValues1Repo.addIndexes()
-        } else {
-            deckSearchValues2Repo.addIndexes()
-        }
-        val updated = repo.save(
-            activeSasUpdateConfig.copy(
-                activeSearchTable = swapTo,
-                sasUpdateCompletedTimestamp = now(),
-            )
-        )
-        this.updateSasConfigValues(updated)
-        if (swapTo == ActiveSasSearchTable.DSV1) {
-            deckSearchValues2Repo.dropIndexes()
-        } else {
-            deckSearchValues1Repo.dropIndexes()
-        }
-
-        log.info("SAS Update: Complete! Switched from $activeSasUpdateConfig to $updated")
+    fun setReadyToActivateNewVersion(readyToUpdate: Boolean) {
+        this.readyToActivateNewVersion = readyToUpdate
     }
 
     fun findSasVersion(): Int {
@@ -69,11 +47,6 @@ class SasVersionService(
 
     fun isUpdating() = updating
 
-    fun findActiveSasSearchTable(): ActiveSasSearchTable = activeConfig
+    fun isReadyToActivateNewVersion() = readyToActivateNewVersion
 
-    fun updateSasConfigValues(sasUpdateConfiguration: SasVersion) {
-        activeConfig = sasUpdateConfiguration.activeSearchTable
-        sasVersion = sasUpdateConfiguration.version
-        updating = sasUpdateConfiguration.sasUpdateCompletedTimestamp == null
-    }
 }

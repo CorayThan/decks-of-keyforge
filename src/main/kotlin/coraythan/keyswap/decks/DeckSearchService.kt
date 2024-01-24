@@ -73,15 +73,6 @@ class DeckSearchService(
         log.info("$scheduledStop count decks.")
     }
 
-//    private fun currentDeckSearchValues(): EntityPathBase<out DeckSearchValues> {
-//        when (sasVersionService.findActiveSasSearchTable()) {
-//            ActiveSasSearchTable.DSV1 ->
-//                return QDeckSearchValues1.deckSearchValues1
-//            ActiveSasSearchTable.DSV2 ->
-//                return QDeckSearchValues2.deckSearchValues2
-//        }
-//    }
-
     fun countFilters(filters: DeckFilters): DeckCount {
 
         val count: Long
@@ -100,7 +91,7 @@ class DeckSearchService(
             val userHolder = UserHolder(null, currentUserService, userService)
             val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
 
-            val deckQ = QDeckSearchValues1.deckSearchValues1
+            val deckQ = QDeckSasValuesSearchable.deckSasValuesSearchable
             count = query
                 .select(deckQ.id)
                 .from(deckQ)
@@ -127,7 +118,7 @@ class DeckSearchService(
 
         val userHolder = UserHolder(null, currentUserService, userService)
         val predicate = deckFilterPredicate(filters, userHolder, filters.sort)
-        val deckQ = QDeckSearchValues1.deckSearchValues1
+        val deckQ = QDeckSasValuesSearchable.deckSasValuesSearchable
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
@@ -248,7 +239,7 @@ class DeckSearchService(
         userHolder: UserHolder,
         deckId: Long,
     ): Boolean {
-        val deckQ = QDeckSearchValues1.deckSearchValues1
+        val deckQ = QDeckSasValuesSearchable.deckSasValuesSearchable
         val predicate = deckFilterPredicate(filters, userHolder)
         predicate.and(deckQ.deckId.eq(deckId))
 
@@ -268,7 +259,7 @@ class DeckSearchService(
         userHolder: UserHolder,
         sortOptions: DeckSortOptions? = null,
     ): BooleanBuilder {
-        val deckQ = QDeckSearchValues1.deckSearchValues1
+        val deckQ = QDeckSasValuesSearchable.deckSasValuesSearchable
         val ownedDecksQ = QOwnedDeck.ownedDeck
         val tagQ = QDeckTag.deckTag
         val predicate = BooleanBuilder()
@@ -336,11 +327,9 @@ class DeckSearchService(
                     JPAExpressions
                         .select(tagQ.deck.id)
                         .from(tagQ)
-                        .where(tagQ.id.eq(it))
+                        .where(tagQ.tag.id.eq(it))
                 )
             )
-
-            //predicate.and(deckQ.deck.tags.any().tag.id.eq(it))
         }
 
         filters.notTags.forEach {
@@ -351,11 +340,9 @@ class DeckSearchService(
                     JPAExpressions
                         .select(tagQ.deck.id)
                         .from(tagQ)
-                        .where(tagQ.id.eq(it))
+                        .where(tagQ.tag.id.eq(it))
                 )
             )
-
-//            predicate.andNot(deckQ.deck.tags.any().tag.id.eq(it))
         }
 
         if (filters.notes.isNotBlank()) {

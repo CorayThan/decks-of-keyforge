@@ -9,10 +9,20 @@ import java.time.ZonedDateTime
 data class SasVersion(
 
     @Enumerated(value = EnumType.STRING)
-    val activeSearchTable: ActiveSasSearchTable,
+    val activeUpdateTable: SasVersionTableForUpdates,
 
     val version: Int,
     val createdTimestamp: ZonedDateTime = now(),
+
+    /**
+     * This represents that the sas scores have been completely updated for all decks in the update table,
+     * but that table hasn't yet been activated.
+     */
+    val sasScoresUpdated: Boolean = false,
+
+    /**
+     * This is populated when this SAS version has been activated and is used in searching.
+     */
     val sasUpdateCompletedTimestamp: ZonedDateTime? = null,
 
     @Id
@@ -22,10 +32,12 @@ data class SasVersion(
 )
 
 interface SasVersionRepo : CrudRepository<SasVersion, Long> {
-    fun findFirstByOrderByIdDesc(): SasVersion
+    fun findFirstBySasUpdateCompletedTimestampNotNullOrderByIdDesc(): SasVersion
+    fun findFirstBySasUpdateCompletedTimestampNullOrderByIdDesc(): SasVersion?
+    fun findFirstBySasUpdateCompletedTimestampNullAndSasScoresUpdatedTrueOrderByIdDesc(): SasVersion?
 }
 
-enum class ActiveSasSearchTable {
+enum class SasVersionTableForUpdates {
     DSV1,
     DSV2,
 }

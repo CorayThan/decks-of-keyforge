@@ -33,7 +33,6 @@ class RunOnStart(
 
         fixSynergies.fix()
 
-        cardService.publishNextInfo()
         cardService.loadExtraInfo()
         cardService.allFullCardsNonMaverick()
 

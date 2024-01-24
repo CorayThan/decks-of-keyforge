@@ -151,19 +151,6 @@ data class Deck(
             .copy(bonusIconsString = jacksonObjectMapper().writeValueAsString(icons))
     }
 
-    fun ratingsEqual(o: Deck) = this.amberControl == o.amberControl &&
-            this.expectedAmber == o.expectedAmber &&
-            this.artifactControl == o.artifactControl &&
-            this.creatureControl == o.creatureControl &&
-            this.effectivePower == o.effectivePower &&
-            this.efficiency == o.efficiency &&
-            this.recursion == o.recursion &&
-            this.disruption == o.disruption &&
-            this.creatureProtection == o.creatureProtection &&
-            this.other == o.other &&
-            this.sasRating == o.sasRating &&
-            this.aercScore == o.aercScore
-
     override fun toDeckSearchResult(
         housesAndCards: List<HouseAndCards>?,
         cards: List<Card>?,

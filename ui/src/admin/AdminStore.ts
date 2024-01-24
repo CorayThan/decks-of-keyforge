@@ -3,8 +3,11 @@ import { makeObservable, observable } from "mobx"
 import { cardStore, CardStore } from "../cards/CardStore"
 import { StatsStore } from "../stats/StatsStore"
 import { messageStore } from "../ui/MessageStore"
+import { HttpConfig } from "../config/HttpConfig"
 
 export class AdminStore {
+
+    static readonly SECURE_CONTEXT = HttpConfig.API + "/deck-sas-updates/secured"
 
     @observable
     reloadingCards = false
@@ -18,6 +21,11 @@ export class AdminStore {
         await axios.get(`${CardStore.CONTEXT}/reload`)
         await cardStore.loadAllCards()
         this.reloadingCards = false
+    }
+
+    publishNewSas = async () => {
+        const response: AxiosResponse<number> = await axios.post(`${AdminStore.SECURE_CONTEXT}/publish`)
+        messageStore.setSuccessMessage(`Publishing SAS version ${response.data}`)
     }
 
     startNewStats = async () => {

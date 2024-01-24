@@ -54,21 +54,20 @@ class CardService(
     lateinit var extraInfo: Map<String, ExtraCardInfo>
     lateinit var nextExtraInfo: Map<String, ExtraCardInfo>
 
-    fun publishNextInfo() {
-        log.info("Publishing next extra info started")
-
-        val publishedAercVersion = sasVersionService.findSasVersion()
+    fun publishNextInfo(publishVersion: Int) {
+        log.info("Publishing next extra info version $publishVersion")
 
         try {
             val currentInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
 
             val activeVersion = extraCardInfoRepo.findFirstByActiveTrueOrderByVersionDesc().version
 
-            val infosToPublish = extraCardInfoRepo.findByPublishedNullAndVersionLessThanEqual(publishedAercVersion)
+            val infosToPublish = extraCardInfoRepo.findByPublishedNullAndVersionLessThanEqual(publishVersion)
             val toPublishCount = infosToPublish.size
-            val toPublishVersions = infosToPublish.groupBy { it.version }.map { "Publishing ${it.value.size} card updates of version ${it.key}" }
+            val toPublishVersions = infosToPublish.groupBy { it.version }
+                .map { "Publishing ${it.value.size} card updates of version ${it.key}" }
 
-            log.info("Highest active version $activeVersion new published version $publishedAercVersion toPublish Count $toPublishCount publishing $toPublishVersions")
+            log.info("Highest active version $activeVersion new published version $publishVersion toPublish Count $toPublishCount publishing $toPublishVersions")
             if (toPublishCount > 0) {
 
                 val toPublish = mapInfos(infosToPublish)
@@ -87,7 +86,7 @@ class CardService(
                 extraCardInfoRepo.saveAll(updated)
                 versionService.revVersion()
                 log.info(
-                    "Publishing next extra info fully complete. Active aerc version $activeVersion published verison $publishedAercVersion " +
+                    "Publishing next extra info fully complete. Active aerc version $activeVersion published verison $publishVersion " +
                             "done publishing published " +
                             "${toPublish.size} unpublished ${unpublish.size}"
                 )
@@ -187,7 +186,10 @@ class CardService(
                     cards
                         .filter { it.house == house }
                         .sorted()
-                        .map { it.toSimpleCard(!(it.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum } ?: true)) }
+                        .map {
+                            it.toSimpleCard(!(it.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum }
+                                ?: true))
+                        }
                 )
             }
             .sortedBy { it.house }
@@ -272,6 +274,7 @@ class CardService(
                 predicate.and(cardQ.cardType.`in`(CardType.Creature))
                 "power"
             }
+
             CardSortOptions.ARMOR -> {
                 predicate.and(cardQ.cardType.`in`(CardType.Creature))
                 "armor"
@@ -412,7 +415,8 @@ class CardService(
         tokenCards = cards.values.filter { it.token }.associateBy { it.cardTitle }
         nonMaverickCachedCards = cards
         nonMaverickCachedCardsWithNames = cards.map { it.value.cardTitle.cleanCardName() to it.value }.toMap()
-        nonMaverickCachedCardsWithUrlNames = cards.map { cardNameToCardImageUrl(it.value.cardTitle) to it.value }.toMap()
+        nonMaverickCachedCardsWithUrlNames =
+            cards.map { cardNameToCardImageUrl(it.value.cardTitle) to it.value }.toMap()
         val notNullCards = nonMaverickCachedCards?.values?.toList()?.sorted()
         nonMaverickCachedCardsList = notNullCards
         if (notNullCards != null) cardWinsService.addWinsToCards(notNullCards)
@@ -468,8 +472,13 @@ class CardService(
         val realCards = allFullCardsNonMaverickMap()
         return cardIds.cardIds.flatMap { entry ->
             entry.value.map {
-                val realCard = realCards[it.toNew()] ?: throw java.lang.IllegalStateException("No card for ${it.toNew()}")
-                realCard.copy(house = entry.key, maverick = !realCard.anomaly && !(realCard.houses?.contains(entry.key) ?: true), enhanced = it.enhanced)
+                val realCard =
+                    realCards[it.toNew()] ?: throw java.lang.IllegalStateException("No card for ${it.toNew()}")
+                realCard.copy(
+                    house = entry.key,
+                    maverick = !realCard.anomaly && !(realCard.houses?.contains(entry.key) ?: true),
+                    enhanced = it.enhanced
+                )
             }
         }
     }
