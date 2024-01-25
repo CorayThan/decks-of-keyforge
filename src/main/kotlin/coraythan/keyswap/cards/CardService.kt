@@ -83,7 +83,7 @@ class CardService(
                 }
 
                 val updated = toPublish.map { it.value }.plus(unpublish)
-                extraCardInfoRepo.saveAll(updated)
+                extraCardInfoRepo.saveAllAndFlush(updated)
                 versionService.revVersion()
                 log.info(
                     "Publishing next extra info fully complete. Active aerc version $activeVersion published verison $publishVersion " +
@@ -91,6 +91,8 @@ class CardService(
                             "${toPublish.size} unpublished ${unpublish.size}"
                 )
             }
+
+            this.loadExtraInfo()
         } catch (exception: Exception) {
             log.error("Nothing is going to work because we couldn't publish extra info!", exception)
             throw IllegalStateException(exception)
