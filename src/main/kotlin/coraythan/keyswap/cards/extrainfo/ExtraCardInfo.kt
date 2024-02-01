@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.cards.CardNumberSetPair
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCard
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
@@ -32,6 +33,7 @@ data class CardNumberSetPairOld(
 data class ExtraCardInfo(
 
     var cardName: String = "",
+    val cardNameUrl: String? = "",
 
     val expectedAmber: Double = 0.0,
     val expectedAmberMax: Double? = null,
@@ -101,6 +103,9 @@ data class ExtraCardInfo(
     val created: ZonedDateTime? = now(),
     val updated: ZonedDateTime? = now(),
     var published: ZonedDateTime? = null,
+
+    @ManyToOne
+    val dokCard: DokCard? = null,
 
     @Id
     val id: UUID = UUID.randomUUID()

@@ -141,7 +141,8 @@ class PatreonService(
 
     fun updateCreatorAccount(refreshToken: String): PatreonAccount {
         log.info("patreon client id: $patreonClientId refresh: $refreshToken")
-        val newAccount = PatreonAccount.fromToken(patreonClient.refreshTokens(refreshToken))
+        val patreonToken = patreonClient.refreshTokens(refreshToken)
+        val newAccount = PatreonAccount.fromToken(patreonToken)
         val savedCreatorAccount = saveCreatorAccount(newAccount)
         refreshCampaignInfo(savedCreatorAccount.accessToken)
         log.info("updated patreon account with client id: $patreonClientId refresh: $refreshToken")

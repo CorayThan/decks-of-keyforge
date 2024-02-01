@@ -1,6 +1,8 @@
 package coraythan.keyswap.cards
 
 import coraythan.keyswap.House
+import coraythan.keyswap.cards.dokcards.DokCard
+import coraythan.keyswap.cards.dokcards.toUrlFriendlyCardTitle
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.decks.models.SimpleCard
@@ -187,6 +189,20 @@ data class Card(
         "\n$name: ${traits.joinToString(" • ") { it.print() }}"
     }
 
+    fun toDoKCard() = DokCard(
+        cardTitle = this.cardTitle,
+        cardTitleUrl = this.cardTitle.toUrlFriendlyCardTitle(),
+        houses = if (this.maverick || this.anomaly) listOf() else listOf(this.house),
+        cardType = this.cardType,
+        rarity = this.rarity,
+        amber = this.amber,
+        power = this.power,
+        armor = this.armor,
+        big = this.big == true,
+        token = this.token,
+        evilTwin = this.isEvilTwin(),
+        traits = this.traits.toList(),
+    )
 
 }
 

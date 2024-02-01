@@ -1,9 +1,10 @@
 package coraythan.keyswap.cards.extrainfo
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardEditHistory
 import coraythan.keyswap.cards.CardEditHistoryRepo
+import coraythan.keyswap.cards.dokcards.DokCard
+import coraythan.keyswap.cards.dokcards.toUrlFriendlyCardTitle
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
 import coraythan.keyswap.sasupdate.SasVersionService
@@ -31,13 +32,19 @@ class ExtraCardInfoService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    fun trueExtraCardInfoTitles() {
+        val infos = extraCardInfoRepo.findAll()
+        val updatedNameInfos = infos.map { it.copy(cardNameUrl = it.cardName.toUrlFriendlyCardTitle()) }
+        extraCardInfoRepo.saveAllAndFlush(updatedNameInfos)
+    }
+
     fun findExtraCardInfo(id: UUID): ExtraCardInfo {
 
         val info = extraCardInfoRepo.findByIdOrNull(id) ?: throw IllegalStateException("No extra card info for id $id")
         return findNextOrCurrentInfo(info)
     }
 
-    fun saveNewExtraCardInfo(card: Card): ExtraCardInfo {
+    fun saveNewExtraCardInfo(card: DokCard): ExtraCardInfo {
 
         if (extraCardInfoRepo.existsByCardName(card.cardTitle)) error("There's already extra info for ${card.cardTitle}")
 

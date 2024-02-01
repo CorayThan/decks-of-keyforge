@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 import kotlin.system.measureTimeMillis
 
 private const val lockUpdateRatings = "PT10S"
-private const val lockCheckToPublishSAS = "PT6H"
+private const val lockCheckToPublishSAS = "PT3H"
 
 @Transactional
 @Service

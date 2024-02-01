@@ -11,11 +11,13 @@ interface ExtraCardInfoRepo : JpaRepository<ExtraCardInfo, UUID>, QuerydslPredic
     fun findFirstByActiveTrueOrderByVersionDesc(): ExtraCardInfo
     fun findByVersionLessThanAndActiveFalse(version: Int): List<ExtraCardInfo>
     fun findByCardName(cardName: String): List<ExtraCardInfo>
+    fun findByCardNameUrl(cardNameUrl: String): List<ExtraCardInfo>
 
     fun findByPublishedNullAndVersionLessThanEqual(version: Int): List<ExtraCardInfo>
     fun findByPublishedNull(): List<ExtraCardInfo>
 
     fun existsByCardName(name: String): Boolean
+    fun existsByCardNameUrl(cardNameUrl: String): Boolean
 
     @Modifying
     @Query("UPDATE ExtraCardInfo extraCardInfo SET extraCardInfo.active = true, extraCardInfo.version = ?2 WHERE extraCardInfo.id = ?1")

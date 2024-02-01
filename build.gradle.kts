@@ -9,12 +9,12 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("kapt") version kotlinVersion
 
-    id("org.springframework.boot") version "3.1.4"
+    id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.3"
 }
 
 group = "coraythan"
-version = "577"
+version = "578"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -99,7 +99,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
-    implementation("io.hypersistence:hypersistence-utils-hibernate-62:3.6.0")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-62:3.7.1")
     implementation("com.querydsl:querydsl-core:$queryDslVersion")
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta")
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta")

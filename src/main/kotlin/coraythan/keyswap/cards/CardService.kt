@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.querydsl.core.BooleanBuilder
 import coraythan.keyswap.cards.cardwins.CardWinsService
+import coraythan.keyswap.cards.dokcards.DokCardUpdateService
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
-import coraythan.keyswap.cards.extrainfo.ExtraCardInfoService
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.decks.models.HouseAndCards
@@ -30,12 +30,12 @@ import java.time.ZonedDateTime
 class CardService(
     private val cardRepo: CardRepo,
     private val extraCardInfoRepo: ExtraCardInfoRepo,
-    private val extraCardInfoService: ExtraCardInfoService,
     private val cardWinsService: CardWinsService,
     private val versionService: CardsVersionService,
     private val currentUserService: CurrentUserService,
     private val sasVersionService: SasVersionService,
-    private val objectMapper: ObjectMapper
+    private val dokCardUpdateService: DokCardUpdateService,
+    private val objectMapper: ObjectMapper,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -53,6 +53,23 @@ class CardService(
     lateinit var previousExtraInfo: Map<String, ExtraCardInfo>
     lateinit var extraInfo: Map<String, ExtraCardInfo>
     lateinit var nextExtraInfo: Map<String, ExtraCardInfo>
+
+    fun importNewCards(keyforgeApiCards: List<KeyForgeCard>): Boolean {
+
+        val cards = keyforgeApiCards.mapNotNull { it.toCard(this.extraInfo) }
+
+        val savedMvCardNames = mutableListOf<String>()
+
+        cards.forEach {
+            if (!cardRepo.existsById(it.id)) {
+                savedMvCardNames.add(it.cardTitle)
+                cardRepo.saveAndFlush(it)
+            }
+        }
+        log.info("Saved new MV Cards $savedMvCardNames")
+
+        return dokCardUpdateService.createDoKCardsFromKCards(cards)
+    }
 
     fun publishNextInfo(publishVersion: Int) {
         log.info("Publishing next extra info version $publishVersion")
@@ -285,56 +302,6 @@ class CardService(
 
         val cards = cardRepo.findAll(predicate, Sort.by(filters.sortDirection.direction, sortProperty)).toList()
         return fullCardsFromCards(cards)
-    }
-
-    @Transactional
-    fun importNewCards(cards: List<KeyForgeCard>): Boolean {
-
-        val cardsToSave = mutableMapOf<String, Card>()
-
-        if (cards.any { !cardRepo.existsById(it.id) } == true) {
-            cards.forEach {
-                if (!cardRepo.existsById(it.id)) {
-                    val cardToSave = it.toCard(this.extraInfo)
-
-                    if (cardToSave != null) {
-                        cardsToSave[it.id] = cardToSave
-                    }
-                }
-            }
-
-            log.debug("Loaded cards from deck.")
-        }
-
-        if (cardsToSave.isNotEmpty()) {
-
-            log.info("Found ${cardsToSave.size} new cards to save!")
-
-            val newExtraCardInfos = cardsToSave.values
-                .filter { it.extraCardInfo == null }
-                .groupBy { it.cardTitle }
-                .map {
-                    log.info("Saving extra info for ${it.key}")
-                    it.key to extraCardInfoService.saveNewExtraCardInfo(it.value.first())
-                }
-                .toMap()
-
-            cardsToSave.forEach { _, card ->
-                log.info("Saving card ${card.cardTitle}")
-                if (card.extraCardInfo == null) {
-                    val newExtraInfo = newExtraCardInfos[card.cardTitle]
-                    cardRepo.save(card.copy(extraCardInfo = newExtraInfo))
-                } else {
-                    cardRepo.save(card)
-                }
-            }
-
-            loadExtraInfo()
-            reloadCachedCards()
-            versionService.revVersion()
-        }
-
-        return cardsToSave.isNotEmpty()
     }
 
     fun reloadCachedCards() {
