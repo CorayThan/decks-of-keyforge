@@ -2,8 +2,11 @@ package coraythan.keyswap.cards.dokcards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.generatets.GenerateTs
+import coraythan.keyswap.generatets.TsIgnore
 import jakarta.persistence.*
 
+@GenerateTs
 @Entity
 class DokCardExpansion(
 
@@ -14,6 +17,7 @@ class DokCardExpansion(
     val wins: Int = 0,
     val losses: Int = 0,
 
+    @TsIgnore
     @JsonIgnoreProperties("expansions")
     @ManyToOne
     val card: DokCard,

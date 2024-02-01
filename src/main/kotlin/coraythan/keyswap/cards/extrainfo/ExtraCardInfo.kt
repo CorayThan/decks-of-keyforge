@@ -1,5 +1,6 @@
 package coraythan.keyswap.cards.extrainfo
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.cards.CardNumberSetPair
@@ -104,6 +105,7 @@ data class ExtraCardInfo(
     val updated: ZonedDateTime? = now(),
     var published: ZonedDateTime? = null,
 
+    @JsonIgnore
     @ManyToOne
     val dokCard: DokCard? = null,
 
