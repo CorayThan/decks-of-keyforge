@@ -33,12 +33,12 @@ enum class TokenCard(val cardTitle: String) {
 
     companion object {
         fun ordinalByCardTitle(cardTitle: String): Int {
-            return values().find { it.cardTitle == cardTitle }
+            return entries.find { it.cardTitle == cardTitle }
                 ?.ordinal ?: throw IllegalArgumentException("No token for card title $cardTitle")
         }
 
         fun cardTitleFromOrdinal(ordinal: Int): String {
-            return TokenCard.values()[ordinal].cardTitle
+            return entries[ordinal].cardTitle
         }
     }
 

@@ -61,7 +61,6 @@ data class PrivateMessage(
                         name = deck.name,
                         keyforgeId = deck.keyforgeId,
                         houses = deck.houses,
-                        sas = deck.sasRating,
                 ),
                 hidden = if (toId == user.id) recipientHidden else senderHidden,
                 replies = replyDtos,

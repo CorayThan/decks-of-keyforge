@@ -1,6 +1,7 @@
 package coraythan.keyswap
 
 import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.synergy.FixSynergies
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
@@ -12,6 +13,7 @@ var startupComplete = false
 @Component
 class RunOnStart(
     private val cardService: CardService,
+    private val cardCache: DokCardCacheService,
     private val fixSynergies: FixSynergies,
     private val userSearchService: UserSearchService,
 ) : CommandLineRunner {
@@ -20,10 +22,11 @@ class RunOnStart(
 
     override fun run(vararg args: String?) {
 
-        fixSynergies.fix()
+        cardCache.addCardTexts()
 
-        cardService.loadExtraInfo()
-        cardService.allFullCardsNonMaverick()
+        cardCache.loadCards()
+
+        fixSynergies.fix()
 
         // deckImporterService.updateDeckStats()
 //        dokCardUpdateService.downloadAllNewCardImages()

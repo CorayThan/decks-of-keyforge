@@ -1,10 +1,9 @@
 package coraythan.keyswap.synergy.synergysystem
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.decks.models.GenericDeck
-import coraythan.keyswap.decks.models.withBonusIcons
 import coraythan.keyswap.roundToTwoSigDig
 import coraythan.keyswap.synergy.*
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addDeckTraits
@@ -72,13 +71,17 @@ object DeckSynergyService {
         }
     }
 
-    fun fromDeckWithCards(deck: GenericDeck, inputCards: List<Card>, token: Card? = null): DeckSynergyInfo {
+    fun fromDeckWithCards(
+        deck: GenericDeck,
+        inputCards: List<DokCardInDeck>,
+        token: DokCardInDeck? = null
+    ): DeckSynergyInfo {
 
-        val cardsNoToken = if (inputCards.any { it.big == true }) {
+        val cardsNoToken = if (inputCards.any { it.card.big }) {
             inputCards
-                .groupBy { it.cardTitle }
+                .groupBy { it.card.cardTitle }
                 .flatMap {
-                    if (it.value.first().big == true) {
+                    if (it.value.first().card.big) {
                         it.value.drop(it.value.size / 2)
                     } else {
                         it.value
@@ -90,26 +93,27 @@ object DeckSynergyService {
 
         val tokenValues = makeTokenValues(cardsNoToken, token)
 
-        val cards: List<Card> = cardsNoToken
+        val cards: List<DokCardInDeck> = cardsNoToken
             .let {
                 if (token == null) it else it.plus(
                     (0..(tokenValues?.tokensPerGame?.roundToInt() ?: 0)).map { token })
             }
-        val cardsWithBonusIcons = cards.withBonusIcons(deck.bonusIcons())
-        val deckStats = DeckSynergyStats.createStats(deck, cardsWithBonusIcons, tokenValues)
+        val deckStats = DeckSynergyStats.createStats(deck, cards, tokenValues)
 
         val traitsMap = mutableMapOf<SynergyTrait, MatchSynergiesToTraits>()
 
         val cardsMap: Map<House, Map<String, CardToMatchInfo>> = cards
             .groupBy { it.house }
             .map { cardsByHouse ->
-                cardsByHouse.key to cardsByHouse.value.groupBy { it.cardTitle }.map { it.key to CardToMatchInfo(it.value.size, it.value.first().cardType) }.toMap()
+                cardsByHouse.key to cardsByHouse.value.groupBy { it.card.cardTitle }
+                    .map { it.key to CardToMatchInfo(it.value.size, it.value.first().card.cardType) }.toMap()
             }
             .toMap()
 
         // Add traits from each card
-        cards.forEach { card ->
-            val cardInfo = card.extraCardInfo!!
+        cards.forEach { dokCardInDeck ->
+            val card = dokCardInDeck.card
+            val cardInfo = dokCardInDeck.extraCardInfo
             val cardSpecialTraits = card.traits.mapNotNull {
                 val trait = SynergyTrait.fromTrait(it)
                 if (trait == null) null else SynTraitValue(trait)
@@ -117,12 +121,12 @@ object DeckSynergyService {
             val cardAllTraits = cardInfo.traits
                 .plus(cardSpecialTraits)
                 .let {
-                    if (card.enhanced == true) {
+                    if (dokCardInDeck.enhanced) {
                         it.plus(
                             SynTraitValue(
                                 SynergyTrait.enhanced,
                                 rating = 3,
-                                cardTypes = card.allTypes().toList()
+                                cardTypes = cardInfo.allCardTypes.toList()
                             )
                         )
                     } else {
@@ -131,23 +135,27 @@ object DeckSynergyService {
                 }
             cardAllTraits
                 .forEach { traitValue ->
-                    traitsMap.addTrait(traitValue, card, card.house)
+                    traitsMap.addTrait(traitValue, card, dokCardInDeck.house)
                     if (traitValue.trait == SynergyTrait.uses && (traitValue.cardTypes.isNullOrEmpty() || traitValue.cardTypes.contains(
                             CardType.Creature
                         ))
                     ) {
-                        traitsMap.addTrait(traitValue.copy(trait = SynergyTrait.causesReaping), card, card.house)
+                        traitsMap.addTrait(
+                            traitValue.copy(trait = SynergyTrait.causesReaping),
+                            card,
+                            dokCardInDeck.house
+                        )
                         if (traitValue.rating > 1) {
                             traitsMap.addTrait(
                                 traitValue.copy(
                                     trait = SynergyTrait.causesFighting,
                                     rating = traitValue.rating - 1
-                                ), card, card.house
+                                ), card, dokCardInDeck.house
                             )
                         }
                     }
                 }
-            traitsMap.addTrait(SynTraitValue(SynergyTrait.any), card, card.house)
+            traitsMap.addTrait(SynTraitValue(SynergyTrait.any), card, dokCardInDeck.house)
         }
 
         // log.info("Traits map is: ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitsMap)}")
@@ -157,11 +165,11 @@ object DeckSynergyService {
         addOutOfHouseTraits(deck.houses, cards, traitsMap)
 
         val synergyCombos: List<SynergyCombo> = cards
-            .groupBy { Pair(it.cardTitle, it.house) }
+            .groupBy { Pair(it.card.cardTitle, it.house) }
             .map { cardsById ->
                 val card = cardsById.value[0]
                 val count = cardsById.value.size
-                val cardInfo = card.extraCardInfo ?: error("Oh no, ${card.cardTitle} had null extra info! $card")
+                val cardInfo = card.extraCardInfo
 
                 val matchedTraits: Map<String?, List<SynergyMatch>> = cardInfo.synergies
                     .map { synergy ->
@@ -270,7 +278,7 @@ object DeckSynergyService {
                 )
                 val pValue =
                     if (cardInfo.effectivePower == 0 && (cardInfo.effectivePowerMax == null || cardInfo.effectivePowerMax == 0.0)) {
-                        SynergizedValue(card.effectivePower.toDouble(), 0.0)
+                        SynergizedValue(cardInfo.realEffectivePower.toDouble(), 0.0)
                     } else {
                         synergizedValue(
                             totalSynPercent,
@@ -325,12 +333,12 @@ object DeckSynergyService {
 
                 SynergyCombo(
                     house = card.house,
-                    cardName = card.cardTitle,
+                    cardName = card.card.cardTitle,
                     synergies = matchedTraits.values.flatten()
                         .sortedBy { it.trait.synergyGroup },
                     netSynergy = synergyValues.sum(),
                     aercScore = synergizedValues.map { it.value }
-                        .sum() + (card.cardType.creatureBonus()),
+                        .sum() + (card.card.cardType.creatureBonus()),
 
                     amberControl = aValue.value,
                     expectedAmber = eValue.value,
@@ -347,7 +355,7 @@ object DeckSynergyService {
                     synStart = cardInfo.baseSynPercent
                 )
             }
-            .plus(generateSelfEnhancementCombos(cardsWithBonusIcons))
+            .plus(generateSelfEnhancementCombos(cards))
 
         val a = synergyCombos.sumOf { it.amberControl * it.copies }
         val e = synergyCombos.sumOf { it.expectedAmber * it.copies }
@@ -361,7 +369,8 @@ object DeckSynergyService {
         val cp = synergyCombos.sumOf { it.creatureProtection * it.copies }
 
         val creatureCount =
-            cards.filter { it.cardType == CardType.Creature }.size + (tokenValues?.tokensPerGame?.roundToInt() ?: 0)
+            cards.filter { it.card.cardType == CardType.Creature }.size + (tokenValues?.tokensPerGame?.roundToInt()
+                ?: 0)
         val powerValue = p.toDouble() / 10.0
 
         // Remember! When updating this also update Card
@@ -369,7 +378,8 @@ object DeckSynergyService {
 
         val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.sumOf { it.netSynergy * it.copies }
         val antisynergy = antiSynergyToRound.roundToInt().absoluteValue
-        val preMetaSas = a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * StaticAercValues.creatureBonus)
+        val preMetaSas =
+            a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * StaticAercValues.creatureBonus)
 
         val efficiencyBonus = calculateEfficiencyBonus(synergyCombos, preMetaSas)
 
@@ -404,11 +414,15 @@ object DeckSynergyService {
             tokenCreationValues = if (tokenValues == null) null else TokenCreationValues(
                 tokensPerGame = tokenValues.tokensPerGame,
                 tokensPerHouse = tokenValues.tokensPerGamePerHouse.map { TokensPerGameForHouse(it.key, it.value) },
-            )
+            ),
         )
     }
 
-    private fun cardMatches(card: Card, synergy: SynTraitValue, cardsMap: Map<House, Map<String, CardToMatchInfo>>): SynMatchInfo? {
+    private fun cardMatches(
+        card: DokCardInDeck,
+        synergy: SynTraitValue,
+        cardsMap: Map<House, Map<String, CardToMatchInfo>>
+    ): SynMatchInfo? {
         val matches: List<CardToMatchInfo> = when (synergy.house) {
             SynTraitHouse.anyHouse -> cardsMap.mapNotNull {
                 it.value[synergy.cardName]
@@ -426,7 +440,7 @@ object DeckSynergyService {
             TraitStrength.NORMAL
         }
         return if (cardCount != 0) {
-            SynMatchInfo(mapOf(strength to if (card.cardTitle == synergy.cardName) cardCount - 1 else cardCount))
+            SynMatchInfo(mapOf(strength to if (card.card.cardTitle == synergy.cardName) cardCount - 1 else cardCount))
         } else {
             null
         }

@@ -1,6 +1,9 @@
 package coraythan.keyswap.decks.models
 
+import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.roundToTwoSigDig
+import coraythan.keyswap.synergy.DeckSynergyInfo
 import jakarta.persistence.*
 import java.time.ZonedDateTime
 
@@ -51,46 +54,46 @@ abstract class DeckSasValues(
     val deckId: Long,
 
 ) {
-    constructor(deck: Deck) : this(
+    constructor(deck: Deck, cards: List<DokCardInDeck>, deckSyns: DeckSynergyInfo, sasVersion: Int) : this(
         name = deck.name,
         expansion = deck.expansion,
-        maverickCount = deck.maverickCount,
-        rawAmber = deck.rawAmber,
-        bonusDraw = deck.bonusDraw ?: 0,
-        bonusCapture = deck.bonusCapture ?: 0,
-        creatureCount = deck.creatureCount,
-        actionCount = deck.actionCount,
-        artifactCount = deck.artifactCount,
-        upgradeCount = deck.upgradeCount,
+        maverickCount = cards.count { it.maverick },
+        rawAmber = cards.sumOf { it.card.amber } + deck.bonusIcons().bonusIconHouses.sumOf { it.bonusIconCards.sumOf { it.bonusAember } },
+        bonusDraw = deck.bonusIcons().bonusIconHouses.sumOf { it.bonusIconCards.sumOf { it.bonusDraw } },
+        bonusCapture = deck.bonusIcons().bonusIconHouses.sumOf { it.bonusIconCards.sumOf { it.bonusCapture } },
+        creatureCount = cards.count { it.card.cardType == CardType.Creature },
+        actionCount = cards.count { it.card.cardType == CardType.Action },
+        artifactCount = cards.count { it.card.cardType == CardType.Artifact },
+        upgradeCount = cards.count { it.card.cardType == CardType.Upgrade },
         tokenNumber = deck.tokenNumber,
-        cardNames = deck.cardNames,
+        cardNames = cards.genCardNamesIndexableString(),
         houseNamesString = deck.houseNamesString,
         importDateTime = deck.importDateTime,
 
         // Indexed SAS values
-        expectedAmber = deck.expectedAmber,
-        amberControl = deck.amberControl,
-        creatureControl = deck.creatureControl,
-        artifactControl = deck.artifactControl,
-        efficiency = deck.efficiency,
-        recursion = deck.recursion,
-        effectivePower = deck.effectivePower,
-        disruption = deck.disruption,
-        aercScore = deck.aercScore,
-        aercVersion = deck.aercVersion,
-        sasRating = deck.sasRating,
-        synergyRating = deck.synergyRating,
-        antisynergyRating = deck.antisynergyRating,
+        expectedAmber = deckSyns.expectedAmber,
+        amberControl = deckSyns.amberControl,
+        creatureControl = deckSyns.creatureControl,
+        artifactControl = deckSyns.artifactControl,
+        efficiency = deckSyns.efficiency,
+        recursion = deckSyns.recursion,
+        effectivePower = deckSyns.effectivePower,
+        disruption = deckSyns.disruption,
+        aercScore = deckSyns.rawAerc.toDouble(),
+        aercVersion = sasVersion,
+        sasRating = deckSyns.sasRating,
+        synergyRating = deckSyns.synergyRating,
+        antisynergyRating = deckSyns.antisynergyRating,
 
         // SAS Values w/out search indexing
-        other = deck.other,
-        creatureProtection = deck.creatureProtection,
+        other = deckSyns.other,
+        creatureProtection = deckSyns.creatureProtection,
 
         deck = deck,
         deckId = deck.id,
     )
 
-    fun sasValuesChanged(deck: Deck): Boolean {
+    fun sasValuesChanged(deck: DeckSynergyInfo, inputAercVersion: Int): Boolean {
         
         val ratingsEqual = this.amberControl.roundToTwoSigDig() == deck.amberControl.roundToTwoSigDig() &&
                 this.expectedAmber.roundToTwoSigDig() == deck.expectedAmber.roundToTwoSigDig() &&
@@ -103,7 +106,7 @@ abstract class DeckSasValues(
                 this.creatureProtection.roundToTwoSigDig() == deck.creatureProtection.roundToTwoSigDig() &&
                 this.other.roundToTwoSigDig() == deck.other.roundToTwoSigDig() &&
                 this.sasRating == deck.sasRating &&
-                this.aercScore.roundToTwoSigDig() == deck.aercScore.roundToTwoSigDig()
+                this.aercScore.roundToTwoSigDig() == deck.rawAerc.toDouble().roundToTwoSigDig()
         
         // Indexed SAS values
         expectedAmber = deck.expectedAmber
@@ -114,8 +117,8 @@ abstract class DeckSasValues(
         recursion = deck.recursion
         effectivePower = deck.effectivePower
         disruption = deck.disruption
-        aercScore = deck.aercScore
-        aercVersion = deck.aercVersion
+        aercScore = deck.rawAerc.toDouble()
+        aercVersion = inputAercVersion
         sasRating = deck.sasRating
         synergyRating = deck.synergyRating
         antisynergyRating = deck.antisynergyRating
@@ -130,7 +133,7 @@ abstract class DeckSasValues(
 }
 
 @Entity
-class DeckSasValuesSearchable(deck: Deck) : DeckSasValues(deck) {
+class DeckSasValuesSearchable(deck: Deck, cards: List<DokCardInDeck>, deckSyns: DeckSynergyInfo, sasVersion: Int) : DeckSasValues(deck, cards, deckSyns, sasVersion) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "deck_search_values_1_sequence")
     @SequenceGenerator(name = "deck_search_values_1_sequence", allocationSize = 1)
@@ -138,7 +141,7 @@ class DeckSasValuesSearchable(deck: Deck) : DeckSasValues(deck) {
 }
 
 @Entity
-class DeckSasValuesUpdatable(deck: Deck) : DeckSasValues(deck) {
+class DeckSasValuesUpdatable(deck: Deck, cards: List<DokCardInDeck>, deckSyns: DeckSynergyInfo, sasVersion: Int) : DeckSasValues(deck, cards, deckSyns, sasVersion) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "deck_search_values_2_sequence")
     @SequenceGenerator(name = "deck_search_values_2_sequence", allocationSize = 1)

@@ -7,10 +7,10 @@ import { theme } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { LinkMenuItem } from "../mui-restyled/LinkMenuItem"
 import { screenStore } from "../ui/ScreenStore"
-import { KCard } from "./KCard"
 import { CardSimpleView } from "./views/CardSimpleView"
+import { FrontendCard } from "../generated-src/FrontendCard"
 
-export const FancyCardMenuItem = observer((props: { card: KCard, onClick: () => void }) => {
+export const FancyCardMenuItem = observer((props: { card: FrontendCard, onClick: () => void }) => {
     const {card, onClick} = props
 
     if (screenStore.screenSizeXs()) {

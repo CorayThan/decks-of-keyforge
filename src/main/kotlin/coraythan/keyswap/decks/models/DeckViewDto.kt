@@ -47,6 +47,7 @@ fun List<HouseAndCards>.addBonusIcons(bonusIcons: DeckBonusIcons): List<HouseAnd
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class SimpleCard(
     val cardTitle: String,
+    val cardTitleUrl: String? = null,
     val rarity: Rarity? = null,
     val legacy: Boolean? = null,
     val maverick: Boolean? = null,

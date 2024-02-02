@@ -17,7 +17,6 @@ import { observer } from "mobx-react"
 import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { cardStore } from "../cards/CardStore"
-import { KCard } from "../cards/KCard"
 import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, prettyJson, Utils } from "../config/Utils"
@@ -34,6 +33,7 @@ import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
 import { AercBlameView } from "./AercBlameView"
 import { AercBlame } from "../generated-src/AercBlame"
 import { CardView } from "../cards/views/CardView"
+import { FrontendCard } from "../generated-src/FrontendCard"
 
 export const UpdateExtraCardInfoPage = observer(() => {
 
@@ -55,7 +55,7 @@ export const UpdateExtraCardInfoPage = observer(() => {
 
 interface UpdateExtraCardInfoProps {
     extraCardInfo: ExtraCardInfo
-    card: KCard
+    card: FrontendCard
     aercBlame: AercBlame[]
 }
 

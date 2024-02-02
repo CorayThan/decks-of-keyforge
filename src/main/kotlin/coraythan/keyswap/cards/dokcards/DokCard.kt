@@ -41,6 +41,9 @@ data class DokCard(
     val token: Boolean = false,
     val evilTwin: Boolean = false,
 
+    val cardText: String? = null,
+    val flavorText: String? = null,
+
     @Type(ListArrayType::class)
     @Column(
         columnDefinition = "varchar[]"
@@ -55,6 +58,4 @@ data class DokCard(
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "dok_card_sequence")
     @SequenceGenerator(name = "dok_card_sequence", allocationSize = 1)
     val id: Long = -1
-) {
-
-}
+)

@@ -4,7 +4,7 @@ import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckImporterService
@@ -29,7 +29,7 @@ import java.util.*
 @Transactional
 @Service
 class AllianceDeckService(
-    private val cardService: CardService,
+    private val cardCache: DokCardCacheService,
     private val userService: KeyUserService,
     private val currentUserService: CurrentUserService,
     private val statsService: StatsService,
@@ -102,16 +102,16 @@ class AllianceDeckService(
             val allianceDeckInfo = DeckBuildingData(
                 name = allianceName,
                 cards = deckHousePairs.associate { deckHousePair ->
-                    deckHousePair.second to cardService.cardsForDeck(deckHousePair.first)
+                    deckHousePair.second to cardCache.cardsForDeck(deckHousePair.first)
                         .filter { it.house == deckHousePair.second }
-                        .map { TheoryCard(it.cardTitle, it.enhanced ?: false) }
+                        .map { TheoryCard(it.card.cardTitle, it.enhanced) }
                 },
                 expansion = expansion,
                 tokenTitle = toSave.tokenName,
             )
 
             val deck = deckImporterService.viewTheoreticalDeck(allianceDeckInfo)
-            val cards = cardService.cardsForDeck(deck)
+            val cards = cardCache.cardsForDeck(deck)
 
             val tempAllianceDeck = AllianceDeck.fromDeck(deck, cards, user)
                 .copy(
@@ -171,11 +171,14 @@ class AllianceDeckService(
 
     fun findAllianceDeckSearchResultWithCards(id: UUID): DeckSearchResult {
         val deck = allianceDeckRepo.findByIdOrNull(id) ?: throw BadRequestException("No alliance deck with id $id")
+        val cards = cardCache.cardsForDeck(deck)
+        val token = cardCache.tokenForDeck(deck)
         return deck.toDeckSearchResult(
-            cardService.deckToHouseAndCards(deck),
-            cardService.cardsForDeck(deck),
+            cardCache.deckToHouseAndCards(deck),
+            cards,
             stats = statsService.findCurrentStats(),
-            token = cardService.tokenForDeck(deck),
+            token = token,
+            synergies = DeckSynergyService.fromDeckWithCards(deck, cards, token),
         )
     }
 
@@ -219,12 +222,14 @@ class AllianceDeckService(
             .fetch()
 
         val decks = deckResults.mapNotNull {
-            val cardsAndToken = cardService.cardsAndTokenFutureProof(it, userHolder.user)
+            val cardsAndToken = cardCache.cardsAndTokenFutureProof(it, userHolder.user)
             val cards = cardsAndToken.cards
             val token = cardsAndToken.token
 
+            log.info("ally deck to search result deck results")
+
             var searchResult = it.toDeckSearchResult(
-                cardService.deckToHouseAndCards(it),
+                cardCache.deckToHouseAndCards(it),
                 cards,
                 stats = statsService.findCurrentStats(),
                 synergies = DeckSynergyService.fromDeckWithCards(it, cards, token),
@@ -347,23 +352,25 @@ class AllianceDeckService(
     private fun allianceDeckToAllianceDeckWithSynergies(deck: AllianceDeck): DeckWithSynergyInfo {
         val user = currentUserService.loggedInUser()
         val stats = statsService.findCurrentStats()
-        val cardsAndToken = cardService.cardsAndTokenFutureProof(deck, user)
+        val cardsAndToken = cardCache.cardsAndTokenFutureProof(deck, user)
         val cards = cardsAndToken.cards
         val token = cardsAndToken.token
+        val synergies = DeckSynergyService.fromDeckWithCards(deck, cards, token)
 
         val searchResult = deck.toDeckSearchResult(
-            cardService.deckToHouseAndCards(deck),
+            cardCache.deckToHouseAndCards(deck),
             cards,
             stats = stats,
-            synergies = DeckSynergyService.fromDeckWithCards(deck, cards, token),
+            synergies = synergies,
             includeDetails = true,
             token,
         )
 
         return DeckWithSynergyInfo(
             deck = searchResult,
-            synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1.0,
-            antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1.0,
+            synergyPercentile = stats?.synergyStats?.percentileForValue?.get(synergies.synergyRating) ?: -1.0,
+            antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(synergies.antisynergyRating)
+                ?: -1.0,
         )
     }
 

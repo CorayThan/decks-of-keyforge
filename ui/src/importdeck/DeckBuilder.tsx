@@ -1,11 +1,10 @@
 import { Box, Button, Divider, IconButton } from "@material-ui/core"
 import { Delete } from "@material-ui/icons"
-import { cloneDeep, sortBy } from "lodash"
+import { sortBy } from "lodash"
 import { autorun, computed, makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { cardStore } from "../cards/CardStore"
-import { KCard } from "../cards/KCard"
 import { SingleCardSearchSuggest } from "../cards/SingleCardSearchSuggest"
 import { CardAsLine } from "../cards/views/CardAsLine"
 import { spacing } from "../config/MuiConfig"
@@ -18,6 +17,7 @@ import { House } from "../generated-src/House"
 import { TheoryCard } from "../generated-src/TheoryCard"
 import { HouseLabel } from "../houses/HouseUtils"
 import { CardsInHouses, DeckBuilderData } from "./DeckBuilderData"
+import { FrontendCard } from "../generated-src/FrontendCard"
 
 class DeckBuilderStore {
     @observable
@@ -73,15 +73,10 @@ class DeckBuilderStore {
             if (cardHolder.option !== "") {
 
                 const foundCard = cardStore.fullCardFromCardName(cardHolder.option)!
-                const copiedCard = cloneDeep(foundCard)
-                if (copiedCard.house !== house) {
-                    copiedCard.maverick = true
-                    copiedCard.house = house
-                }
-                log.debug(`Pushing ${copiedCard.cardTitle} to house ${house}`)
+                log.debug(`Pushing ${foundCard.cardTitle} to house ${house}`)
                 const houseCards = this.currentDeck!.cards[house]
-                houseCards.push({name: copiedCard.cardTitle, enhanced: false})
-                this.currentDeck!.cards[house] = sortBy(houseCards, (card: TheoryCard) => cardStore.fullCardFromCardName(card.name)?.cardNumber)
+                houseCards.push({name: foundCard.cardTitle, enhanced: false})
+                this.currentDeck!.cards[house] = sortBy(houseCards, (card: TheoryCard) => cardStore.fullCardFromCardName(card.name)?.cardType)
                 cardHolder.option = ""
             }
         })
@@ -109,7 +104,11 @@ class DeckBuilderStore {
 export const deckBuilderStore = new DeckBuilderStore()
 
 @observer
-export class DisplayCardsInHouseEditable extends React.Component<{ house: House, cards: TheoryCard[], expansion: Expansion }> {
+export class DisplayCardsInHouseEditable extends React.Component<{
+    house: House,
+    cards: TheoryCard[],
+    expansion: Expansion
+}> {
     render() {
         const {house, cards, expansion} = this.props
         const searchSuggestCardNames = Array.from(new Set(cardStore.findCardNamesForExpansion().flatMap(forExp => {
@@ -126,10 +125,11 @@ export class DisplayCardsInHouseEditable extends React.Component<{ house: House,
                 <HouseLabel title={true} house={house}/>
                 <Divider style={{marginTop: 4}}/>
                 {cards.map((card, idx) => {
-                    const fullCard = cardStore.fullCardFromCardName(card.name) as KCard
+                    const fullCard = cardStore.fullCardFromCardName(card.name) as FrontendCard
                     return (
                         <Box display={"flex"} alignItems={"center"} key={idx}>
-                            <CardAsLine card={fullCard} width={showEnhanced ? 120 : 160} marginTop={4} cardActualHouse={this.props.house}/>
+                            <CardAsLine card={fullCard} width={showEnhanced ? 120 : 160} marginTop={4}
+                                        cardActualHouse={this.props.house}/>
                             <Box flexGrow={1}/>
                             {showEnhanced && (
                                 <Button

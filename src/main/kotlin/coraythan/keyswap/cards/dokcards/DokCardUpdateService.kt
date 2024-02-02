@@ -4,13 +4,9 @@ import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardsVersionService
 import coraythan.keyswap.cards.Rarity
-import coraythan.keyswap.cards.extrainfo.ExtraCardInfoService
 import coraythan.keyswap.expansions.Expansion
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.http.*
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.io.File
@@ -23,35 +19,9 @@ class DokCardUpdateService(
     private val versionService: CardsVersionService,
     private val dokCardRepo: DokCardRepo,
     private val dokCardUpdateDao: DokCardUpdateDao,
-    private val extraCardInfoService: ExtraCardInfoService,
     private val restTemplate: RestTemplate,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
-
-    private var createAllDokCardsPage = 0
-    private var findMoreCards = true
-
-    @Scheduled(
-        fixedDelayString = "PT100H",
-        initialDelayString = "PT10S"
-    )
-    fun createAllDokCards() {
-        log.info("Start create all DoK Cards")
-
-        extraCardInfoService.trueExtraCardInfoTitles()
-
-        while (findMoreCards) {
-            val foundCards = cardRepo.findAll(PageRequest.of(createAllDokCardsPage, 1000, Sort.by("id")))
-            val foundCardsList = foundCards.toList()
-            if (foundCardsList.size == 0) {
-                findMoreCards = false
-            } else {
-                createDoKCardsFromKCards(foundCardsList)
-            }
-            log.info("Create All Dok Cards Page $createAllDokCardsPage complete, found ${foundCardsList.size} cards.")
-            createAllDokCardsPage++
-        }
-    }
 
     fun createDoKCardsFromKCards(cards: List<Card>): Boolean {
         var updatedCards = false

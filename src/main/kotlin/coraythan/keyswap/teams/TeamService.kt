@@ -26,13 +26,13 @@ import java.util.*
 @Service
 @Transactional
 class TeamService(
-        private val teamRepo: TeamRepo,
-        private val currentUserService: CurrentUserService,
-        private val userRepo: KeyUserRepo,
-        private val s3Service: S3Service,
-        private val ownedDeckRepo: OwnedDeckRepo,
-        private val ownedAllianceDeckRepo: OwnedAllianceDeckRepo,
-        val entityManager: EntityManager,
+    private val teamRepo: TeamRepo,
+    private val currentUserService: CurrentUserService,
+    private val userRepo: KeyUserRepo,
+    private val s3Service: S3Service,
+    private val ownedDeckRepo: OwnedDeckRepo,
+    private val ownedAllianceDeckRepo: OwnedAllianceDeckRepo,
+    val entityManager: EntityManager,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -40,14 +40,21 @@ class TeamService(
 
     var allTeams: List<TeamName> = listOf()
 
-    @Scheduled(fixedDelayString = lockUpdateUserSearchStatsFor, initialDelayString = SchedulingConfig.updateUserStatsInitialDelay)
-    @SchedulerLock(name = "updateCachedTeams", lockAtLeastFor = lockUpdateUserSearchStatsFor, lockAtMostFor = lockUpdateUserSearchStatsFor)
+    @Scheduled(
+        fixedDelayString = lockUpdateUserSearchStatsFor,
+        initialDelayString = SchedulingConfig.updateUserStatsInitialDelay
+    )
+    @SchedulerLock(
+        name = "updateCachedTeams",
+        lockAtLeastFor = lockUpdateUserSearchStatsFor,
+        lockAtMostFor = lockUpdateUserSearchStatsFor
+    )
     fun updateCachedTeamInfo() {
         try {
             log.info("$scheduledStart update cached teams.")
 
             allTeams = teamRepo.findAll()
-                    .map { TeamName(it.id, it.name, it.teamImg, it.homepage, it.members.map { member -> member.username }) }
+                .map { TeamName(it.id, it.name, it.teamImg, it.homepage, it.members.map { member -> member.username }) }
 
             log.info("$scheduledStop cached ${allTeams.size} teams")
         } catch (e: Throwable) {
@@ -76,7 +83,8 @@ class TeamService(
         val userForUsername = userRepo.findByUsernameIgnoreCase(username) ?: return false
 
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
-        val team = teamRepo.findByTeamLeaderId(loggedInUser.id) ?: throw BadRequestException("No team for user ${loggedInUser.email}")
+        val team = teamRepo.findByTeamLeaderId(loggedInUser.id)
+            ?: throw BadRequestException("No team for user ${loggedInUser.email}")
         teamRepo.save(team.copy(invites = team.invites.toSet().plus(userForUsername.id).toList()))
         return true
     }
@@ -86,14 +94,16 @@ class TeamService(
         val userForUsername = userRepo.findByUsernameIgnoreCase(username) ?: return
 
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
-        val team = teamRepo.findByTeamLeaderId(loggedInUser.id) ?: throw BadRequestException("No team for user ${loggedInUser.email}")
+        val team = teamRepo.findByTeamLeaderId(loggedInUser.id)
+            ?: throw BadRequestException("No team for user ${loggedInUser.email}")
 
         teamRepo.save(team.copy(invites = team.invites.filter { it != userForUsername.id }))
     }
 
     fun removeFromTeam(username: String) {
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
-        val team = teamRepo.findByTeamLeaderId(loggedInUser.id) ?: throw BadRequestException("No teamm for team leader ${loggedInUser.email}")
+        val team = teamRepo.findByTeamLeaderId(loggedInUser.id)
+            ?: throw BadRequestException("No teamm for team leader ${loggedInUser.email}")
         val toRemove = team.members.find { it.username == username }
         if (toRemove != null) {
             removeFromTeamAndDecks(toRemove, team)
@@ -112,19 +122,20 @@ class TeamService(
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
         val team = if (loggedInUser.teamId == null) null else teamRepo.findByIdOrNull(loggedInUser.teamId)
         return if (team == null) {
-            TeamOrInvites(invites = teamRepo.findByInvitesContains(loggedInUser.id).map { TeamInviteInfo(it.name, it.id) })
+            TeamOrInvites(
+                invites = teamRepo.findByInvitesContains(loggedInUser.id).map { TeamInviteInfo(it.name, it.id) })
         } else {
             TeamOrInvites(team = TeamInfo(
-                    name = team.name,
-                    leader = team.members.find { it.id == team.teamLeaderId }?.username ?: "",
-                    members = team.members.map {
-                        val decks = ownedDeckRepo.findAllByOwnerId(it.id).map { it.deck }
-                        it.generateSearchResult(decks)
-                    }.sortedBy { it.username },
-                    invites = team.invites.map { userRepo.findByIdOrNull(it)!!.username },
-                    teamImg = team.teamImg,
-                    homepage = team.homepage,
-            ), invites = listOf())
+                name = team.name,
+                leader = team.members.find { it.id == team.teamLeaderId }?.username ?: "",
+                members = team.members.map {
+                    it.generateSearchResult()
+                }.sortedBy { it.username },
+                invites = team.invites.map { userRepo.findByIdOrNull(it)!!.username },
+                teamImg = team.teamImg,
+                homepage = team.homepage,
+            ), invites = listOf()
+            )
         }
     }
 
@@ -137,7 +148,8 @@ class TeamService(
 
     fun addTeamImg(img: MultipartFile, extension: String) {
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
-        val team = teamRepo.findByTeamLeaderId(loggedInUser.id) ?: throw BadRequestException("No team for user ${loggedInUser.email}")
+        val team = teamRepo.findByTeamLeaderId(loggedInUser.id)
+            ?: throw BadRequestException("No team for user ${loggedInUser.email}")
 
         if (team.teamImg != null) {
             s3Service.deleteUserContent(team.teamImg)
@@ -150,14 +162,16 @@ class TeamService(
 
     fun updateHomepage(homepage: String) {
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
-        val team = teamRepo.findByTeamLeaderId(loggedInUser.id) ?: throw BadRequestException("No team for user ${loggedInUser.email}")
+        val team = teamRepo.findByTeamLeaderId(loggedInUser.id)
+            ?: throw BadRequestException("No team for user ${loggedInUser.email}")
 
         teamRepo.save(team.copy(homepage = homepage.trim()))
     }
 
     fun disbandTeam() {
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
-        val team = teamRepo.findByTeamLeaderId(loggedInUser.id) ?: throw BadRequestException("No team for team leader ${loggedInUser.email}")
+        val team = teamRepo.findByTeamLeaderId(loggedInUser.id)
+            ?: throw BadRequestException("No team for team leader ${loggedInUser.email}")
         if (team.members.size > 1) throw BadRequestException("Team too big to disband.")
 
         log.info("Delete team ${team.name} with id ${team.id}")
@@ -180,7 +194,7 @@ class TeamService(
         ownedAllianceDeckRepo.removeTeamForUser(toRemove.id)
 
         teamRepo.save(team.copy(
-                members = team.members.filter { it.id != toRemove.id }
+            members = team.members.filter { it.id != toRemove.id }
         ))
     }
 }

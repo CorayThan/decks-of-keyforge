@@ -1,14 +1,15 @@
 package coraythan.keyswap.stats
 
 import coraythan.keyswap.*
-import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.Rarity
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.decks.DeckPageService
 import coraythan.keyswap.decks.DeckPageType
 import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.decks.addWinsLosses
-import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.DeckSasValuesSearchable
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.sasupdate.SasVersionService
@@ -29,7 +30,7 @@ private const val statsUpdateQuantity = 10000L
 @Service
 class StatsService(
     private val currentUserService: CurrentUserService,
-    private val cardService: CardService,
+    private val cardCache: DokCardCacheService,
     private val deckStatisticsRepo: DeckStatisticsRepo,
     private val deckPageService: DeckPageService,
     private val sasVersionService: SasVersionService,
@@ -183,7 +184,8 @@ class StatsService(
                     }
                     else -> {
                         val currentPage = deckPageService.findCurrentPage(DeckPageType.STATS)
-                        val deckResults = deckPageService.decksForPage(currentPage, DeckPageType.STATS)
+                        val deckResults =
+                            deckPageService.deckSasSearchableValuesForPage(currentPage, DeckPageType.STATS)
 
                         if (!deckResults.moreResults) {
                             updateStats = false
@@ -205,7 +207,7 @@ class StatsService(
         }
     }
 
-    private fun updateStats(statsEntities: List<DeckStatisticsEntity>, decks: List<Deck>) {
+    private fun updateStats(statsEntities: List<DeckStatisticsEntity>, decks: List<DeckSasValuesSearchable>) {
         statsEntities.forEach { statsEntity ->
             val stats: DeckStatistics
             try {
@@ -234,12 +236,12 @@ class StatsService(
             decks
                 .filter { statsEntity.expansion == null || statsEntity.expansion.expansionNumber == it.expansion }
                 .forEach { ratedDeck ->
-                    val cards = cardService.cardsForDeck(ratedDeck)
-                    val token = cardService.tokenForDeck(ratedDeck)
-                    val deckWithSyns = DeckSynergyService.fromDeckWithCards(ratedDeck, cards, token)
+                    val cards = cardCache.cardsForDeck(ratedDeck.deck)
+                    val token = cardCache.tokenForDeck(ratedDeck.deck)
+                    val deckWithSyns = DeckSynergyService.fromDeckWithCards(ratedDeck.deck, cards, token)
 
-                    stats.armorValues.incrementValue(ratedDeck.totalArmor)
-                    stats.totalCreaturePower.incrementValue(ratedDeck.totalPower)
+                    stats.armorValues.incrementValue(cards.sumOf { it.card.armor })
+                    stats.totalCreaturePower.incrementValue(cards.sumOf { it.card.power })
                     stats.aerc.incrementValue(ratedDeck.aercScore.roundToInt())
                     stats.expectedAmber.incrementValue(ratedDeck.expectedAmber.roundToInt())
                     stats.amberControl.incrementValue(ratedDeck.amberControl.roundToInt())
@@ -260,15 +262,15 @@ class StatsService(
                     stats.artifactCount.incrementValue(ratedDeck.artifactCount)
                     stats.upgradeCount.incrementValue(ratedDeck.upgradeCount)
 
-                    val creatureCards = cards.filter { card -> card.cardType == CardType.Creature }
-                    stats.power2OrLower.incrementValue(creatureCards.filter { card -> card.power < 3 }.size)
-                    stats.power3OrLower.incrementValue(creatureCards.filter { card -> card.power < 4 }.size)
-                    stats.power3OrHigher.incrementValue(creatureCards.filter { card -> card.power > 2 }.size)
-                    stats.power4OrHigher.incrementValue(creatureCards.filter { card -> card.power > 3 }.size)
-                    stats.power5OrHigher.incrementValue(creatureCards.filter { card -> card.power > 4 }.size)
+                    val creatureCards = cards.filter { card -> card.card.cardType == CardType.Creature }
+                    stats.power2OrLower.incrementValue(creatureCards.filter { card -> card.card.power < 3 }.size)
+                    stats.power3OrLower.incrementValue(creatureCards.filter { card -> card.card.power < 4 }.size)
+                    stats.power3OrHigher.incrementValue(creatureCards.filter { card -> card.card.power > 2 }.size)
+                    stats.power4OrHigher.incrementValue(creatureCards.filter { card -> card.card.power > 3 }.size)
+                    stats.power5OrHigher.incrementValue(creatureCards.filter { card -> card.card.power > 4 }.size)
 
-                    if (ratedDeck.wins != 0 || ratedDeck.losses != 0) {
-                        val wins = Wins(ratedDeck.wins, ratedDeck.losses)
+                    if (ratedDeck.deck.wins != 0 || ratedDeck.deck.losses != 0) {
+                        val wins = Wins(ratedDeck.deck.wins, ratedDeck.deck.losses)
                         stats.sasToWinsLosses.addWinsLosses(ratedDeck.sasRating, wins)
                         stats.metaToWinsLosses.addWinsLosses(deckWithSyns.meta().roundToInt(), wins)
                         stats.synergyToWinsLosses.addWinsLosses(ratedDeck.synergyRating, wins)
@@ -292,8 +294,8 @@ class StatsService(
                         stats.artifactWins.addWinsLosses(ratedDeck.artifactCount, wins)
                         stats.upgradeWins.addWinsLosses(ratedDeck.upgradeCount, wins)
 
-                        stats.raresWins.addWinsLosses(ratedDeck.raresCount, wins)
-                        ratedDeck.houses.forEach { house ->
+                        stats.raresWins.addWinsLosses(cards.count { it.card.rarity == Rarity.Rare }, wins)
+                        ratedDeck.deck.houses.forEach { house ->
                             stats.housesWins.addWinsLosses(house, wins)
                         }
                     }
@@ -301,7 +303,7 @@ class StatsService(
                     if (statsEntity.expansion == null) {
 
                         stats.aercDatas = stats.aercDatas.map { aercData ->
-                            if (ratedDeck.expansionEnum == aercData.expansion && (aercData.house == null || ratedDeck.houses.contains(
+                            if (ratedDeck.deck.expansionEnum == aercData.expansion && (aercData.house == null || ratedDeck.deck.houses.contains(
                                     aercData.house
                                 ))
                             ) {

@@ -1,7 +1,6 @@
 import { Box, Typography } from "@material-ui/core"
 import * as React from "react"
 import { cardStore } from "../../cards/CardStore"
-import { KCard } from "../../cards/KCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { displaySas } from "../../expansions/Expansions"
@@ -18,6 +17,7 @@ import {
 import { TimeUtils } from "../../config/TimeUtils"
 import { userStore } from "../../user/UserStore"
 import { observer } from "mobx-react"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
 export enum AercViewType {
     DECK,
@@ -70,7 +70,7 @@ export const AercViewForDeck = observer((props: { deck: DeckSearchResult, type: 
             }
             return cardStore.fullCardFromCardName(simpleCard.cardTitle)
         }))
-        .filter(card => card != null) as KCard[]
+        .filter(card => card != null) as FrontendCard[]
 
     if (mobile) {
         return (
@@ -95,7 +95,7 @@ export const AercViewForDeck = observer((props: { deck: DeckSearchResult, type: 
         )
     }
 
-    const dateAdded = deck.dateAdded == null ? "" : `on ${TimeUtils.formatShortDate(deck.dateAdded)}`
+    const dateAdded = deck.dateAdded == null ? "" : `${TimeUtils.formatShortDate(deck.dateAdded)}`
 
     return (
         <div
@@ -135,7 +135,7 @@ export const AercViewForDeck = observer((props: { deck: DeckSearchResult, type: 
                         style={{fontSize: "0.75rem"}}
                         align={"right"}
                     >
-                        discoverer
+                        {deck.discoveredBy}
                     </Typography>
                     <Typography
                         variant={"body2"}
@@ -143,7 +143,7 @@ export const AercViewForDeck = observer((props: { deck: DeckSearchResult, type: 
                         style={{fontSize: "0.75rem"}}
                         align={"right"}
                     >
-                        {deck.discoveredBy} {dateAdded}
+                        {dateAdded}
                     </Typography>
                 </Box>
             )}

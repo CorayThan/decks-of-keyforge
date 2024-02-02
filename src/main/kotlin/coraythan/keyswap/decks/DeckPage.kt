@@ -2,16 +2,13 @@ package coraythan.keyswap.decks
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
-import coraythan.keyswap.decks.models.Deck
-import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
-import coraythan.keyswap.decks.models.QDeckSasValuesUpdatable
+import coraythan.keyswap.decks.models.*
 import jakarta.persistence.*
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import kotlin.system.measureTimeMillis
 
 enum class DeckPageType(val quantity: Int) {
     IMPORT(10),
@@ -61,6 +58,33 @@ class DeckPageService(
         deckPageRepo.save(DeckPage(currentPage, type))
     }
 
+    fun deckSasSearchableValuesForPage(
+        currentPage: Int,
+        type: DeckPageType,
+        latestFirst: Boolean = false
+    ): DeckSasSearchableValuesResult {
+        val idStart = currentPage.toLong() * type.quantity
+        val idEnd = idEndForPage(currentPage, type)
+
+        val deckQ = QDeckSasValuesSearchable.deckSasValuesSearchable
+        val predicate = BooleanBuilder()
+            .and(deckQ.id.between(idStart, idEnd))
+        val results = query.selectFrom(deckQ)
+            .innerJoin(deckQ.deck).fetchJoin()
+            .where(predicate)
+            .let {
+                if (latestFirst) {
+                    it.orderBy(deckQ.importDateTime.desc())
+                } else {
+                    it
+                }
+            }
+            .fetch()
+
+        val hasMore = if (results.isEmpty()) deckSasValuesUpdatableRepo.existsByIdGreaterThan(idEnd) else true
+        return DeckSasSearchableValuesResult(results, hasMore)
+    }
+
     fun deckSasUpdatableValuesForPage(
         currentPage: Int,
         type: DeckPageType,
@@ -68,27 +92,21 @@ class DeckPageService(
     ): DeckSasUpdatableValuesResult {
         val idStart = currentPage.toLong() * type.quantity
         val idEnd = idEndForPage(currentPage, type)
-        val results: List<DeckSasValuesUpdatable>
 
-        val searchMs = measureTimeMillis {
-            val deckQ = QDeckSasValuesUpdatable.deckSasValuesUpdatable
-            val predicate = BooleanBuilder()
-                .and(deckQ.id.between(idStart, idEnd))
-            results = query.selectFrom(deckQ)
-                .innerJoin(deckQ.deck).fetchJoin()
-                .where(predicate)
-                .let {
-                    if (latestFirst) {
-                        it.orderBy(deckQ.importDateTime.desc())
-                    } else {
-                        it
-                    }
+        val deckQ = QDeckSasValuesUpdatable.deckSasValuesUpdatable
+        val predicate = BooleanBuilder()
+            .and(deckQ.id.between(idStart, idEnd))
+        val results = query.selectFrom(deckQ)
+            .innerJoin(deckQ.deck).fetchJoin()
+            .where(predicate)
+            .let {
+                if (latestFirst) {
+                    it.orderBy(deckQ.importDateTime.desc())
+                } else {
+                    it
                 }
-                .fetch()
-
-        }
-
-        // log.info("Deck $type id start $idStart end $idEnd took ${searchMs}ms to find ${results.size} decks. latestFirst: $latestFirst")
+            }
+            .fetch()
 
         val hasMore = if (results.isEmpty()) deckSasValuesUpdatableRepo.existsByIdGreaterThan(idEnd) else true
         return DeckSasUpdatableValuesResult(results, hasMore)
@@ -120,5 +138,10 @@ data class DeckPageResult(
 
 data class DeckSasUpdatableValuesResult(
     val decks: List<DeckSasValuesUpdatable>,
+    val moreResults: Boolean,
+)
+
+data class DeckSasSearchableValuesResult(
+    val decks: List<DeckSasValuesSearchable>,
     val moreResults: Boolean,
 )

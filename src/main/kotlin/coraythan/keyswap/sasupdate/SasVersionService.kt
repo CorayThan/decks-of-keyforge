@@ -30,6 +30,12 @@ class SasVersionService(
         this.readyToActivateNewVersion = updatingSasVersion != null && updatingSasVersion.sasScoresUpdated
     }
 
+    fun findUpdatingSasVersion(): Int {
+        val updatingSasVersion = repo.findFirstBySasUpdateCompletedTimestampNullOrderByIdDesc()
+        val activeSasVersionConfiguration = repo.findFirstBySasUpdateCompletedTimestampNotNullOrderByIdDesc()
+        return updatingSasVersion?.version ?: activeSasVersionConfiguration.version
+    }
+
     fun setUpdatingAndSasVersion(updating: Boolean, sasVersion: Int, readyToUpdate: Boolean) {
         this.updating = updating
         this.sasVersion = sasVersion

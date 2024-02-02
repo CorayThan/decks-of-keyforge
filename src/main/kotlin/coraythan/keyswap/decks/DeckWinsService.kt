@@ -2,14 +2,14 @@ package coraythan.keyswap.decks
 
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardRepo
-import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.cardwins.CardWinsService
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.Env
-import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
 import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.users.search.UserSearchService
@@ -28,7 +28,7 @@ private const val lockUpdatePageOfWinLosses = "PT20S"
 @Service
 class DeckWinsService(
     private val keyforgeApi: KeyforgeApi,
-    private val cardService: CardService,
+    private val cardCache: DokCardCacheService,
     private val cardRepo: CardRepo,
     private val deckRepo: DeckRepo,
     private val deckPageService: DeckPageService,
@@ -133,29 +133,30 @@ class DeckWinsService(
         val updateCardAndHouseWinsLossesDuration = measureTimeMillis {
 
             val decksWithScores = deckRepo.findByWinsGreaterThanOrLossesGreaterThan(0, 0)
-            log.info("Found ${decksWithScores.size} decks with a win or loss. total wins ${decksWithScores.sumOf { it.wins }} " +
-                    "losses ${decksWithScores.sumOf { it.losses }}"
+            log.info(
+                "Found ${decksWithScores.size} decks with a win or loss. total wins ${decksWithScores.sumOf { it.wins }} " +
+                        "losses ${decksWithScores.sumOf { it.losses }}"
             )
 
             val cardWins = mutableMapOf<String, Wins>()
             val cardWinsWithExpansions =
-                Expansion.values().map { it to mutableMapOf<String, Wins>() }.toMap().toMutableMap()
+                Expansion.entries.map { it to mutableMapOf<String, Wins>() }.toMap().toMutableMap()
             val houseWins = mutableMapOf<House, Wins>()
 
             decksWithScores.forEach { deck ->
-                val cards = cardService.cardsForDeck(deck)
+                val cards = cardCache.cardsForDeck(deck)
                 val expansion = Expansion.forExpansionNumber(deck.expansion)
 
                 cards.forEach { card ->
-                    val wins = cardWins[card.cardTitle] ?: Wins()
+                    val wins = cardWins[card.card.cardTitle] ?: Wins()
                     val winsValue = wins.copy(wins = wins.wins + deck.wins, losses = wins.losses + deck.losses)
-                    cardWins[card.cardTitle] = winsValue
-                    val expansionWins = cardWinsWithExpansions[expansion]?.get(card.cardTitle) ?: Wins()
+                    cardWins[card.card.cardTitle] = winsValue
+                    val expansionWins = cardWinsWithExpansions[expansion]?.get(card.card.cardTitle) ?: Wins()
                     val expansionWinsValue = expansionWins.copy(
                         wins = expansionWins.wins + deck.wins,
                         losses = expansionWins.losses + deck.losses
                     )
-                    cardWinsWithExpansions[expansion]!![card.cardTitle] = expansionWinsValue
+                    cardWinsWithExpansions[expansion]!![card.card.cardTitle] = expansionWinsValue
                 }
                 deck.houses.forEach { house ->
                     val wins = houseWins[house] ?: Wins()
@@ -173,7 +174,7 @@ class DeckWinsService(
 
             saveCardWins(cardWins)
             cardWinsService.saveCardWins(cardWinsWithExpansions)
-            cardService.reloadCachedCards()
+            cardCache.loadCards()
         }
 
         log.info("$scheduledStop It took ${updateCardAndHouseWinsLossesDuration / 1000} seconds to update wins and losses for cards and houses.")
@@ -183,8 +184,7 @@ class DeckWinsService(
     private fun saveDeckWins(deck: KeyForgeDeck) {
         val preexisting = deckRepo.findByKeyforgeId(deck.id)
         if (preexisting != null) {
-            val cards = cardService.cardsForDeck(preexisting)
-            val updated = preexisting.withCards(cards).addGameStats(deck)
+            val updated = preexisting.addGameStats(deck)
 
             if (updated != null) {
                 deckRepo.save(updated)

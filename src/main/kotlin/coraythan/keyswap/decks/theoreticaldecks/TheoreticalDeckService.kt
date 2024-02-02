@@ -2,7 +2,7 @@ package coraythan.keyswap.decks.theoreticaldecks
 
 import coraythan.keyswap.House
 import coraythan.keyswap.alliancedecks.AllianceDeckHouses
-import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckImporterService
@@ -25,7 +25,7 @@ class TheoreticalDeckService(
     private val theoreticalDeckRepo: TheoreticalDeckRepo,
     private val deckSearchService: DeckSearchService,
     private val deckImporterService: DeckImporterService,
-    private val cardService: CardService,
+    private val cardCache: DokCardCacheService,
     private val currentUserService: CurrentUserService,
     private val deckRepo: DeckRepo,
 ) {
@@ -33,9 +33,12 @@ class TheoreticalDeckService(
     fun saveAllianceDeck(toSave: AllianceDeckHouses): UUID {
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
 
-        val deckOne = deckRepo.findByKeyforgeId(toSave.houseOneDeckId) ?: throw BadRequestException("No deck for ${toSave.houseOneDeckId}")
-        val deckTwo = deckRepo.findByKeyforgeId(toSave.houseTwoDeckId) ?: throw BadRequestException("No deck for ${toSave.houseTwoDeckId}")
-        val deckThree = deckRepo.findByKeyforgeId(toSave.houseThreeDeckId) ?: throw BadRequestException("No deck for ${toSave.houseThreeDeckId}")
+        val deckOne = deckRepo.findByKeyforgeId(toSave.houseOneDeckId)
+            ?: throw BadRequestException("No deck for ${toSave.houseOneDeckId}")
+        val deckTwo = deckRepo.findByKeyforgeId(toSave.houseTwoDeckId)
+            ?: throw BadRequestException("No deck for ${toSave.houseTwoDeckId}")
+        val deckThree = deckRepo.findByKeyforgeId(toSave.houseThreeDeckId)
+            ?: throw BadRequestException("No deck for ${toSave.houseThreeDeckId}")
 
         val deckName = "Alliance of " +
                 "${deckOne.name.firstWord()} " +
@@ -89,7 +92,8 @@ class TheoreticalDeckService(
 
     fun deleteTheoreticalDeck(id: UUID) {
         val user = currentUserService.loggedInUserOrUnauthorized()
-        val theoreticalDeck = theoreticalDeckRepo.findByIdOrNull(id) ?: throw BadRequestException("No theoretical deck for id $id")
+        val theoreticalDeck =
+            theoreticalDeckRepo.findByIdOrNull(id) ?: throw BadRequestException("No theoretical deck for id $id")
         if (theoreticalDeck.creatorId != user.id) throw UnauthorizedException("You must have created the theoretical deck to delete it.")
         theoreticalDeckRepo.deleteById(id)
     }
@@ -102,11 +106,7 @@ class TheoreticalDeckService(
             cardIds = theoryDeck.cardIds,
             houseNamesString = theoryDeck.houseNamesString
         )
-        val withCards = deck.withCards(
-            cardService.cardsForDeck(deck)
-        )
-        val rated = deckImporterService.rateDeck(withCards)
-        val deckResult = deckSearchService.deckToDeckWithSynergies(rated.first)
+        val deckResult = deckSearchService.deckToDeckWithSynergies(deck)
 
         val cardsWithoutLegacies = deckResult.deck.housesAndCards.map {
             it.copy(cards = it.cards.map { it.copy(legacy = false) })
@@ -118,9 +118,9 @@ class TheoreticalDeckService(
     }
 
     private fun deckToHouseCardsPair(deck: Deck, house: House): Pair<House, List<TheoryCard>> {
-        val deckCards = cardService.cardsForDeck(deck)
+        val deckCards = cardCache.cardsForDeck(deck)
         return house to deckCards
             .filter { it.house == house }
-            .map { TheoryCard(it.cardTitle, it.enhanced ?: false) }
+            .map { TheoryCard(it.card.cardTitle, it.enhanced) }
     }
 }

@@ -196,6 +196,21 @@ data class IndividalDeckTraitStats(
         val percentile60: Int,
         val percentileForValue: MutableMap<Int, Double>
 ) {
+
+    fun closestPercentileForValue(stat: Int): Double {
+        val trueValue = percentileForValue[stat]
+        if (trueValue != null) {
+            return trueValue
+        }
+
+        val possibleStats = percentileForValue.keys.toSortedSet()
+            .sortedDescending()
+        possibleStats.forEach {
+            if (it < stat) return percentileForValue[it] ?: 0.0
+        }
+        return 0.0
+    }
+
     companion object {
 
         /**

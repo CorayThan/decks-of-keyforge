@@ -1,6 +1,5 @@
 import { cardStore } from "../../cards/CardStore"
 import { EnhancementType } from "../../cards/EnhancementType"
-import { KCard } from "../../cards/KCard"
 import { log, roundToHundreds } from "../../config/Utils"
 import { ExtendedExpansionUtils } from "../../expansions/ExtendedExpansionUtils"
 import { DeckSaleInfo } from "../../generated-src/DeckSaleInfo"
@@ -16,6 +15,7 @@ import { DeckType } from "../../generated-src/DeckType"
 import { AllianceHouseInfo } from "../../generated-src/AllianceHouseInfo"
 import { TokenInfo } from "../../generated-src/TokenInfo"
 import { TokenCreationValues } from "../../generated-src/TokenCreationValues"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
 export interface DeckWithSynergyInfo {
     deck: DeckSearchResult
@@ -122,7 +122,7 @@ export class DeckUtils {
 
             const cards = deck.housesAndCards
                 .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
-                .filter(card => card != null) as KCard[]
+                .filter(card => card != null) as FrontendCard[]
 
 
             cards.forEach(card => {

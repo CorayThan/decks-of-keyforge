@@ -1,26 +1,10 @@
 package coraythan.keyswap.cards
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.querydsl.core.BooleanBuilder
-import coraythan.keyswap.cards.cardwins.CardWinsService
 import coraythan.keyswap.cards.dokcards.DokCardUpdateService
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
-import coraythan.keyswap.decks.models.Deck
-import coraythan.keyswap.decks.models.GenericDeck
-import coraythan.keyswap.decks.models.HouseAndCards
-import coraythan.keyswap.expansions.Expansion
-import coraythan.keyswap.sasupdate.SasVersionService
-import coraythan.keyswap.synergy.SynTraitHouse
-import coraythan.keyswap.synergy.SynTraitValue
-import coraythan.keyswap.synergy.SynergyTrait
-import coraythan.keyswap.synergy.TraitStrength
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeCard
-import coraythan.keyswap.users.CurrentUserService
-import coraythan.keyswap.users.KeyUser
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
@@ -30,33 +14,14 @@ import java.time.ZonedDateTime
 class CardService(
     private val cardRepo: CardRepo,
     private val extraCardInfoRepo: ExtraCardInfoRepo,
-    private val cardWinsService: CardWinsService,
     private val versionService: CardsVersionService,
-    private val currentUserService: CurrentUserService,
-    private val sasVersionService: SasVersionService,
     private val dokCardUpdateService: DokCardUpdateService,
-    private val objectMapper: ObjectMapper,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    private val cardNameReplacementRegex = "[^\\d\\w\\s]".toRegex()
-    private val spaceRegex = "\\s".toRegex()
-
-    private var previousInfoWithNames: Map<String, Card>? = null
-    private var nextInfoWithNames: Map<String, Card>? = null
-    private var tokenCards: Map<String, Card>? = null
-    private var nonMaverickCachedCards: Map<CardNumberSetPair, Card>? = null
-    private var nonMaverickCachedCardsWithNames: Map<String, Card>? = null
-    private var nonMaverickCachedCardsWithUrlNames: Map<String, Card>? = null
-    private var nonMaverickCachedCardsList: List<Card>? = null
-    private var nonMaverickCachedCardsListNoDups: List<Card>? = null
-    lateinit var previousExtraInfo: Map<String, ExtraCardInfo>
-    lateinit var extraInfo: Map<String, ExtraCardInfo>
-    lateinit var nextExtraInfo: Map<String, ExtraCardInfo>
-
     fun importNewCards(keyforgeApiCards: List<KeyForgeCard>): Boolean {
 
-        val cards = keyforgeApiCards.mapNotNull { it.toCard(this.extraInfo) }
+        val cards = keyforgeApiCards.mapNotNull { it.toCard() }
 
         val savedMvCardNames = mutableListOf<String>()
 
@@ -109,356 +74,22 @@ class CardService(
                 )
             }
 
-            this.loadExtraInfo()
         } catch (exception: Exception) {
             log.error("Nothing is going to work because we couldn't publish extra info!", exception)
             throw IllegalStateException(exception)
         }
     }
 
-    fun loadExtraInfo() {
-        log.info("Loading extra info started")
-        val publishedAercVersion = sasVersionService.findSasVersion()
-        try {
-            this.extraInfo = mapInfos(extraCardInfoRepo.findByActiveTrue())
 
-            this.nextExtraInfo = mapInfos(extraCardInfoRepo.findByPublishedNull())
-            val previousOnes = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(publishedAercVersion)
-                .groupBy { it.cardName }
-                .mapNotNull { it.value.maxByOrNull { infos -> infos.version } }
-            this.previousExtraInfo = mapInfos(previousOnes)
-
-        } catch (exception: Exception) {
-            log.error("Nothing is going to work because we couldn't load extra info!", exception)
-            throw IllegalStateException(exception)
-        }
-        log.info("Loading extra info fully complete for AERC version ${publishedAercVersion} found infos for ${this.extraInfo.size} cards")
+    private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos.associateBy { cardInfo ->
+        cardInfo.synergies.size
+        cardInfo.traits.size
+        cardInfo.cardNameUrl
     }
-
-    private fun mapInfos(extraInfos: List<ExtraCardInfo>) = extraInfos
-        .map { cardInfo ->
-            cardInfo.synergies.size
-            cardInfo.traits.size
-            cardInfo.cardName.cleanCardName() to cardInfo
-        }
-        .toMap()
 
     fun findByExpansionCardName(expansion: Int, cardName: String, enhanced: Boolean = false) =
         cardRepo.findByExpansionAndCardTitleAndEnhanced(expansion, cardName, enhanced).firstOrNull()
 
-    fun findByCardName(cardName: String) = nonMaverickCachedCardsWithNames!![cardName.cleanCardName()]
-    fun findByCardUrlName(cardUrlName: String) = nonMaverickCachedCardsWithUrlNames!![cardUrlName]
-    fun findTokenByName(tokenName: String) = tokenCards!![tokenName]
+    fun findByCardName(cardName: String) = cardRepo.findFirstByCardTitleAndMaverickFalse(cardName)
 
-    fun previousInfo(): Map<String, Card> {
-        if (previousInfoWithNames == null) {
-            reloadCachedCards()
-        }
-        return previousInfoWithNames!!
-    }
-
-    fun findFutureInfo(): Map<String, Card> {
-        currentUserService.contentCreatorOrUnauthorized()
-        return nextInfo()
-    }
-
-    fun nextInfo(): Map<String, Card> {
-        if (nextInfoWithNames == null) {
-            reloadCachedCards()
-        }
-        return nextInfoWithNames!!
-    }
-
-    fun allFullCardsNonMaverick(): List<Card> {
-        if (nonMaverickCachedCardsList == null) {
-            reloadCachedCards()
-        }
-        return nonMaverickCachedCardsList!!
-    }
-
-    fun allFullCardsNonMaverickNoDups(): List<Card> {
-        if (nonMaverickCachedCardsListNoDups == null) {
-            reloadCachedCards()
-        }
-        return nonMaverickCachedCardsListNoDups!!
-    }
-
-    fun allFullCardsNonMaverickMap(): Map<CardNumberSetPair, Card> {
-        if (nonMaverickCachedCards == null) {
-            reloadCachedCards()
-        }
-        return nonMaverickCachedCards!!
-    }
-
-    fun realAllCards(): List<Card> {
-        return cardRepo.findAll()
-    }
-
-    fun deckToHouseAndCards(deck: GenericDeck): List<HouseAndCards> {
-        val houses = deck.houses
-        val cardIdsString = deck.cardIds
-        val cards = cardsFromCardIds(cardIdsString)
-        return houses
-            .map { house ->
-                HouseAndCards(
-                    house,
-                    cards
-                        .filter { it.house == house }
-                        .sorted()
-                        .map {
-                            it.toSimpleCard(!(it.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum }
-                                ?: true))
-                        }
-                )
-            }
-            .sortedBy { it.house }
-    }
-
-    fun cardsForDeck(deck: GenericDeck): List<Card> {
-        val cards = cardsFromCardIds(deck.cardIds, deck.name)
-        check(cards.size == 36) { "Why doesn't this deck have cards? $deck" }
-        return cards
-    }
-
-    fun tokenForDeck(deck: GenericDeck): Card? {
-        val deckTokenNum = deck.tokenNumber ?: return null
-        if (tokenCards == null) {
-            reloadCachedCards()
-        }
-        return tokenCards?.get(TokenCard.cardTitleFromOrdinal(deckTokenNum))!!
-    }
-
-    fun cardsAndTokenFutureProof(deck: GenericDeck, user: KeyUser?): CardsAndToken {
-        val cards = if (user?.displayFutureSas() == true) {
-            futureCardsForDeck(deck)
-        } else {
-            cardsForDeck(deck)
-        }
-        val token = if (user?.displayFutureSas() == true) {
-            futureTokenForDeck(deck)
-        } else {
-            tokenForDeck(deck)
-        }
-        return CardsAndToken(cards, token)
-    }
-
-    fun futureTokenForDeck(deck: GenericDeck): Card? {
-        val tokenNum = deck.tokenNumber ?: return null
-        if (tokenCards == null) {
-            reloadCachedCards()
-        }
-        tokenCards?.get(TokenCard.cardTitleFromOrdinal(tokenNum))!!
-            .apply {
-                val nextInfo = nextExtraInfo[this.cardTitle.cleanCardName()]
-                return if (nextInfo != null) {
-                    this.copy(extraCardInfo = nextInfo)
-                } else {
-                    this
-                }
-            }
-    }
-
-    fun futureCardsForDeck(deck: GenericDeck): List<Card> {
-        return cardsForDeck(deck)
-            .map {
-                val futureInfo = nextExtraInfo[it.cardTitle.cleanCardName()]
-                if (futureInfo == null) {
-                    it
-                } else {
-                    it.copy(extraCardInfo = futureInfo)
-                }
-            }
-    }
-
-    fun filterCards(filters: CardFilters): Iterable<Card> {
-        val cardQ = QCard.card
-        val predicate = BooleanBuilder()
-
-        if (!filters.includeMavericks) predicate.and(cardQ.maverick.isFalse)
-        if (filters.rarities.isNotEmpty()) predicate.and(cardQ.rarity.`in`(filters.rarities))
-        if (filters.types.isNotEmpty()) predicate.and(cardQ.cardType.`in`(filters.types))
-        if (filters.houses.isNotEmpty()) predicate.and(cardQ.house.`in`(filters.houses))
-        if (filters.ambers.isNotEmpty()) predicate.and(cardQ.amber.`in`(filters.ambers))
-        if (filters.powers.isNotEmpty()) predicate.and(cardQ.power.`in`(filters.powers))
-        if (filters.armors.isNotEmpty()) predicate.and(cardQ.armor.`in`(filters.armors))
-
-        if (filters.title.isNotBlank()) predicate.and(cardQ.cardTitle.likeIgnoreCase("%${filters.title}%"))
-        if (filters.description.isNotBlank()) predicate.and(cardQ.cardText.likeIgnoreCase("%${filters.description}%"))
-
-        val sortProperty = when (filters.sort) {
-            CardSortOptions.SET_NUMBER -> "cardNumber"
-            CardSortOptions.CARD_NAME -> "cardTitle"
-            CardSortOptions.AMBER -> "amber"
-            CardSortOptions.POWER -> {
-                predicate.and(cardQ.cardType.`in`(CardType.Creature))
-                "power"
-            }
-
-            CardSortOptions.ARMOR -> {
-                predicate.and(cardQ.cardType.`in`(CardType.Creature))
-                "armor"
-            }
-        }
-
-        val cards = cardRepo.findAll(predicate, Sort.by(filters.sortDirection.direction, sortProperty)).toList()
-        return fullCardsFromCards(cards)
-    }
-
-    fun reloadCachedCards() {
-        val allCards = cardRepo.findAll()
-        val cards = fullCardsFromCards(
-            allCards
-                .groupBy { "${it.expansion}-${it.cardNumber}" }
-                .values
-                .map { groupedCards ->
-                    groupedCards.let { sameCards ->
-                        val nonMav = sameCards.filter { !it.maverick && !it.anomaly }
-                        if (nonMav.isEmpty()) {
-                            val first = sameCards.first()
-                            val representativeCard = if (first.big == true) sameCards.first { it.power > 0 } else first
-                            representativeCard.houses = listOf()
-                            representativeCard
-                        } else {
-                            val first = nonMav.first()
-                            val representativeCard = if (first.big == true) sameCards.first { it.power > 0 } else first
-                            representativeCard.houses = nonMav.map { it.house }.toSet().toList().sorted()
-                            representativeCard
-                        }
-                    }
-                }
-        ).map {
-            val extraTraits = it.traits
-                .mapNotNull { trait ->
-                    SynergyTrait.fromTrait(trait)
-                }
-                .map { trait -> SynTraitValue(trait = trait) }
-                .plus(
-                    if (it.aercScoreAverage >= 2.5) {
-                        listOf(
-                            (SynTraitValue(
-                                trait = SynergyTrait.good,
-                                house = SynTraitHouse.anyHouse,
-                                cardTypes = listOf(it.cardType),
-                                rating = when {
-                                    it.aercScoreAverage >= 3.5 -> TraitStrength.STRONG.value
-                                    it.aercScoreAverage >= 3 -> TraitStrength.NORMAL.value
-                                    else -> TraitStrength.WEAK.value
-                                }
-                            ))
-                        )
-                    } else {
-                        listOf()
-                    }
-                )
-
-            val numberSetPair = CardNumberSetPair(Expansion.forExpansionNumber(it.expansion), it.cardNumber)
-            val realExtraInfo = extraInfo[it.cardTitle.cleanCardName()] ?: error("no extra info for ${it.cardTitle}")
-
-            val extraSynergies = realExtraInfo.traits
-                .mapNotNull { synTrait ->
-                    when (synTrait.trait) {
-                        SynergyTrait.alpha -> SynTraitValue(SynergyTrait.alpha, -3, SynTraitHouse.house)
-                        SynergyTrait.omega -> SynTraitValue(SynergyTrait.omega, -3, SynTraitHouse.house)
-                        else -> null
-                    }
-                }
-
-            numberSetPair to
-                    it.copy(
-                        extraCardInfo = realExtraInfo.copy(
-                            traits = realExtraInfo.traits.plus(extraTraits),
-                            synergies = realExtraInfo.synergies.plus(extraSynergies)
-                        )
-                    )
-        }.toMap()
-
-        val cardExpansions = cards.entries
-            .groupBy { it.value.cardTitle }
-            .map { it.key to it.value.map { cardNums -> cardNums.key } }
-            .toMap()
-
-        cards.forEach {
-            it.value.cardNumbers = cardExpansions[it.value.cardTitle]
-        }
-
-        tokenCards = cards.values.filter { it.token }.associateBy { it.cardTitle }
-        nonMaverickCachedCards = cards
-        nonMaverickCachedCardsWithNames = cards.map { it.value.cardTitle.cleanCardName() to it.value }.toMap()
-        nonMaverickCachedCardsWithUrlNames =
-            cards.map { cardNameToCardImageUrl(it.value.cardTitle) to it.value }.toMap()
-        val notNullCards = nonMaverickCachedCards?.values?.toList()?.sorted()
-        nonMaverickCachedCardsList = notNullCards
-        if (notNullCards != null) cardWinsService.addWinsToCards(notNullCards)
-        nonMaverickCachedCardsListNoDups = nonMaverickCachedCardsList
-            ?.map { it.cardTitle.cleanCardName() to it }
-            ?.toMap()?.values
-            ?.toList()
-            ?.sortedBy { "${it.house}${it.cardNumber.padStart(4, '0')}" }
-        previousInfoWithNames = previousExtraInfo.mapNotNull { entry ->
-            val card = nonMaverickCachedCardsWithNames!![entry.key]
-            if (card == null) {
-                null
-            } else {
-                card.cardTitle.cleanCardName() to card.copy(extraCardInfo = entry.value)
-            }
-        }.toMap()
-        nextInfoWithNames = nextExtraInfo.mapNotNull { entry ->
-            val card = nonMaverickCachedCardsWithNames!![entry.key]
-            if (card == null) {
-                null
-            } else {
-                card.cardTitle.cleanCardName() to card.copy(extraCardInfo = entry.value)
-            }
-        }.toMap()
-    }
-
-    fun twinedCardsForDeck(deck: Deck): List<Card> {
-
-        nonMaverickCachedCardsWithNames ?: error("No non maverick cards with names available yet.")
-
-        return cardsForDeck(deck).map {
-            val converted = if (it.cardTitle.contains(evilTwinCardName)) {
-                val goodTwinName = it.cardTitle.dropLast(evilTwinCardName.length)
-                findByCardName(goodTwinName)
-            } else {
-                findByCardName(it.cardTitle + evilTwinCardName)
-            }
-
-            converted?.copy(house = it.house, maverick = it.maverick, enhanced = it.enhanced) ?: it
-        }
-    }
-
-    private fun fullCardsFromCards(cards: List<Card>) = cards.map {
-        it.copy(
-            extraCardInfo = this.extraInfo[it.cardTitle.cleanCardName()]
-                ?: throw IllegalStateException("No extra info for ${it.cardTitle}")
-        )
-    }
-
-    fun cardsFromCardIds(cardIdsString: String, deckName: String? = null): List<Card> {
-        require(cardIdsString.isNotBlank()) { "Card id string was blank! deck name: $deckName" }
-        val cardIds = objectMapper.readValue<CardIds>(cardIdsString)
-        val realCards = allFullCardsNonMaverickMap()
-        return cardIds.cardIds.flatMap { entry ->
-            entry.value.map {
-                val realCard =
-                    realCards[it.toNew()] ?: throw java.lang.IllegalStateException("No card for ${it.toNew()}")
-                realCard.copy(
-                    house = entry.key,
-                    maverick = !realCard.anomaly && !(realCard.houses?.contains(entry.key) ?: true),
-                    enhanced = it.enhanced
-                )
-            }
-        }
-    }
-
-    private fun cardNameToCardImageUrl(cardName: String): String {
-        return cardName
-            .replace(cardNameReplacementRegex, "")
-            .replace(spaceRegex, "-")
-            .lowercase()
-    }
 }
-
-val nonAlphanumericSpaceRegex = "[^a-zA-Z0-9\\s\\-,]".toRegex()
-fun String.cleanCardName() = this.replace(nonAlphanumericSpaceRegex, "")

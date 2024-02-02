@@ -79,6 +79,8 @@ class DeckSasUpdateService(
     fun continueUpdatingSasValues() {
         if (sasVersionService.isUpdating() && !sasVersionService.isReadyToActivateNewVersion()) {
 
+            val updateVersion = sasVersionService.findUpdatingSasVersion()
+
             val currentPage: Int
             val dsvForPage: DeckSasUpdatableValuesResult
             val updatedDsv: List<DeckSasValuesUpdatable>
@@ -90,7 +92,7 @@ class DeckSasUpdateService(
                 updatedDsv = dsvForPage.decks
                     .mapNotNull {
                         val ratedDeck = deckImporterService.rateDeck(it.deck)
-                        val ratingsEqual = it.sasValuesChanged(ratedDeck.first)
+                        val ratingsEqual = it.sasValuesChanged(ratedDeck, updateVersion)
                         if (ratingsEqual) null else it
                     }
 

@@ -1,6 +1,7 @@
 package coraythan.keyswap.publicapis
 
 import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.DeckSearchResult
@@ -18,37 +19,38 @@ import java.util.*
 
 @Service
 class PublicApiService(
-        private val currentUserService: CurrentUserService,
-        private val keyUserRepo: KeyUserRepo,
-        private val deckRepo: DeckRepo,
-        private val cardService: CardService,
-        private val statsService: StatsService,
-        private val userDeckRepo: UserDeckRepo,
-        private val ownedDeckRepo: OwnedDeckRepo,
-        private val favoritedDeckRepo: FavoritedDeckRepo,
-        private val funnyDeckRepo: FunnyDeckRepo,
+    private val currentUserService: CurrentUserService,
+    private val keyUserRepo: KeyUserRepo,
+    private val deckRepo: DeckRepo,
+    private val cardService: CardService,
+    private val statsService: StatsService,
+    private val userDeckRepo: UserDeckRepo,
+    private val ownedDeckRepo: OwnedDeckRepo,
+    private val favoritedDeckRepo: FavoritedDeckRepo,
+    private val funnyDeckRepo: FunnyDeckRepo,
+    private val cardCache: DokCardCacheService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun findMyDeckIds(user: KeyUser): List<String> {
         return ownedDeckRepo.findAllByOwnerId(user.id)
-                .map { it.deck.keyforgeId }
+            .map { it.deck.keyforgeId }
     }
 
     fun findMyDecks(user: KeyUser): List<PublicMyDeckInfo> {
         return ownedDeckRepo.findAllByOwnerId(user.id)
-                .map {
-                    PublicMyDeckInfo(
-                            deck = it.deck.toDeckSearchResult(
-                                    stats = statsService.cachedStats
-                            ),
-                            wishlist = favoritedDeckRepo.existsByDeckIdAndUserId(it.deck.id, user.id),
-                            funny = funnyDeckRepo.existsByDeckIdAndUserId(it.deck.id, user.id),
-                            notes = userDeckRepo.findByUserIdAndDeckId(user.id, it.deck.id)?.notes,
-                            ownedByMe = true
-                    )
-                }
+            .map {
+                PublicMyDeckInfo(
+                    deck = it.deck.toDeckSearchResult(
+                        stats = statsService.cachedStats
+                    ),
+                    wishlist = favoritedDeckRepo.existsByDeckIdAndUserId(it.deck.id, user.id),
+                    funny = funnyDeckRepo.existsByDeckIdAndUserId(it.deck.id, user.id),
+                    notes = userDeckRepo.findByUserIdAndDeckId(user.id, it.deck.id)?.notes,
+                    ownedByMe = true
+                )
+            }
     }
 
     fun findDeckSimple(keyforgeId: String): DeckSearchResult? {
@@ -62,10 +64,10 @@ class PublicApiService(
             return null
         }
         return deck.toDeckSearchResult(
-                housesAndCards = cardService.deckToHouseAndCards(deck),
-                cards = cardService.cardsForDeck(deck),
-                stats = statsService.findCurrentStats(),
-            token = cardService.tokenForDeck(deck),
+            housesAndCards = cardCache.deckToHouseAndCards(deck),
+            cards = cardCache.cardsForDeck(deck),
+            stats = statsService.findCurrentStats(),
+            token = cardCache.tokenForDeck(deck),
         )
     }
 
@@ -78,7 +80,8 @@ class PublicApiService(
     }
 
     fun userForApiKey(apiKey: String): KeyUser {
-        return keyUserRepo.findByApiKey(apiKey) ?: throw BadRequestException("Your api key is invalid. Please generate a new one.")
+        return keyUserRepo.findByApiKey(apiKey)
+            ?: throw BadRequestException("Your api key is invalid. Please generate a new one.")
     }
 
 }

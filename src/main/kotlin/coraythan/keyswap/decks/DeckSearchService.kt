@@ -9,8 +9,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.*
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.QDeckListing
-import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.TokenCard
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.config.UnauthorizedException
@@ -18,7 +18,6 @@ import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.patreon.levelAtLeast
-import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.tags.KTagRepo
@@ -40,7 +39,6 @@ private const val lockCountDecks = "PT24H"
 @Transactional
 @Service
 class DeckSearchService(
-    private val cardService: CardService,
     private val deckRepo: DeckRepo,
     private val userService: KeyUserService,
     private val currentUserService: CurrentUserService,
@@ -49,7 +47,7 @@ class DeckSearchService(
     private val entityManager: EntityManager,
     private val ownedDeckRepo: OwnedDeckRepo,
     private val ownedDeckService: OwnedDeckService,
-    private val sasVersionService: SasVersionService,
+    private val cardCache: DokCardCacheService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
@@ -152,10 +150,10 @@ class DeckSearchService(
 
         val decks = deckResults.mapNotNull {
 
-            val cardsAndToken = cardService.cardsAndTokenFutureProof(it, userHolder.user)
+            val cardsAndToken = cardCache.cardsAndTokenFutureProof(it, userHolder.user)
 
             var searchResult = it.toDeckSearchResult(
-                cardService.deckToHouseAndCards(it),
+                cardCache.deckToHouseAndCards(it),
                 cardsAndToken.cards,
                 stats = statsService.findCurrentStats(),
                 synergies = DeckSynergyService.fromDeckWithCards(it, cardsAndToken.cards, cardsAndToken.token),
@@ -523,7 +521,7 @@ class DeckSearchService(
                 it.mav == true -> {
                     predicate.andAnyOf(
                         *it.cardNames.flatMap { cardName ->
-                            House.entries.toSet().minus(cardService.findByCardName(cardName)!!.house)
+                            House.entries.toSet().minus(cardCache.findByCardName(cardName).dokCard.houses.toSet())
                                 .map { otherHouse ->
                                     deckQ.cardNames.like("%~$cardName${otherHouse}~%")
                                 }
@@ -576,10 +574,10 @@ class DeckSearchService(
     fun findDeckSearchResultWithCards(keyforgeId: String): DeckSearchResult {
         val deck = deckRepo.findByKeyforgeId(keyforgeId) ?: throw BadRequestException("No deck with id $keyforgeId")
         return deck.toDeckSearchResult(
-            cardService.deckToHouseAndCards(deck),
-            cardService.cardsForDeck(deck),
+            cardCache.deckToHouseAndCards(deck),
+            cardCache.cardsForDeck(deck),
             stats = statsService.findCurrentStats(),
-            token = cardService.tokenForDeck(deck),
+            token = cardCache.tokenForDeck(deck),
         )
     }
 
@@ -604,14 +602,15 @@ class DeckSearchService(
     fun deckToDeckWithSynergies(deck: Deck): DeckWithSynergyInfo {
         val user = currentUserService.loggedInUser()
         val stats = statsService.findCurrentStats()
-        val cardsAndToken = cardService.cardsAndTokenFutureProof(deck, user)
+        val cardsAndToken = cardCache.cardsAndTokenFutureProof(deck, user)
         val cards = cardsAndToken.cards
+        val synergies = DeckSynergyService.fromDeckWithCards(deck, cards, cardsAndToken.token)
 
         val searchResult = deck.toDeckSearchResult(
-            cardService.deckToHouseAndCards(deck),
+            cardCache.deckToHouseAndCards(deck),
             cards,
             stats = stats,
-            synergies = DeckSynergyService.fromDeckWithCards(deck, cards, cardsAndToken.token),
+            synergies = synergies,
             includeDetails = true,
             token = cardsAndToken.token,
         )
@@ -622,8 +621,9 @@ class DeckSearchService(
             } else {
                 searchResult
             },
-            synergyPercentile = stats?.synergyStats?.percentileForValue?.get(deck.synergyRating) ?: -1.0,
-            antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(deck.antisynergyRating) ?: -1.0,
+            synergyPercentile = stats?.synergyStats?.percentileForValue?.get(synergies.synergyRating) ?: -1.0,
+            antisynergyPercentile = stats?.antisynergyStats?.percentileForValue?.get(synergies.antisynergyRating)
+                ?: -1.0,
         )
     }
 
@@ -642,7 +642,7 @@ class DeckSearchService(
     }
 
     fun findDecksByName(name: String): List<DeckSearchResult> {
-        val deckQ = QDeck.deck
+        val deckQ = QDeckSasValuesSearchable.deckSasValuesSearchable
         val predicate = BooleanBuilder()
         val trimmed = name
             .lowercase()
@@ -655,17 +655,19 @@ class DeckSearchService(
         toUse.forEach { predicate.and(deckQ.name.likeIgnoreCase("%$it%")) }
 
         return query.selectFrom(deckQ)
+            .innerJoin(deckQ.deck).fetchJoin()
             .where(predicate)
             .orderBy(deckQ.sasRating.desc())
             .limit(5)
             .fetch()
             .map {
-                val cards = cardService.cardsForDeck(it)
-                val token = cardService.tokenForDeck(it)
-                it.toDeckSearchResult(
-                    housesAndCards = it.houses.map { house -> HouseAndCards(house, listOf()) },
+                val deck = it.deck
+                val cards = cardCache.cardsForDeck(deck)
+                val token = cardCache.tokenForDeck(deck)
+                deck.toDeckSearchResult(
+                    housesAndCards = deck.houses.map { house -> HouseAndCards(house, listOf()) },
                     stats = statsService.findCurrentStats(),
-                    synergies = DeckSynergyService.fromDeckWithCards(it, cards, token),
+                    synergies = DeckSynergyService.fromDeckWithCards(deck, cards, token),
                     token = token,
                 )
             }

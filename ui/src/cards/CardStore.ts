@@ -13,9 +13,11 @@ import { Rarity } from "../generated-src/Rarity"
 import { statsStore } from "../stats/StatsStore"
 import { userStore } from "../user/UserStore"
 import { CardFilters, CardSort } from "./CardFilters"
-import { cardNameToCardNameKey, CardNumberSetPair, CardUtils, CardWinRates, KCard, winPercentForCard } from "./KCard"
+import { cardNameToCardNameKey, CardUtils, CardWinRates } from "./KCard"
 import { CardType } from "../generated-src/CardType"
 import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
+import { FrontendCard } from "../generated-src/FrontendCard"
+import { CardNumberSetPair } from "../generated-src/CardNumberSetPair"
 
 export class CardStore {
     static readonly CONTEXT = HttpConfig.API + "/cards"
@@ -24,7 +26,7 @@ export class CardStore {
     private cardsKey = "cards"
 
     @observable
-    cards?: KCard[]
+    cards?: FrontendCard[]
 
     @observable
     searchingForCards = false
@@ -33,13 +35,13 @@ export class CardStore {
     cardsLoaded = false
 
     @observable
-    allCards: KCard[] = []
+    allCards: FrontendCard[] = []
     @observable
-    allCardsNoTokens: KCard[] = []
+    allCardsNoTokens: FrontendCard[] = []
     @observable
-    allTokens: KCard[] = []
+    allTokens: FrontendCard[] = []
 
-    private cardNameLowercaseToCard?: Map<string, KCard>
+    private cardNameLowercaseToCard?: Map<string, FrontendCard>
     private cardNameLowercaseToHasAerc?: Map<string, HasAerc>
 
     @observable
@@ -52,13 +54,13 @@ export class CardStore {
     cardFlavors: string[] = ["Gotta go, gotta go, gotta go..."]
 
     @observable
-    cardNameSearchResults: KCard[] = []
+    cardNameSearchResults: FrontendCard[] = []
 
     @observable
-    private previousExtraInfo?: { [cardName: string]: KCard }
+    private previousExtraInfo?: { [cardName: string]: FrontendCard }
 
     @observable
-    private nextExtraInfo?: { [cardName: string]: KCard }
+    private nextExtraInfo?: { [cardName: string]: FrontendCard }
 
     @observable
     findingPreviousInfo = false
@@ -117,7 +119,7 @@ export class CardStore {
         const toSearch = this.allCards
         let filtered = toSearch.slice().filter(card => {
             const extraInfo = this.findExtraInfoToUse(card)
-            const cardNumsConverted = card.cardNumbers?.map(cardNum => cardNum.expansion === Expansion.ANOMALY_EXPANSION ? {
+            const cardNumsConverted = card.cardNumbers.map((cardNum: CardNumberSetPair) => cardNum.expansion === Expansion.ANOMALY_EXPANSION ? {
                 expansion: Expansion.WORLDS_COLLIDE,
                 cardNumber: cardNum.cardNumber
             } : cardNum)
@@ -138,7 +140,7 @@ export class CardStore {
                 &&
                 (filters.trait == null || extraInfo.traits.some(infoTrait => infoTrait.trait === filters.trait))
                 &&
-                (!filters.anomalies || (filters.anomalies && card.anomaly))
+                (!filters.anomalies || (filters.anomalies && card.expansions.find(expansion => expansion.expansion === Expansion.ANOMALY_EXPANSION) != null))
                 &&
                 (filters.synergy == null || extraInfo.synergies.some(infoTrait => infoTrait.trait === filters.synergy))
                 &&
@@ -171,17 +173,17 @@ export class CardStore {
             filtered = sortBy(filtered, ["cardTitle", "cardNumber"])
 
         } else if (filters.sort === "SET_NUMBER" && filters.expansions.length !== 1) {
-            log.info("Sort by house then card number")
-            filtered = sortBy(filtered, (card: KCard) => {
-                return `${card.house}${card.cardNumber.toString().padStart(4, "0")}`
+            log.info("Sort by house then card name")
+            filtered = sortBy(filtered, (card: FrontendCard) => {
+                return `${card.houses}${card.cardTitle}`
             })
         } else if (filters.sort === "SET_NUMBER") {
-            filtered = sortBy(filtered, (card: KCard) => {
+            filtered = sortBy(filtered, (card: FrontendCard) => {
                 const cardNumbers = card.cardNumbers?.filter((cardNumber: CardNumberSetPair) => filters.expansions.includes(expansionNumberForExpansion(cardNumber.expansion))) ?? []
                 if (cardNumbers.length > 0) {
                     return cardNumbers[0].cardNumber
                 } else {
-                    return card.cardNumber
+                    return card.cardTitle
                 }
             })
         }
@@ -219,7 +221,7 @@ export class CardStore {
     loadAllCards = async () => {
         this.searchingForCards = true
 
-        let cardsLoaded: KCard[]
+        let cardsLoaded: FrontendCard[]
 
         if (IdbUtils.idbAvailable) {
             const newVersion = await this.checkCardsVersion()
@@ -229,7 +231,7 @@ export class CardStore {
                 // this version of cards already saved, just load it
                 cardsLoaded = (await get(this.cardsKey)) ?? []
             } else {
-                const cardsData: AxiosResponse<KCard[]> = await axios.get(`${CardStore.CONTEXT}`)
+                const cardsData: AxiosResponse<FrontendCard[]> = await axios.get(`${CardStore.CONTEXT}`)
                 cardsLoaded = cardsData.data.slice()
                 await set(this.cardsKey, cardsLoaded)
                 await set(this.cardsVersionKey, newVersion)
@@ -237,17 +239,13 @@ export class CardStore {
             log.info(`Loaded cards from ${newVersion == null ? "db" : "api"} took ${Math.round(performance.now() - msStart)}ms`)
         } else {
             log.info("IDB unavailable in card store.")
-            const cardsData: AxiosResponse<KCard[]> = await axios.get(`${CardStore.CONTEXT}`)
+            const cardsData: AxiosResponse<FrontendCard[]> = await axios.get(`${CardStore.CONTEXT}`)
             cardsLoaded = cardsData.data.slice()
         }
 
         log.debug(`Start load all cards async`)
         this.searchingForCards = false
 
-        cardsLoaded.forEach(card => {
-            card.winRate = winPercentForCard(card)
-            card.enhanced = false
-        })
         this.cardNameLowercaseToCard = new Map()
         this.cardNameLowercaseToHasAerc = new Map()
         this.cardNames = cardsLoaded.map(card => {
@@ -355,10 +353,10 @@ export class CardStore {
         return this.allCards.find(card => cardNameToCardNameKey(card.cardTitle) === cardNameKey)
     }
 
-    findExtraInfoToUse = (card: KCard) => {
+    findExtraInfoToUse = (card: FrontendCard) => {
         let extraInfo = card.extraCardInfo
         if (this.showFutureCardInfo && this.nextExtraInfo && this.nextExtraInfo[card.cardTitle] != null) {
-            extraInfo = this.nextExtraInfo[this.cleanCardName(card.cardTitle)].extraCardInfo
+            extraInfo = this.nextExtraInfo[card.cardTitleUrl].extraCardInfo
         }
         return extraInfo
     }
@@ -404,8 +402,8 @@ export class CardStore {
      * Don't use on the fly
      * @param card
      */
-    private hasAercFromCard = (card: KCard): HasAerc => {
-        const {effectivePower, aercScore, aercScoreMax} = card
+    private hasAercFromCard = (card: FrontendCard): HasAerc => {
+        const {effectivePower, aercScore, aercScoreMax} = card.extraCardInfo
         const extraCardInfo = cardStore.findExtraInfoToUse(card)
         const {
             amberControl,
@@ -429,9 +427,9 @@ export class CardStore {
             otherMax
         } = extraCardInfo
 
-        let averageAercScore = card.aercScore
-        if (card.aercScoreMax != null) {
-            averageAercScore = roundToHundreds((card.aercScore + card.aercScoreMax) / 2)
+        let averageAercScore = card.extraCardInfo.aercScore
+        if (card.extraCardInfo.aercScoreMax != null) {
+            averageAercScore = roundToHundreds((card.extraCardInfo.aercScore + card.extraCardInfo.aercScoreMax) / 2)
         }
 
         return {
@@ -465,7 +463,7 @@ export class CardStore {
         return cardName.replace(this.nonAlphanumericSpaceRegex, "")
     }
 
-    private includeCard = (filters: CardFilters, card: KCard): boolean => {
+    private includeCard = (filters: CardFilters, card: FrontendCard): boolean => {
         // Convert fixed rarity to Variant
         const cardRarity = card.rarity == Rarity.Special || card.rarity == Rarity.Variant || card.rarity == Rarity.FIXED ? Rarity.Variant : card.rarity
         const filtersRarities = filters.rarities.map(rarity => (rarity as Rarity | "Special") === "Special" ? Rarity.Variant : rarity)

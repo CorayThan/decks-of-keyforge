@@ -1,4 +1,4 @@
-import { CardUtils, findCardImageUrl, KCard } from "../KCard"
+import { CardUtils, findCardImageUrl } from "../KCard"
 import { SynergyCombo } from "../../generated-src/SynergyCombo"
 import { ExtraCardInfo } from "../../generated-src/ExtraCardInfo"
 import { observer } from "mobx-react"
@@ -21,9 +21,10 @@ import { AercForCard } from "../../aerc/views/AercForCard"
 import * as React from "react"
 import { CardSimpleView } from "./CardSimpleView"
 import { CardSetsFromCard, CardSynergies, CardTraits } from "./CardSupplementalViews"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
 interface CardViewProps {
-    card: KCard
+    card: FrontendCard
     simple?: boolean
     noLink?: boolean
     combo?: SynergyCombo
@@ -151,7 +152,7 @@ export const CardView = observer((props: CardViewProps) => {
     )
 })
 
-const AercAndSynergies = (props: { card: KCard, combo?: SynergyCombo, title?: string, copies?: number }) => {
+const AercAndSynergies = (props: { card: FrontendCard, combo?: SynergyCombo, title?: string, copies?: number }) => {
     const {card, combo, title, copies} = props
     const extraCardInfo = card.extraCardInfo
     const {traits, synergies, publishedDate} = extraCardInfo

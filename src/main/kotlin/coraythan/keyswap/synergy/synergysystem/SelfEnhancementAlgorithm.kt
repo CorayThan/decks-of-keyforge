@@ -1,22 +1,22 @@
 package coraythan.keyswap.synergy.synergysystem
 
-import coraythan.keyswap.decks.models.CardWithBonusIcons
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.synergy.SynergyCombo
 import coraythan.keyswap.synergy.SynergyMatch
 import coraythan.keyswap.synergy.SynergyTrait
 
 object SelfEnhancementAlgorithm {
-    fun generateSelfEnhancementCombos(cards: List<CardWithBonusIcons>): List<SynergyCombo> {
+    fun generateSelfEnhancementCombos(cards: List<DokCardInDeck>): List<SynergyCombo> {
         return cards
             .filter { card ->
-                card.total() > 0 && card.card.extraCardInfo?.traits?.any { trait ->
+                card.enhanced && card.extraCardInfo.traits.any { trait ->
                     trait.trait == SynergyTrait.dangerousRandomPlay || trait.trait == SynergyTrait.replaysSelf
-                } == true
+                }
             }
             .mapNotNull { cardWithIcons ->
                 val card = cardWithIcons.card
-                val trait = card.extraCardInfo?.traits?.firstOrNull { it.trait == SynergyTrait.replaysSelf }
-                    ?: card.extraCardInfo?.traits?.firstOrNull { it.trait == SynergyTrait.dangerousRandomPlay }
+                val trait = cardWithIcons.extraCardInfo.traits.firstOrNull { it.trait == SynergyTrait.replaysSelf }
+                    ?: cardWithIcons.extraCardInfo.traits.firstOrNull { it.trait == SynergyTrait.dangerousRandomPlay }
                 if (trait == null) null else {
                     val multiplier = if (trait.trait == SynergyTrait.replaysSelf) {
                         when (trait.rating) {
@@ -41,7 +41,7 @@ object SelfEnhancementAlgorithm {
                     val total = efficiencyMod + amberMod + amberControlMod + creatureControlMod
 
                     SynergyCombo(
-                        house = card.house,
+                        house = cardWithIcons.house,
                         cardName = card.cardTitle + " Enhanced",
                         synergies = listOf(SynergyMatch(trait, 100, setOf())),
                         netSynergy = total,

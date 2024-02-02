@@ -1,6 +1,7 @@
 package coraythan.keyswap.auctions.purchases
 
 import coraythan.keyswap.config.SchedulingConfig
+import coraythan.keyswap.decks.DeckSasValuesSearchableRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.onceEverySixHoursLock
 import coraythan.keyswap.expansions.Expansion
@@ -19,8 +20,9 @@ import kotlin.math.roundToInt
 @Service
 @Transactional
 class PurchaseService(
-        private val purchaseRepo: PurchaseRepo,
-        private val currentUserService: CurrentUserService
+    private val dsvsRepo: DeckSasValuesSearchableRepo,
+    private val purchaseRepo: PurchaseRepo,
+    private val currentUserService: CurrentUserService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -32,6 +34,10 @@ class PurchaseService(
         log.info("$scheduledStart purchase stats update")
 
         val purchases = purchaseRepo.findByPurchasedOnAfter(LocalDateTime.now().minusMonths(2))
+
+        val deckSases = purchases.map {
+            it.deck.id to dsvsRepo.findSasForDeckId(it.deck.id)
+        }.toMap()
 
         purchaseStats = PurchaseStats(
                 standardCount = purchaseRepo.countBySaleType(SaleType.STANDARD),
@@ -47,7 +53,7 @@ class PurchaseService(
                                     currency = purchasesData.key.first ?: "Unknown",
                                     expansion = if (expansionInt == null) null else Expansion.forExpansionNumber(expansionInt),
                                     data = purchasesData.value
-                                            .groupBy { it.deck.sasRating }
+                                            .groupBy { deckSases[it.deck.id]!! }
                                             .map { purchasesForSas ->
                                                 PurchaseAmountData(
                                                         amount = purchasesForSas.value.map { it.saleAmount }.average().roundToInt(),

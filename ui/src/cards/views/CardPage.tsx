@@ -9,8 +9,8 @@ import { Loader } from "../../mui-restyled/Loader"
 import { uiStore } from "../../ui/UiStore"
 import { userStore } from "../../user/UserStore"
 import { cardStore } from "../CardStore"
-import { KCard } from "../KCard"
 import { CardView } from "./CardView"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
 interface CardPageProps extends RouteComponentProps<{ cardName: string }> {
 }
@@ -39,14 +39,14 @@ class CardContainer extends React.Component<CardContainerProps> {
             return <Typography>Can't find card with name {cardName}</Typography>
         }
         if (userStore.isAdmin) {
-            return <Redirect to={Routes.editExtraCardInfo(card.extraCardInfo.id)} />
+            return <Redirect to={Routes.editExtraCardInfo(card.extraCardInfo.id)}/>
         }
         return <CardPageView card={card}/>
     }
 }
 
 interface CardProps {
-    card: KCard
+    card: FrontendCard
 }
 
 class CardPageView extends React.Component<CardProps> {

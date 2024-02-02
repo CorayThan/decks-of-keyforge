@@ -17,10 +17,11 @@ import { KeyButton } from "../../mui-restyled/KeyButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { cardStore } from "../CardStore"
 import { EnhancementType } from "../EnhancementType"
-import { CardUtils, findCardImageUrl, KCard } from "../KCard"
+import { CardUtils, findCardImageUrl } from "../KCard"
 import { AnomalyIcon, LegacyIcon, MaverickIcon, RarityIcon } from "../rarity/Rarity"
 import { CardSimpleView } from "./CardSimpleView"
 import { CardView } from "./CardView"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
 interface CardAsLineProps {
     card: SimpleCard
@@ -99,7 +100,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                         <CardSimpleView card={card} size={250} style={{margin: 4}}/>
                         <div style={{marginTop: spacing(2)}}>
-                            <AercForCard card={fullCard as KCard}
+                            <AercForCard card={fullCard as FrontendCard}
                                          realValue={findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)}/>
                         </div>
                     </DialogContent>
@@ -199,7 +200,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
     }
 }
 
-const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, deck?: DeckSearchResult) => {
+const findSynegyComboForCardFromDeck = (card: Partial<FrontendCard>, house?: House, deck?: DeckSearchResult) => {
     const name = card.cardTitle
     if (name == null || deck == null || deck.synergyDetails == null) {
         return
@@ -207,7 +208,7 @@ const findSynegyComboForCardFromDeck = (card: Partial<KCard>, house?: House, dec
     return deck.synergyDetails.find(combo => combo.cardName === name && (house == null || combo.house === house))
 }
 
-const CardLine = observer((props: CardAsLineProps & { fullCard: KCard }) => {
+const CardLine = observer((props: CardAsLineProps & { fullCard: FrontendCard }) => {
     const {card, fullCard, hideRarity, deck} = props
 
     const enhanced = CardUtils.bonusIconCount(card) > 0

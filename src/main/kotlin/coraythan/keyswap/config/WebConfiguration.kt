@@ -4,7 +4,7 @@ import coraythan.keyswap.Api
 import coraythan.keyswap.alliancedecks.AllianceDeckService
 import coraythan.keyswap.auctions.DeckListingRepo
 import coraythan.keyswap.auctions.DeckListingStatus
-import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.htmlEncode
 import coraythan.keyswap.tags.TagService
@@ -28,7 +28,7 @@ class WebConfiguration(
     private val userSearchService: UserSearchService,
     private val deckSearchService: DeckSearchService,
     private val allianceDeckService: AllianceDeckService,
-    private val cardService: CardService,
+    private val cardCache: DokCardCacheService,
     private val tagService: TagService,
     private val deckListingRepo: DeckListingRepo,
 ) : WebMvcConfigurer {
@@ -182,7 +182,7 @@ class WebConfiguration(
                         uri.substring(7, questionIdx + 1)
                     }
 
-                    val card = cardService.findByCardUrlName(cardName)
+                    val card = cardCache.findByCardNameUrl(cardName)
 
                     if (card == null) {
                         transformIndexPage(
@@ -193,7 +193,7 @@ class WebConfiguration(
                     } else {
                         transformIndexPage(
                             resource,
-                            card.cardTitle,
+                            card.cardName,
                             card.printValues(),
                             "https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/$cardName.png",
                             300,

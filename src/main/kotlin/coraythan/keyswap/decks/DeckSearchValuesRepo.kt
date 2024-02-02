@@ -5,10 +5,16 @@ import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.query.Param
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional
-interface DeckSasValuesSearchableRepo : CrudRepository<DeckSasValuesSearchable, Long>
+interface DeckSasValuesSearchableRepo : CrudRepository<DeckSasValuesSearchable, Long> {
+    @Query("SELECT dsvs.sasRating FROM DeckSasValuesSearchable dsvs WHERE dsvs.deckId = :deckId")
+    fun findSasForDeckId(@Param(value = "deckId") deckId: Long): Int
+
+    fun findByDeckId(deckId: Long): DeckSasValuesSearchable
+}
 
 @Transactional
 interface DeckSasValuesUpdatableRepo : CrudRepository<DeckSasValuesUpdatable, Long> {

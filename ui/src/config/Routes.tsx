@@ -7,7 +7,6 @@ import { CommunityPage } from "../about/CommunityPage"
 import { PrivacyPolicy } from "../about/PrivacyPolicy"
 import { ThirdPartyIntegrations } from "../about/ThirdPartyIntegrations"
 import { AdminPanelView } from "../admin/AdminPanelView"
-import { ArticlesPage } from "../articles/ArticlesPage"
 import { CardFilters, cardFiltersToQueryString } from "../cards/CardFilters"
 import { CardSearchPage } from "../cards/CardSearchPage"
 import { cardNameToCardNameKey } from "../cards/KCard"
@@ -108,7 +107,6 @@ class Routes {
     static usersDecks = () => `/decks?owner=${userStore.username}`
     static analyzeUsersDecks = () => `/analyze-collection?owner=${userStore.username}`
     static teamDecks = () => `/decks?teamDecks=true`
-    static articlePage = (urlTitle?: string) => `${Routes.articles}/${urlTitle == null ? ":urlTitle" : urlTitle}`
     static userContent = (key: string) => `https://dok-user-content.s3-us-west-2.amazonaws.com/${key}`
     static compareDecksWithIds = (decks: DeckNameId[]) => {
         const normalDeckIds = decks
@@ -388,16 +386,6 @@ const KeyRouter = observer(() => {
                     <Route
                         path={Routes.stats}
                         component={StatsPage}
-                    />
-                    <Route
-                        exact={true}
-                        path={Routes.articles}
-                        component={ArticlesPage}
-                    />
-                    <Route
-                        exact={true}
-                        path={Routes.articlePage()}
-                        component={ArticlesPage}
                     />
                     <Route
                         exact={true}

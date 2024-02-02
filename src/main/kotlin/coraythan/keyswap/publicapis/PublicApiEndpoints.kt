@@ -1,12 +1,12 @@
 package coraythan.keyswap.publicapis
 
-import coraythan.keyswap.cards.Card
-import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.RateExceededException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.Nothing
 import coraythan.keyswap.decks.SimpleDeckResponse
+import coraythan.keyswap.decks.models.FrontendCard
 import coraythan.keyswap.keyforgeevents.tournaments.TournamentInfo
 import coraythan.keyswap.keyforgeevents.tournaments.TournamentService
 import coraythan.keyswap.sasupdate.SasVersionService
@@ -27,7 +27,7 @@ val maxApiRequests = 25
 class PublicApiEndpoints(
     private val publicApiService: PublicApiService,
     private val statsService: StatsService,
-    private val cardService: CardService,
+    private val cardCache: DokCardCacheService,
     private val keyUserRepo: KeyUserRepo,
     private val currentUserService: CurrentUserService,
     private val tournamentService: TournamentService,
@@ -77,13 +77,13 @@ class PublicApiEndpoints(
 
     @CrossOrigin
     @GetMapping("/v1/cards")
-    fun findCards1(@RequestHeader("Api-Key") apiKey: String): List<Card> {
+    fun findCards1(@RequestHeader("Api-Key") apiKey: String): List<FrontendCard> {
 
         this.rateLimit(apiKey)
 
         val user = publicApiService.userForApiKey(apiKey)
         log.info("Cards request from user ${user.email}")
-        return cardService.allFullCardsNonMaverickNoDups()
+        return cardCache.currentCards()
     }
 
     @CrossOrigin

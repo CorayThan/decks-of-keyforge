@@ -9,7 +9,6 @@ import coraythan.keyswap.generic.Country
 import coraythan.keyswap.now
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.scheduledException
-import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.users.search.UserSearchResult
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
@@ -25,14 +24,13 @@ const val lockRemoveManualPatrons = "PT24H"
 @Service
 @Transactional
 class KeyUserService(
-        private val userRepo: KeyUserRepo,
-        private val currentUserService: CurrentUserService,
-        private val bCryptPasswordEncoder: BCryptPasswordEncoder,
-        private val passwordResetCodeService: PasswordResetCodeService,
-        private val deckListingRepo: DeckListingRepo,
-        private val ownedDeckRepo: OwnedDeckRepo,
-        private val deckRepo: DeckRepo,
-        private val keyUserSearchProjectionRepo: KeyUserSearchProjectionRepo,
+    private val userRepo: KeyUserRepo,
+    private val currentUserService: CurrentUserService,
+    private val bCryptPasswordEncoder: BCryptPasswordEncoder,
+    private val passwordResetCodeService: PasswordResetCodeService,
+    private val deckListingRepo: DeckListingRepo,
+    private val deckRepo: DeckRepo,
+    private val keyUserSearchProjectionRepo: KeyUserSearchProjectionRepo,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -43,17 +41,24 @@ class KeyUserService(
         val usernameRegex = usernameRegexBase.toRegex()
     }
 
-    @Scheduled(fixedDelayString = lockRemoveManualPatrons, initialDelayString = SchedulingConfig.removeManualPatronsInitialDelay)
-    @SchedulerLock(name = "removeManualPatrons", lockAtLeastFor = lockRemoveManualPatrons, lockAtMostFor = lockRemoveManualPatrons)
+    @Scheduled(
+        fixedDelayString = lockRemoveManualPatrons,
+        initialDelayString = SchedulingConfig.removeManualPatronsInitialDelay
+    )
+    @SchedulerLock(
+        name = "removeManualPatrons",
+        lockAtLeastFor = lockRemoveManualPatrons,
+        lockAtMostFor = lockRemoveManualPatrons
+    )
     fun removeManualPatrons() {
         try {
             userRepo.findByRemoveManualPatreonTierNotNull()
-                    .forEach {
-                        if (it.removeManualPatreonTier?.isBefore(now()) == true) {
-                            log.info("Removing manual patron tier ${it.manualPatreonTier} from ${it.username}")
-                            userRepo.makeManualPatronExpiring(null, null, it.username)
-                        }
+                .forEach {
+                    if (it.removeManualPatreonTier?.isBefore(now()) == true) {
+                        log.info("Removing manual patron tier ${it.manualPatreonTier} from ${it.username}")
+                        userRepo.makeManualPatronExpiring(null, null, it.username)
                     }
+                }
         } catch (e: Throwable) {
             log.error("$scheduledException removing manual patrons", e)
         }
@@ -72,7 +77,8 @@ class KeyUserService(
 
         validateUsername(userRegInfo.username)
 
-        return userRepo.save(KeyUser(
+        return userRepo.save(
+            KeyUser(
                 id = UUID.randomUUID(),
                 username = userRegInfo.username,
                 email = userRegInfo.email.lowercase(),
@@ -84,7 +90,8 @@ class KeyUserService(
                 lastVersionSeen = userRegInfo.lastVersionSeen,
                 currencySymbol = "$",
                 country = userRegInfo.country
-        ))
+            )
+        )
     }
 
     fun userFromEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
@@ -92,13 +99,13 @@ class KeyUserService(
     fun findByIdOrNull(id: UUID) = userRepo.findByIdOrNull(id)
     fun findUserProfile(username: String): UserProfile? {
         val user = userRepo.findByUsernameIgnoreCase(username) ?: return null
-        val ownedDecks = ownedDeckRepo.findAllByOwnerId(user.id).map { it.deck }
-        return user.toProfile(currentUserService.loggedInUser()?.username == username, ownedDecks)
+        return user.toProfile(currentUserService.loggedInUser()?.username == username)
     }
 
     fun findUserByUsername(username: String) = userRepo.findByUsernameIgnoreCase(username)
 
-    fun findIdAndDeckVisibilityByUsername(username: String) = keyUserSearchProjectionRepo.findByUsernameIgnoreCase(username)
+    fun findIdAndDeckVisibilityByUsername(username: String) =
+        keyUserSearchProjectionRepo.findByUsernameIgnoreCase(username)
 
     fun findByEmail(email: String) = userRepo.findByEmailIgnoreCase(email)
 
@@ -112,13 +119,20 @@ class KeyUserService(
         val userAllowsTrades = user.allowsTrades
         var auctions = user.auctions
 
-        if (update.currencySymbol != user.currencySymbol && deckListingRepo.findAllBySellerIdAndStatus(user.id, DeckListingStatus.AUCTION).isNotEmpty()) {
+        if (update.currencySymbol != user.currencySymbol && deckListingRepo.findAllBySellerIdAndStatus(
+                user.id,
+                DeckListingStatus.AUCTION
+            ).isNotEmpty()
+        ) {
             throw BadRequestException("You cannot update your currency symbol while you have active auctions.")
         }
 
         if (update.country != user.country || update.currencySymbol != user.currencySymbol) {
             auctions = user.auctions.map {
-                it.copy(forSaleInCountry = update.country ?: Country.UnitedStates, currencySymbol = update.currencySymbol)
+                it.copy(
+                    forSaleInCountry = update.country ?: Country.UnitedStates,
+                    currencySymbol = update.currencySymbol
+                )
             }
         }
 
@@ -128,16 +142,19 @@ class KeyUserService(
         val sellerEmail = update.sellerEmail?.lowercase() ?: user.sellerEmail
         val alreadyVerifiedEmail = if (user.emailVerified) user.email.lowercase() else null
         val alreadyVerifiedEmail2 = if (user.sellerEmailVerified) user.sellerEmail?.lowercase() else null
-        val emailVerified = if (email == alreadyVerifiedEmail || email == alreadyVerifiedEmail2) true else if (update.email == null) user.emailVerified else false
-        val sellerEmailVerified = if (sellerEmail != null && (sellerEmail == alreadyVerifiedEmail || sellerEmail == alreadyVerifiedEmail2)) {
-            true
-        } else if (update.sellerEmail == null) {
-            user.sellerEmailVerified
-        } else {
-            false
-        }
+        val emailVerified =
+            if (email == alreadyVerifiedEmail || email == alreadyVerifiedEmail2) true else if (update.email == null) user.emailVerified else false
+        val sellerEmailVerified =
+            if (sellerEmail != null && (sellerEmail == alreadyVerifiedEmail || sellerEmail == alreadyVerifiedEmail2)) {
+                true
+            } else if (update.sellerEmail == null) {
+                user.sellerEmailVerified
+            } else {
+                false
+            }
 
-        userRepo.save(user.copy(
+        userRepo.save(
+            user.copy(
                 email = email,
                 emailVerified = emailVerified,
                 publicContactInfo = update.publicContactInfo,
@@ -155,7 +172,8 @@ class KeyUserService(
                 shippingCost = update.shippingCost,
                 autoRenewListings = update.autoRenewListings,
                 viewFutureSas = update.viewFutureSas,
-        ))
+            )
+        )
 
         if (userAllowsTrades != update.allowsTrades) {
             val activeListings = deckListingRepo.findAllBySellerIdAndStatus(user.id, DeckListingStatus.SALE)
@@ -172,8 +190,10 @@ class KeyUserService(
             "Password is too short."
         }
 
-        val emailToResetFor = passwordResetCodeService.resetCodeEmail(code) ?: throw IllegalArgumentException("No email for this code or expired.")
-        val userAccount = userRepo.findByEmailIgnoreCase(emailToResetFor) ?: throw IllegalStateException("No account found with email $emailToResetFor")
+        val emailToResetFor = passwordResetCodeService.resetCodeEmail(code)
+            ?: throw IllegalArgumentException("No email for this code or expired.")
+        val userAccount = userRepo.findByEmailIgnoreCase(emailToResetFor)
+            ?: throw IllegalStateException("No account found with email $emailToResetFor")
         val withPassword = userAccount.copy(password = bCryptPasswordEncoder.encode(newPassword))
         userRepo.save(withPassword)
         passwordResetCodeService.delete(code)
@@ -213,16 +233,19 @@ class KeyUserService(
     }
 
     fun setContributionLevel(username: String, patreonRewardsTier: PatreonRewardsTier) {
-        val toUpdate = userRepo.findByUsernameIgnoreCase(username) ?: throw BadRequestException("No user for user name $username")
+        val toUpdate =
+            userRepo.findByUsernameIgnoreCase(username) ?: throw BadRequestException("No user for user name $username")
         userRepo.save(toUpdate.copy(patreonTier = patreonRewardsTier))
     }
 
     fun verifyEmail(code: String) {
-        val codeInfo = passwordResetCodeService.passwordResetCodeByCode(code) ?: throw BadRequestException("We couldn't find the given code.")
+        val codeInfo = passwordResetCodeService.passwordResetCodeByCode(code)
+            ?: throw BadRequestException("We couldn't find the given code.")
         if (codeInfo.userId == null) {
             throw BadRequestException("Please use a fresh code.")
         }
-        val user = userRepo.findByIdOrNull(codeInfo.userId) ?: throw BadRequestException("No user exists for the given code.")
+        val user =
+            userRepo.findByIdOrNull(codeInfo.userId) ?: throw BadRequestException("No user exists for the given code.")
         val email = codeInfo.email.lowercase()
         val userEmail = user.email.lowercase()
         val sellerEmail = user.sellerEmail?.lowercase()

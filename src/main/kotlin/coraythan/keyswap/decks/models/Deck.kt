@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import coraythan.keyswap.*
 import coraythan.keyswap.auctions.DeckListing
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.Rarity
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.keyforgeevents.tournaments.TournamentDeck
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
@@ -33,39 +32,8 @@ data class Deck(
     val wins: Int = 0,
     val losses: Int = 0,
 
-    val anomalyCount: Int? = 0,
-    val maverickCount: Int = 0,
-    val specialsCount: Int = 0,
-    val raresCount: Int = 0,
-    val uncommonsCount: Int = 0,
-
-    override val rawAmber: Int = 0,
-    override val totalPower: Int = 0,
-    override val bonusDraw: Int? = 0,
-    override val bonusCapture: Int? = 0,
-    override val creatureCount: Int = 0,
-    override val actionCount: Int = 0,
-    override val artifactCount: Int = 0,
-    override val upgradeCount: Int = 0,
-    override val totalArmor: Int = 0,
-
-    override val expectedAmber: Double = 0.0,
-    override val amberControl: Double = 0.0,
-    override val creatureControl: Double = 0.0,
-    override val artifactControl: Double = 0.0,
-    override val efficiency: Double = 0.0,
-    override val recursion: Double = 0.0,
-    override val effectivePower: Int = 0,
-    override val creatureProtection: Double = 0.0,
-    override val disruption: Double = 0.0,
-    override val other: Double = 0.0,
-    override val aercScore: Double = 0.0,
-    override val previousSasRating: Int? = 0,
-    override val previousMajorSasRating: Int? = 0,
-    override val aercVersion: Int = 0,
-    override val sasRating: Int = 0,
-    override val synergyRating: Int = 0,
-    override val antisynergyRating: Int = 0,
+    val previousSasRating: Int? = 0,
+    val previousMajorSasRating: Int? = 0,
 
     val forSale: Boolean = false,
     val forTrade: Boolean = false,
@@ -77,12 +45,6 @@ data class Deck(
 
     override val cardIds: String = "",
     override val tokenNumber: Int? = null,
-
-    override val cardNames: String = "",
-
-//    @Type(JsonBinaryType::class)
-//    @Column(columnDefinition = "json")
-//    val cards: Map<House, List<CardInDeck>>? = mapOf(),
 
     override val houseNamesString: String = "",
 
@@ -135,8 +97,6 @@ data class Deck(
 
     val twinId: String? = null,
 
-    val refreshedBonusIcons: Boolean? = false,
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "hibernate_sequence")
     @SequenceGenerator(name = "hibernate_sequence", allocationSize = 1)
@@ -153,11 +113,11 @@ data class Deck(
 
     override fun toDeckSearchResult(
         housesAndCards: List<HouseAndCards>?,
-        cards: List<Card>?,
+        cards: List<DokCardInDeck>?,
         stats: DeckStatistics?,
         synergies: DeckSynergyInfo?,
         includeDetails: Boolean,
-        token: Card?,
+        token: DokCardInDeck?,
     ): DeckSearchResult {
 
         return DeckSearchResult(
@@ -172,47 +132,49 @@ data class Deck(
             wins = wins.zeroToNull(),
             losses = losses.zeroToNull(),
 
-            creatureCount = creatureCount.zeroToNull(),
-            actionCount = actionCount.zeroToNull(),
-            artifactCount = artifactCount.zeroToNull(),
-            upgradeCount = upgradeCount.zeroToNull(),
+            creatureCount = cards?.count { it.card.cardType == CardType.Creature },
+            actionCount = cards?.count { it.card.cardType == CardType.Action },
+            artifactCount = cards?.count { it.card.cardType == CardType.Artifact },
+            upgradeCount = cards?.count { it.card.cardType == CardType.Upgrade },
 
             cardDrawCount = (cards?.filter {
-                it.extraCardInfo?.traits?.containsTrait(SynergyTrait.drawsCards) == true
-                        || it.extraCardInfo?.traits?.containsTrait(SynergyTrait.increasesHandSize) == true
+                it.extraCardInfo.traits.containsTrait(SynergyTrait.drawsCards) || it.extraCardInfo.traits.containsTrait(
+                    SynergyTrait.increasesHandSize
+                )
             }?.size ?: 0).zeroToNull(),
             cardArchiveCount = (cards?.filter {
-                it.extraCardInfo?.traits?.containsTrait(
+                it.extraCardInfo.traits.containsTrait(
                     SynergyTrait.archives,
                     player = SynTraitPlayer.FRIENDLY
-                ) == true
+                )
             }?.size
                 ?: 0).zeroToNull(),
             keyCheatCount = (cards?.filter {
-                it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true ||
-                        it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeysWithoutAember) == true
+                it.extraCardInfo.traits.containsTrait(SynergyTrait.forgesKeys) || it.extraCardInfo.traits.containsTrait(
+                    SynergyTrait.forgesKeysWithoutAember
+                )
             }?.size ?: 0).zeroToNull(),
-            rawAmber = rawAmber,
-            totalArmor = totalArmor.zeroToNull(),
+            rawAmber = if (cards == null) -1 else cards.sumOf { it.card.amber } + this.bonusIcons().bonusIconHouses.sumOf { it.bonusIconCards.sumOf { it.bonusAember } },
+            totalArmor = cards?.sumOf { it.card.armor },
+            totalPower = cards?.sumOf { it.card.power } ?: -1,
 
-            expectedAmber = synergies?.expectedAmber ?: expectedAmber,
-            amberControl = synergies?.amberControl ?: amberControl,
-            creatureControl = synergies?.creatureControl ?: creatureControl,
-            artifactControl = (synergies?.artifactControl ?: artifactControl).zeroToNull(),
-            efficiency = (synergies?.efficiency ?: efficiency).zeroToNull(),
-            recursion = (synergies?.recursion ?: recursion).zeroToNull(),
-            effectivePower = synergies?.effectivePower ?: effectivePower,
-            creatureProtection = (synergies?.creatureProtection ?: creatureProtection).zeroToNull(),
-            disruption = (synergies?.disruption ?: disruption).zeroToNull(),
-            other = (synergies?.other ?: other).zeroToNull(),
-            aercScore = synergies?.rawAerc ?: aercScore.toInt(),
-            previousSasRating = previousSasRating ?: sasRating,
+            expectedAmber = synergies?.expectedAmber ?: -1.0,
+            amberControl = synergies?.amberControl ?: -1.0,
+            creatureControl = synergies?.creatureControl ?: -1.0,
+            artifactControl = (synergies?.artifactControl ?: -1.0).zeroToNull(),
+            efficiency = (synergies?.efficiency ?: -1.0).zeroToNull(),
+            recursion = (synergies?.recursion ?: -1.0).zeroToNull(),
+            effectivePower = synergies?.effectivePower ?: -1,
+            creatureProtection = (synergies?.creatureProtection ?: -1.0).zeroToNull(),
+            disruption = (synergies?.disruption ?: -1.0).zeroToNull(),
+            other = (synergies?.other ?: -1.0).zeroToNull(),
+            aercScore = synergies?.rawAerc ?: -1,
+            previousSasRating = previousSasRating ?: -1,
             previousMajorSasRating = previousMajorSasRating,
-            aercVersion = aercVersion,
-            sasRating = synergies?.sasRating ?: sasRating,
-            synergyRating = synergies?.synergyRating ?: synergyRating,
-            antisynergyRating = synergies?.antisynergyRating ?: antisynergyRating,
-            totalPower = totalPower,
+            aercVersion = -1,
+            sasRating = synergies?.sasRating ?: -1,
+            synergyRating = synergies?.synergyRating ?: -1,
+            antisynergyRating = synergies?.antisynergyRating ?: -1,
             forSale = forSale.falseToNull(),
             forTrade = forTrade.falseToNull(),
             forAuction = forAuction.falseToNull(),
@@ -222,8 +184,7 @@ data class Deck(
 
             lastSasUpdate = lastUpdate?.toLocalDateWithOffsetMinutes(-420)?.toString().emptyToNull(),
 
-            sasPercentile = stats?.sasStats?.percentileForValue?.get(synergies?.sasRating ?: sasRating)
-                ?: if (sasRating < 75) 0.0 else 100.0,
+            sasPercentile = stats?.sasStats?.closestPercentileForValue(synergies?.sasRating ?: 0) ?: 0.0,
 
             synergyDetails = if (includeDetails) synergies?.synergyCombos else synergies?.synergyCombos?.map {
                 it.copy(
@@ -239,7 +200,7 @@ data class Deck(
             dateAdded = dateAdded,
 
             twinId = twinId,
-            tokenInfo = if (token == null) null else TokenInfo(token.id, token.cardTitle, token.house),
+            tokenInfo = token?.toTokenInfo(),
         )
     }
 
@@ -257,58 +218,43 @@ data class Deck(
         )
     }
 
-    fun withCards(newCardsList: List<Card>): Deck {
-        if (newCardsList.size != 36) throw IllegalArgumentException("The cards list contained too many cards: ${newCardsList.size}")
+}
 
-        val cardNames = "~" +
-                // Add the cards themselves
-                newCardsList
-                    .groupBy { it.cardTitle }
-                    .map { entry ->
-                        "${entry.key}${(1..entry.value.size).joinToString("")}"
-                    }.sorted().joinToString("~") + "~" +
-                // Add duplicates for mavericks with the house
-                newCardsList
-                    .filter { it.maverick && !it.anomaly }
-                    .groupBy { it.cardTitle }
-                    .flatMap { entry ->
-                        entry.value
-                            .groupBy { it.house }
-                            .map { houseToCards ->
-                                val firstCard = houseToCards.value[0]
-                                "${firstCard.cardTitle}${firstCard.house}"
-                            }
-                    }.sorted().joinToString("~") + "~" +
-                // Add duplicates for anomalies with the house
-                newCardsList
-                    .filter { it.anomaly }
-                    .groupBy { it.cardTitle }
-                    .flatMap { entry ->
-                        entry.value
-                            .groupBy { it.house }
-                            .map { houseToCards ->
-                                val firstCard = houseToCards.value[0]
-                                "${firstCard.cardTitle}${firstCard.house}"
-                            }
-                    }.sorted().joinToString("~") + "~"
-
-        return this.copy(
-            cardNames = cardNames,
-            totalPower = newCardsList.sumOf { it.power },
-            totalArmor = newCardsList.sumOf { it.armor },
-            creatureCount = newCardsList.filter { it.cardType == CardType.Creature }.size,
-            actionCount = newCardsList.filter { it.cardType == CardType.Action }.size,
-            artifactCount = newCardsList.filter { it.cardType == CardType.Artifact }.size,
-            upgradeCount = newCardsList.filter { it.cardType == CardType.Upgrade }.size,
-            maverickCount = newCardsList.filter { it.maverick }.size,
-            anomalyCount = newCardsList.filter { it.anomaly }.size,
-            specialsCount = newCardsList.filter { it.rarity == Rarity.FIXED || it.rarity == Rarity.Variant || it.rarity == Rarity.Special }.size,
-            raresCount = newCardsList.filter { it.rarity == Rarity.Rare }.size,
-            uncommonsCount = newCardsList.filter { it.rarity == Rarity.Uncommon }.size,
-            evilTwin = newCardsList.any { it.isEvilTwin() }
-        )
-    }
-
+fun List<DokCardInDeck>.genCardNamesIndexableString(): String {
+    if (this.size != 36) throw IllegalStateException("Can't gen card names indexed from wrong card list size ${this.size}")
+    return "~" +
+            // Add the cards themselves
+            this
+                .groupBy { it.card.cardTitle }
+                .map { entry ->
+                    "${entry.key}${(1..entry.value.size).joinToString("")}"
+                }.sorted().joinToString("~") + "~" +
+            // Add duplicates for mavericks with the house
+            this
+                .asSequence()
+                .filter { it.maverick && !it.anomaly }
+                .groupBy { it.card.cardTitle }
+                .flatMap { entry ->
+                    entry.value
+                        .groupBy { it.house }
+                        .map { houseToCards ->
+                            val firstCard = houseToCards.value[0]
+                            "${firstCard.card.cardTitle}${firstCard.house}"
+                        }
+                }.sorted().joinToString("~") + "~" +
+            // Add duplicates for anomalies with the house
+            this
+                .asSequence()
+                .filter { it.anomaly }
+                .groupBy { it.card.cardTitle }
+                .flatMap { entry ->
+                    entry.value
+                        .groupBy { it.house }
+                        .map { houseToCards ->
+                            val firstCard = houseToCards.value[0]
+                            "${firstCard.card.cardTitle}${firstCard.house}"
+                        }
+                }.sorted().joinToString("~") + "~"
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -339,27 +285,17 @@ data class BonusIconsCard(
     val bonusDraw: Int = 0,
 )
 
-data class CardWithBonusIcons(
-    val card: Card,
-    val bonusAember: Int = 0,
-    val bonusCapture: Int = 0,
-    val bonusDamage: Int = 0,
-    val bonusDraw: Int = 0,
-) {
-    fun total() = bonusAember + bonusCapture + bonusDraw + bonusDamage
-}
-
-fun List<Card>.withBonusIcons(icons: DeckBonusIcons): List<CardWithBonusIcons> {
-    if (icons.bonusIconHouses.isEmpty()) return this.map { CardWithBonusIcons(it) }
+fun List<DokCardInDeck>.withBonusIcons(icons: DeckBonusIcons): List<DokCardInDeck> {
+    if (icons.bonusIconHouses.isEmpty()) return this
     return this.groupBy { it.house }
         .map { houseAndCards ->
             val bonusIconsCards =
                 icons.bonusIconHouses.first { it.house == houseAndCards.key }.bonusIconCards.toMutableList()
-            houseAndCards.value.map {
-                val bonusIcons = bonusIconsCards.find { cardIcons -> cardIcons.cardTitle == it.cardTitle }
+            houseAndCards.value.map { dokCardInDeck ->
+                val bonusIcons =
+                    bonusIconsCards.find { cardIcons -> cardIcons.cardTitle == dokCardInDeck.card.cardTitle }
                 bonusIconsCards.remove(bonusIcons)
-                CardWithBonusIcons(
-                    card = it,
+                dokCardInDeck.copy(
                     bonusAember = bonusIcons?.bonusAember ?: 0,
                     bonusCapture = bonusIcons?.bonusCapture ?: 0,
                     bonusDamage = bonusIcons?.bonusDamage ?: 0,
@@ -369,14 +305,3 @@ fun List<Card>.withBonusIcons(icons: DeckBonusIcons): List<CardWithBonusIcons> {
         }
         .flatten()
 }
-
-data class CardInDeck(
-    val cardTitle: String,
-    val maverick: Boolean = false,
-    val legacy: Boolean = false,
-    val anomaly: Boolean = false,
-    val bonusAember: Int = 0,
-    val bonusCapture: Int = 0,
-    val bonusDamage: Int = 0,
-    val bonusDraw: Int = 0,
-)

@@ -2,8 +2,10 @@ package coraythan.keyswap.thirdpartyservices.mastervault
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.*
-import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
+import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.Rarity
+import coraythan.keyswap.cards.evilTwinCardName
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeCard(
@@ -26,7 +28,7 @@ data class KeyForgeCard(
     val is_non_deck: Boolean,
     val traits: String? = null
 ) {
-    fun toCard(extraInfoMap: Map<String, ExtraCardInfo>): Card? {
+    fun toCard(): Card? {
         val powerNumber = power?.toIntOrNull() ?: 0
         val armorNumber = armor?.toIntOrNull() ?: 0
         val realCardType = theirCardTypeToReasonableOne(card_type) ?: return null
@@ -55,11 +57,11 @@ data class KeyForgeCard(
             expansion,
             is_maverick,
             is_anomaly,
-            extraCardInfo = extraInfoMap[cardTitleFixed.cleanCardName()],
             traits = traits?.uppercase()?.split(" • ")?.toSet() ?: setOf(),
             big = card_type == "Creature1" || card_type == "Creature2",
             enhanced = is_enhanced,
             token = realCardType == CardType.TokenCreature,
+            extraCardInfo = null,
         )
     }
 

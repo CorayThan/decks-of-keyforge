@@ -1,19 +1,22 @@
 package coraythan.keyswap.synergy.synergysystem
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.TraitStrength
 
 object TokenSynergyService {
 
-    fun makeTokenValues(cards: List<Card>, token: Card?): TokenValues? {
+    fun makeTokenValues(cards: List<DokCardInDeck>, token: DokCardInDeck?): TokenValues? {
         if (token == null) return null
 
-        val cardsByHouse: Map<House, List<Card>> = cards.groupBy { it.house }
-        val traitsByHouse: Map<House, List<SynTraitValue>> = cardsByHouse.map { cardsByHouseEntry -> cardsByHouseEntry.key to cardsByHouseEntry.value.mapNotNull { it.extraCardInfo?.traits }.flatten() }.toMap()
-        val makesTokenStrengthsByHouse: Map<House, Double> = traitsByHouse.map { it.key to it.value.sumOf { traitToTokenCreationValue(it) } }.toMap()
+        val cardsByHouse: Map<House, List<DokCardInDeck>> = cards.groupBy { it.house }
+        val traitsByHouse: Map<House, List<SynTraitValue>> = cardsByHouse.map { cardsByHouseEntry ->
+            cardsByHouseEntry.key to cardsByHouseEntry.value.map { it.extraCardInfo.traits }.flatten()
+        }.toMap()
+        val makesTokenStrengthsByHouse: Map<House, Double> =
+            traitsByHouse.map { it.key to it.value.sumOf { traitToTokenCreationValue(it) } }.toMap()
 
         return TokenValues(
             tokensPerGamePerHouse = makesTokenStrengthsByHouse,

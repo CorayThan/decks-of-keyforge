@@ -5,12 +5,9 @@ import coraythan.keyswap.cards.dokcards.DokCard
 import coraythan.keyswap.cards.dokcards.toUrlFriendlyCardTitle
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.decks.Wins
-import coraythan.keyswap.decks.models.SimpleCard
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
-import coraythan.keyswap.roundToTwoSigDig
-import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.synergysystem.StaticAercValues
 import jakarta.persistence.*
 import java.time.ZonedDateTime
@@ -69,125 +66,7 @@ data class Card(
         return cardTitle.compareTo(other.cardTitle)
     }
 
-    fun allTypes() = extraCardInfo?.extraCardTypes?.toSet()?.plus(cardType) ?: setOf(cardType)
-
-    val effectivePower: Int
-        get() = if (extraCardInfo?.effectivePower != 0) {
-            extraCardInfo?.effectivePower ?: 0
-        } else {
-            power + armor
-        }
-
-    val effectivePowerAercScore: Double
-        get() = this.effectivePower.toDouble() / 10.0
-
-    val aercScoreAverage: Double
-        get() {
-            val max = aercScoreMax
-            return if (max == null) aercScore else (aercScore + max) / 2
-        }
-
-    val aercScore: Double
-        get() {
-            val cardInfo = this.extraCardInfo
-            return if (cardInfo == null) {
-                0.0
-            } else {
-                cardInfo.amberControl +
-                        cardInfo.expectedAmber +
-                        cardInfo.artifactControl +
-                        cardInfo.creatureControl +
-                        cardInfo.efficiency +
-                        cardInfo.recursion +
-                        cardInfo.disruption +
-                        cardInfo.creatureProtection +
-                        cardInfo.other +
-                        this.effectivePowerAercScore +
-                        this.cardType.creatureBonus()
-            }
-        }
-
-    val aercScoreMax: Double?
-        get() {
-            val cardInfo = this.extraCardInfo
-            return if (cardInfo == null) {
-                null
-            } else {
-                val maxAerc = (cardInfo.amberControlMax ?: cardInfo.amberControl) +
-                        (cardInfo.artifactControlMax ?: cardInfo.artifactControl) +
-                        (cardInfo.creatureControlMax ?: cardInfo.creatureControl) +
-                        (cardInfo.efficiencyMax ?: cardInfo.efficiency) +
-                        (cardInfo.recursionMax ?: cardInfo.recursion) +
-                        (cardInfo.disruptionMax ?: cardInfo.disruption) +
-                        (cardInfo.creatureProtectionMax ?: cardInfo.creatureProtection) +
-                        (cardInfo.otherMax ?: cardInfo.other) +
-                        (cardInfo.expectedAmberMax ?: cardInfo.expectedAmber) +
-                        (if (cardInfo.effectivePowerMax == null) {
-                            this.effectivePowerAercScore
-                        } else {
-                            cardInfo.effectivePowerMax / 10
-                        }) +
-                        this.cardType.creatureBonus()
-
-                if (maxAerc == this.aercScore) {
-                    null
-                } else {
-                    maxAerc
-                }
-            }
-        }
-
-    fun toSimpleCard(isLegacy: Boolean) = SimpleCard(
-        cardTitle = cardTitle,
-        rarity = rarity,
-        maverick = maverick,
-        anomaly = anomaly,
-        enhanced = enhanced,
-        legacy = isLegacy
-    )
-
-    fun printValues(): String {
-        val info = extraCardInfo
-        return if (info == null) {
-            "unknown"
-        } else {
-            listOfNotNull(
-                printValue("AERC", aercScore, aercScoreMax),
-                printValue("A", info.amberControl, info.amberControlMax),
-                printValue("E", info.expectedAmber, info.expectedAmberMax),
-                printValue("R", info.artifactControl, info.artifactControlMax),
-                printValue("C", info.creatureControl, info.creatureControlMax),
-                printValue(
-                    "P",
-                    this.effectivePower.toDouble() / 10,
-                    if (info.effectivePowerMax != null && info.effectivePowerMax != 0.0) info.effectivePowerMax / 10 else null
-                ),
-                printValue("F", info.efficiency, info.efficiencyMax),
-                printValue("U", info.recursion, info.recursionMax),
-                printValue("D", info.disruption, info.disruptionMax),
-                printValue("CP", info.creatureProtection, info.creatureProtectionMax),
-                printValue("O", info.other, info.otherMax)
-            )
-                .joinToString(" • ") +
-                    printTraits("Traits", info.traits) +
-                    printTraits("Syns", info.synergies)
-
-        }
-    }
-
     fun isEvilTwin() = this.cardTitle.contains(evilTwinCardName)
-
-    private fun printValue(name: String, min: Double, max: Double?) = if (min == 0.0 && (max == 0.0 || max == null)) {
-        null
-    } else {
-        "$name: ${min.roundToTwoSigDig()}${if (max == null || max == 0.0) "" else " to ${max.roundToTwoSigDig()}"}"
-    }
-
-    private fun printTraits(name: String, traits: List<SynTraitValue>) = if (traits.isEmpty()) {
-        ""
-    } else {
-        "\n$name: ${traits.joinToString(" • ") { it.print() }}"
-    }
 
     fun toDoKCard() = DokCard(
         cardTitle = this.cardTitle,
@@ -201,6 +80,8 @@ data class Card(
         big = this.big == true,
         token = this.token,
         evilTwin = this.isEvilTwin(),
+        cardText = this.cardText,
+        flavorText = this.flavorText,
         traits = this.traits.toList(),
     )
 

@@ -1,8 +1,8 @@
 package coraythan.keyswap.synergy.synergysystem
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynergyTrait
@@ -12,12 +12,12 @@ object GenerateDeckAndHouseTraits {
 
     fun addOutOfHouseTraits(
         houses: List<House>,
-        cards: List<Card>,
+        cards: List<DokCardInDeck>,
         traits: MutableMap<SynergyTrait, MatchSynergiesToTraits>
     ) {
         houses.forEach { house ->
             val cardsNotForHouse = cards.filter { it.house != house }
-            val creatureCount = cardsNotForHouse.filter { it.cardType == CardType.Creature }.size
+            val creatureCount = cardsNotForHouse.count { it.card.cardType == CardType.Creature }
 
             if (creatureCount > 12) traits.addDeckTrait(
                 SynergyTrait.highCreatureCount, when {
@@ -41,17 +41,17 @@ object GenerateDeckAndHouseTraits {
 
     fun addHouseTraits(
         houses: List<House>,
-        cards: List<Card>,
+        cards: List<DokCardInDeck>,
         traits: MutableMap<SynergyTrait, MatchSynergiesToTraits>,
     ) {
         houses.forEach { house ->
             val cardsForHouse = cards.filter { it.house == house }
-            val totalCreaturePower = cardsForHouse.map { it.power }.sum()
-            val creatureCount = cardsForHouse.filter { it.cardType == CardType.Creature }.size
-            val artifactCount = cardsForHouse.filter { it.cardType == CardType.Artifact }.size
-            val upgradeCount = cardsForHouse.filter { it.cardType == CardType.Upgrade }.size
+            val totalCreaturePower = cardsForHouse.sumOf { it.card.power }
+            val creatureCount = cardsForHouse.count { it.card.cardType == CardType.Creature }
+            val artifactCount = cardsForHouse.count { it.card.cardType == CardType.Artifact }
+            val upgradeCount = cardsForHouse.count { it.card.cardType == CardType.Upgrade }
 
-            val bonusAmber = cardsForHouse.map { it.amber }.sum()
+            val bonusAmber = cardsForHouse.map { it.totalAmber }.sum()
             traits.addDeckTrait(
                 SynergyTrait.bonusAmber,
                 bonusAmber,
@@ -61,11 +61,11 @@ object GenerateDeckAndHouseTraits {
             )
 
             val totalExpectedAmber = cardsForHouse.map {
-                val max = it.extraCardInfo?.expectedAmberMax ?: 0.0
-                val min = it.extraCardInfo?.expectedAmber ?: 0.0
+                val max = it.extraCardInfo.expectedAmberMax ?: 0.0
+                val min = it.extraCardInfo.expectedAmber
                 if (max == 0.0) min else (min + max) / 2
             }.sum()
-            val totalArmor = cardsForHouse.map { it.armor }.sum()
+            val totalArmor = cardsForHouse.sumOf { it.card.armor }
 
             if (totalExpectedAmber > 7) traits.addDeckTrait(
                 SynergyTrait.highExpectedAmber, when {
@@ -157,22 +157,29 @@ object GenerateDeckAndHouseTraits {
     fun addDeckTraits(
         deck: GenericDeck,
         traits: MutableMap<SynergyTrait, MatchSynergiesToTraits>,
-        cards: List<Card>
+        cards: List<DokCardInDeck>
     ) {
 
         if (deck.houses.contains(House.Mars)) traits.addDeckTrait(SynergyTrait.hasMars, 4)
 
-        val bonusAmber = cards.map { it.amber + (it.extraCardInfo?.enhancementAmber ?: 0) }.sum()
-        val bonusCapture = cards.mapNotNull { it.extraCardInfo?.enhancementCapture }.sum()
-        val bonusDraw = cards.mapNotNull { it.extraCardInfo?.enhancementDraw }.sum()
-        val bonusDamage = cards.mapNotNull { it.extraCardInfo?.enhancementDamage }.sum()
+        val bonusAmber = cards.sumOf { it.totalAmber }
+        val bonusCapture = cards.sumOf { it.bonusCapture }
+        val bonusDraw = cards.sumOf { it.bonusDraw }
+        val bonusDamage = cards.sumOf { it.bonusDamage }
 
         traits.addDeckTrait(SynergyTrait.bonusAmber, bonusAmber, strength = TraitStrength.EXTRA_WEAK)
         traits.addDeckTrait(SynergyTrait.bonusCapture, bonusCapture, strength = TraitStrength.EXTRA_WEAK)
         traits.addDeckTrait(SynergyTrait.bonusDraw, bonusDraw, strength = TraitStrength.EXTRA_WEAK)
         traits.addDeckTrait(SynergyTrait.bonusDamage, bonusDamage, strength = TraitStrength.EXTRA_WEAK)
 
-        val totalExpectedAmber = cards.map { it.extraCardInfo?.expectedAmber ?: 0.0 }.sum()
+        val totalExpectedAmber = cards.sumOf { it.extraCardInfo.expectedAmber }
+
+        val totalPower = cards.sumOf { it.card.power }
+        val totalArmor = cards.sumOf { it.card.armor }
+        val artifactCount = cards.count { it.card.cardType == CardType.Artifact }
+        val upgradeCount = cards.count { it.card.cardType == CardType.Upgrade }
+        val creatureCount = cards.count { it.card.cardType == CardType.Creature }
+
         if (totalExpectedAmber > 21) traits.addDeckTrait(
             SynergyTrait.highExpectedAmber, when {
                 totalExpectedAmber > 26 -> 4
@@ -190,73 +197,73 @@ object GenerateDeckAndHouseTraits {
             }
         )
 
-        if (deck.totalPower < 60) traits.addDeckTrait(
+        if (totalPower < 60) traits.addDeckTrait(
             SynergyTrait.lowTotalCreaturePower, when {
-                deck.totalPower < 47 -> 4
-                deck.totalPower < 52 -> 3
-                deck.totalPower < 57 -> 2
+                totalPower < 47 -> 4
+                totalPower < 52 -> 3
+                totalPower < 57 -> 2
                 else -> 1
             }
         )
-        if (deck.totalPower > 67) traits.addDeckTrait(
+        if (totalPower > 67) traits.addDeckTrait(
             SynergyTrait.highTotalCreaturePower, when {
-                deck.totalPower > 83 -> 4
-                deck.totalPower > 77 -> 3
-                deck.totalPower > 72 -> 2
+                totalPower > 83 -> 4
+                totalPower > 77 -> 3
+                totalPower > 72 -> 2
                 else -> 1
             }
         )
 
-        if (deck.totalArmor > 3) traits.addDeckTrait(
+        if (totalArmor > 3) traits.addDeckTrait(
             SynergyTrait.highTotalArmor, when {
-                deck.totalArmor > 8 -> 4
-                deck.totalArmor > 6 -> 3
-                deck.totalArmor > 4 -> 2
+                totalArmor > 8 -> 4
+                totalArmor > 6 -> 3
+                totalArmor > 4 -> 2
                 else -> 1
             }
         )
 
-        if (deck.artifactCount > 4) traits.addDeckTrait(
+        if (artifactCount > 4) traits.addDeckTrait(
             SynergyTrait.highArtifactCount, when {
-                deck.artifactCount > 7 -> 4
-                deck.artifactCount > 6 -> 3
-                deck.artifactCount > 5 -> 2
+                artifactCount > 7 -> 4
+                artifactCount > 6 -> 3
+                artifactCount > 5 -> 2
                 else -> 1
             }
         )
 
-        if (deck.artifactCount < 4) traits.addDeckTrait(
+        if (artifactCount < 4) traits.addDeckTrait(
             SynergyTrait.lowArtifactCount, when {
-                deck.artifactCount < 1 -> 4
-                deck.artifactCount < 2 -> 3
-                deck.artifactCount < 3 -> 2
+                artifactCount < 1 -> 4
+                artifactCount < 2 -> 3
+                artifactCount < 3 -> 2
                 else -> 1
             }
         )
 
-        if (deck.upgradeCount > 0) traits.addDeckTrait(
+        if (upgradeCount > 0) traits.addDeckTrait(
             SynergyTrait.upgradeCount, when {
-                deck.upgradeCount > 3 -> 4
-                deck.upgradeCount > 2 -> 3
-                deck.upgradeCount > 1 -> 2
+                upgradeCount > 3 -> 4
+                upgradeCount > 2 -> 3
+                upgradeCount > 1 -> 2
                 else -> 1
             }
         )
 
-        if (deck.creatureCount > 18) traits.addDeckTrait(
+        if (creatureCount > 18) traits.addDeckTrait(
             SynergyTrait.highCreatureCount, when {
-                deck.creatureCount > 21 -> 4
-                deck.creatureCount > 20 -> 3
-                deck.creatureCount > 19 -> 2
+                creatureCount > 21 -> 4
+                creatureCount > 20 -> 3
+                creatureCount > 19 -> 2
                 else -> 1
             }
         )
 
-        if (deck.creatureCount < 17) traits.addDeckTrait(
+        if (creatureCount < 17) traits.addDeckTrait(
             SynergyTrait.lowCreatureCount, when {
-                deck.creatureCount < 14 -> 4
-                deck.creatureCount < 15 -> 3
-                deck.creatureCount < 16 -> 2
+                creatureCount < 14 -> 4
+                creatureCount < 15 -> 3
+                creatureCount < 16 -> 2
                 else -> 1
             }
         )

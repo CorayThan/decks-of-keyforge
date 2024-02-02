@@ -2,7 +2,8 @@ package coraythan.keyswap.alliancedecks
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.DeckStatistics
@@ -22,34 +23,7 @@ data class AllianceDeck(
 
     override val name: String,
     override val expansion: Int,
-
-    override val rawAmber: Int = 0,
-    override val totalPower: Int = 0,
-    override val bonusDraw: Int = 0,
-    override val bonusCapture: Int = 0,
-    override val creatureCount: Int = 0,
-    override val actionCount: Int = 0,
-    override val artifactCount: Int = 0,
-    override val upgradeCount: Int = 0,
-    override val totalArmor: Int = 0,
-
-    override val expectedAmber: Double = 0.0,
-    override val amberControl: Double = 0.0,
-    override val creatureControl: Double = 0.0,
-    override val artifactControl: Double = 0.0,
-    override val efficiency: Double = 0.0,
-    override val recursion: Double = 0.0,
-    override val effectivePower: Int = 0,
-    override val creatureProtection: Double = 0.0,
-    override val disruption: Double = 0.0,
-    override val other: Double = 0.0,
-    override val aercScore: Double = 0.0,
-    override val previousSasRating: Int? = 0,
-    override val previousMajorSasRating: Int? = 0,
-    override val aercVersion: Int? = 0,
-    override val sasRating: Int = 0,
-    override val synergyRating: Int = 0,
-    override val antisynergyRating: Int = 0,
+    val sasRating: Int = 0,
 
     val validAlliance: Boolean = true,
     val createdDateTime: ZonedDateTime? = now(),
@@ -58,8 +32,6 @@ data class AllianceDeck(
     @Column(columnDefinition = "TEXT")
     override val cardIds: String = "",
     override val tokenNumber: Int? = null,
-
-    override val cardNames: String = "",
 
     override val houseNamesString: String = "",
 
@@ -103,10 +75,10 @@ data class AllianceDeck(
             "United Action" to 100,
         )
 
-        fun determineIfValid(cards: List<Card>): Boolean {
+        fun determineIfValid(cards: List<DokCardInDeck>): Boolean {
             val restrictedCards = cards
-                .filter { restrictedCardsList.containsKey(it.cardTitle) }
-                .groupBy { it.cardTitle }
+                .filter { restrictedCardsList.containsKey(it.card.cardTitle) }
+                .groupBy { it.card.cardTitle }
                 .map { it.key to it.value.size }
 
             if (restrictedCards.size > 1) return false
@@ -125,39 +97,12 @@ data class AllianceDeck(
             }
         }
 
-        fun fromDeck(deck: Deck, cards: List<Card>, discoverer: KeyUser): AllianceDeck {
+        fun fromDeck(deck: Deck, cards: List<DokCardInDeck>, discoverer: KeyUser): AllianceDeck {
             return AllianceDeck(
                 name = deck.name,
                 expansion = deck.expansion,
 
-                rawAmber = deck.rawAmber,
-                totalPower = deck.totalPower,
-                bonusDraw = deck.bonusDraw ?: 0,
-                bonusCapture = deck.bonusCapture ?: 0,
-                creatureCount = deck.creatureCount,
-                actionCount = deck.actionCount,
-                artifactCount = deck.artifactCount,
-                upgradeCount = deck.upgradeCount,
-                totalArmor = deck.totalArmor,
-
-                expectedAmber = deck.expectedAmber,
-                amberControl = deck.amberControl,
-                creatureControl = deck.creatureControl,
-                artifactControl = deck.artifactControl,
-                efficiency = deck.efficiency,
-                recursion = deck.recursion,
-                effectivePower = deck.effectivePower,
-                creatureProtection = deck.creatureProtection,
-                disruption = deck.disruption,
-                other = deck.other,
-                aercScore = deck.aercScore,
-                aercVersion = deck.aercVersion,
-                sasRating = deck.sasRating,
-                synergyRating = deck.synergyRating,
-                antisynergyRating = deck.antisynergyRating,
-
                 cardIds = deck.cardIds,
-                cardNames = deck.cardNames,
                 houseNamesString = deck.houseNamesString,
                 bonusIconsString = deck.bonusIconsString,
                 discoverer = discoverer,
@@ -172,11 +117,11 @@ data class AllianceDeck(
 
     override fun toDeckSearchResult(
         housesAndCards: List<HouseAndCards>?,
-        cards: List<Card>?,
+        cards: List<DokCardInDeck>?,
         stats: DeckStatistics?,
         synergies: DeckSynergyInfo?,
         includeDetails: Boolean,
-        token: Card?,
+        token: DokCardInDeck?,
     ): DeckSearchResult {
 
         return DeckSearchResult(
@@ -186,50 +131,47 @@ data class AllianceDeck(
             expansion = expansionEnum,
             name = name,
 
-            creatureCount = creatureCount.zeroToNull(),
-            actionCount = actionCount.zeroToNull(),
-            artifactCount = artifactCount.zeroToNull(),
-            upgradeCount = upgradeCount.zeroToNull(),
+            creatureCount = cards?.count { it.card.cardType == CardType.Creature },
+            actionCount = cards?.count { it.card.cardType == CardType.Action },
+            artifactCount = cards?.count { it.card.cardType == CardType.Artifact },
+            upgradeCount = cards?.count { it.card.cardType == CardType.Upgrade },
 
             cardDrawCount = (cards?.filter {
-                it.extraCardInfo?.traits?.containsTrait(SynergyTrait.drawsCards) == true
-                        || it.extraCardInfo?.traits?.containsTrait(SynergyTrait.increasesHandSize) == true
+                it.extraCardInfo.traits.containsTrait(SynergyTrait.drawsCards) || it.extraCardInfo.traits.containsTrait(
+                    SynergyTrait.increasesHandSize
+                )
             }?.size ?: 0).zeroToNull(),
             cardArchiveCount = (cards?.filter {
-                it.extraCardInfo?.traits?.containsTrait(
+                it.extraCardInfo.traits.containsTrait(
                     SynergyTrait.archives,
                     player = SynTraitPlayer.FRIENDLY
-                ) == true
+                )
             }?.size
                 ?: 0).zeroToNull(),
-            keyCheatCount = (cards?.filter { it.extraCardInfo?.traits?.containsTrait(SynergyTrait.forgesKeys) == true }?.size
+            keyCheatCount = (cards?.count { it.extraCardInfo.traits.containsTrait(SynergyTrait.forgesKeys) }
                 ?: 0).zeroToNull(),
-            rawAmber = rawAmber,
-            totalArmor = totalArmor.zeroToNull(),
+            rawAmber = if (cards == null) -1 else cards.sumOf { it.card.amber } + this.bonusIcons().bonusIconHouses.sumOf { it.bonusIconCards.sumOf { it.bonusAember } },
+            totalArmor = cards?.sumOf { it.card.armor },
+            totalPower = cards?.sumOf { it.card.power } ?: -1,
 
-            expectedAmber = synergies?.expectedAmber ?: expectedAmber,
-            amberControl = synergies?.amberControl ?: amberControl,
-            creatureControl = synergies?.creatureControl ?: creatureControl,
-            artifactControl = (synergies?.artifactControl ?: artifactControl).zeroToNull(),
-            efficiency = (synergies?.efficiency ?: efficiency).zeroToNull(),
-            recursion = (synergies?.recursion ?: recursion).zeroToNull(),
-            effectivePower = synergies?.effectivePower ?: effectivePower,
-            creatureProtection = (synergies?.creatureProtection ?: creatureProtection).zeroToNull(),
-            disruption = (synergies?.disruption ?: disruption).zeroToNull(),
-            other = (synergies?.other ?: other).zeroToNull(),
-            aercScore = synergies?.rawAerc ?: aercScore.toInt(),
-            previousSasRating = previousSasRating ?: sasRating,
-            previousMajorSasRating = previousMajorSasRating,
-            aercVersion = aercVersion ?: 12,
-            sasRating = synergies?.sasRating ?: sasRating,
-            synergyRating = synergies?.synergyRating ?: synergyRating,
-            antisynergyRating = synergies?.antisynergyRating ?: antisynergyRating,
-            totalPower = totalPower,
+            expectedAmber = synergies?.expectedAmber ?: -1.0,
+            amberControl = synergies?.amberControl ?: -1.0,
+            creatureControl = synergies?.creatureControl ?: -1.0,
+            artifactControl = (synergies?.artifactControl ?: -1.0).zeroToNull(),
+            efficiency = (synergies?.efficiency ?: -1.0).zeroToNull(),
+            recursion = (synergies?.recursion ?: -1.0).zeroToNull(),
+            effectivePower = synergies?.effectivePower ?: -1,
+            creatureProtection = (synergies?.creatureProtection ?: -1.0).zeroToNull(),
+            disruption = (synergies?.disruption ?: -1.0).zeroToNull(),
+            other = (synergies?.other ?: -1.0).zeroToNull(),
+            aercScore = synergies?.rawAerc ?: -1.0.toInt(),
+            sasRating = synergies?.sasRating ?: -1,
+            synergyRating = synergies?.synergyRating ?: -1,
+            antisynergyRating = synergies?.antisynergyRating ?: -1,
             housesAndCards = housesAndCards?.addBonusIcons(bonusIcons()) ?: listOf(),
-            tokenInfo = if (token == null) null else TokenInfo(token.id, token.cardTitle, token.house),
+            tokenInfo = token?.toTokenInfo(),
 
-            sasPercentile = stats?.sasStats?.percentileForValue?.get(synergies?.sasRating ?: sasRating)
-                ?: if (sasRating < 75) 0.0 else 100.0,
+            sasPercentile = stats?.sasStats?.closestPercentileForValue(synergies?.sasRating ?: 0) ?: 0.0,
 
             synergyDetails = if (includeDetails) synergies?.synergyCombos else synergies?.synergyCombos?.map {
                 it.copy(

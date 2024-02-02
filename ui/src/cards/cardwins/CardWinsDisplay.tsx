@@ -6,9 +6,10 @@ import { spacing } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
 import { ExpansionIcon } from "../../expansions/ExpansionIcon"
 import { cardStore } from "../CardStore"
-import { CardWinRates, KCard } from "../KCard"
+import { CardWinRates } from "../KCard"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
-export const CardWinsDisplay = observer((props: { card: KCard }) => {
+export const CardWinsDisplay = observer((props: { card: FrontendCard }) => {
 
     const {card} = props
 

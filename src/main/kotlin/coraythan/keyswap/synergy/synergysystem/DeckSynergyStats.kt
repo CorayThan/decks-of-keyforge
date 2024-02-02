@@ -2,7 +2,7 @@ package coraythan.keyswap.synergy.synergysystem
 
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.decks.models.CardWithBonusIcons
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
@@ -39,24 +39,24 @@ data class DeckSynergyStats(
 
         fun createStats(
             deck: GenericDeck,
-            inputCards: List<CardWithBonusIcons>,
+            inputCards: List<DokCardInDeck>,
             tokenValues: TokenValues?
         ): DeckSynergyStats {
             return DeckSynergyStats(
                 deckStats = statsFromCards(inputCards, tokenValues?.tokensPerGame?.roundToInt() ?: 0),
                 houseStats = deck.houses.associateWith {
                     statsFromCards(
-                        inputCards.filter { card -> card.card.house == it },
+                        inputCards.filter { card -> card.house == it },
                         tokenValues?.tokensPerGamePerHouse?.get(it)?.roundToInt() ?: 0
                     )
                 },
             )
         }
 
-        private fun statsFromCards(inputCards: List<CardWithBonusIcons>, tokensCount: Int): Map<SynergyTrait, Int> {
+        private fun statsFromCards(inputCards: List<DokCardInDeck>, tokensCount: Int): Map<SynergyTrait, Int> {
             return mapOf(
                 SynergyTrait.creatureCount to inputCards.count {
-                    it.card.cardType == CardType.Creature || it.card.cardType == CardType.TokenCreature || it.card.extraCardInfo?.extraCardTypes?.contains(
+                    it.card.cardType == CardType.Creature || it.card.cardType == CardType.TokenCreature || it.extraCardInfo.extraCardTypes?.contains(
                         CardType.Creature
                     ) == true
                 },

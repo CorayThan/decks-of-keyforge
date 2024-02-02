@@ -1,6 +1,6 @@
 import { Box, Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
-import { CardUtils, KCard } from "../../cards/KCard"
+import { CardUtils } from "../../cards/KCard"
 import { spacing } from "../../config/MuiConfig"
 import { TimeUtils } from "../../config/TimeUtils"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
@@ -24,10 +24,11 @@ import { InfoIconList, InfoIconValue } from "../../generic/InfoIcon"
 import { HasAerc } from "../HasAerc"
 import { DeckType } from "../../generated-src/DeckType"
 import { TokenIcon } from "../../generic/icons/TokenIcon"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
 interface AercCatProps {
     deck: DeckSearchResult
-    cards: KCard[]
+    cards: FrontendCard[]
     hasAerc: HasAerc
     combos?: SynergyCombo[]
     twoHigh?: boolean
@@ -132,11 +133,11 @@ export const AercCategoryExtras = (props: AercCatProps) => {
     )
 }
 
-const cardMatchesScalingSteal = (card: KCard) => card.extraCardInfo?.traits?.find(traitValue => (
+const cardMatchesScalingSteal = (card: FrontendCard) => card.extraCardInfo?.traits?.find(traitValue => (
     traitValue.trait === SynergyTrait.scalingAmberControl && traitValue.rating > 1
 ))
 
-const cardMatchesBoardWipe = (card: KCard) => card.extraCardInfo?.traits?.find(traitValue => (
+const cardMatchesBoardWipe = (card: FrontendCard) => card.extraCardInfo?.traits?.find(traitValue => (
     traitValue.trait === SynergyTrait.boardClear && traitValue.rating > 1
 ))
 
@@ -250,10 +251,10 @@ const expansionSpecificCounts = (props: AercCatProps, width: number | undefined)
 
     if (deck.expansion === Expansion.DARK_TIDINGS) {
 
-        const manipulatesTideCheckCard = (card: KCard) => card.extraCardInfo?.traits?.find(trait => trait.trait === SynergyTrait.lowersTide || trait.trait === SynergyTrait.raisesTide)
-        const manipulatesTide = (cards: KCard[]) => cards.filter(manipulatesTideCheckCard)
-        const usesTideCheckCard = (card: KCard) => card.extraCardInfo?.synergies?.find(synergy => synergy.trait === SynergyTrait.lowersTide || synergy.trait === SynergyTrait.raisesTide)
-        const usesTide = (cards: KCard[]) => cards.filter(usesTideCheckCard)
+        const manipulatesTideCheckCard = (card: FrontendCard) => card.extraCardInfo?.traits?.find(trait => trait.trait === SynergyTrait.lowersTide || trait.trait === SynergyTrait.raisesTide)
+        const manipulatesTide = (cards: FrontendCard[]) => cards.filter(manipulatesTideCheckCard)
+        const usesTideCheckCard = (card: FrontendCard) => card.extraCardInfo?.synergies?.find(synergy => synergy.trait === SynergyTrait.lowersTide || synergy.trait === SynergyTrait.raisesTide)
+        const usesTide = (cards: FrontendCard[]) => cards.filter(usesTideCheckCard)
 
         return {
             icon: <TideIcon width={width}/>,

@@ -1,15 +1,20 @@
 import { Box, Typography } from "@material-ui/core"
 import * as React from "react"
 import { cardStore } from "../../cards/CardStore"
-import { KCard } from "../../cards/KCard"
 import { spacing, theme } from "../../config/MuiConfig"
 import { roundToHundreds, roundToTens } from "../../config/Utils"
 import { CardType } from "../../generated-src/CardType"
 import { SynergyCombo } from "../../generated-src/SynergyCombo"
 import { userStore } from "../../user/UserStore"
 import { ExtraCardInfoUtils } from "../../extracardinfo/ExtraCardInfoUtils"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
-export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: SynergyCombo, copies?: number }) => {
+export const AercForCard = (props: {
+    card: FrontendCard,
+    short?: boolean,
+    realValue?: SynergyCombo,
+    copies?: number
+}) => {
     const {card, short, realValue, copies} = props
     const info = card.extraCardInfo
     let effectivePower = info.effectivePower
@@ -93,18 +98,27 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
             />
             {realValue == null ? (
                 <AercScore
-                    score={ExtraCardInfoUtils.minAERC(card.cardType, info)} max={ExtraCardInfoUtils.maxAERC(card.cardType, info)} name={"AERC"}
+                    score={ExtraCardInfoUtils.minAERC(card.cardType, info)}
+                    max={ExtraCardInfoUtils.maxAERC(card.cardType, info)}
+                    name={"AERC"}
                 />
             ) : (
                 <AercAercScore score={realValue.aercScore} synergy={realValue.netSynergy}/>
             )}
             {copies != null && realValue?.aercScore != null && (
                 <>
-                    <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
+                    <Typography
+                        variant={"body2"}
+                        color={"textSecondary"}
+                        style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}
+                    >
                         AERC for {copies} tokens:
                     </Typography>
                     <Box/>
-                    <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
+                    <Typography
+                        variant={"body2"} color={"textSecondary"}
+                        style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}
+                    >
                         {roundToHundreds(copies * realValue.aercScore)}
                     </Typography>
                 </>
@@ -113,7 +127,13 @@ export const AercForCard = (props: { card: KCard, short?: boolean, realValue?: S
     )
 }
 
-const AercScore = (props: { score: number, max?: number, name: string, synergizedScore?: number, singleColumn?: boolean }) => {
+const AercScore = (props: {
+    score: number,
+    max?: number,
+    name: string,
+    synergizedScore?: number,
+    singleColumn?: boolean
+}) => {
     const {score, max, name, synergizedScore, singleColumn} = props
     if (score === 0 && max == null) {
         return null
@@ -132,7 +152,8 @@ const AercScore = (props: { score: number, max?: number, name: string, synergize
     }
     return (
         <>
-            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
+            <Typography variant={"body2"} color={"textSecondary"}
+                        style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
                 {name}:
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>
@@ -152,7 +173,8 @@ const AercAercScore = (props: { score: number, synergy: number }) => {
     }
     return (
         <>
-            <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
+            <Typography variant={"body2"} color={"textSecondary"}
+                        style={{marginTop: theme.spacing(0.5), marginRight: spacing(1)}}>
                 AERC:
             </Typography>
             <Typography variant={"body2"} color={"textSecondary"} style={{marginTop: theme.spacing(0.5)}}>

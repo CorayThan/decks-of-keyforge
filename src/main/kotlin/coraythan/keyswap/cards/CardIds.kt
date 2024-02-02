@@ -3,6 +3,7 @@ package coraythan.keyswap.cards
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.extrainfo.CardNumberSetPairOld
 import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.generatets.GenerateTs
 
 data class CardIds(
         val cardIds: Map<House, List<CardNumberSetPairOld>>
@@ -17,6 +18,7 @@ data class CardIds(
     }
 }
 
+@GenerateTs
 data class CardNumberSetPair(
         val expansion: Expansion,
         val cardNumber: String

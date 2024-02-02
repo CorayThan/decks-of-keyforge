@@ -7,10 +7,11 @@ import { Routes } from "../../config/Routes"
 import { CsvDownloadButton } from "../../generic/CsvDownloadButton"
 import { KeyButton } from "../../mui-restyled/KeyButton"
 import { KeyLink } from "../../mui-restyled/KeyLink"
-import { CardUtils, KCard } from "../KCard"
+import { CardUtils } from "../KCard"
 import { CardSetsFromCard, CardSynergies, CardTraits } from "./CardSupplementalViews"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
-export const CardTableView = observer((props: { cards: KCard[] }) => {
+export const CardTableView = observer((props: { cards: FrontendCard[] }) => {
     return (
         <div>
             <Paper style={{marginBottom: spacing(2), marginRight: spacing(2)}}>

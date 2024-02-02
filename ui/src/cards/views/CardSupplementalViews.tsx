@@ -1,12 +1,12 @@
-import { KCard } from "../KCard"
 import { ExpansionUtils } from "../../generated-src/Expansion"
 import { ExpansionIcon } from "../../expansions/ExpansionIcon"
 import { spacing } from "../../config/MuiConfig"
 import { SynTraitValue } from "../../generated-src/SynTraitValue"
 import { TraitBubble } from "../../synergy/TraitBubble"
 import * as React from "react"
+import { FrontendCard } from "../../generated-src/FrontendCard"
 
-export const CardSetsFromCard = (props: { card: KCard, noDot?: boolean }) => {
+export const CardSetsFromCard = (props: { card: FrontendCard, noDot?: boolean }) => {
     const sets = ExpansionUtils.sort(props.card.cardNumbers?.map(cardNumber => cardNumber.expansion) ?? [])
     return (
         <div style={{display: "flex"}}>

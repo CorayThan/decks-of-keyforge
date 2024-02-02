@@ -5,11 +5,13 @@ import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.config.SchedulingConfig
+import coraythan.keyswap.decks.DeckFilters
+import coraythan.keyswap.decks.DeckSearchService
+import coraythan.keyswap.decks.models.SimpleCard
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.tokenize
-import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.Instant
+import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
 const val lockUpdateUserSearchStatsFor = "PT1M"
@@ -29,10 +32,10 @@ const val lockUpdateUserSearchStatsFor = "PT1M"
 @Service
 @Transactional
 class UserSearchService(
-        private val ownedDeckRepo: OwnedDeckRepo,
-        private val userRepo: KeyUserRepo,
-        private val currentUserService: CurrentUserService,
-        private val entityManager: EntityManager
+    private val userRepo: KeyUserRepo,
+    private val currentUserService: CurrentUserService,
+    private val deckSearchService: DeckSearchService,
+    private val entityManager: EntityManager
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -41,51 +44,59 @@ class UserSearchService(
     var allSearchableUsers: List<UserSearchResult> = listOf()
     var lastUserSearchUpdate: Instant = Instant.now()
 
-    @Scheduled(fixedDelayString = lockUpdateUserSearchStatsFor, initialDelayString = SchedulingConfig.updateUserStatsInitialDelay)
-    @SchedulerLock(name = "updateUserStats", lockAtLeastFor = lockUpdateUserSearchStatsFor, lockAtMostFor = lockUpdateUserSearchStatsFor)
+    @Scheduled(
+        fixedDelayString = lockUpdateUserSearchStatsFor,
+        initialDelayString = SchedulingConfig.updateUserStatsInitialDelay
+    )
+    @SchedulerLock(
+        name = "updateUserStats",
+        lockAtLeastFor = lockUpdateUserSearchStatsFor,
+        lockAtMostFor = lockUpdateUserSearchStatsFor
+    )
     fun updateUserStats() {
         try {
             log.info("$scheduledStart update user stats.")
             var count: Int
-            var generationTime: Long = 0
             val userUpdateTime = measureTimeMillis {
                 val users = userRepo.findTop100ByUpdateStatsTrue()
                 count = users.size
                 users
-                        .forEach {
-                            var dataNullable: UserSearchResult?
-                            val singleGenTime = measureTimeMillis {
-                                val ownedDecks = ownedDeckRepo.findAllByOwnerId(it.id).map { it.deck }
-                                dataNullable = it.generateSearchResult(ownedDecks)
-                            }
-                            val data = dataNullable!!
-                            generationTime += singleGenTime
-                            userRepo.updateUserStats(
-                                    it.id,
-                                    data.deckCount,
-                                    data.forSaleCount,
-                                    data.topSasAverage,
-                                    data.highSas,
-                                    data.lowSas,
-                                    data.totalPower,
-                                    data.totalChains,
-                                    data.mavericks,
-                                    data.anomalies
-                            )
-                        }
+                    .forEach {
+                        val data = deckSearchService.filterDecks(
+                            DeckFilters(
+                                owner = it.username,
+                                pageSize = 20000,
+                            ), 0
+                        ).decks
+
+                        val allCards: List<SimpleCard> = data.flatMap { it.housesAndCards.flatMap { it.cards } }
+
+                        userRepo.updateUserStats(
+                            it.id,
+                            data.size,
+                            data.count { it.forSale == true },
+                            data.take(10).map { it.sasRating }.average().roundToInt(),
+                            data.first().sasRating,
+                            data.last().sasRating,
+                            data.sumOf { it.powerLevel ?: 0 },
+                            data.sumOf { it.chains ?: 0 },
+                            allCards.count { it.maverick == true },
+                            allCards.count { it.anomaly == true },
+                        )
+                    }
             }
 
             this.updateSearchResults()
 
-            log.info("$scheduledStop Updated $count users in $userUpdateTime ms gen time $generationTime ms")
+            log.info("$scheduledStop Updated $count users in $userUpdateTime ms")
         } catch (e: Throwable) {
             log.error("$scheduledException updating stats for users", e)
         }
     }
 
     fun currentSearchResults() = UserSearchResults(
-            updatedMinutesAgo = Duration.between(this.lastUserSearchUpdate, Instant.now()).abs().toMinutes(),
-            users = this.allSearchableUsers
+        updatedMinutesAgo = Duration.between(this.lastUserSearchUpdate, Instant.now()).abs().toMinutes(),
+        users = this.allSearchableUsers
     )
 
     fun updateSearchResults() {
@@ -108,38 +119,63 @@ class UserSearchService(
         val sort = when (filters.sort) {
             UserSort.RATING ->
                 userQ.rating.desc()
+
             UserSort.DECK_COUNT ->
                 userQ.deckCount.desc()
+
             UserSort.SAS_AVERAGE ->
                 userQ.topSasAverage.desc()
+
             UserSort.TOP_SAS ->
                 userQ.highSas.desc()
+
             UserSort.LOW_SAS ->
                 userQ.lowSas.asc()
+
             UserSort.FOR_SALE_COUNT ->
                 userQ.forSaleCount.desc()
+
             UserSort.PATRON_LEVEL ->
                 userQ.patreonTier.desc()
+
             UserSort.TOTAL_POWER ->
                 userQ.totalPower.desc()
+
             UserSort.TOTAL_CHAINS ->
                 userQ.totalChains.desc()
+
             UserSort.USER_NAME ->
                 userQ.username.asc()
         }
 
         return query
-                .select(
-                        Projections.constructor(UserSearchResult::class.java,
-                                userQ.id, userQ.username, userQ.rating, userQ.deckCount, userQ.forSaleCount, userQ.topSasAverage, userQ.highSas, userQ.lowSas, userQ.totalPower,
-                                userQ.totalChains, userQ.mavericks, userQ.anomalies, userQ.type, userQ.patreonTier, userQ.manualPatreonTier, userQ.teamId, userQ.allowUsersToSeeDeckOwnership
-                        )
+            .select(
+                Projections.constructor(
+                    UserSearchResult::class.java,
+                    userQ.id,
+                    userQ.username,
+                    userQ.rating,
+                    userQ.deckCount,
+                    userQ.forSaleCount,
+                    userQ.topSasAverage,
+                    userQ.highSas,
+                    userQ.lowSas,
+                    userQ.totalPower,
+                    userQ.totalChains,
+                    userQ.mavericks,
+                    userQ.anomalies,
+                    userQ.type,
+                    userQ.patreonTier,
+                    userQ.manualPatreonTier,
+                    userQ.teamId,
+                    userQ.allowUsersToSeeDeckOwnership
                 )
-                .from(userQ)
-                .where(predicate)
-                .orderBy(sort)
-                .fetch()
-                .filter { it.deckCount != 0 }
+            )
+            .from(userQ)
+            .where(predicate)
+            .orderBy(sort)
+            .fetch()
+            .filter { it.deckCount != 0 }
     }
 
     private fun userFilterPredicate(filters: UserFilters, withHidden: Boolean = false): Predicate {
@@ -155,20 +191,28 @@ class UserSearchService(
         when (filters.sort) {
             UserSort.DECK_COUNT ->
                 predicate.and(userQ.deckCount.gt(0))
+
             UserSort.SAS_AVERAGE ->
                 predicate.and(userQ.deckCount.gt(0))
+
             UserSort.TOP_SAS ->
                 predicate.and(userQ.deckCount.gt(0))
+
             UserSort.LOW_SAS ->
                 predicate.and(userQ.deckCount.gt(0))
+
             UserSort.FOR_SALE_COUNT ->
                 predicate.and(userQ.forSaleCount.gt(0))
+
             UserSort.PATRON_LEVEL ->
                 predicate.and(userQ.patreonTier.isNotNull)
+
             UserSort.TOTAL_POWER ->
                 predicate.and(userQ.totalPower.gt(0))
+
             UserSort.TOTAL_CHAINS ->
                 predicate.and(userQ.totalChains.gt(0))
+
             else -> {
                 // do nothing
             }

@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.DeckSasValuesSearchableRepo
 import coraythan.keyswap.decks.models.DeckType
 import coraythan.keyswap.keyforgeevents.*
 import coraythan.keyswap.nowLocal
@@ -34,6 +35,7 @@ class TournamentService(
     private val keyUserRepo: KeyUserRepo,
     private val deckRepo: DeckRepo,
     private val keyForgeEventService: KeyForgeEventService,
+    private val dsvsRepo: DeckSasValuesSearchableRepo,
     private val entityManager: EntityManager,
 ) {
 
@@ -141,11 +143,12 @@ class TournamentService(
         val allDecks = tournamentDeckRepo.findByTourneyId(id)
 
         val tournamentDeckInfos = allDecks.map {
+            val sas = dsvsRepo.findSasForDeckId(it.deck.id)
             TournamentDeckInfo(
                 id = it.deck.id,
                 keyforgeId = it.deck.keyforgeId,
                 name = it.deck.name,
-                sas = it.deck.sasRating,
+                sas = sas,
                 houses = it.deck.houses,
                 username = participantInfo[it.participantId]!!.username,
                 dokUser = participantInfo[it.participantId]!!.dokUser,

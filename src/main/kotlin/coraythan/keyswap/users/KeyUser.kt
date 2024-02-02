@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.auctions.purchases.Purchase
-import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.nowLocal
@@ -16,7 +15,6 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.*
-import kotlin.math.roundToInt
 
 @Entity
 data class KeyUser(
@@ -125,7 +123,7 @@ data class KeyUser(
     val primaryEmail: String
         get() = sellerEmail ?: email
 
-    fun toProfile(isUser: Boolean, owned: List<Deck>) = UserProfile(
+    fun toProfile(isUser: Boolean) = UserProfile(
         id = id,
         username = username,
         email = if (isUser) email else null,
@@ -137,7 +135,7 @@ data class KeyUser(
         country = country,
         preferredCountries = preferredCountries,
         lastVersionSeen = lastVersionSeen,
-        searchResult = if (allowUsersToSeeDeckOwnership) generateSearchResult(owned) else null,
+        searchResult = if (allowUsersToSeeDeckOwnership) generateSearchResult() else null,
         allowsMessages = allowsMessages,
         viewFutureSas = viewFutureSas
     )
@@ -174,21 +172,20 @@ data class KeyUser(
         viewFutureSas = viewFutureSas,
     )
 
-    fun generateSearchResult(owned: List<Deck>): UserSearchResult {
-        val sasRatings = owned.map { deck -> deck.sasRating }.sortedDescending()
+    fun generateSearchResult(): UserSearchResult {
         return UserSearchResult(
             this.id,
             this.username,
             this.rating,
-            owned.count(),
+            this.deckCount,
             this.auctions.count { listing -> listing.isActive },
-            if (owned.size < 10) 0 else sasRatings.take(10).average().roundToInt(),
-            sasRatings.firstOrNull() ?: 0,
-            sasRatings.lastOrNull() ?: 0,
-            owned.map { deck -> deck.powerLevel }.sum(),
-            owned.map { deck -> deck.chains }.sum(),
-            owned.map { deck -> deck.maverickCount }.sum(),
-            owned.map { deck -> deck.anomalyCount ?: 0 }.sum(),
+            this.topSasAverage,
+            this.highSas,
+            this.lowSas,
+            this.totalPower,
+            this.totalChains,
+            this.mavericks,
+            this.anomalies,
             this.type,
             this.patreonTier,
             this.manualPatreonTier,
@@ -238,7 +235,8 @@ data class KeyUser(
     }
 
     fun displayFutureSas() =
-        (this.realPatreonTier().levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) || this.type == UserType.CONTENT_CREATOR) && this.viewFutureSas
+        (this.realPatreonTier()
+            .levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION) || this.type == UserType.CONTENT_CREATOR) && this.viewFutureSas
 
     override fun equals(other: Any?): Boolean {
         if (other is KeyUser) {

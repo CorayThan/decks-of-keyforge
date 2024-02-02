@@ -3,9 +3,13 @@ package coraythan.keyswap.decks
 import com.fasterxml.jackson.databind.ObjectMapper
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.*
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.Env
-import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.DeckBuildingData
+import coraythan.keyswap.decks.models.DeckSasValuesSearchable
+import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
 import coraythan.keyswap.decks.pastsas.PastSasService
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
@@ -28,7 +32,6 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
 import java.util.*
-import kotlin.math.absoluteValue
 import kotlin.system.measureTimeMillis
 
 private const val lockImportNewDecksFor = "PT1M"
@@ -50,6 +53,7 @@ class DeckImporterService(
     private val cardRepo: CardRepo,
     private val pastSasService: PastSasService,
     private val postProcessDecksService: PostProcessDecksService,
+    private val dokCardCacheService: DokCardCacheService,
     private val sasVersionService: SasVersionService,
     @Value("\${env}")
     private val env: Env,
@@ -234,7 +238,6 @@ class DeckImporterService(
                         it.enhanced
                     )
                         ?: cardService.findByCardName(it.name)
-                        ?: throw BadRequestException("Couldn't find card with expansion ${deckBuilderData.expansion} name $it and house ${entry.key}")
 
                 card.copy(house = entry.key)
             }
@@ -290,7 +293,6 @@ class DeckImporterService(
                                 }
                             }
                             val cardServiceCard = cardService.findByCardName(dbCard.cardTitle)
-                                ?: error("No card in card service for ${dbCard.cardTitle}")
                             dbCard.extraCardInfo = cardServiceCard.extraCardInfo
                             dbCard
                         }
@@ -332,113 +334,43 @@ class DeckImporterService(
 
     fun viewTheoreticalDeck(deck: DeckBuildingData): Deck {
         val deckAndCards = makeBasicDeckFromDeckBuilderData(deck)
-        val tokenCard = if (deck.tokenTitle == null) {
-            null
-        } else {
-            this.cardService.findTokenByName(deck.tokenTitle)
-        }
-        return validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second, tokenCard)
+        return validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second, deck.tokenTitle)
     }
 
     private fun saveDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, token: Card?): Deck {
-        val ratedDeck = validateAndRateDeck(deck, houses, cardsList, token)
+        val ratedDeck = validateAndRateDeck(deck, houses, cardsList, token?.cardTitle)
         val saved = deckRepo.save(ratedDeck)
-        deckSasValuesSearchableRepo.save(DeckSasValuesSearchable(ratedDeck))
-        deckSasValuesUpdatableRepo.save(DeckSasValuesUpdatable(ratedDeck))
+        val deckSyns = rateDeck(deck)
+        val dokCards = dokCardCacheService.cardsForDeck(deck)
+        val sasVersion = sasVersionService.findSasVersion()
+        deckSasValuesSearchableRepo.save(DeckSasValuesSearchable(ratedDeck, dokCards, deckSyns, sasVersion))
+        deckSasValuesUpdatableRepo.save(DeckSasValuesUpdatable(ratedDeck, dokCards, deckSyns, sasVersion))
 
         postProcessDecksService.addPostProcessDeck(saved)
         return saved
     }
 
-    private fun validateAndRateDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, token: Card?): Deck {
+    private fun validateAndRateDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, tokenName: String?): Deck {
         check(houses.size == 3) { "Deck doesn't have 3 houses! $deck" }
         check(cardsList.size == 36) { "Can't have a deck without 36 cards deck: $deck" }
 
         val saveable = deck
-            .withCards(cardsList)
             .copy(
+                evilTwin = cardsList.any { it.isEvilTwin() },
                 houseNamesString = houses.sorted().joinToString("|"),
                 cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList)),
-                tokenNumber = if (token == null) null else TokenCard.ordinalByCardTitle(token.cardTitle)
+                tokenNumber = if (tokenName == null) null else TokenCard.ordinalByCardTitle(tokenName)
             )
 
-        val ratedDeck = rateDeck(saveable).first
+        check(saveable.cardIds.isNotBlank()) { "Can't save a deck without its card ids: $deck" }
 
-        check(!ratedDeck.cardIds.isBlank()) { "Can't save a deck without its card ids: $deck" }
-
-        return ratedDeck
+        return saveable
     }
 
-    fun rateDeck(inputDeck: Deck, majorRevision: Boolean = false): Pair<Deck, DeckSynergyInfo> {
-        val publishedAercVersion = sasVersionService.findSasVersion()
-        val cards = cardService.cardsForDeck(inputDeck)
-        val cardsMap = this.cardsForDeck(inputDeck)
-        val token = cardService.tokenForDeck(inputDeck)
-
-        val deck = inputDeck
-//            .copy(
-//            cards = cardsMap
-//        )
-
-        val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(deck, cards, token)
-        val bonusDraw = deck.bonusIcons().bonusIconHouses.flatMap { it.bonusIconCards }.sumOf { it.bonusDraw }
-        val bonusCapture = deck.bonusIcons().bonusIconHouses.flatMap { it.bonusIconCards }.sumOf { it.bonusCapture }
-        val rawAmber = cards.sumOf { it.amber } +
-                deck.bonusIcons().bonusIconHouses.flatMap { it.bonusIconCards }.sumOf { it.bonusAember }
-        return Pair(
-            deck.copy(
-                rawAmber = rawAmber,
-                bonusDraw = if (bonusDraw == 0) null else bonusDraw,
-                bonusCapture = if (bonusCapture == 0) null else bonusCapture,
-
-                creatureCount = cards.filter { it.cardType == CardType.Creature }.size,
-                actionCount = cards.filter { it.cardType == CardType.Action }.size,
-                artifactCount = cards.filter { it.cardType == CardType.Artifact }.size,
-                upgradeCount = cards.filter { it.cardType == CardType.Upgrade }.size,
-
-                amberControl = deckSynergyInfo.amberControl,
-                expectedAmber = deckSynergyInfo.expectedAmber,
-                artifactControl = deckSynergyInfo.artifactControl,
-                creatureControl = deckSynergyInfo.creatureControl,
-                efficiency = deckSynergyInfo.efficiency,
-                recursion = deckSynergyInfo.recursion,
-                effectivePower = deckSynergyInfo.effectivePower,
-                disruption = deckSynergyInfo.disruption,
-                creatureProtection = deckSynergyInfo.creatureProtection,
-                other = deckSynergyInfo.other,
-                aercScore = deckSynergyInfo.rawAerc.toDouble(),
-                sasRating = deckSynergyInfo.sasRating,
-                previousSasRating = if (deckSynergyInfo.sasRating != deck.sasRating) deck.sasRating else deck.previousSasRating,
-                previousMajorSasRating = if (majorRevision) deck.sasRating else deck.previousMajorSasRating,
-                aercVersion = publishedAercVersion,
-                synergyRating = deckSynergyInfo.synergyRating,
-                antisynergyRating = deckSynergyInfo.antisynergyRating.absoluteValue
-            ), deckSynergyInfo
-        )
-    }
-
-    private fun cardsForDeck(deck: Deck): Map<House, List<CardInDeck>> {
-        val cards = cardService.cardsForDeck(deck).withBonusIcons(deck.bonusIcons())
-
-        return cards
-            .groupBy { it.card.house }
-            .map { houseOfCards ->
-                houseOfCards.key to houseOfCards.value
-                    .map { cardWithIcons ->
-                        val card = cardWithIcons.card
-                        val isLegacy =
-                            !(card.cardNumbers?.any { cardNum -> cardNum.expansion == deck.expansionEnum } ?: true)
-                        CardInDeck(
-                            cardTitle = card.cardTitle,
-                            maverick = card.maverick,
-                            legacy = isLegacy,
-                            anomaly = card.anomaly,
-                            bonusAember = cardWithIcons.bonusAember,
-                            bonusCapture = cardWithIcons.bonusCapture,
-                            bonusDamage = cardWithIcons.bonusDamage,
-                            bonusDraw = cardWithIcons.bonusDraw,
-                        )
-                    }
-            }.toMap()
+    fun rateDeck(inputDeck: Deck, majorRevision: Boolean = false): DeckSynergyInfo {
+        val cards = dokCardCacheService.cardsForDeck(inputDeck)
+        val token = dokCardCacheService.tokenForDeck(inputDeck)
+        val deckSynergyInfo = DeckSynergyService.fromDeckWithCards(inputDeck, cards, token)
+        return deckSynergyInfo
     }
 }

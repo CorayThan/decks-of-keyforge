@@ -1,8 +1,9 @@
 package coraythan.keyswap.synergy.synergysystem
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCard
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.synergy.*
 import org.slf4j.LoggerFactory
 
@@ -15,9 +16,9 @@ data class MatchSynergiesToTraits(
         private val log = LoggerFactory.getLogger(this::class.java)
     }
 
-    fun matches(card: Card, synergyValue: SynTraitValue): SynMatchInfo {
+    fun matches(card: DokCardInDeck, synergyValue: SynTraitValue): SynMatchInfo {
         val house = card.house
-        val cardName = card.cardTitle
+        val cardName = card.card.cardTitle
 
         // log.info("Check if there is a match for card ${card.cardTitle} in trait values ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitValues)}")
 
@@ -25,20 +26,30 @@ data class MatchSynergiesToTraits(
             .filter {
                 val traitsCard = it.card
                 val typeMatch =
-                    typesMatch(it.value.trait, synergyValue.cardTypes ?: listOf(), traitsCard?.allTypes(), it.value.cardTypes ?: listOf())
+                    typesMatch(
+                        it.value.trait,
+                        synergyValue.cardTypes ?: listOf(),
+                        card.extraCardInfo.allCardTypes,
+                        it.value.cardTypes ?: listOf()
+                    )
                 val playerMatch = playersMatch(synergyValue.player, it.value.player)
                 val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
 
                 // If the synergy has a power range, does the traits card match that power range?
                 val synergyPowerMatch = synergyValue.powerMatch(traitsCard?.power ?: -1, traitsCard?.cardType)
                 // If the trait has a power range, does the synergizing card match that power range?
-                val traitPowerMatch = it.value.powerMatch(card.power, card.cardType)
+                val traitPowerMatch = it.value.powerMatch(card.card.power, card.card.cardType)
 
                 // For matching traits on the synergy
                 val synergyTraitsMatch =
-                    traitsOnSynergyMatch(synergyValue.cardTraits ?: listOf(), traitsCard?.traits, synergyValue.notCardTraits)
+                    traitsOnSynergyMatch(
+                        synergyValue.cardTraits ?: listOf(),
+                        traitsCard?.traits,
+                        synergyValue.notCardTraits
+                    )
                 // For matching traits on the trait
-                val traitsTraitMatch = traitsOnTraitMatch(it.value.cardTraits ?: listOf(), card.traits, it.value.notCardTraits)
+                val traitsTraitMatch =
+                    traitsOnTraitMatch(it.value.cardTraits ?: listOf(), card.card.traits, it.value.notCardTraits)
                 val match =
                     typeMatch && playerMatch && houseMatch && synergyPowerMatch && traitPowerMatch && synergyTraitsMatch && traitsTraitMatch
 
@@ -144,7 +155,7 @@ data class MatchSynergiesToTraits(
 
 fun MutableMap<SynergyTrait, MatchSynergiesToTraits>.addTrait(
     traitValue: SynTraitValue,
-    card: Card?,
+    card: DokCard?,
     house: House?,
     deckTrait: Boolean = false
 ) {
@@ -173,7 +184,7 @@ data class SynMatchInfo(
 
 data class SynTraitValueWithHouse(
     val value: SynTraitValue,
-    val card: Card?,
+    val card: DokCard?,
     val house: House?,
     val deckTrait: Boolean
 )

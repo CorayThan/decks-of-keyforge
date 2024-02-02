@@ -2,7 +2,9 @@ package coraythan.keyswap.cards.extrainfo
 
 import coraythan.keyswap.Api
 import coraythan.keyswap.cards.*
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
+import coraythan.keyswap.decks.models.FrontendCard
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.web.bind.annotation.*
@@ -12,7 +14,7 @@ import java.util.*
 @RequestMapping("${Api.base}/extra-card-infos")
 class ExtraCardInfoEndpoints(
     private val extraCardInfoService: ExtraCardInfoService,
-    private val cardService: CardService,
+    private val cardCache: DokCardCacheService,
 ) {
 
     @GetMapping("/{infoId}")
@@ -23,8 +25,7 @@ class ExtraCardInfoEndpoints(
         val id = extraCardInfoService.updateExtraCardInfo(extraCardInfo)
 
         GlobalScope.launch {
-            cardService.loadExtraInfo()
-            cardService.reloadCachedCards()
+            cardCache.loadCards()
         }
 
         return id
@@ -32,11 +33,11 @@ class ExtraCardInfoEndpoints(
 
     @GetMapping("/historical/{cardName}")
     fun cardAercHistory(@PathVariable cardName: String): CardHistory {
-        val card = cardService.findByCardName(cardName) ?: throw BadRequestException("No card with name $cardName")
+        val card = cardCache.findByCardName(cardName)
         val publishedAERCsForCard = extraCardInfoService.publishedAERCs(cardName)
         val editHistory = extraCardInfoService.editHistoryForCard(publishedAERCsForCard.map { it.id })
         return CardHistory(
-            card,
+            card.toCardForFrontend(),
             publishedAERCsForCard,
             editHistory,
         )
@@ -49,7 +50,7 @@ class ExtraCardInfoEndpoints(
 }
 
 data class CardHistory(
-    val card: Card,
+    val card: FrontendCard,
     val cardAERCs: List<ExtraCardInfo>,
     val editHistory: List<CardEditHistory>,
 )

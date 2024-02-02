@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.cards.CardNumberSetPair
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCard
+import coraythan.keyswap.decks.models.FrontendCard
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
+import coraythan.keyswap.roundToTwoSigDig
 import coraythan.keyswap.synergy.SynTraitValue
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.*
@@ -34,7 +36,7 @@ data class CardNumberSetPairOld(
 data class ExtraCardInfo(
 
     var cardName: String = "",
-    val cardNameUrl: String? = "",
+    val cardNameUrl: String = "",
 
     val expectedAmber: Double = 0.0,
     val expectedAmberMax: Double? = null,
@@ -80,7 +82,6 @@ data class ExtraCardInfo(
      */
     val baseSynPercent: Int? = null,
 
-
     @Type(
         value = ListArrayType::class,
         parameters = [Parameter(
@@ -107,11 +108,21 @@ data class ExtraCardInfo(
 
     @JsonIgnore
     @ManyToOne
-    val dokCard: DokCard? = null,
+    val dokCard: DokCard,
 
     @Id
     val id: UUID = UUID.randomUUID()
 ) {
+
+    val realEffectivePower: Int
+        get() = if (effectivePower != 0) {
+            effectivePower
+        } else {
+            dokCard.power + dokCard.armor
+        }
+
+    val allCardTypes: Set<CardType>
+        get() = if (this.extraCardTypes == null) setOf(dokCard.cardType) else setOf(dokCard.cardType).plus(this.extraCardTypes)
 
     val publishedDate: LocalDate?
         get() = published?.toLocalDate()
@@ -177,4 +188,110 @@ data class ExtraCardInfo(
         )
     }
 
+    fun printValues() = listOfNotNull(
+        printValue("AERC", aercScore, aercScoreMax),
+        printValue("A", amberControl, amberControlMax),
+        printValue("E", expectedAmber, expectedAmberMax),
+        printValue("R", artifactControl, artifactControlMax),
+        printValue("C", creatureControl, creatureControlMax),
+        printValue(
+            "P",
+            this.effectivePower.toDouble() / 10,
+            if (effectivePowerMax != null && effectivePowerMax != 0.0) effectivePowerMax / 10 else null
+        ),
+        printValue("F", efficiency, efficiencyMax),
+        printValue("U", recursion, recursionMax),
+        printValue("D", disruption, disruptionMax),
+        printValue("CP", creatureProtection, creatureProtectionMax),
+        printValue("O", other, otherMax)
+    )
+        .joinToString(" • ") +
+            printTraits("Traits", traits) +
+            printTraits("Syns", synergies)
+
+    val aercScoreAverage: Double
+        get() {
+            val max = aercScoreMax
+            return if (max == null) aercScore else (aercScore + max) / 2
+        }
+
+    val aercScore: Double
+        get() = amberControl +
+                expectedAmber +
+                artifactControl +
+                creatureControl +
+                efficiency +
+                recursion +
+                disruption +
+                creatureProtection +
+                other +
+                this.effectivePowerAercScore +
+                this.dokCard.cardType.creatureBonus()
+
+    val aercScoreMax: Double?
+        get() {
+            val maxAerc = (amberControlMax ?: amberControl) +
+                    (artifactControlMax ?: artifactControl) +
+                    (creatureControlMax ?: creatureControl) +
+                    (efficiencyMax ?: efficiency) +
+                    (recursionMax ?: recursion) +
+                    (disruptionMax ?: disruption) +
+                    (creatureProtectionMax ?: creatureProtection) +
+                    (otherMax ?: other) +
+                    (expectedAmberMax ?: expectedAmber) +
+                    (if (effectivePowerMax == null) {
+                        this.effectivePowerAercScore
+                    } else {
+                        effectivePowerMax / 10
+                    }) +
+                    this.dokCard.cardType.creatureBonus()
+
+            if (maxAerc == this.aercScore) {
+                return null
+            } else {
+                return maxAerc
+            }
+        }
+
+    val effectivePowerAercScore: Double
+        get() = this.effectivePower.toDouble() / 10.0
+
+    private fun printValue(name: String, min: Double, max: Double?) = if (min == 0.0 && (max == 0.0 || max == null)) {
+        null
+    } else {
+        "$name: ${min.roundToTwoSigDig()}${if (max == null || max == 0.0) "" else " to ${max.roundToTwoSigDig()}"}"
+    }
+
+    private fun printTraits(name: String, traits: List<SynTraitValue>) = if (traits.isEmpty()) {
+        ""
+    } else {
+        "\n$name: ${traits.joinToString(" • ") { it.print() }}"
+    }
+
+    fun toCardForFrontend(): FrontendCard {
+        val card = dokCard
+        return FrontendCard(
+            id = card.id,
+            houses = card.houses,
+            cardTitle = card.cardTitle,
+            cardTitleUrl = card.cardTitleUrl,
+            cardType = card.cardType,
+            cardText = card.cardText ?: "",
+            traits = card.traits,
+            amber = card.amber,
+            power = card.power,
+            armor = card.armor,
+            rarity = card.rarity,
+            flavorText = card.flavorText,
+            big = card.big,
+            token = card.token,
+            wins = card.expansions.sumOf { it.wins },
+            losses = card.expansions.sumOf { it.losses },
+            extraCardInfo = this,
+            expansions = card.expansions,
+            cardNumbers = card.expansions.map { CardNumberSetPair(it.expansion, it.cardNumber) }
+        )
+    }
+
 }
+

@@ -6,6 +6,7 @@ import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.models.Deck
+import coraythan.keyswap.decks.models.DeckSasValuesSearchable
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.userdeck.ListingInfo
@@ -21,121 +22,26 @@ import java.util.*
 
 @Service
 class EmailService(
-        private val emailSender: JavaMailSender,
-        private val keyUserService: KeyUserService,
-        private val passwordResetCodeService: PasswordResetCodeService,
-        private val currentUserService: CurrentUserService,
-        private val offerRepo: OfferRepo,
-        private val links: AppLinks,
-        private val userRepo: KeyUserRepo,
-        @Value("\${env}")
-        private val env: Env
+    private val emailSender: JavaMailSender,
+    private val keyUserService: KeyUserService,
+    private val passwordResetCodeService: PasswordResetCodeService,
+    private val currentUserService: CurrentUserService,
+    private val offerRepo: OfferRepo,
+    private val links: AppLinks,
+    private val userRepo: KeyUserRepo,
+    @Value("\${env}")
+    private val env: Env
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun sendErrorMessageToMe(message: String, e: Exception) {
-        sendEmail("decksofkeyforge@gmail.com", "Error on DoK! $message", "message: ${e.message} to string: $e", "Error Notif")
-    }
-
-    fun sendOutBidEmail(buyer: KeyUser, deck: Deck, timeLeft: String) {
-        try {
-            sendEmail(
-                    buyer.primaryEmail,
-                    "You've been outbid in the auction for ${deck.name}!",
-                    """
-                    <div>
-                        You've been outbid in the auction for ${links.deckLink(deck)}.
-                    </div>
-                    <br>
-                    <br>
-                    <div>
-                        The auction ends in $timeLeft from the time this email was sent.
-                    </div>
-                    <br>
-                    <br>
-                    <div>
-                        You'll need to place another bid before then if you want to win the deck!
-                    </div>
-                """.trimIndent(),
-                    "Outbid"
-            )
-        } catch (e: Exception) {
-            log.warn("Couldn't send outbid notification to ${buyer.primaryEmail}", e)
-        }
-    }
-
-    fun sendSomeoneElseBoughtNowEmail(buyer: KeyUser, deck: Deck) {
-        try {
-            sendEmail(
-                    buyer.primaryEmail,
-                    "Someone else bought ${deck.name}!",
-                    """
-                    <div>
-                        Someone else has purchased the deck ${links.deckLink(deck)}, for which you were the highest bidder.
-                    </div>
-                """.trimIndent(),
-                    "Sold to someone else"
-            )
-        } catch (e: Exception) {
-            log.warn("Couldn't send outbid notification to ${buyer.primaryEmail}", e)
-        }
-    }
-
-    fun sendAuctionPurchaseEmail(buyer: KeyUser, seller: KeyUser, deck: Deck, price: Int) {
-        val currencySymbol = seller.currencySymbol
-        val shippingCost = seller.shippingCost
-        try {
-            sendEmail(
-                    seller.primaryEmail,
-                    "${deck.name} has sold on auction!",
-                    """
-                    <div>
-                        ${links.userLink(buyer.username)} has won the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
-                    </div>
-                    <br>
-                    <br>
-                    <div>
-                        The shipping costs at the time of sale were: ${shippingCost ?: "None listed"}
-                    </div>
-                    <br>
-                    <br>
-                    <div>
-                        You can reply to this email to contact the buyer.
-                    </div>
-                """.trimIndent(),
-                    "Auction Sold",
-                    buyer.primaryEmail
-            )
-        } catch (e: Exception) {
-            log.warn("Couldn't send deck sold email to seller for ${seller.primaryEmail}", e)
-        }
-        try {
-            sendEmail(
-                    buyer.primaryEmail,
-                    "You have won the auction for ${deck.name}!",
-                    """
-                    <div>
-                        You have won the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
-                    </div>
-                    <br>
-                    <br>
-                    <div>
-                        The shipping costs at the time of sale were: ${shippingCost ?: "None listed"}
-                    </div>
-                    <br>
-                    <br>
-                    <div>
-                        You can reply to this email to contact the seller, or use any listed seller contact information on the
-                        ${links.deckCompletedAuctions(deck.name)}. They may also have contact info on their profile: ${links.userLink(seller.username)}.
-                    </div>
-                """.trimIndent(),
-                    "Auction Won",
-                    seller.primaryEmail
-            )
-        } catch (e: Exception) {
-            log.warn("Couldn't send deck sold email to buyer for ${seller.primaryEmail}", e)
-        }
+        sendEmail(
+            "decksofkeyforge@gmail.com",
+            "Error on DoK! $message",
+            "message: ${e.message} to string: $e",
+            "Error Notif"
+        )
     }
 
     fun sendBoughtNowEmail(buyer: KeyUser, seller: KeyUser, deck: Deck, price: Int) {
@@ -143,9 +49,9 @@ class EmailService(
         val shippingCost = seller.shippingCost
         try {
             sendEmail(
-                    seller.primaryEmail,
-                    "${deck.name} has sold!",
-                    """
+                seller.primaryEmail,
+                "${deck.name} has sold!",
+                """
                     <div>
                         ${links.userLink(buyer.username)} has purchased the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
                     </div>
@@ -160,17 +66,17 @@ class EmailService(
                         You can reply to this email to contact the buyer.
                     </div>
                 """.trimIndent(),
-                    "Deck Sold",
-                    buyer.primaryEmail
+                "Deck Sold",
+                buyer.primaryEmail
             )
         } catch (e: Exception) {
             log.warn("Couldn't send deck sold email to seller for ${seller.primaryEmail}", e)
         }
         try {
             sendEmail(
-                    buyer.primaryEmail,
-                    "You have purchased ${deck.name}!",
-                    """
+                buyer.primaryEmail,
+                "You have purchased ${deck.name}!",
+                """
                     <div>
                         You have purchased the deck ${links.deckLink(deck)} for $currencySymbol$price plus shipping.
                     </div>
@@ -186,40 +92,27 @@ class EmailService(
                         They may also have contact info on their profile: ${links.userLink(seller.username)}.
                     </div>
                 """.trimIndent(),
-                    "Deck Purchased",
-                    seller.primaryEmail
+                "Deck Purchased",
+                seller.primaryEmail
             )
         } catch (e: Exception) {
             log.warn("Couldn't send deck sold email to buyer for ${seller.primaryEmail}", e)
         }
     }
 
-    fun sendAuctionDidNotSellEmail(seller: KeyUser, deck: Deck, currency: String, relistedAtPrice: Int?) {
-        sendEmail(
-                seller.primaryEmail,
-                "Your deck for auction ${deck.name} did not sell",
-                """
-                    <div>
-                        The minimum bid for ${links.deckLink(deck)} was not met before the end of the auction. 
-                        ${if (relistedAtPrice == null) "" else "It has been relisted automatically at ${currency}${relistedAtPrice}"}
-                    </div>
-                """.trimIndent(),
-                "Auction Did Not Sell"
-        )
-    }
-
     fun sendResetPassword(reset: ResetEmail) {
         val userInSystem = keyUserService.findByEmail(reset.email)
         if (userInSystem != null) {
             val resetCode = passwordResetCodeService.createCode(reset.email)
-            sendEmail(reset.email, "Reset your decksofkeyforge.com password",
-                    """
+            sendEmail(
+                reset.email, "Reset your decksofkeyforge.com password",
+                """
                 <div>
                     Use this link to reset your password. It will expire in 24 hours.
                     ${links.resetPassword(resetCode)}
                 </div>
             """.trimIndent(),
-                    "Reset Password"
+                "Reset Password"
             )
         }
     }
@@ -230,20 +123,28 @@ class EmailService(
             throw BadRequestException("You don't have the email ${verify.email}")
         }
         val resetCode = passwordResetCodeService.createCode(verify.email, currentUser.id)
-        sendEmail(verify.email, "Verify your decksofkeyforge.com email",
-                """
+        sendEmail(
+            verify.email, "Verify your decksofkeyforge.com email",
+            """
                 <div>
                     Use this link to verify your email:
                     ${links.verifyEmail(resetCode)}
                 </div>
             """.trimIndent(),
-                "Verify Email"
+            "Verify Email"
         )
     }
 
-    fun sendDeckListedNotification(recipientId: UUID, listingInfo: ListingInfo, deck: Deck, queryName: String, sellerUsername: String) {
+    fun sendDeckListedNotification(
+        recipientId: UUID,
+        listingInfo: ListingInfo,
+        deck: DeckSasValuesSearchable,
+        queryName: String,
+        sellerUsername: String
+    ) {
 
-        val recipient = userRepo.findByIdOrNull(recipientId) ?: throw IllegalStateException("No user with id $recipientId")
+        val recipient =
+            userRepo.findByIdOrNull(recipientId) ?: throw IllegalStateException("No user with id $recipientId")
 
         try {
 
@@ -253,12 +154,12 @@ class EmailService(
             }
 
             sendEmail(
-                    recipient.primaryEmail,
-                    "\"$queryName\" matches a deck listed on DoK",
-                    """
+                recipient.primaryEmail,
+                "\"$queryName\" matches a deck listed on DoK",
+                """
                     <div>
                         <div>
-                            The deck ${links.deckLink(deck)} matches the query "$queryName" you've set up to
+                            The deck ${links.deckLink(deck.deck)} matches the query "$queryName" you've set up to
                             email you whenever a deck is listed for sale.
                         </div>
                         <br>
@@ -273,8 +174,8 @@ class EmailService(
                         ${this.makeDeckStats(deck)}
                     </div>
                 """.trimIndent(),
-                    "Deck For Sale",
-                    bottomContent = "You can turn off these emails on your ${links.myDeckNotifications()}."
+                "Deck For Sale",
+                bottomContent = "You can turn off these emails on your ${links.myDeckNotifications()}."
             )
 
         } catch (e: Exception) {
@@ -287,7 +188,7 @@ class EmailService(
         val emailSender = currentUserService.loggedInUserOrUnauthorized()
 
         val seller = keyUserService.findUserByUsername(sellerMessage.username)
-                ?: throw BadRequestException("Couldn't find user with username ${sellerMessage.username}")
+            ?: throw BadRequestException("Couldn't find user with username ${sellerMessage.username}")
         val email = seller.primaryEmail
 
 
@@ -314,21 +215,21 @@ class EmailService(
         """.trimIndent()
 
         sendEmail(
-                email,
-                "$deckName has a message on DoK",
-                emailContents,
-                "Message Received",
-                senderEmail,
-                ccEmail = if (ccSender) senderEmail else null,
-                bottomContent = bottomContent
+            email,
+            "$deckName has a message on DoK",
+            emailContents,
+            "Message Received",
+            senderEmail,
+            ccEmail = if (ccSender) senderEmail else null,
+            bottomContent = bottomContent
         )
         if (!ccSender) {
             sendEmail(
-                    senderEmail,
-                    "We sent this email to ${sellerMessage.username}, the seller of $deckName",
-                    emailContents,
-                    "Message Sent",
-                    bottomContent = bottomContent
+                senderEmail,
+                "We sent this email to ${sellerMessage.username}, the seller of $deckName",
+                emailContents,
+                "Message Sent",
+                bottomContent = bottomContent
             )
         }
     }
@@ -346,11 +247,15 @@ class EmailService(
                 """.trimIndent()
 
         sendEmail(
-                seller.primaryEmail,
-                "You've received an offer of ${currencySymbol}${amount} for ${deck.name}",
-                message,
-                "Offer Received",
-                bottomContent = "You can stop future offer notifications for this deck by canceling its sale ${links.deckLink(deck)}"
+            seller.primaryEmail,
+            "You've received an offer of ${currencySymbol}${amount} for ${deck.name}",
+            message,
+            "Offer Received",
+            bottomContent = "You can stop future offer notifications for this deck by canceling its sale ${
+                links.deckLink(
+                    deck
+                )
+            }"
         )
     }
 
@@ -388,21 +293,21 @@ class EmailService(
 
         val emailContents = userToUserEmailContent(messageStart, senderUsername, ccSender, senderEmail, message)
         sendEmail(
-                emailRecipient.primaryEmail,
-                "$deckName has a message about an offer on DoK",
-                emailContents,
-                "Offer Message",
-                senderEmail,
-                ccEmail = if (ccSender) senderEmail else null,
-                bottomContent = bottomContent
+            emailRecipient.primaryEmail,
+            "$deckName has a message about an offer on DoK",
+            emailContents,
+            "Offer Message",
+            senderEmail,
+            ccEmail = if (ccSender) senderEmail else null,
+            bottomContent = bottomContent
         )
         if (!ccSender) {
             sendEmail(
-                    senderEmail,
-                    "We sent this email about an offer for $deckName",
-                    emailContents,
-                    "Offer Message Sent",
-                    bottomContent = bottomContent
+                senderEmail,
+                "We sent this email about an offer for $deckName",
+                emailContents,
+                "Offer Message Sent",
+                bottomContent = bottomContent
             )
         }
     }
@@ -426,46 +331,60 @@ class EmailService(
                 """.trimIndent()
 
         sendEmail(
-                offerSender.primaryEmail,
-                "Your offer for ${deck.name} has been accepted!",
-                message,
-                "Offer Accepted",
-                seller.primaryEmail,
-                seller.primaryEmail,
-                bottomContent = "You can stop future offer notifications by canceling offers you've made on your ${links.offersLink()}"
+            offerSender.primaryEmail,
+            "Your offer for ${deck.name} has been accepted!",
+            message,
+            "Offer Accepted",
+            seller.primaryEmail,
+            seller.primaryEmail,
+            bottomContent = "You can stop future offer notifications by canceling offers you've made on your ${links.offersLink()}"
         )
     }
 
-    fun sendOfferRejectedEmail(deck: Deck, recipient: KeyUser, acceptedDifferent: Boolean = false, seller: KeyUser, amount: Int) {
+    fun sendOfferRejectedEmail(
+        deck: Deck,
+        recipient: KeyUser,
+        acceptedDifferent: Boolean = false,
+        seller: KeyUser,
+        amount: Int
+    ) {
         val currencySymbol = seller.currencySymbol
         sendEmail(
-                recipient.primaryEmail,
-                "Your offer for ${deck.name} has been turned down",
-                """
+            recipient.primaryEmail,
+            "Your offer for ${deck.name} has been turned down",
+            """
                     <div>
                         <div>
                             Your offer of $currencySymbol${amount} for ${links.deckLink(deck)} has been turned down. ${if (acceptedDifferent) "The seller accepted a different offer." else ""}
                         </div>
                     </div>
                 """.trimIndent(),
-                "Offer Rejected",
-                bottomContent = "You can stop future offer rejected notifications by canceling offers you've made on your ${links.offersLink()}"
+            "Offer Rejected",
+            bottomContent = "You can stop future offer rejected notifications by canceling offers you've made on your ${links.offersLink()}"
         )
     }
 
-    private fun userToUserEmailContent(messageStart: String, senderUsername: String, ccSender: Boolean, senderEmail: String, message: String) =
-            """
+    private fun userToUserEmailContent(
+        messageStart: String,
+        senderUsername: String,
+        ccSender: Boolean,
+        senderEmail: String,
+        message: String
+    ) =
+        """
                 <div>
                     <div>
                         $messageStart
                     </div>
                     <br>
                     <div>
-                        ${if (ccSender) {
+                        ${
+            if (ccSender) {
                 "We have included $senderUsername on this email since you have a public contact email. You "
             } else {
                 "We have not given $senderUsername your email address, but you "
-            }}
+            }
+        }
                         can reply to their message at
                         <a href="mailto:$senderEmail">$senderEmail</a>
                     </div>
@@ -476,7 +395,15 @@ class EmailService(
                 </div>
             """.trimIndent()
 
-    private fun sendEmail(email: String, subject: String, content: String, title: String, replyTo: String? = null, ccEmail: String? = null, bottomContent: String? = null) {
+    private fun sendEmail(
+        email: String,
+        subject: String,
+        content: String,
+        title: String,
+        replyTo: String? = null,
+        ccEmail: String? = null,
+        bottomContent: String? = null
+    ) {
         val mimeMessage = emailSender.createMimeMessage()
         val helper = MimeMessageHelper(mimeMessage, false, "UTF-8")
         mimeMessage.setContent(EmailFormatter.format(title, content, bottomContent, links), "text/html")
@@ -490,65 +417,70 @@ class EmailService(
         emailSender.send(mimeMessage)
     }
 
-    private fun  makeDeckStats(deck: Deck): String {
+    private fun makeDeckStats(dsvs: DeckSasValuesSearchable): String {
         return """
 <table>
     <tr>
-        <td>${deck.name}</td>
+        <td>${dsvs.name}</td>
     </tr>
     <tr>
-        <td>${deck.sasRating} SAS     ${Expansion.forExpansionNumber(deck.expansion).readable}     ${deck.houseNamesString.replace("|", " - ")}</td>
+        <td>${dsvs.sasRating} SAS     ${Expansion.forExpansionNumber(dsvs.expansion).readable}     ${
+            dsvs.houseNamesString.replace(
+                "|",
+                " - "
+            )
+        }</td>
     </tr>
     <tr>
         <td>
             <table border="0" cellspacing="8" cellpadding="0">
                 <tr>
                     <td>Aember Control (A)</td>
-                    <td>${deck.amberControl.roundToOneSigDig()}</td>
+                    <td>${dsvs.amberControl.roundToOneSigDig()}</td>
                     <td>Actions</td>
-                    <td>${deck.actionCount}</td>
+                    <td>${dsvs.actionCount}</td>
                 </tr>
                 <tr>
                     <td>Expected Aember (E)</td>
-                    <td>${deck.expectedAmber.roundToOneSigDig()}</td>
+                    <td>${dsvs.expectedAmber.roundToOneSigDig()}</td>
                     <td>Creatures</td>
-                    <td>${deck.creatureCount}</td>                    
+                    <td>${dsvs.creatureCount}</td>                    
                 </tr>
                 <tr>
                     <td>Artifact Control (R)</td>
-                    <td>${deck.artifactControl.roundToOneSigDig()}</td>
+                    <td>${dsvs.artifactControl.roundToOneSigDig()}</td>
                     <td>Artifacts</td>
-                    <td>${deck.artifactCount}</td>                    
+                    <td>${dsvs.artifactCount}</td>                    
                 </tr>
                 <tr>
                     <td>Creature Control (C)</td>
-                    <td>${deck.creatureControl.roundToOneSigDig()}</td>
+                    <td>${dsvs.creatureControl.roundToOneSigDig()}</td>
                     <td>Upgrades</td>
-                    <td>${deck.upgradeCount}</td>                    
+                    <td>${dsvs.upgradeCount}</td>                    
                 </tr>
                 <tr>
                     <td>Effective Power (P)</td>
-                    <td>${deck.effectivePower}</td>
+                    <td>${dsvs.effectivePower}</td>
                 </tr>
                 <tr>
                     <td>Efficiency (F)</td>
-                    <td>${deck.efficiency.roundToOneSigDig()}</td>
+                    <td>${dsvs.efficiency.roundToOneSigDig()}</td>
                 </tr>
                 <tr>
                     <td>Recursion (U)</td>
-                    <td>${deck.recursion.roundToOneSigDig()}</td>
+                    <td>${dsvs.recursion.roundToOneSigDig()}</td>
                 </tr>
                 <tr>
                     <td>Disruption (D)</td>
-                    <td>${deck.disruption.roundToOneSigDig()}</td>
+                    <td>${dsvs.disruption.roundToOneSigDig()}</td>
                 </tr>
                 <tr>
                     <td>Creature Protection (CP)</td>
-                    <td>${deck.creatureProtection.roundToOneSigDig()}</td>
+                    <td>${dsvs.creatureProtection.roundToOneSigDig()}</td>
                 </tr>
                 <tr>
                     <td>Other (O)</td>
-                    <td>${deck.other.roundToOneSigDig()}</td>
+                    <td>${dsvs.other.roundToOneSigDig()}</td>
                 </tr>
             </table>
         </td>

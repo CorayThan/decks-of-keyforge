@@ -143,13 +143,6 @@ const OffersList = (props: { name: string, noneMessage: string, offersToMe: bool
                                             {offersForDeck.deck.name}
                                         </Typography>
                                     </UnstyledLink>
-                                    <div style={{flexGrow: 1}}/>
-                                    <Typography color={"primary"} variant={"h5"} style={{marginRight: 4}}>
-                                        {offersForDeck.deck.sas}
-                                    </Typography>
-                                    <Typography color={"primary"} variant={"h5"} style={{fontSize: "1.25rem", paddingTop: 5}}>
-                                        SAS
-                                    </Typography>
                                 </div>
                                 <OffersForDeckTableFull
                                     offers={offersForDeck.offers}

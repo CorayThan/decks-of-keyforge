@@ -14,9 +14,9 @@ import { userStore } from "../user/UserStore"
 import { CardFilters } from "./CardFilters"
 import { CardsSearchDrawer } from "./CardsSearchDrawer"
 import { cardStore } from "./CardStore"
-import { KCard } from "./KCard"
 import { CardTableView } from "./views/CardTableView"
 import { CardView } from "./views/CardView"
+import { FrontendCard } from "../generated-src/FrontendCard"
 
 export class CardSearchPage extends React.Component<RouteComponentProps<{}>> {
 
@@ -79,7 +79,7 @@ class LoadInitialCardSearch extends React.Component<WaitForAllCardsProps> {
 }
 
 interface CardSearchContainerProps extends WaitForAllCardsProps {
-    cards: KCard[]
+    cards: FrontendCard[]
 }
 
 @observer
@@ -126,7 +126,7 @@ class CardSearchContainer extends React.Component<CardSearchContainerProps> {
 }
 
 interface CardsContainerWithScrollProps {
-    allCards: KCard[]
+    allCards: FrontendCard[]
     showAllCards: boolean
     showHistory?: boolean
 }
@@ -135,7 +135,7 @@ interface CardsContainerWithScrollProps {
 export class CardsContainerWithScroll extends React.Component<CardsContainerWithScrollProps> {
 
     @observable
-    cardsToDisplay: KCard[] = []
+    cardsToDisplay: FrontendCard[] = []
 
     pageQuantity = 0
 

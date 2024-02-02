@@ -2,71 +2,14 @@ import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
 import { Utils } from "../config/Utils"
 import { activeSasExpansions } from "../expansions/Expansions"
-import { CardType } from "../generated-src/CardType"
 import { Expansion } from "../generated-src/Expansion"
-import { House } from "../generated-src/House"
-import { Rarity } from "../generated-src/Rarity"
 import { SimpleCard } from "../generated-src/SimpleCard"
 import { SynergyTrait } from "../generated-src/SynergyTrait"
 import { SynTraitPlayer } from "../generated-src/SynTraitPlayer"
-import { Wins } from "../generated-src/Wins"
 import { CsvData } from "../generic/CsvDownloadButton"
 import { statsStore } from "../stats/StatsStore"
 import { synTraitValueToString } from "../synergy/SynTraitValue"
-import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
-
-export interface KCard {
-    id: string
-    cardTitle: string
-    house: House
-    houses: House[]
-    frontImage: string
-    cardType: CardType
-    cardText: string
-    traits?: string[]
-    amber: number
-    power: number
-    armor: number
-    powerString: string
-    armorString: string
-    rarity: Rarity
-    flavorText?: string
-    cardNumber: string
-    expansion: number
-    maverick: boolean
-    anomaly: boolean
-    enhanced?: boolean
-    big?: boolean
-    effectivePower: number
-
-    wins?: number
-    losses?: number
-    winRate?: number
-
-    aercScore: number
-    aercScoreMax?: number
-
-    extraCardInfo: ExtraCardInfo
-
-    cardNumbers?: CardNumberSetPair[]
-
-    /**
-     * Key is BackendExpansion
-     */
-    expansionWins?: { [key: string]: Wins }
-}
-
-export interface CardNumberSetPair {
-    expansion: Expansion
-    cardNumber: string
-}
-
-export const winPercentForCard = (card: KCard): number | undefined => {
-    if (card.wins == null || card.losses == null) {
-        return undefined
-    }
-    return (card.wins / (card.wins + card.losses))
-}
+import { FrontendCard } from "../generated-src/FrontendCard"
 
 const cardNameReplacementRegex = /[^\d\w\s]/g
 const spaceRegex = /\s/g
@@ -86,7 +29,6 @@ export interface CardWinRates {
     relativeToAveragePercent?: number
     wins?: number
     losses?: number
-
 }
 
 export const minCardWinsToDisplay = 250
@@ -97,17 +39,17 @@ export class CardUtils {
         return (card.bonusAember ?? 0) + (card.bonusDamage ?? 0) + (card.bonusDraw ?? 0) + (card.bonusCapture ?? 0)
     }
 
-    static cardMatchesFriendlyTrait = (card: KCard, trait: SynergyTrait): boolean => {
-        return card.extraCardInfo?.traits?.find(traitValue =>
+    static cardMatchesFriendlyTrait = (card: FrontendCard, trait: SynergyTrait): boolean => {
+        return card.extraCardInfo.traits.find(traitValue =>
             (traitValue.trait === trait && traitValue.player !== SynTraitPlayer.ENEMY)
         ) != null
     }
 
-    static findCardsWithFriendlyTrait = (cards: KCard[], trait: SynergyTrait): KCard[] => {
+    static findCardsWithFriendlyTrait = (cards: FrontendCard[], trait: SynergyTrait): FrontendCard[] => {
         return cards.filter(card => CardUtils.cardMatchesFriendlyTrait(card, trait))
     }
 
-    static cardAverageRelativeWinRate = (card: KCard): number => {
+    static cardAverageRelativeWinRate = (card: FrontendCard): number => {
 
         const winRates = CardUtils.cardWinRates(card)
             .map(winRate => winRate.relativeToAveragePercent)
@@ -122,12 +64,12 @@ export class CardUtils {
         })! / winRates.length
     }
 
-    static cardWinRates = (card: KCard): CardWinRates[] => {
+    static cardWinRates = (card: FrontendCard): CardWinRates[] => {
         const winRates: CardWinRates[] = []
-        const expansionWins = card.expansionWins
+        const expansionWins = card.expansions
         if (expansionWins != null && card.houses.length > 0) {
             activeSasExpansions.forEach(expansion => {
-                const wins = expansionWins[expansion]
+                const wins = expansionWins.find(cardExpInfo => cardExpInfo.expansion === expansion)
                 if (wins != null && (wins.wins + wins.losses > minCardWinsToDisplay)) {
                     const winRatePercent = CardUtils.calcWinRate(wins.wins, wins.losses)
                     const expHouseWinPercent = statsStore.winRateForExpansionAndHouse(expansion, card.houses[0])
@@ -176,7 +118,7 @@ export class CardUtils {
         return 4
     }
 
-    static arrayToCSV = (cards: KCard[]): CsvData => {
+    static arrayToCSV = (cards: FrontendCard[]): CsvData => {
         const data = cards.map(card => {
 
             return [
@@ -185,8 +127,8 @@ export class CardUtils {
                 card.cardNumbers?.map(numbers => `${numbers.expansion} – ${numbers.cardNumber}`),
                 card.cardType,
                 card.rarity,
-                card.aercScore,
-                card.aercScoreMax,
+                card.extraCardInfo.aercScore,
+                card.extraCardInfo.aercScoreMax,
                 card.extraCardInfo.amberControl,
                 card.extraCardInfo.amberControlMax,
                 card.extraCardInfo.expectedAmber,
@@ -197,7 +139,7 @@ export class CardUtils {
                 card.extraCardInfo.artifactControlMax,
                 card.extraCardInfo.creatureControl,
                 card.extraCardInfo.creatureControlMax,
-                card.effectivePower,
+                card.extraCardInfo.effectivePower,
                 card.extraCardInfo.effectivePowerMax,
                 card.extraCardInfo.efficiency,
                 card.extraCardInfo.recursion,
@@ -209,8 +151,8 @@ export class CardUtils {
                 card.extraCardInfo.otherMax,
 
                 card.amber,
-                card.powerString,
-                card.armorString,
+                card.power,
+                card.armor,
                 card.wins,
                 card.losses,
 

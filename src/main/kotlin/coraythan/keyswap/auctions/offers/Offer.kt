@@ -87,7 +87,6 @@ fun List<Offer>.toOffersForDeck(offsetMinutes: Int): OffersForDeck {
                     deck.keyforgeId,
                     deck.name,
                     auction.currencySymbol,
-                    deck.sasRating
             ),
             this.sortedDescending().map { it.toDto(offsetMinutes) }
     )
@@ -141,7 +140,6 @@ data class OfferDeckData(
         val id: String,
         val name: String,
         val currency: String,
-        val sas: Int
 )
 
 @GenerateTs
