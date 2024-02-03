@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.cards.CardNumberSetPair
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCard
-import coraythan.keyswap.decks.models.FrontendCard
+import coraythan.keyswap.cards.FrontendCard
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
@@ -74,6 +74,7 @@ data class ExtraCardInfo(
     val enhancementCapture: Int = 0,
     val enhancementDraw: Int = 0,
     val enhancementDamage: Int = 0,
+    val enhancementDiscard: Int = 0,
 
     /**
      * Changes the starting base match strength. For example, starts at -50 for Grumpy Buggy. This means you need
@@ -108,7 +109,7 @@ data class ExtraCardInfo(
 
     @JsonIgnore
     @ManyToOne
-    val dokCard: DokCard,
+    val dokCard: DokCard = DokCard(),
 
     @Id
     val id: UUID = UUID.randomUUID()
@@ -181,6 +182,7 @@ data class ExtraCardInfo(
             enhancementCapture = info.enhancementCapture,
             enhancementDamage = info.enhancementDamage,
             enhancementDraw = info.enhancementDraw,
+            enhancementDiscard = info.enhancementDiscard,
             baseSynPercent = info.baseSynPercent,
             adaptiveScore = info.adaptiveScore,
             traits = mutableListOf(),

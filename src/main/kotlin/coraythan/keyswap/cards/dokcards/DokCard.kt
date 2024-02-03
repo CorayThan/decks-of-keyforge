@@ -14,10 +14,10 @@ import org.hibernate.annotations.Type
 @Entity
 data class DokCard(
 
-    val cardTitle: String,
+    val cardTitle: String = "",
 
     // Has UK
-    val cardTitleUrl: String,
+    val cardTitleUrl: String = "",
 
     @Type(
         value = ListArrayType::class,
@@ -27,16 +27,16 @@ data class DokCard(
         )]
     )
     @Column(columnDefinition = "house[]")
-    val houses: List<House>,
+    val houses: List<House> = listOf(),
 
     @Enumerated(EnumType.STRING)
-    val cardType: CardType,
+    val cardType: CardType = CardType.Creature,
     @Enumerated(EnumType.STRING)
-    val rarity: Rarity,
+    val rarity: Rarity = Rarity.Common,
 
-    val amber: Int,
-    val power: Int,
-    val armor: Int,
+    val amber: Int = 0,
+    val power: Int = 0,
+    val armor: Int = 0,
     val big: Boolean = false,
     val token: Boolean = false,
     val evilTwin: Boolean = false,
@@ -48,7 +48,7 @@ data class DokCard(
     @Column(
         columnDefinition = "varchar[]"
     )
-    val traits: List<String>,
+    val traits: List<String> = listOf(),
 
     @JsonIgnoreProperties("card")
     @OneToMany(mappedBy = "card", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])

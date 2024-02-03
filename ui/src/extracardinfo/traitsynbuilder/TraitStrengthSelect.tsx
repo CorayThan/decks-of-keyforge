@@ -80,7 +80,7 @@ const TraitStrengthDescription = (props: { trait?: SynergyTrait }) => {
 
     if (trait != null && [
         SynergyTrait.creatureCount, SynergyTrait.tokenCount, SynergyTrait.bonusAmber, SynergyTrait.bonusCapture,
-        SynergyTrait.bonusDraw, SynergyTrait.bonusDamage, SynergyTrait.totalCreaturePower, SynergyTrait.totalArmor,
+        SynergyTrait.bonusDraw, SynergyTrait.bonusDamage, SynergyTrait.bonusDiscard, SynergyTrait.totalCreaturePower, SynergyTrait.totalArmor,
     ].includes(trait)) {
         return (
             <>

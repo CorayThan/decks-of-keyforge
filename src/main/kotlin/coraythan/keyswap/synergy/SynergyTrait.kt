@@ -88,6 +88,7 @@ enum class SynergyTrait {
     bonusDraw,
     bonusDamage,
     bonusCapture,
+    bonusDiscard,
 
     // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4 +=1
     hasMars,

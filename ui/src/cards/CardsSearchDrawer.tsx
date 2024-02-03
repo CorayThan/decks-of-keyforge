@@ -17,7 +17,7 @@ import { spacing } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { ConstraintDropdowns, FiltersConstraintsStore } from "../decks/search/ConstraintDropdowns"
-import { activeCardLinksExpansions, expansionInfoMapNumbers } from "../expansions/Expansions"
+import { expansionInfoMapNumbers, expansionsWithCards } from "../expansions/Expansions"
 import { ExpansionSelectOrExclude, SelectedOrExcludedExpansions } from "../expansions/ExpansionSelectOrExclude"
 import { validSynergies, validTraits } from "../extracardinfo/SynergyTraitUtils"
 import { CardType } from "../generated-src/CardType"
@@ -54,7 +54,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
     selectedExpansions = new SelectedOrExcludedExpansions(
         this.props.filters.expansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum),
         this.props.filters.excludedExpansions.map(expNum => expansionInfoMapNumbers.get(expNum)!.backendEnum),
-        activeCardLinksExpansions,
+        expansionsWithCards,
     )
     selectedPublishDate = new SelectedPublishDate(this.props.filters.aercHistoryDate)
 
@@ -139,7 +139,7 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                             <ExpansionSelectOrExclude
                                 selectedExpansions={this.selectedExpansions}
                                 allowExclusions={true}
-                                availableExpansions={activeCardLinksExpansions}
+                                availableExpansions={expansionsWithCards}
                             />
                         </ListItem>
                         <ListItem>

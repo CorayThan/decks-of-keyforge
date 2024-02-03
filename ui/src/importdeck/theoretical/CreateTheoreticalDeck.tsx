@@ -113,12 +113,30 @@ export const CreateTheoreticalDeck = observer(() => {
                         onClick={() => {
                             deckBuilderStore.currentDeck!.cards["Shadows"] = cardStore.allCards.slice(0, 12).map(card => ({
                                 name: card.cardTitle,
-                                enhanced: false
+                                enhanced: false,
+                                bonusAmber: 0,
+                                bonusCapture: 0,
+                                bonusDamage: 0,
+                                bonusDiscard: 0,
+                                bonusDraw: 0,
                             }))
-                            deckBuilderStore.currentDeck!.cards["Dis"] = cardStore.allCards.slice(0, 12).map(card => ({name: card.cardTitle, enhanced: false}))
+                            deckBuilderStore.currentDeck!.cards["Dis"] = cardStore.allCards.slice(0, 12).map(card => ({
+                                name: card.cardTitle,
+                                enhanced: false,
+                                bonusAmber: 0,
+                                bonusCapture: 0,
+                                bonusDamage: 0,
+                                bonusDiscard: 0,
+                                bonusDraw: 0,
+                            }))
                             deckBuilderStore.currentDeck!.cards["Logos"] = cardStore.allCards.slice(0, 12).map(card => ({
                                 name: card.cardTitle,
-                                enhanced: false
+                                enhanced: false,
+                                bonusAmber: 0,
+                                bonusCapture: 0,
+                                bonusDamage: 0,
+                                bonusDiscard: 0,
+                                bonusDraw: 0,
                             }))
                         }}
                     >

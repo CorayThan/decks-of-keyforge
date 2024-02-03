@@ -6,7 +6,7 @@ import coraythan.keyswap.config.RateExceededException
 import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.decks.Nothing
 import coraythan.keyswap.decks.SimpleDeckResponse
-import coraythan.keyswap.decks.models.FrontendCard
+import coraythan.keyswap.cards.FrontendCard
 import coraythan.keyswap.keyforgeevents.tournaments.TournamentInfo
 import coraythan.keyswap.keyforgeevents.tournaments.TournamentService
 import coraythan.keyswap.sasupdate.SasVersionService

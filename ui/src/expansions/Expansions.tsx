@@ -25,6 +25,21 @@ export enum ExpansionNumber {
     MN24 = 722,
 }
 
+export const displayMyDecksLinksFor = [
+    Expansion.CALL_OF_THE_ARCHONS,
+    Expansion.AGE_OF_ASCENSION,
+    Expansion.WORLDS_COLLIDE,
+    Expansion.MASS_MUTATION,
+    Expansion.DARK_TIDINGS,
+    Expansion.WINDS_OF_EXCHANGE,
+    Expansion.GRIM_REMINDERS,
+    Expansion.VAULT_MASTERS_2023,
+]
+export const tournamentInvalidExpansions = [
+    ExpansionNumber.UC22,
+    ExpansionNumber.MN24,
+]
+
 export const activeExpansions = [
     Expansion.CALL_OF_THE_ARCHONS,
     Expansion.AGE_OF_ASCENSION,
@@ -59,6 +74,24 @@ export const activeCardExpansions = [
     ExpansionNumber.DT,
     ExpansionNumber.WOE,
     ExpansionNumber.GR,
+]
+
+export const expansionsWithCards = [
+    Expansion.CALL_OF_THE_ARCHONS,
+    Expansion.AGE_OF_ASCENSION,
+    Expansion.WORLDS_COLLIDE,
+    Expansion.MASS_MUTATION,
+    Expansion.DARK_TIDINGS,
+    Expansion.WINDS_OF_EXCHANGE,
+    Expansion.GRIM_REMINDERS,
+    Expansion.VAULT_MASTERS_2023,
+    Expansion.MENAGERIE_2024,
+]
+
+export const recentExpansions = [
+    Expansion.GRIM_REMINDERS,
+    Expansion.WINDS_OF_EXCHANGE,
+    Expansion.MENAGERIE_2024,
 ]
 
 export const activeCardLinksExpansions = [

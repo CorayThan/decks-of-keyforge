@@ -1,9 +1,6 @@
-package coraythan.keyswap.decks.models
+package coraythan.keyswap.cards
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.CardNumberSetPair
-import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.cards.dokcards.DokCardExpansion
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.generatets.GenerateTs

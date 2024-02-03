@@ -2,9 +2,11 @@ package coraythan.keyswap.cards.dokcards
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.querydsl.core.types.dsl.BooleanExpression
+import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.*
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
-import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
+import coraythan.keyswap.cards.extrainfo.QExtraCardInfo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.decks.models.HouseAndCards
@@ -12,20 +14,20 @@ import coraythan.keyswap.decks.models.withBonusIcons
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.users.KeyUser
+import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class DokCardCacheService(
-    private val extraCardInfoRepo: ExtraCardInfoRepo,
-    private val dokCardRepo: DokCardRepo,
-    private val cardRepo: CardRepo,
     private val sasVersionService: SasVersionService,
     private val objectMapper: ObjectMapper,
+    private val entityManager: EntityManager,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+    private val query = JPAQueryFactory(entityManager)
 
     private var previousCardsCachedByUrlName: Map<String, ExtraCardInfo> = mapOf()
 
@@ -41,43 +43,31 @@ class DokCardCacheService(
     private var loaded = false
 
     @Transactional
-    fun addCardTexts() {
-        log.info("Begin add card texts.")
-        val allDokCards = dokCardRepo.findAll()
-        val withText = allDokCards.map {
-            val card = cardRepo.findFirstByCardTitle(it.cardTitle)
-            it.copy(
-                cardText = card.cardText,
-                flavorText = card.flavorText,
-            )
-        }
-        dokCardRepo.saveAll(withText)
-        log.info("End add card texts")
-    }
-
-    @Transactional
     fun loadCards() {
         log.info("Begin loading cached cards.")
         val publishedAercVersion = sasVersionService.findSasVersion()
-        val currentInfos = extraCardInfoRepo.findByActiveTrue()
-        val nextInfos = extraCardInfoRepo.findByPublishedNull()
-        val previousInfos = extraCardInfoRepo.findByVersionLessThanAndActiveFalse(publishedAercVersion)
 
-        loadLazyEntities(currentInfos)
-        loadLazyEntities(nextInfos)
-        loadLazyEntities(previousInfos)
+        val extraQ = QExtraCardInfo.extraCardInfo
+        val currentInfos = findInfos(extraQ.active.isTrue)
+        val nextInfos = findInfos(extraQ.published.isNull)
+        val previousInfos = findInfos(extraQ.active.isFalse.and(extraQ.version.lt(publishedAercVersion)))
+
+        log.info(
+            "Loading cards there are ${
+                Expansion.entries.map { expan ->
+                    "${currentInfos.count { it.dokCard.expansions.any { it.expansion == expan } }} cards for $expan"
+                }
+            }"
+        )
 
         cardsCachedByUrlName = currentInfos.map { extraInfo ->
             extraInfo.dokCard.cardTitleUrl to extraInfo
         }.toMap()
 
-        log.info("Loading cached cards 1")
-
         cardsCachedByNumberSet = currentInfos.flatMap { extraInfo ->
             extraInfo.dokCard.expansions
                 .map { CardNumberSetPair(it.expansion, it.cardNumber) to extraInfo }
         }.toMap()
-        log.info("Loading cached cards 2")
 
         tokenCards = currentInfos
             .filter { it.dokCard.token }
@@ -85,26 +75,18 @@ class DokCardCacheService(
                 extraInfo.dokCard.cardTitle to extraInfo
             }.toMap()
 
-        log.info("Loading cached cards 4")
-
         previousCardsCachedByUrlName = previousInfos.map { extraInfo ->
             extraInfo.dokCard.cardTitleUrl to extraInfo
         }.toMap()
-
-        log.info("Loading cached cards 5")
 
         futureCardsCachedByUrlName = nextInfos.map { extraInfo ->
             extraInfo.dokCard.cardTitleUrl to extraInfo
         }.toMap()
 
-        log.info("Loading cached cards 6")
-
         futureCardsCachedByNumberSet = nextInfos.flatMap { extraInfo ->
             extraInfo.dokCard.expansions
                 .map { CardNumberSetPair(it.expansion, it.cardNumber) to extraInfo }
         }.toMap()
-
-        log.info("Loading cached cards 7")
 
         futureTokenCards = nextInfos
             .filter { it.dokCard.token }
@@ -114,6 +96,13 @@ class DokCardCacheService(
 
         loaded = true
         log.info("Loading cached cards complete.")
+    }
+
+    fun updateCache(expansion: Expansion, cardNumber: String, extraInfo: ExtraCardInfo) {
+        loadLazyEntities(listOf(extraInfo))
+        this.cardsCachedByUrlName = this.cardsCachedByUrlName.plus(Pair(extraInfo.cardNameUrl, extraInfo))
+        this.cardsCachedByNumberSet =
+            this.cardsCachedByNumberSet.plus(Pair(CardNumberSetPair(expansion, cardNumber), extraInfo))
     }
 
     fun currentCards() = if (!loaded) {
@@ -135,20 +124,15 @@ class DokCardCacheService(
     }
 
     fun findByCardName(cardName: String) =
-        if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardName.toUrlFriendlyCardTitle()]!!
+        if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardName.toUrlFriendlyCardTitle()]
+            ?: error("No card for ${cardName.toUrlFriendlyCardTitle()}")
+
+    fun findByCardNameOrNull(cardName: String) =
+        if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardName.toUrlFriendlyCardTitle()]
 
     fun findByCardNameUrl(cardNameUrl: String) =
         if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardNameUrl]
-
-//    fun findTokenByName(tokenName: String): DokCardInDeck {
-//        if (!loaded) throw IllegalStateException("Site still loading cards")
-//        val token = tokenCards[tokenName] ?: throw IllegalStateException("No token for $tokenName")
-//        return DokCardInDeck(
-//            card = token.dokCard,
-//            extraCardInfo = token,
-//            house = token.dokCard.houses.first(),
-//        )
-//    }
+            ?: error("No card for card name url $cardNameUrl")
 
     fun twinnedCardsForDeck(deck: Deck): List<DokCardInDeck> {
         if (!loaded) throw IllegalStateException("Site still loading cards")
@@ -235,6 +219,18 @@ class DokCardCacheService(
             .sortedBy { it.house }
     }
 
+    private fun findInfos(predicate: BooleanExpression): List<ExtraCardInfo> {
+        val extraQ = QExtraCardInfo.extraCardInfo
+        val infos = query.selectFrom(extraQ)
+            .innerJoin(extraQ.dokCard).fetchJoin()
+            .leftJoin(extraQ.synergies).fetchJoin()
+            .where(predicate)
+            .fetch()
+
+        infos.forEach { it.traits.size }
+        return infos
+    }
+
     private fun futureTokenForDeck(deck: GenericDeck): DokCardInDeck? {
         if (!loaded) throw IllegalStateException("Site still loading cards")
         val deckTokenNum = deck.tokenNumber ?: return null
@@ -254,8 +250,3 @@ class DokCardCacheService(
         }
     }
 }
-
-data class CardTexts(
-    val cardText: String,
-    val flavorText: String?,
-)

@@ -2,8 +2,8 @@ package coraythan.keyswap.config
 
 object SchedulingConfig {
     const val updateUserStatsInitialDelay = "PT10S"
-    const val importNewDecksInitialDelay = "PT15S"
     const val rateDecksInitialDelay = "PT45S"
+    const val importNewDecksInitialDelay = "PT75S"
     const val purchasesInitialDelay = "PT1M"
     const val postProcessDecksDelay = "PT3M"
     const val countDecksIntialDelay = "PT1M"

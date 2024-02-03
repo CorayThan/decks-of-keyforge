@@ -56,6 +56,7 @@ import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUt
 import { DeckNameId } from "../decks/comparison/CompareDecks"
 import { DeckType } from "../generated-src/DeckType"
 import { CardHistoryPage } from "../cards/views/CardHistoryPage"
+import { DeckImportPage } from "../importdeck/DeckImportPage"
 
 class Routes {
 
@@ -85,6 +86,7 @@ class Routes {
     static termsOfUse = "/terms-of-use"
     static codeOfConduct = "/code-of-conduct"
     static thirdPartyTools = "/third-party-tools"
+    static importDecks = "/import-decks"
     static myTournaments = `${Routes.tournaments}?mineOnly=true`
     static myTheoreticalDecks = `${Routes.theoreticalDecks}/mine`
     static oldMyAllianceDecks = `${Routes.oldAlliancesRoute}/mine`
@@ -186,9 +188,9 @@ class Routes {
         return Routes.cardSearch(filters)
     }
 
-    static decksForExpansion = (expansion: ExpansionNumber, mine?: boolean) => {
+    static decksForExpansions = (expansions: ExpansionNumber[], mine?: boolean) => {
         const filters = new DeckFilters()
-        filters.expansions = [expansion]
+        filters.expansions = expansions.slice()
         if (mine && userStore.username != null) {
             filters.owner = userStore.username
         }
@@ -287,6 +289,11 @@ const KeyRouter = observer(() => {
                         exact={true}
                         path={Routes.allianceDeckPage()}
                         component={AllianceDeckViewPage}
+                    />
+                    <Route
+                        exact={true}
+                        path={Routes.importDecks}
+                        component={DeckImportPage}
                     />
                     <Route
                         exact={true}

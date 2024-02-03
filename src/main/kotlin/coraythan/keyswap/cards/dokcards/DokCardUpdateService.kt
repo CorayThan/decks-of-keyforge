@@ -37,7 +37,7 @@ class DokCardUpdateService(
                 updatedCards = true
             } else {
                 // Existing card. Let's update the expansions and houses if necessary
-                updatedCards = dokCardUpdateDao.updateDokCard(card.id)
+                if (dokCardUpdateDao.updateDokCard(card.id)) updatedCards = true
             }
         }
 
@@ -47,9 +47,8 @@ class DokCardUpdateService(
         return updatedCards
     }
 
-    fun downloadAllNewCardImages() {
-        val findDecks = cardRepo.findByExpansion(Expansion.WINDS_OF_EXCHANGE.expansionNumber)
-            .plus(cardRepo.findByExpansion(Expansion.ANOMALY_EXPANSION.expansionNumber))
+    fun downloadAllNewCardImages(fromExpansions: Set<Expansion>) {
+        val findDecks = fromExpansions.flatMap { cardRepo.findByExpansion(it.expansionNumber) }
             .filter { it.frontImage.contains("mastervault-storage-prod.s3") }
             .distinctBy { it.cardTitle }
 

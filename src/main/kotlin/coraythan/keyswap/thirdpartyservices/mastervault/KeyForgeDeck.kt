@@ -51,6 +51,7 @@ data class KeyForgeDeck(
                                     bonusCapture = iconsForCard.second.count { icon -> icon == "capture" },
                                     bonusDamage = iconsForCard.second.count { icon -> icon == "damage" },
                                     bonusDraw = iconsForCard.second.count { icon -> icon == "draw" },
+                                    bonusDiscard = iconsForCard.second.count { icon -> icon == "discard" },
                                 )
                             }
                         }

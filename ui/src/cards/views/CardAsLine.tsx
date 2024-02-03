@@ -240,6 +240,9 @@ const CardLine = observer((props: CardAsLineProps & { fullCard: FrontendCard }) 
                     {[...Array(card.bonusDraw ?? 0)].map((n, idx) => (
                         <EnhancementIcon type={EnhancementType.DRAW} key={idx}/>
                     ))}
+                    {[...Array(card.bonusDiscard ?? 0)].map((n, idx) => (
+                        <EnhancementIcon type={EnhancementType.DISCARD} key={idx}/>
+                    ))}
                 </Box>
             )}
             {card.anomaly ? (

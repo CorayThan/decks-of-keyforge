@@ -3,23 +3,50 @@ package coraythan.keyswap.cards
 import coraythan.keyswap.cards.dokcards.DokCardUpdateService
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
+import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeCard
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 @Transactional
 @Service
 class CardService(
+    private val deckRepo: DeckRepo,
     private val cardRepo: CardRepo,
     private val extraCardInfoRepo: ExtraCardInfoRepo,
     private val versionService: CardsVersionService,
+    private val keyforgeApi: KeyforgeApi,
     private val dokCardUpdateService: DokCardUpdateService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    fun importNewCards(keyforgeApiCards: List<KeyForgeCard>): Boolean {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun importNewCardsForDeck(mvDeck: KeyForgeDeck): Boolean {
+        if (!deckRepo.existsByKeyforgeId(mvDeck.id)) {
+            val checkCards =
+                (mvDeck.cards ?: mvDeck._links?.cards) ?: error("Cards in the deck ${mvDeck.id} are null.")
+            val cleanCards = checkCards.filter {
+                // Skip stupid tide card
+                it != "37377d67-2916-4d45-b193-bea6ecd853e3"
+            }
+            val newCardExists = cleanCards.any { !cardRepo.existsById(it) }
+
+            if (newCardExists) {
+                val deckWithCards = keyforgeApi.findDeck(mvDeck.id, true)
+                    ?: error("No deck for ${mvDeck.id} in KeyForge API")
+
+                return this.importNewCards(deckWithCards._linked.cards!!)
+            }
+        }
+        return false
+    }
+
+    private fun importNewCards(keyforgeApiCards: List<KeyForgeCard>): Boolean {
 
         val cards = keyforgeApiCards.mapNotNull { it.toCard() }
 
@@ -33,7 +60,11 @@ class CardService(
         }
         log.info("Saved new MV Cards $savedMvCardNames")
 
-        return dokCardUpdateService.createDoKCardsFromKCards(cards)
+        val updateResult = dokCardUpdateService.createDoKCardsFromKCards(cards)
+        if (updateResult) {
+            versionService.revVersion()
+        }
+        return updateResult
     }
 
     fun publishNextInfo(publishVersion: Int) {

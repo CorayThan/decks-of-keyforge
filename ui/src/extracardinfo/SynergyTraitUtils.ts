@@ -71,7 +71,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         groupName: "Enhancements",
         description: "You can synergize with bonus pips in a deck, house and/or out of house. ",
         synergyOnly: true,
-        traits: [SynergyTrait.bonusAmber, SynergyTrait.bonusDraw, SynergyTrait.bonusDamage, SynergyTrait.bonusCapture],
+        traits: [SynergyTrait.bonusAmber, SynergyTrait.bonusDraw, SynergyTrait.bonusDamage, SynergyTrait.bonusCapture, SynergyTrait.bonusDiscard],
     },
     {
         groupName: "House and Deck Synergies",

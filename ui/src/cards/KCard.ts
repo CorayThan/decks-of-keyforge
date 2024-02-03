@@ -36,7 +36,7 @@ export const minCardWinsToDisplay = 250
 export class CardUtils {
 
     static bonusIconCount = (card: SimpleCard): number => {
-        return (card.bonusAember ?? 0) + (card.bonusDamage ?? 0) + (card.bonusDraw ?? 0) + (card.bonusCapture ?? 0)
+        return (card.bonusAember ?? 0) + (card.bonusDamage ?? 0) + (card.bonusDraw ?? 0) + (card.bonusCapture ?? 0) + (card.bonusDiscard ?? 0)
     }
 
     static cardMatchesFriendlyTrait = (card: FrontendCard, trait: SynergyTrait): boolean => {

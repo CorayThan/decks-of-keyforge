@@ -75,7 +75,15 @@ class DeckBuilderStore {
                 const foundCard = cardStore.fullCardFromCardName(cardHolder.option)!
                 log.debug(`Pushing ${foundCard.cardTitle} to house ${house}`)
                 const houseCards = this.currentDeck!.cards[house]
-                houseCards.push({name: foundCard.cardTitle, enhanced: false})
+                houseCards.push({
+                    name: foundCard.cardTitle,
+                    enhanced: false,
+                    bonusAmber: 0,
+                    bonusCapture: 0,
+                    bonusDamage: 0,
+                    bonusDiscard: 0,
+                    bonusDraw: 0,
+                })
                 this.currentDeck!.cards[house] = sortBy(houseCards, (card: TheoryCard) => cardStore.fullCardFromCardName(card.name)?.cardType)
                 cardHolder.option = ""
             }
@@ -90,7 +98,12 @@ class DeckBuilderStore {
             this.houses?.push(houseAndCards.house)
             cards[houseAndCards.house] = houseAndCards.cards.map(card => ({
                 name: card.cardTitle,
-                enhanced: card.enhanced ?? false
+                enhanced: card.enhanced ?? false,
+                bonusAmber: card.bonusAember ?? 0,
+                bonusCapture: card.bonusCapture ?? 0,
+                bonusDamage: card.bonusDamage ?? 0,
+                bonusDiscard: card.bonusDiscard ?? 0,
+                bonusDraw: card.bonusDraw ?? 0,
             }))
         })
         this.currentDeck = {

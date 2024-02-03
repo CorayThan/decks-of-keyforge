@@ -29,6 +29,9 @@ export class DeckStore implements DeckStoreInterface {
     currentDeckPage = 0
 
     @observable
+    importDecksPageDeck?: DeckSearchResult
+
+    @observable
     decksToDisplay?: number[]
 
     deckIdToDeck?: Map<number, DeckSearchResult>
@@ -111,6 +114,18 @@ export class DeckStore implements DeckStoreInterface {
         this.compareDecks = response.data
     }
 
+    findDeckForImportPage = async (keyforgeId: string) => {
+        const response: AxiosResponse<DeckWithSynergyInfo> = await axios.get(`${DeckStore.CONTEXT}/with-synergies/${keyforgeId}`)
+
+        const deck: DeckWithSynergyInfo = response.data
+        if (!deck || !deck.deck) {
+            messageStore.setWarningMessage(`Couldn't fetch the deck with id: ${keyforgeId}`)
+        } else {
+            this.importDecksPageDeck = deck.deck
+        }
+        return deck
+    }
+
     findDeck = async (keyforgeId: string) => {
         const response: AxiosResponse<DeckWithSynergyInfo> = await axios.get(`${DeckStore.CONTEXT}/with-synergies/${keyforgeId}`)
 
@@ -157,36 +172,33 @@ export class DeckStore implements DeckStoreInterface {
             })
     }
 
-    importDeck = (keyforgeId: string) => {
+    importDeck = async (keyforgeId: string) => {
         this.importingDeck = true
-        axios.post(`${DeckStore.CONTEXT}/${keyforgeId}/import`)
-            .then((response: AxiosResponse) => {
-                this.importedDeck = response.data
-                if (!response.data) {
-                    messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
-                }
+        const deckImportResponse: AxiosResponse<boolean> = await axios.post(`${DeckStore.CONTEXT}/${keyforgeId}/import`)
 
-                this.importingDeck = false
-                rightMenuStore.close()
-                closeAllMenuStoresExcept()
-            })
+        this.importedDeck = deckImportResponse.data
+        if (!deckImportResponse.data) {
+            messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
+        }
+
+        this.importingDeck = false
+        rightMenuStore.close()
+        closeAllMenuStoresExcept()
     }
 
-    importDeckAndAddToMyDecks = (keyforgeId: string) => {
+    importDeckAndAddToMyDecks = async (keyforgeId: string) => {
         this.importingAndAddingDeck = true
-        axios.post(`${DeckStore.CONTEXT}/${keyforgeId}/import-and-add`)
-            .then((response: AxiosResponse) => {
-                this.importedDeck = response.data
-                if (!response.data) {
-                    messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
-                } else {
-                    userDeckStore.findOwnedDecks()
-                }
+        const deckImportResponse: AxiosResponse<boolean> = await axios.post(`${DeckStore.CONTEXT}/${keyforgeId}/import-and-add`)
+        this.importedDeck = deckImportResponse.data
+        if (!deckImportResponse.data) {
+            messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
+        } else {
+            userDeckStore.findOwnedDecks()
+        }
 
-                this.importingAndAddingDeck = false
-                rightMenuStore.close()
-                closeAllMenuStoresExcept()
-            })
+        this.importingAndAddingDeck = false
+        rightMenuStore.close()
+        closeAllMenuStoresExcept()
     }
 
     findDeckSaleInfo = (keyforgeId: string) => {

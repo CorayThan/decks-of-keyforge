@@ -9,7 +9,6 @@ import { DeckStatsView, ExtraDeckStatsView } from "../stats/DeckStatsView"
 import { DeckSynergiesInfoView } from "../synergy/DeckSynergiesInfoView"
 import { uiStore } from "../ui/UiStore"
 import { ComparisonPopover } from "./comparison/ComparisonPopover"
-import { deckImportPopStore } from "./DeckImportPop"
 import { deckStore } from "./DeckStore"
 import { DeckViewSmall } from "./DeckViewSmall"
 import { DeckWithSynergyInfo } from "./models/DeckSearchResult"
@@ -17,6 +16,7 @@ import { ForSaleView } from "./sales/ForSaleView"
 import { AllianceDeckPopover } from "../alliancedecks/AllianceDeckPopover";
 import { useParams } from "react-router-dom";
 import { DeckType } from "../generated-src/DeckType";
+import { deckImportPopStore } from "../importdeck/DeckImportPop"
 
 export const DeckViewPage = observer(() => {
     const {keyforgeDeckId} = useParams<{ keyforgeDeckId: string }>()

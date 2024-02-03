@@ -119,6 +119,7 @@ export class DeckUtils {
             let enhancedCapture = 0
             let enhancedDamage = 0
             let enhancedDraw = 0
+            let enhancedDiscard = 0
 
             const cards = deck.housesAndCards
                 .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
@@ -130,9 +131,10 @@ export class DeckUtils {
                 enhancedCapture += card.extraCardInfo.enhancementCapture
                 enhancedDamage += card.extraCardInfo.enhancementDamage
                 enhancedDraw += card.extraCardInfo.enhancementDraw
+                enhancedDiscard += card.extraCardInfo.enhancementDiscard
             })
 
-            if (enhancedAmber + enhancedCapture + enhancedDamage + enhancedDraw === 0) {
+            if (enhancedAmber + enhancedCapture + enhancedDamage + enhancedDraw + enhancedDiscard === 0) {
                 return undefined
             }
 
@@ -141,6 +143,7 @@ export class DeckUtils {
             enhancements.set(EnhancementType.CAPTURE, enhancedCapture)
             enhancements.set(EnhancementType.DAMAGE, enhancedDamage)
             enhancements.set(EnhancementType.DRAW, enhancedDraw)
+            enhancements.set(EnhancementType.DISCARD, enhancedDiscard)
 
             return enhancements
         }
@@ -289,6 +292,7 @@ export class DeckUtils {
                 enhancements?.get(EnhancementType.CAPTURE) ?? 0,
                 enhancements?.get(EnhancementType.DAMAGE) ?? 0,
                 enhancements?.get(EnhancementType.DRAW) ?? 0,
+                enhancements?.get(EnhancementType.DISCARD) ?? 0,
 
                 deck.keyCheatCount,
                 deck.cardDrawCount,
@@ -351,6 +355,7 @@ export class DeckUtils {
             "Bonus Capture",
             "Bonus Damage",
             "Bonus Draw",
+            "Bonus Discard",
 
             "Key Cheat Count",
             "Card Draw Count",

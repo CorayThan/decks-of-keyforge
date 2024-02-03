@@ -3,8 +3,7 @@ package coraythan.keyswap.cards.extrainfo
 import coraythan.keyswap.Api
 import coraythan.keyswap.cards.*
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
-import coraythan.keyswap.config.BadRequestException
-import coraythan.keyswap.decks.models.FrontendCard
+import coraythan.keyswap.cards.FrontendCard
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.web.bind.annotation.*

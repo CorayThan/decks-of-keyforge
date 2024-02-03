@@ -166,10 +166,12 @@ object GenerateDeckAndHouseTraits {
         val bonusCapture = cards.sumOf { it.bonusCapture }
         val bonusDraw = cards.sumOf { it.bonusDraw }
         val bonusDamage = cards.sumOf { it.bonusDamage }
+        val bonusDiscard = cards.sumOf { it.bonusDiscard }
 
         traits.addDeckTrait(SynergyTrait.bonusAmber, bonusAmber, strength = TraitStrength.EXTRA_WEAK)
         traits.addDeckTrait(SynergyTrait.bonusCapture, bonusCapture, strength = TraitStrength.EXTRA_WEAK)
         traits.addDeckTrait(SynergyTrait.bonusDraw, bonusDraw, strength = TraitStrength.EXTRA_WEAK)
+        traits.addDeckTrait(SynergyTrait.bonusDiscard, bonusDiscard, strength = TraitStrength.EXTRA_WEAK)
         traits.addDeckTrait(SynergyTrait.bonusDamage, bonusDamage, strength = TraitStrength.EXTRA_WEAK)
 
         val totalExpectedAmber = cards.sumOf { it.extraCardInfo.expectedAmber }

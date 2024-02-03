@@ -1,4 +1,4 @@
-import { Button, ListItem, ListItemText, Popover, TextField, Tooltip, Typography } from "@material-ui/core"
+import { Box, Button, ListItem, ListItemText, Popover, TextField, Tooltip, Typography } from "@material-ui/core"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -11,7 +11,7 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
-import { deckStore } from "./DeckStore"
+import { deckStore } from "../decks/DeckStore"
 
 class DeckImportPopStore {
     @observable
@@ -110,7 +110,8 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                     style={{zIndex: screenStore.zindexes.menuPops}}
                 >
                     <div style={{padding: spacing(2), display: "flex", flexDirection: "column", maxWidth: 600}}>
-                        <Typography variant={"body2"} color={"textSecondary"} noWrap={false} style={{marginBottom: spacing(2)}}>
+                        <Typography variant={"body2"} color={"textSecondary"} noWrap={false}
+                                    style={{marginBottom: spacing(2)}}>
                             If this feature doesn't work, please try again later.
                         </Typography>
                         <TextField
@@ -123,29 +124,34 @@ export class DeckImportPop extends React.Component<{ style?: React.CSSProperties
                             helperText={"Id or Url from the deck url at keyforgegame.com e.g. 293f366d-af1d-46ea-9c0f-4cc956dae50d"}
                             error={this.error}
                         />
-                        <div
-                            style={{marginBottom: spacing(2), display: "flex"}}
-                        >
+                        <Box display={"flex"} alignItems={"center"} mb={2}>
                             <Tooltip
                                 title={userStore.theoreticalDecksAllowed ? "" : "Become a $3 a month patron to create theoretical decks!"}
                                 style={{zIndex: screenStore.zindexes.tooltip}}
                             >
-                                <div>
-                                    <LinkButton
-                                        href={Routes.createTheoreticalDeck}
-                                        color={"primary"}
-                                        onClick={() => {
-                                            closeAllMenuStoresExcept()
-                                            deckImportPopStore.popOpen = false
-                                        }}
-                                        style={{marginRight: spacing(2)}}
-                                        disabled={!userStore.theoreticalDecksAllowed}
-                                    >
-                                        Create Theoretical Deck
-                                    </LinkButton>
-                                </div>
+                                <LinkButton
+                                    href={Routes.createTheoreticalDeck}
+                                    onClick={() => {
+                                        closeAllMenuStoresExcept()
+                                        deckImportPopStore.popOpen = false
+                                    }}
+                                    style={{marginRight: spacing(2)}}
+                                    disabled={!userStore.theoreticalDecksAllowed}
+                                >
+                                    Create Theoretical Deck
+                                </LinkButton>
                             </Tooltip>
-                        </div>
+                            <Box flexGrow={1}/>
+                            <LinkButton
+                                onClick={() => {
+                                    closeAllMenuStoresExcept()
+                                    deckImportPopStore.popOpen = false
+                                }}
+                                href={Routes.importDecks}
+                            >
+                                Deck Import Page
+                            </LinkButton>
+                        </Box>
                         <div style={{display: "flex", alignItems: "center"}}>
                             <Button
                                 variant={"outlined"}

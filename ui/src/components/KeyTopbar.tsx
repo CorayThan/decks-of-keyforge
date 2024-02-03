@@ -14,11 +14,16 @@ import { RouteComponentProps, withRouter } from "react-router"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, MyDokSubPaths, Routes, StatsSubPaths } from "../config/Routes"
-import { DeckImportPop } from "../decks/DeckImportPop"
 import { randomDeckMenuItem } from "../decks/RandomDeckFinder"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { DeckOrCardSearchSuggest } from "../decks/search/DeckOrCardSearchSuggest"
-import { activeCardLinksExpansions, activeExpansions, expansionInfoMap } from "../expansions/Expansions"
+import {
+    activeCardLinksExpansions,
+    displayMyDecksLinksFor,
+    expansionInfoMap,
+    recentExpansions,
+    tournamentInvalidExpansions,
+} from "../expansions/Expansions"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
 import { LinkMenu, LinkMenuStore } from "../generic/LinkMenu"
@@ -50,11 +55,16 @@ interface KeyTopbarProps extends RouteComponentProps<{}> {
 const myDeckLinks = () => {
     const links = [
         {to: Routes.usersDecks(), text: "My Decks", mobileActive: true},
-        ...activeExpansions.map(expansion => ({
-            to: Routes.decksForExpansion(expansionInfoMap.get(expansion)!.expansionNumber, true),
+        ...displayMyDecksLinksFor.map(expansion => ({
+            to: Routes.decksForExpansions([expansionInfoMap.get(expansion)!.expansionNumber], true),
             text: `My ${expansionInfoMap.get(expansion)!.abbreviation}`,
             mobileActive: false
         })),
+        {
+            to: Routes.decksForExpansions(tournamentInvalidExpansions, true),
+            text: `Tourney Invalid`,
+            mobileActive: false
+        },
         {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
         {to: Routes.sellersView(), text: "Sellers View", onClick: () => keyLocalStorage.setDeckListViewType("table")},
     ]
@@ -388,14 +398,18 @@ const AppLinks = observer(() => (
             genericOnClick={rightMenuStore.close}
             links={[
                 {to: Routes.decks, text: "Decks", mobileActive: true},
+                ...recentExpansions.map(expansion => ({
+                    to: Routes.decksForExpansions([expansionInfoMap.get(expansion)!.expansionNumber]),
+                    text: `${expansionInfoMap.get(expansion)!.abbreviation}`,
+                    mobileActive: false
+                })),
                 {to: Routes.validAlliances(), text: "Alliances", mobileActive: true},
+                {to: Routes.importDecks, text: "Import Deck", mobileActive: true},
                 {to: Routes.deckSearch(DeckFilters.forSale()), text: "For Sale"},
                 randomDeckMenuItem,
             ]}
             linkMenuStore={decksMenuStore}
-        >
-            <DeckImportPop/>
-        </LinkMenu>
+        />
         <LinkMenu
             genericOnClick={rightMenuStore.close}
             links={[

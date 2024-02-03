@@ -5,13 +5,13 @@ import coraythan.keyswap.alliancedecks.AllianceDeckHouses
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
-import coraythan.keyswap.decks.DeckImporterService
+import coraythan.keyswap.deckimports.DeckCreationService
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.models.Deck
-import coraythan.keyswap.decks.models.DeckBuildingData
+import coraythan.keyswap.deckimports.DeckBuildingData
 import coraythan.keyswap.decks.models.DeckWithSynergyInfo
-import coraythan.keyswap.decks.models.TheoryCard
+import coraythan.keyswap.deckimports.TheoryCard
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.firstWord
 import coraythan.keyswap.patreon.PatreonRewardsTier
@@ -24,7 +24,7 @@ import java.util.*
 class TheoreticalDeckService(
     private val theoreticalDeckRepo: TheoreticalDeckRepo,
     private val deckSearchService: DeckSearchService,
-    private val deckImporterService: DeckImporterService,
+    private val deckCreationService: DeckCreationService,
     private val cardCache: DokCardCacheService,
     private val currentUserService: CurrentUserService,
     private val deckRepo: DeckRepo,
@@ -55,7 +55,7 @@ class TheoreticalDeckService(
             tokenTitle = toSave.tokenName,
         )
 
-        val deck = deckImporterService.viewTheoreticalDeck(allianceDeckInfo)
+        val deck = deckCreationService.viewTheoreticalDeck(allianceDeckInfo)
         val makeBelieveDeck = TheoreticalDeck(
             cardIds = deck.cardIds,
             houseNamesString = deck.houseNamesString,
@@ -68,7 +68,7 @@ class TheoreticalDeckService(
 
     fun saveTheoreticalDeck(toSave: DeckBuildingData): UUID {
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
-        val deck = deckImporterService.viewTheoreticalDeck(toSave)
+        val deck = deckCreationService.viewTheoreticalDeck(toSave)
         val makeBelieveDeck = TheoreticalDeck(
             expansion = deck.expansion,
             cardIds = deck.cardIds,

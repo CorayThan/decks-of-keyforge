@@ -21,6 +21,7 @@ data class DokCardInDeck(
     val bonusCapture: Int = 0,
     val bonusDamage: Int = 0,
     val bonusDraw: Int = 0,
+    val bonusDiscard: Int = 0,
 ) : Comparable<DokCardInDeck> {
     constructor(deck: GenericDeck, card: ExtraCardInfo, cardHouse: House, cardExpansion: Expansion) : this(
         card = card.dokCard,
@@ -40,7 +41,7 @@ data class DokCardInDeck(
     }
 
     val enhanced: Boolean
-        get() = bonusAember > 0 || bonusCapture > 0 || bonusDamage > 0 || bonusDraw > 0
+        get() = bonusAember > 0 || bonusCapture > 0 || bonusDamage > 0 || bonusDraw > 0 || bonusDiscard > 0
 
     val totalAmber: Int
         get() = this.bonusAember + this.card.amber
@@ -62,6 +63,7 @@ data class DokCardInDeck(
         bonusCapture = bonusCapture,
         bonusAember = bonusAember,
         bonusDamage = bonusDamage,
+        bonusDiscard = bonusDiscard,
     )
 
 }

@@ -1,12 +1,13 @@
 package coraythan.keyswap.cards.dokcards
 
 import coraythan.keyswap.cards.CardRepo
+import coraythan.keyswap.cards.CardsVersionService
 import coraythan.keyswap.cards.cardwins.CardWinsService
-import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfoService
 import coraythan.keyswap.expansions.Expansion
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,18 +15,32 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class DokCardUpdateDao(
     private val dokCardRepo: DokCardRepo,
-    private val extraCardInfoRepo: ExtraCardInfoRepo,
     private val extraCardInfoService: ExtraCardInfoService,
     private val dokCardExpansionRepo: DokCardExpansionRepo,
     private val cardWinsService: CardWinsService,
+    private val cardCache: DokCardCacheService,
     private val cardRepo: CardRepo,
+    private val versionService: CardsVersionService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    private var updatedCards = false
+
+    @Scheduled(
+        fixedDelayString = "PT5M",
+        initialDelayString = "PT10M"
+    )
+    fun reloadCards() {
+        if (updatedCards) {
+            log.info("A card got updated so reload from cache in case proactive caching worked badly")
+            cardCache.loadCards()
+            versionService.revVersion()
+        }
+    }
 
     fun saveDokCard(cardId: String) {
         val card = cardRepo.findByIdOrNull(cardId) ?: throw IllegalStateException("No card for $cardId")
         cardWinsService.addWinsToCards(listOf(card))
-        val cardNameUrl = card.cardTitle.toUrlFriendlyCardTitle()
 
         val cardExpansion = Expansion.forExpansionNumber(card.expansion)
         val dokCard = card.toDoKCard()
@@ -38,20 +53,16 @@ class DokCardUpdateDao(
             card = savedDokCard,
         )
         dokCardExpansionRepo.saveAndFlush(dokCardExpansion)
-        val extraInfoExists = extraCardInfoRepo.existsByCardNameUrl(cardNameUrl)
-        if (extraInfoExists) {
-            val infos = extraCardInfoRepo.findByCardNameUrl(cardNameUrl)
-            extraCardInfoRepo.saveAll(
-                infos.map { it.copy(dokCard = savedDokCard) }
-            )
-        } else {
-            extraCardInfoService.saveNewExtraCardInfo(savedDokCard)
-        }
+        val extraInfo = extraCardInfoService.saveNewExtraCardInfo(savedDokCard)
+
+        cardCache.updateCache(cardExpansion, card.cardNumber, extraInfo)
+        updatedCards = true
 
         this.log.info("Creating Card: ${card.cardTitle} -- ${dokCardExpansion.expansion}-${dokCardExpansion.cardNumber}-${if (card.maverick) "mav" else if (card.anomaly) "anom" else savedDokCard.houses.toString()}")
     }
 
     fun updateDokCard(cardId: String): Boolean {
+        var updated = false
         val card = cardRepo.findByIdOrNull(cardId) ?: throw IllegalStateException("No card for $cardId")
         cardWinsService.addWinsToCards(listOf(card))
         val cardNameUrl = card.cardTitle.toUrlFriendlyCardTitle()
@@ -61,12 +72,11 @@ class DokCardUpdateDao(
         val cardExpansion = Expansion.forExpansionNumber(card.expansion)
         val existingExpansions = existingCard.expansions
 
-        if (
-            existingExpansions.none { expan ->
-                expan.expansion == Expansion.forExpansionNumber(card.expansion) &&
-                        expan.cardNumber == card.cardNumber
-            }
-        ) {
+        val expansionExists = dokCardExpansionRepo.existsByExpansionAndCardNumber(cardExpansion, card.cardNumber)
+
+        val extraInfo = cardCache.findByCardNameUrl(cardNameUrl)
+        var updatedDokCard = existingCard
+        if (!expansionExists) {
             val newExpansion = DokCardExpansion(
                 cardNumber = card.cardNumber,
                 expansion = Expansion.forExpansionNumber(card.expansion),
@@ -76,15 +86,28 @@ class DokCardUpdateDao(
             )
 
             this.log.info("Updating Card: ${card.cardTitle} Adding expansion: ${newExpansion.expansion}-${newExpansion.cardNumber} existing expansions: $existingExpansions")
-            dokCardExpansionRepo.saveAndFlush(newExpansion)
-            return true
+            val savedExpansion = dokCardExpansionRepo.saveAndFlush(newExpansion)
+
+            updated = true
+            updatedDokCard = extraInfo.dokCard.copy(
+                expansions = extraInfo.dokCard.expansions.plus(savedExpansion)
+            )
         }
         if (!card.maverick && !card.anomaly && !existingCard.houses.contains(card.house)) {
             this.log.info("Updating Card: ${card.cardTitle} Adding house: ${card.house}")
-            dokCardRepo.saveAndFlush(existingCard.copy(houses = existingCard.houses.toSet().plus(card.house).toList()))
-            return true
-        }
+            dokCardRepo.saveAndFlush(
+                existingCard.copy(
+                    houses = existingCard.houses.toSet().plus(card.house).toList()
+                )
+            )
 
-        return false
+            updated = true
+            updatedDokCard = updatedDokCard.copy(houses = existingCard.houses.toSet().plus(card.house).toList())
+        }
+        if (updated) {
+            cardCache.updateCache(cardExpansion, card.cardNumber, extraInfo.copy(dokCard = updatedDokCard))
+            updatedCards = true
+        }
+        return updated
     }
 }

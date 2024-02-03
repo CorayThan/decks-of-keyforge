@@ -7,7 +7,9 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
-import coraythan.keyswap.decks.DeckImporterService
+import coraythan.keyswap.deckimports.DeckBuildingData
+import coraythan.keyswap.deckimports.DeckCreationService
+import coraythan.keyswap.deckimports.TheoryCard
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.SortDirection
 import coraythan.keyswap.decks.UserHolder
@@ -36,7 +38,7 @@ class AllianceDeckService(
     private val ownedAllianceDeckRepo: OwnedAllianceDeckRepo,
     private val allianceDeckRepo: AllianceDeckRepo,
     private val deckRepo: DeckRepo,
-    private val deckImporterService: DeckImporterService,
+    private val deckCreationService: DeckCreationService,
     private val allianceHouseRepo: AllianceHouseRepo,
     private val entityManager: EntityManager,
 ) {
@@ -104,19 +106,49 @@ class AllianceDeckService(
                 cards = deckHousePairs.associate { deckHousePair ->
                     deckHousePair.second to cardCache.cardsForDeck(deckHousePair.first)
                         .filter { it.house == deckHousePair.second }
-                        .map { TheoryCard(it.card.cardTitle, it.enhanced) }
+                        .map {
+                            TheoryCard(
+                                it.card.cardTitle,
+                                enhanced = false,
+                                bonusAmber = it.bonusAember,
+                                bonusCapture = it.bonusCapture,
+                                bonusDamage = it.bonusDamage,
+                                bonusDraw = it.bonusDraw,
+                                bonusDiscard = it.bonusDiscard,
+                            )
+                        }
                 },
                 expansion = expansion,
                 tokenTitle = toSave.tokenName,
             )
 
-            val deck = deckImporterService.viewTheoreticalDeck(allianceDeckInfo)
+            val bonusIcons = DeckBonusIcons(allianceDeckInfo.cards.entries
+                .map { allyHouses ->
+                    BonusIconHouse(
+                        house = allyHouses.key,
+                        bonusIconCards = allyHouses.value
+                            .map { theoryCard ->
+                                BonusIconsCard(
+                                    cardTitle = theoryCard.name,
+                                    bonusAember = theoryCard.bonusAmber,
+                                    bonusCapture = theoryCard.bonusCapture,
+                                    bonusDamage = theoryCard.bonusDamage,
+                                    bonusDraw = theoryCard.bonusDraw,
+                                    bonusDiscard = theoryCard.bonusDiscard,
+                                )
+                            }
+                    )
+                })
+
+            val deck = deckCreationService.viewTheoreticalDeck(allianceDeckInfo)
             val cards = cardCache.cardsForDeck(deck)
+
 
             val tempAllianceDeck = AllianceDeck.fromDeck(deck, cards, user)
                 .copy(
                     housesUniqueId = allianceDeckUniqueKey
                 )
+                .withBonusIcons(bonusIcons)
 
             allianceDeck = allianceDeckRepo.save(tempAllianceDeck)
 

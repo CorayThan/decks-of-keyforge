@@ -283,6 +283,7 @@ data class BonusIconsCard(
     val bonusCapture: Int = 0,
     val bonusDamage: Int = 0,
     val bonusDraw: Int = 0,
+    val bonusDiscard: Int = 0,
 )
 
 fun List<DokCardInDeck>.withBonusIcons(icons: DeckBonusIcons): List<DokCardInDeck> {
@@ -300,6 +301,7 @@ fun List<DokCardInDeck>.withBonusIcons(icons: DeckBonusIcons): List<DokCardInDec
                     bonusCapture = bonusIcons?.bonusCapture ?: 0,
                     bonusDamage = bonusIcons?.bonusDamage ?: 0,
                     bonusDraw = bonusIcons?.bonusDraw ?: 0,
+                    bonusDiscard = bonusIcons?.bonusDiscard ?: 0,
                 )
             }
         }

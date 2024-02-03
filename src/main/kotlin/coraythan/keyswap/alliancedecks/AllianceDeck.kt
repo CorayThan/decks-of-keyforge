@@ -1,6 +1,7 @@
 package coraythan.keyswap.alliancedecks
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardInDeck
@@ -101,7 +102,6 @@ data class AllianceDeck(
             return AllianceDeck(
                 name = deck.name,
                 expansion = deck.expansion,
-
                 cardIds = deck.cardIds,
                 houseNamesString = deck.houseNamesString,
                 bonusIconsString = deck.bonusIconsString,
@@ -114,6 +114,11 @@ data class AllianceDeck(
 
     val dateAdded: LocalDate?
         get() = this.createdDateTime?.toLocalDate()
+
+    fun withBonusIcons(icons: DeckBonusIcons): AllianceDeck {
+        return this
+            .copy(bonusIconsString = jacksonObjectMapper().writeValueAsString(icons))
+    }
 
     override fun toDeckSearchResult(
         housesAndCards: List<HouseAndCards>?,

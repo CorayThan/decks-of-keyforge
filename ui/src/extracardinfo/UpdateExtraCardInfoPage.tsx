@@ -121,6 +121,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     @observable
     enhancementDraw = "0"
     @observable
+    enhancementDiscard = "0"
+    @observable
     enhancementDamage = "0"
 
     @observable
@@ -179,6 +181,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.enhancementAmber = extraCardInfo.enhancementAmber.toString()
         this.enhancementCapture = extraCardInfo.enhancementCapture.toString()
         this.enhancementDraw = extraCardInfo.enhancementDraw.toString()
+        this.enhancementDiscard = extraCardInfo.enhancementDiscard.toString()
         this.enhancementDamage = extraCardInfo.enhancementDamage.toString()
 
         this.extraCardTypes = extraCardInfo.extraCardTypes ?? []
@@ -242,6 +245,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             enhancementAmber: Number(this.enhancementAmber),
             enhancementCapture: Number(this.enhancementCapture),
             enhancementDraw: Number(this.enhancementDraw),
+            enhancementDiscard: Number(this.enhancementDiscard),
             enhancementDamage: Number(this.enhancementDamage),
 
             extraCardTypes: this.extraCardTypes.length === 0 ? undefined : this.extraCardTypes,
@@ -421,6 +425,11 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 name={"bonus draw"}
                                 value={this.enhancementDraw}
                                 update={(event: EventValue) => this.enhancementDraw = event.target.value}
+                            />
+                            <InfoInput
+                                name={"bonus discard"}
+                                value={this.enhancementDiscard}
+                                update={(event: EventValue) => this.enhancementDiscard = event.target.value}
                             />
                             <InfoInput
                                 name={"bonus damage"}

@@ -2,6 +2,7 @@ package coraythan.keyswap.sasupdate
 
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.config.SchedulingConfig
+import coraythan.keyswap.deckimports.DeckCreationService
 import coraythan.keyswap.decks.*
 import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
 import coraythan.keyswap.now
@@ -23,7 +24,7 @@ class DeckSasUpdateService(
     private val deckPageService: DeckPageService,
     private val sasVersionService: SasVersionService,
     private val cardService: CardService,
-    private val deckImporterService: DeckImporterService,
+    private val deckCreationService: DeckCreationService,
     private val sasVersionRepo: SasVersionRepo,
     private val currentUserService: CurrentUserService,
 ) {
@@ -91,7 +92,7 @@ class DeckSasUpdateService(
 
                 updatedDsv = dsvForPage.decks
                     .mapNotNull {
-                        val ratedDeck = deckImporterService.rateDeck(it.deck)
+                        val ratedDeck = deckCreationService.rateDeck(it.deck)
                         val ratingsEqual = it.sasValuesChanged(ratedDeck, updateVersion)
                         if (ratingsEqual) null else it
                     }
@@ -101,7 +102,8 @@ class DeckSasUpdateService(
 
             if (!dsvForPage.moreResults) {
 
-                val sasVersion = this.sasVersionRepo.findFirstBySasUpdateCompletedTimestampNullOrderByIdDesc() ?: throw IllegalStateException("SAS Update: No in progress SAS version to set scores as ready in")
+                val sasVersion = this.sasVersionRepo.findFirstBySasUpdateCompletedTimestampNullOrderByIdDesc()
+                    ?: throw IllegalStateException("SAS Update: No in progress SAS version to set scores as ready in")
                 if (!sasVersion.sasScoresUpdated) {
                     log.info("SAS Update: Updating sas version to scores updated true")
                     this.sasVersionRepo.save(sasVersion.copy(sasScoresUpdated = true))

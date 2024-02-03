@@ -31,6 +31,7 @@ data class DeckSynergyStats(
             SynergyTrait.bonusCapture to bonusIconBaseTraitStrengths,
             SynergyTrait.bonusDamage to bonusIconBaseTraitStrengths,
             SynergyTrait.bonusDraw to bonusIconBaseTraitStrengths,
+            SynergyTrait.bonusDiscard to bonusIconBaseTraitStrengths,
             SynergyTrait.totalCreaturePower to TraitVals(90, 30, 45, 15),
             SynergyTrait.totalArmor to TraitVals(10, 5),
         )
@@ -64,6 +65,7 @@ data class DeckSynergyStats(
                 SynergyTrait.bonusCapture to inputCards.sumOf { it.bonusCapture },
                 SynergyTrait.bonusDamage to inputCards.sumOf { it.bonusDamage },
                 SynergyTrait.bonusDraw to inputCards.sumOf { it.bonusDraw },
+                SynergyTrait.bonusDiscard to inputCards.sumOf { it.bonusDiscard },
                 SynergyTrait.totalCreaturePower to inputCards.sumOf { it.card.power },
                 SynergyTrait.tokenCount to tokensCount,
                 SynergyTrait.totalArmor to inputCards.sumOf { it.card.armor }

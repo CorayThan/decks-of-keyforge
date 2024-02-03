@@ -43,4 +43,6 @@ val activeExpansions = setOf(
     Expansion.WINDS_OF_EXCHANGE,
     Expansion.UNCHAINED_2022,
     Expansion.VAULT_MASTERS_2023,
+    Expansion.GRIM_REMINDERS,
+    Expansion.MENAGERIE_2024,
 )
