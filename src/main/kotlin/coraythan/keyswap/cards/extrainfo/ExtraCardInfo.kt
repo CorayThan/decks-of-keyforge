@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import coraythan.keyswap.cards.CardNumberSetPair
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.dokcards.DokCard
 import coraythan.keyswap.cards.FrontendCard
+import coraythan.keyswap.cards.dokcards.DokCard
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
@@ -122,8 +122,8 @@ data class ExtraCardInfo(
             dokCard.power + dokCard.armor
         }
 
-    val allCardTypes: Set<CardType>
-        get() = if (this.extraCardTypes == null) setOf(dokCard.cardType) else setOf(dokCard.cardType).plus(this.extraCardTypes)
+    fun allCardTypes(): Set<CardType> =
+        if (this.extraCardTypes == null) setOf(dokCard.cardType) else setOf(dokCard.cardType).plus(this.extraCardTypes)
 
     val publishedDate: LocalDate?
         get() = published?.toLocalDate()

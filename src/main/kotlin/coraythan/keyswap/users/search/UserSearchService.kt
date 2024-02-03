@@ -70,14 +70,21 @@ class UserSearchService(
                         ).decks
 
                         val allCards: List<SimpleCard> = data.flatMap { it.housesAndCards.flatMap { it.cards } }
+                        val top10Sas = data.take(10).map { it.sasRating }
+
+                        val top10SasAverage = if (top10Sas.isEmpty()) {
+                            0
+                        } else {
+                            top10Sas.average().roundToInt()
+                        }
 
                         userRepo.updateUserStats(
                             it.id,
                             data.size,
                             data.count { it.forSale == true },
-                            data.take(10).map { it.sasRating }.average().roundToInt(),
-                            data.first().sasRating,
-                            data.last().sasRating,
+                            top10SasAverage,
+                            data.firstOrNull()?.sasRating ?: 0,
+                            data.lastOrNull()?.sasRating ?: 0,
                             data.sumOf { it.powerLevel ?: 0 },
                             data.sumOf { it.chains ?: 0 },
                             allCards.count { it.maverick == true },

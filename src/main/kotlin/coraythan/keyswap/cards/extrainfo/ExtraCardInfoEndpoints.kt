@@ -1,9 +1,9 @@
 package coraythan.keyswap.cards.extrainfo
 
 import coraythan.keyswap.Api
-import coraythan.keyswap.cards.*
-import coraythan.keyswap.cards.dokcards.DokCardCacheService
+import coraythan.keyswap.cards.CardEditHistory
 import coraythan.keyswap.cards.FrontendCard
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.web.bind.annotation.*
@@ -43,7 +43,10 @@ class ExtraCardInfoEndpoints(
     }
 
     @GetMapping("/edit-history/{extraInfoId}")
-    fun editHistory(@PathVariable extraInfoId: UUID, @RequestHeader(value = "Timezone") offsetMinutes: Int): List<AercBlame> {
+    fun editHistory(
+        @PathVariable extraInfoId: UUID,
+        @RequestHeader(value = "Timezone") offsetMinutes: Int
+    ): List<AercBlame> {
         return extraCardInfoService.editHistoryForCardById(extraInfoId, offsetMinutes)
     }
 }

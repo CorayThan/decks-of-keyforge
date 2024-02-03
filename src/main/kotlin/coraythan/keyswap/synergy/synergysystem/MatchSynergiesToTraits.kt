@@ -29,7 +29,7 @@ data class MatchSynergiesToTraits(
                     typesMatch(
                         it.value.trait,
                         synergyValue.cardTypes ?: listOf(),
-                        card.extraCardInfo.allCardTypes,
+                        card.extraCardInfo.allCardTypes(),
                         it.value.cardTypes ?: listOf()
                     )
                 val playerMatch = playersMatch(synergyValue.player, it.value.player)

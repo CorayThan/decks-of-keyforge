@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import coraythan.keyswap.cards.CardEditHistory
 import coraythan.keyswap.cards.CardEditHistoryRepo
 import coraythan.keyswap.cards.dokcards.DokCard
+import coraythan.keyswap.cards.dokcards.DokCardRepo
 import coraythan.keyswap.cards.dokcards.toUrlFriendlyCardTitle
+import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
 import coraythan.keyswap.sasupdate.SasVersionService
@@ -28,6 +30,7 @@ class ExtraCardInfoService(
     private val userRepo: KeyUserRepo,
     private val sasVersionService: SasVersionService,
     private val objectMapper: ObjectMapper,
+    private val dokCardRepo: DokCardRepo,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -78,6 +81,7 @@ class ExtraCardInfoService(
         log.info("Current version $currentVersion latest extra info version $latestPreexistingVersion prev base syn = ${latestExtraInfo.baseSynPercent} new ${sourceInfo.baseSynPercent}")
 
         check(nextVersion >= latestPreexistingVersion) { "latest pre existing version can't be more than next version!" }
+        val dokCard = dokCardRepo.findByCardTitleUrl(sourceInfo.cardNameUrl) ?: throw BadRequestException("No dok card for ${sourceInfo.cardNameUrl}")
 
         val id = if (nextVersion == latestPreexistingVersion) {
             // update next version of extra card info
@@ -88,7 +92,7 @@ class ExtraCardInfoService(
 
             val toSave = latestExtraInfo.replaceAercInfo(info)
             log.info("To save traits: ${toSave.traits.map { "${it.trait} ${it.id}" }}")
-            val saved = extraCardInfoRepo.save(toSave)
+            val saved = extraCardInfoRepo.save(toSave.copy(dokCard = dokCard))
             log.info("saved traits: ${saved.traits.map { "${it.trait} ${it.id}" }}")
 
             info.traits.forEach { trait ->
@@ -104,7 +108,7 @@ class ExtraCardInfoService(
             // create next version of extra card info
 
             val infoToSave = info.readyForCreate(nextVersion)
-            val saved = extraCardInfoRepo.save(infoToSave)
+            val saved = extraCardInfoRepo.save(infoToSave.copy(dokCard = dokCard))
 
             info.traits.forEach { trait ->
                 trait.validate()

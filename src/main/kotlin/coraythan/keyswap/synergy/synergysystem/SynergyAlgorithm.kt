@@ -126,7 +126,7 @@ object DeckSynergyService {
                             SynTraitValue(
                                 SynergyTrait.enhanced,
                                 rating = 3,
-                                cardTypes = cardInfo.allCardTypes.toList()
+                                cardTypes = cardInfo.allCardTypes().toList()
                             )
                         )
                     } else {

@@ -41,7 +41,9 @@ class ImportSkippedDecksService(
     }
 
     fun addImportSkippedDeck(keyforgeId: String) {
-        repo.save(ImportSkippedDeck(keyforgeId))
+        if (!repo.existsByDeckKeyforgeId(keyforgeId)) {
+            repo.save(ImportSkippedDeck(keyforgeId))
+        }
     }
 }
 
@@ -57,4 +59,5 @@ data class ImportSkippedDeck(
 interface ImportSkippedDeckRepo : CrudRepository<ImportSkippedDeck, UUID> {
     @Query("SELECT * FROM import_skipped_deck LIMIT 100", nativeQuery = true)
     fun findAllLimit100(): List<ImportSkippedDeck>
+    fun existsByDeckKeyforgeId(deckKeyforgeId: String): Boolean
 }
