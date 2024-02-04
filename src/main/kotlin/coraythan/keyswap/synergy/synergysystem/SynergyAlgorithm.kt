@@ -160,6 +160,7 @@ object DeckSynergyService {
 
         // log.info("Traits map is: ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitsMap)}")
 
+        AutomaticTraitsAlgorithm.addAutomaticTraits(traitsMap, cards)
         addDeckTraits(deck, traitsMap, cards)
         addHouseTraits(deck.houses, cards, traitsMap)
         addOutOfHouseTraits(deck.houses, cards, traitsMap)

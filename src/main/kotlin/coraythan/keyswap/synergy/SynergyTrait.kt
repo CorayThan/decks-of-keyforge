@@ -107,7 +107,7 @@ enum class SynergyTrait {
     // Special traits
     card,
     // Automatically applied
-    good,
+    highValue,
 
     // DEPRECATED
 

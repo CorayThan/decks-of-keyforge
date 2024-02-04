@@ -176,18 +176,13 @@ export class LandingPage extends React.Component<{}> {
                             {/*</Typography>*/}
 
                             <Typography variant={"h5"} gutterBottom={true}>
-                                Grim Reminders
+                                Grim Reminders Quick Update
                             </Typography>
                             <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                I am hard at work making improvements to Decks of KeyForge that will allow the site
-                                to continue publishing SAS updates and importing new decks while the number of decks
-                                in KeyForge continues to grow.
-                            </Typography>
-                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                My goal is to have this complete and get Grim Reminders decks without SAS importing
-                                into the site this week. But depending on how it goes it could run into next week.
-                                After that it will take a couple weeks for me and the team that helps me create SAS
-                                ratings to rate all the cards and release SAS for GR.
+                                Most of the planned technical improvements have been made, but I'm still working on
+                                fixing up lingering issues from those improvements. Grim Reminders decks can now be
+                                imported! But they will not have meaningful SAS scores for another couple weeks while
+                                the team that helps build SAS scores works on scoring the new cards.
                             </Typography>
                         </AnnouncementPaper>
                         {screenStore.screenSizeSm() ? (
