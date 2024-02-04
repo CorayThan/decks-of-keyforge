@@ -73,12 +73,19 @@ class KeyforgeApi(
                             (if (withCards) "&links=cards" else "")
             )
         } else {
-            restTemplate.postForObject(
+            val url = "$mvProxyBaseUrl/decks"
+            val body = KeyForgeDeckRequestFilters(page, ordering, pageSize, expansion, withCards)
+            try {
+                restTemplate.postForObject(
 //                    "http://localhost:5001/api/master-vault/decks",
-                    "$mvProxyBaseUrl/decks",
-                    HttpEntity<KeyForgeDeckRequestFilters>(KeyForgeDeckRequestFilters(page, ordering, pageSize, expansion, withCards)),
+                    url,
+                    HttpEntity<KeyForgeDeckRequestFilters>(body),
                     KeyForgeDecksPageDto::class.java
-            )
+                )
+            } catch (e: Exception) {
+                log.warn("Exception ${e.message} when requesting decks with URL: $url body: $body")
+                throw e
+            }
         }
     }
 
@@ -120,6 +127,9 @@ class KeyforgeApi(
         } catch (e: HttpClientErrorException.NotFound) {
             // No results
             return null
+        } catch (e: Exception) {
+            log.warn("Exception ${e.message} when requesting decks with URL: $url")
+            throw e
         }
     }
 }

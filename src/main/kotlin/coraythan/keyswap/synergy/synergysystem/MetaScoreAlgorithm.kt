@@ -22,9 +22,9 @@ object MetaScoreAlgorithm {
             }
         val artifactPurgeTraits = purges
             .filter {
-                it.card?.cardTitle == "Harvest Time" ||
-                        it.card?.cardTitle == "Auction Off" ||
-                        it.card?.cardTitle == "Reclaimed by Nature"
+                it.card?.card?.cardTitle == "Harvest Time" ||
+                        it.card?.card?.cardTitle == "Auction Off" ||
+                        it.card?.card?.cardTitle == "Reclaimed by Nature"
             }
 
         val hardRScore = artifactDestroyTraits.plus(artifactPurgeTraits).sumOf { it.value.rating }

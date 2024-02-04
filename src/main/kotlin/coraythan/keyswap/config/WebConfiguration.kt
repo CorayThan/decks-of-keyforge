@@ -182,13 +182,13 @@ class WebConfiguration(
                         uri.substring(7, questionIdx + 1)
                     }
 
-                    val card = cardCache.findByCardNameUrl(cardName)
+                    val card = cardCache.findByCardNameUrlOrNull(cardName)
 
                     if (card == null) {
                         transformIndexPage(
                             resource,
                             "Cards of KeyForge, Card Not Found",
-                            "Search KeyForge cards. View their ratings in the SAS and AERC rating systems."
+                            "No card for $cardName"
                         )
                     } else {
                         transformIndexPage(

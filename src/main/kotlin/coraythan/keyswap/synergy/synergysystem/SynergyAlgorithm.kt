@@ -135,14 +135,14 @@ object DeckSynergyService {
                 }
             cardAllTraits
                 .forEach { traitValue ->
-                    traitsMap.addTrait(traitValue, card, dokCardInDeck.house)
+                    traitsMap.addTrait(traitValue, dokCardInDeck, dokCardInDeck.house)
                     if (traitValue.trait == SynergyTrait.uses && (traitValue.cardTypes.isNullOrEmpty() || traitValue.cardTypes.contains(
                             CardType.Creature
                         ))
                     ) {
                         traitsMap.addTrait(
                             traitValue.copy(trait = SynergyTrait.causesReaping),
-                            card,
+                            dokCardInDeck,
                             dokCardInDeck.house
                         )
                         if (traitValue.rating > 1) {
@@ -150,12 +150,12 @@ object DeckSynergyService {
                                 traitValue.copy(
                                     trait = SynergyTrait.causesFighting,
                                     rating = traitValue.rating - 1
-                                ), card, dokCardInDeck.house
+                                ), dokCardInDeck, dokCardInDeck.house
                             )
                         }
                     }
                 }
-            traitsMap.addTrait(SynTraitValue(SynergyTrait.any), card, dokCardInDeck.house)
+            traitsMap.addTrait(SynTraitValue(SynergyTrait.any), dokCardInDeck, dokCardInDeck.house)
         }
 
         // log.info("Traits map is: ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitsMap)}")
@@ -170,6 +170,10 @@ object DeckSynergyService {
                 val card = cardsById.value[0]
                 val count = cardsById.value.size
                 val cardInfo = card.extraCardInfo
+
+                if (card.card.cardTitleUrl == "full-moon") {
+                    log.info("Synergize full moon")
+                }
 
                 val matchedTraits: Map<String?, List<SynergyMatch>> = cardInfo.synergies
                     .map { synergy ->

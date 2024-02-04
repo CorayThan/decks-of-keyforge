@@ -2,9 +2,13 @@ package coraythan.keyswap.decks
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
+import coraythan.keyswap.alliancedecks.AllianceDeck
+import coraythan.keyswap.alliancedecks.AllianceDeckRepo
 import coraythan.keyswap.decks.models.*
 import jakarta.persistence.*
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,6 +20,7 @@ enum class DeckPageType(val quantity: Int) {
     RATING(10000),
     WINS(25),
     LOSSES(25),
+    ALLIANCE_UPDATE(100),
 }
 
 @Entity
@@ -35,6 +40,7 @@ data class DeckPage(
 class DeckPageService(
     val deckPageRepo: DeckPageRepo,
     val deckSasValuesUpdatableRepo: DeckSasValuesUpdatableRepo,
+    val allianceDeckRepo: AllianceDeckRepo,
     entityManager: EntityManager
 ) {
     private val query = JPAQueryFactory(entityManager)
@@ -56,6 +62,19 @@ class DeckPageService(
     fun setCurrentPage(currentPage: Int, type: DeckPageType) {
         deckPageRepo.deleteAllByType(type)
         deckPageRepo.save(DeckPage(currentPage, type))
+    }
+
+    fun allianceDecksForPage(
+        currentPage: Int,
+        type: DeckPageType,
+    ): AllianceDeckPageResult {
+        val allianceDecks = allianceDeckRepo.findAll(
+            PageRequest.of(currentPage, type.quantity, Sort.by("createdDateTime"))
+        )
+        return AllianceDeckPageResult(
+            decks = allianceDecks.toList(),
+            moreResults = !allianceDecks.isEmpty
+        )
     }
 
     fun deckSasSearchableValuesForPage(
@@ -130,6 +149,11 @@ interface DeckPageRepo : CrudRepository<DeckPage, UUID> {
     fun findAllByType(type: DeckPageType): List<DeckPage>
     fun deleteAllByType(type: DeckPageType)
 }
+
+data class AllianceDeckPageResult(
+    val decks: List<AllianceDeck>,
+    val moreResults: Boolean,
+)
 
 data class DeckPageResult(
     val decks: List<Deck>,

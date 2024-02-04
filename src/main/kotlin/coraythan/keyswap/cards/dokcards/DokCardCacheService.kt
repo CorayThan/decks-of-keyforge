@@ -130,8 +130,11 @@ class DokCardCacheService(
     fun findByCardNameOrNull(cardName: String) =
         if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardName.toUrlFriendlyCardTitle()]
 
-    fun findByCardNameUrl(cardNameUrl: String) =
+    fun findByCardNameUrlOrNull(cardNameUrl: String) =
         if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardNameUrl]
+
+    fun findByCardNameUrl(cardNameUrl: String) =
+        if (!loaded) throw IllegalStateException("Site still loading cards") else findByCardNameUrlOrNull(cardNameUrl)
             ?: error("No card for card name url $cardNameUrl")
 
     fun twinnedCardsForDeck(deck: Deck): List<DokCardInDeck> {
