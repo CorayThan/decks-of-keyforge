@@ -100,6 +100,7 @@ enum class SynergyTrait {
     // for deck: 18-=1/4, 17-=1/2, 16-=3/4, 14-=1
 
     creatureCount,
+    haunted,
     tokenCount,
     totalCreaturePower,
     totalArmor,

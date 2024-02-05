@@ -78,7 +78,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         description: "These traits are generated for each house and deck and do not follow the normal rules of " +
             "trait strengths.",
         synergyOnly: true,
-        traits: [SynergyTrait.creatureCount, SynergyTrait.highValue,
+        traits: [SynergyTrait.creatureCount, SynergyTrait.haunted, SynergyTrait.highValue,
             SynergyTrait.tokenCount, SynergyTrait.totalArmor, SynergyTrait.totalCreaturePower,
             SynergyTrait.highExpectedAmber, SynergyTrait.lowExpectedAmber, SynergyTrait.hasMars],
     },

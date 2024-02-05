@@ -4,9 +4,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.decks.models.GenericDeck
-import coraythan.keyswap.synergy.SynTraitHouse
-import coraythan.keyswap.synergy.SynTraitValue
-import coraythan.keyswap.synergy.SynergyTrait
+import coraythan.keyswap.synergy.*
 import kotlin.math.roundToInt
 
 private data class TraitVals(
@@ -34,6 +32,7 @@ data class DeckSynergyStats(
             SynergyTrait.bonusDiscard to bonusIconBaseTraitStrengths,
             SynergyTrait.totalCreaturePower to TraitVals(90, 30, 45, 15),
             SynergyTrait.totalArmor to TraitVals(10, 5),
+            SynergyTrait.haunted to (TraitVals(100, 0))
         )
 
         private fun matches(trait: SynergyTrait) = traits.keys.contains(trait)
@@ -68,8 +67,52 @@ data class DeckSynergyStats(
                 SynergyTrait.bonusDiscard to inputCards.sumOf { it.bonusDiscard },
                 SynergyTrait.totalCreaturePower to inputCards.sumOf { it.card.power },
                 SynergyTrait.tokenCount to tokensCount,
-                SynergyTrait.totalArmor to inputCards.sumOf { it.card.armor }
+                SynergyTrait.totalArmor to inputCards.sumOf { it.card.armor },
+                SynergyTrait.haunted to calculateHauntingPercent(inputCards)
             )
+        }
+
+        private fun calculateHauntingPercent(cards: List<DokCardInDeck>): Int {
+            val hauntingScore = cards.sumOf { dokCardInDeck ->
+                val traitValues = dokCardInDeck.extraCardInfo.traits.sumOf {
+                    val mills =
+                        if (it.trait == SynergyTrait.mills && (it.player == SynTraitPlayer.ANY || it.player == SynTraitPlayer.FRIENDLY)) {
+                            when (it.strength()) {
+                                TraitStrength.EXTRA_WEAK -> 5
+                                TraitStrength.WEAK -> 10
+                                TraitStrength.NORMAL -> 15
+                                TraitStrength.STRONG -> 20
+                            }
+                        } else {
+                            0
+                        }
+
+                    val discards =
+                        if (
+                            (it.trait == SynergyTrait.discardsCards || it.trait == SynergyTrait.discardsFromDeck)
+                            && (it.player == SynTraitPlayer.ANY || it.player == SynTraitPlayer.FRIENDLY)
+                        ) {
+
+                            when (it.strength()) {
+                                TraitStrength.EXTRA_WEAK -> 4
+                                TraitStrength.WEAK -> 6
+                                TraitStrength.NORMAL -> 8
+                                TraitStrength.STRONG -> 12
+                            }
+                        } else {
+                            0
+                        }
+
+                    mills + discards
+                }
+
+                val artifact = if (dokCardInDeck.card.cardType == CardType.Artifact) -5 else 0
+                val action = if (dokCardInDeck.card.cardType == CardType.Action) 2 else 0
+                val discardPips = dokCardInDeck.bonusDiscard * 4
+                traitValues + artifact + action + discardPips
+            }
+
+            return hauntingScore
         }
     }
 
@@ -121,5 +164,4 @@ data class DeckSynergyStats(
         // println("Inputs $actual $min $max $divisor $finalPercent")
         return finalPercent.roundToInt()
     }
-
 }
