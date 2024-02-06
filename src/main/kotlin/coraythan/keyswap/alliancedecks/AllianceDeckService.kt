@@ -15,7 +15,6 @@ import coraythan.keyswap.decks.SortDirection
 import coraythan.keyswap.decks.UserHolder
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.patreon.PatreonRewardsTier
-import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.tokenize
@@ -25,84 +24,9 @@ import coraythan.keyswap.users.KeyUserService
 import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-
-@Service
-class AllianceDeckUpdateService(
-    private val cardCache: DokCardCacheService,
-    private val allianceDeckRepo: AllianceDeckRepo,
-    private val deckRepo: DeckRepo,
-) {
-
-    private val log = LoggerFactory.getLogger(this::class.java)
-
-    @Transactional
-    fun updateAllianceDeckPips(allianceDeckId: UUID): Boolean {
-        val deck =
-            allianceDeckRepo.findByIdOrNull(allianceDeckId) ?: error("No alliance deck with UUID $allianceDeckId")
-        val firstHouse = deck.allianceHouses[0]
-        val secondHouse = deck.allianceHouses[1]
-        val thirdHouse = deck.allianceHouses[2]
-        val deckOne = deckRepo.findByIdOrNull(firstHouse.deckId)
-            ?: error("No deck for ${deck.allianceHouses[0].name}")
-        val deckTwo = deckRepo.findByIdOrNull(secondHouse.deckId)
-            ?: error("No deck for ${deck.allianceHouses[1].name}")
-        val deckThree = deckRepo.findByIdOrNull(thirdHouse.deckId)
-            ?: error("No deck for ${deck.allianceHouses[2].name}")
-
-        val deckHousePairs = listOf(
-            Pair(deckOne, firstHouse.house),
-            Pair(deckTwo, secondHouse.house),
-            Pair(deckThree, thirdHouse.house),
-        )
-
-        val allianceDeckInfo = DeckBuildingData(
-            name = deck.name,
-            cards = deckHousePairs.associate { deckHousePair ->
-                deckHousePair.second to cardCache.cardsForDeck(deckHousePair.first)
-                    .filter { it.house == deckHousePair.second }
-                    .map {
-                        TheoryCard(
-                            it.card.cardTitle,
-                            enhanced = false,
-                            bonusAmber = it.bonusAember,
-                            bonusCapture = it.bonusCapture,
-                            bonusDamage = it.bonusDamage,
-                            bonusDraw = it.bonusDraw,
-                            bonusDiscard = it.bonusDiscard,
-                        )
-                    }
-            },
-            expansion = deck.expansionEnum,
-            tokenTitle = null,
-        )
-
-        val bonusIcons = DeckBonusIcons(allianceDeckInfo.cards.entries
-            .map { allyHouses ->
-                BonusIconHouse(
-                    house = allyHouses.key,
-                    bonusIconCards = allyHouses.value
-                        .map { theoryCard ->
-                            BonusIconsCard(
-                                cardTitle = theoryCard.name,
-                                bonusAember = theoryCard.bonusAmber,
-                                bonusCapture = theoryCard.bonusCapture,
-                                bonusDamage = theoryCard.bonusDamage,
-                                bonusDraw = theoryCard.bonusDraw,
-                                bonusDiscard = theoryCard.bonusDiscard,
-                            )
-                        }
-                )
-            })
-
-        val allianceDeckWithBonusIcons = deck.withBonusIcons(bonusIcons).copy(updatedPips = true)
-        allianceDeckRepo.save(allianceDeckWithBonusIcons)
-        return deck.bonusIconsString != allianceDeckWithBonusIcons.bonusIconsString
-    }
-}
 
 @Service
 class AllianceDeckService(
@@ -116,33 +40,11 @@ class AllianceDeckService(
     private val deckCreationService: DeckCreationService,
     private val allianceHouseRepo: AllianceHouseRepo,
     private val entityManager: EntityManager,
-    private val allianceUpdateService: AllianceDeckUpdateService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val query = JPAQueryFactory(entityManager)
     private val matchFirstWord = "^\\S+".toRegex()
     private val matchLastWord = "\\S+$".toRegex()
-
-    private var continueAllianceUpdate = true
-
-    @Scheduled(fixedDelayString = "PT1M", initialDelayString = "PT30S")
-    fun updateAlliancesWithoutPips() {
-        if (continueAllianceUpdate) {
-            val decks = allianceDeckRepo.findFirst100ByUpdatedPipsFalse()
-            if (decks.isEmpty()) {
-                log.info("We were done with the alliance update.")
-                continueAllianceUpdate = false
-            }
-
-            var updateCount = 0
-
-            decks.forEach {
-                val updated = allianceUpdateService.updateAllianceDeckPips(it.id)
-                if (updated) updateCount++
-            }
-            log.info("$scheduledStop Alliance decks pip updated $updateCount decks out of ${decks.size}.")
-        }
-    }
 
     @Transactional
     fun saveAllianceDeck(toSave: AllianceDeckHouses): UUID {

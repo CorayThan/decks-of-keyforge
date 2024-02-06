@@ -28,7 +28,7 @@ data class DokCardInDeck(
         extraCardInfo = card,
         house = cardHouse,
         anomaly = cardExpansion === Expansion.ANOMALY_EXPANSION,
-        maverick = deck.expansionEnum != cardExpansion && card.dokCard.houses.isNotEmpty() && !card.dokCard.houses.contains(
+        maverick = card.dokCard.houses.isNotEmpty() && !card.dokCard.houses.contains(
             cardHouse
         ),
         legacy = deck.expansionEnum != cardExpansion && card.dokCard.expansions.none { it.expansion == deck.expansionEnum },

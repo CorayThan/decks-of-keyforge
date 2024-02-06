@@ -72,6 +72,7 @@ enum class SynergyTrait {
     // Other Traits
     any,
     makesTokens,
+    scrapValue,
     preventsDamage,
     alpha,
     omega,

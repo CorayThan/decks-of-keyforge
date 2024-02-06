@@ -118,6 +118,12 @@ class DeckImporterService(
         )
     }
 
+    fun updateDeck(deckId: String) {
+        val deck = keyforgeApi.findDeckToImport(deckId)?.deck ?: throw BadRequestException("No deck in MV for $deckId")
+        cardService.refreshAllCardsForDeck(deck)
+        deckCreationService.updateDeck(deck)
+    }
+
     fun importDeck(deckId: String): Long? {
         val preExistingDeck = deckRepo.findByKeyforgeId(deckId)
         if (preExistingDeck != null) {

@@ -60,7 +60,15 @@ data class KeyForgeDeck(
         )
     }
 
-    fun toDeck() = Deck(
+    fun toDeck(copyIntoDeck: Deck? = null) = if (copyIntoDeck == null) Deck(
+        keyforgeId = id,
+        name = name,
+        expansion = expansion,
+        powerLevel = power_level,
+        chains = chains,
+        wins = wins,
+        losses = losses,
+    ) else copyIntoDeck.copy(
         keyforgeId = id,
         name = name,
         expansion = expansion,

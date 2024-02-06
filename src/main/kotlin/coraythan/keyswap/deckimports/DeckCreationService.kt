@@ -14,6 +14,7 @@ import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeckDto
 import coraythan.keyswap.thirdpartyservices.mastervault.keyforgeApiDeckPageSize
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -57,6 +58,11 @@ class DeckCreationService(
         "Xenos Darkshadow",
     )
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun updateDeck(mvDeck: KeyForgeDeckDto) {
+        saveKeyForgeDeck(mvDeck.data, false, deckRepo.findByKeyforgeId(mvDeck.data.id))
+    }
+
     /**
      * Only set current page if this is auto importing new decks
      *
@@ -67,67 +73,12 @@ class DeckCreationService(
         val savedIds = mutableListOf<Long>()
         deck
             .forEach { keyforgeDeck ->
-                if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) {
-
-                    val checkCards =
-                        (keyforgeDeck.cards ?: keyforgeDeck._links?.cards)
-                            ?: error("Cards in the deck ${keyforgeDeck.id} are null.")
-                    val cleanCards = checkCards.filter {
-                        // Skip stupid tide card
-                        it != "37377d67-2916-4d45-b193-bea6ecd853e3"
-                    }
-
-                    val cardsListWithToken =
-                        cleanCards.map { cardRepo.findByIdOrNull(it) ?: error("No card for card id $it") }
-
-                    val cardsList = cardsListWithToken.filter { !it.token }
-
-                    val badCard = cardsList
-                        .filter { disallowCards.contains(it.cardTitle) }
-                        .map { it.cardTitle }
-
-                    val allHousesHave12 = cardsList
-                        .groupBy { it.house }
-                        .values
-                        .all { it.size == 12 }
-
-                    if (allHousesHave12 && badCard.size < 2) {
-                        val token = cardsListWithToken.firstOrNull { it.token }
-
-                        if (cardsList.size != 36) error("Deck ${keyforgeDeck.id} must have 36 cards.")
-
-                        val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
-                            ?: throw java.lang.IllegalStateException("Deck didn't have houses.")
-                        check(houses.size == 3) { "Deck ${keyforgeDeck.id} doesn't have three houses!" }
-
-                        val bonusIconSimpleCards = keyforgeDeck.createBonusIconsInfo(houses, cardsList)
-
-                        val deckToSave = keyforgeDeck.toDeck().withBonusIcons(bonusIconSimpleCards)
-
-                        try {
-                            val savedDeck = saveDeck(deckToSave, houses, cardsList, token)
-                            savedIds.add(savedDeck.id)
-                        } catch (e: DataIntegrityViolationException) {
-                            if (e.message?.contains("deck_keyforge_id_uk") == true) {
-                                log.info("Ignoring unique key exception adding deck with id ${keyforgeDeck.id}.")
-                            } else {
-                                throw e
-                            }
-                        }
-                    } else {
-                        if (saveForLater) {
-                            log.info("Skipping ${keyforgeDeck.name} for now because it has cards $badCard")
-                            importSkippedDecksService.addImportSkippedDeck(keyforgeDeck.id)
-                        } else {
-                            throw BadRequestException(
-                                "Master Vault currently has a bug with Revenants, so importing " +
-                                        "most decks with them is turned off. This deck includes $badCard"
-                            )
-                        }
-                    }
-
-                } else {
-                    log.debug("Ignoring deck that already existed with id ${keyforgeDeck.id}")
+                val savedId = if (deckRepo.findByKeyforgeId(keyforgeDeck.id) == null) saveKeyForgeDeck(
+                    keyforgeDeck,
+                    saveForLater
+                ) else null
+                if (savedId != null) {
+                    savedIds.add(savedId)
                 }
             }
         if (currentPage != null && deck.count() >= keyforgeApiDeckPageSize) {
@@ -136,6 +87,71 @@ class DeckCreationService(
             deckPageService.setCurrentPage(nextPage, DeckPageType.IMPORT)
         }
         return savedIds
+    }
+
+    private fun saveKeyForgeDeck(
+        keyforgeDeck: KeyForgeDeck,
+        saveForLater: Boolean,
+        updateDeck: Deck? = null,
+    ): Long? {
+
+        val checkCards =
+            (keyforgeDeck.cards ?: keyforgeDeck._links?.cards)
+                ?: error("Cards in the deck ${keyforgeDeck.id} are null.")
+        val cleanCards = checkCards.filter {
+            // Skip stupid tide card
+            it != "37377d67-2916-4d45-b193-bea6ecd853e3"
+        }
+
+        val cardsListWithToken =
+            cleanCards.map { cardRepo.findByIdOrNull(it) ?: error("No card for card id $it") }
+
+        val cardsList = cardsListWithToken.filter { !it.token }
+
+        val badCard = cardsList
+            .filter { disallowCards.contains(it.cardTitle) }
+            .map { it.cardTitle }
+
+        val allHousesHave12 = cardsList
+            .groupBy { it.house }
+            .values
+            .all { it.size == 12 }
+
+        if (allHousesHave12 && badCard.size < 2) {
+            val token = cardsListWithToken.firstOrNull { it.token }
+
+            if (cardsList.size != 36) error("Deck ${keyforgeDeck.id} must have 36 cards.")
+
+            val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
+                ?: throw IllegalStateException("Deck didn't have houses.")
+            check(houses.size == 3) { "Deck ${keyforgeDeck.id} doesn't have three houses!" }
+
+            val bonusIconSimpleCards = keyforgeDeck.createBonusIconsInfo(houses, cardsList)
+
+            val deckToSave = keyforgeDeck.toDeck(updateDeck).withBonusIcons(bonusIconSimpleCards)
+
+            try {
+                val savedDeck = if (updateDeck != null) deckRepo.save(deckToSave) else saveDeck(deckToSave, houses, cardsList, token)
+                return savedDeck.id
+            } catch (e: DataIntegrityViolationException) {
+                if (e.message?.contains("deck_keyforge_id_uk") == true) {
+                    log.info("Ignoring unique key exception adding deck with id ${keyforgeDeck.id}.")
+                } else {
+                    throw e
+                }
+            }
+        } else {
+            if (saveForLater) {
+                log.info("Skipping ${keyforgeDeck.name} for now because it has cards $badCard")
+                importSkippedDecksService.addImportSkippedDeck(keyforgeDeck.id)
+            } else {
+                throw BadRequestException(
+                    "Master Vault currently has a bug with Revenants, so importing " +
+                            "most decks with them is turned off. This deck includes $badCard"
+                )
+            }
+        }
+        return null
     }
 
     fun viewTheoreticalDeck(deck: DeckBuildingData): Deck {

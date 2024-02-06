@@ -162,7 +162,7 @@ export class DeckStore implements DeckStoreInterface {
     refreshDeckScores = (keyforgeId: string) => {
         axios.post(`${DeckStore.SECURE_CONTEXT}/${keyforgeId}/refresh-deck-scores`)
             .then(() => {
-                messageStore.setSuccessMessage("Scores refreshed! Reload the page to see them.")
+                messageStore.setSuccessMessage("Deck refreshed! Reload the page to any changes.")
             })
     }
 

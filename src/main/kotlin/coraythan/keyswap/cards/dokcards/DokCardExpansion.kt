@@ -8,7 +8,7 @@ import jakarta.persistence.*
 
 @GenerateTs
 @Entity
-class DokCardExpansion(
+data class DokCardExpansion(
 
     // add uk for cardNumber + expansion
     val cardNumber: String,

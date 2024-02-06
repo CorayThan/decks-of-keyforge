@@ -68,7 +68,22 @@ data class Card(
 
     fun isEvilTwin() = this.cardTitle.contains(evilTwinCardName)
 
-    fun toDoKCard() = DokCard(
+    fun toDoKCard(copyInto: DokCard? = null) = if (copyInto == null) DokCard(
+        cardTitle = this.cardTitle,
+        cardTitleUrl = this.cardTitle.toUrlFriendlyCardTitle(),
+        houses = if (this.maverick || this.anomaly) listOf() else listOf(this.house),
+        cardType = this.cardType,
+        rarity = this.rarity,
+        amber = this.amber,
+        power = this.power,
+        armor = this.armor,
+        big = this.big == true,
+        token = this.token,
+        evilTwin = this.isEvilTwin(),
+        cardText = this.cardText,
+        flavorText = this.flavorText,
+        traits = this.traits.toList(),
+    ) else copyInto.copy(
         cardTitle = this.cardTitle,
         cardTitleUrl = this.cardTitle.toUrlFriendlyCardTitle(),
         houses = if (this.maverick || this.anomaly) listOf() else listOf(this.house),

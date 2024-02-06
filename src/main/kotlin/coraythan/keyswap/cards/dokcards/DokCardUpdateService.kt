@@ -36,7 +36,7 @@ class DokCardUpdateService(
                 dokCardUpdateDao.saveDokCard(card.id)
                 updatedCards = true
             } else {
-                // Existing card. Let's update the expansions and houses if necessary
+                // Existing card. Let's update it if necessary
                 if (dokCardUpdateDao.updateDokCard(card.id)) updatedCards = true
             }
         }

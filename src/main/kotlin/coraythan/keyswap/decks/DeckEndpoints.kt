@@ -119,7 +119,7 @@ class DeckEndpoints(
     fun updating() = sasVersionService.isUpdating()
 
     @PostMapping("/secured/{id}/refresh-deck-scores")
-    fun refreshDeckScores(@PathVariable id: String) = deckWinsService.updateSingleDeck(id)
+    fun refreshDeckScores(@PathVariable id: String) = deckImporterService.updateDeck(id)
 
     @GetMapping("/past-sas/{id}")
     fun findPastSas(@PathVariable id: Long) = pastSasService.findByDeckId(id)

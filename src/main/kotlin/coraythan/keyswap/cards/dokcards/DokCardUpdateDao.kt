@@ -72,11 +72,11 @@ class DokCardUpdateDao(
         val cardExpansion = Expansion.forExpansionNumber(card.expansion)
         val existingExpansions = existingCard.expansions
 
-        val expansionExists = dokCardExpansionRepo.existsByExpansionAndCardNumber(cardExpansion, card.cardNumber)
+        val preexistingExpansion = dokCardExpansionRepo.findByExpansionAndCardNumber(cardExpansion, card.cardNumber)
 
         val extraInfo = cardCache.findByCardNameUrl(cardNameUrl)
         var updatedDokCard = existingCard
-        if (!expansionExists) {
+        if (preexistingExpansion == null) {
             val newExpansion = DokCardExpansion(
                 cardNumber = card.cardNumber,
                 expansion = Expansion.forExpansionNumber(card.expansion),
@@ -92,6 +92,16 @@ class DokCardUpdateDao(
             updatedDokCard = extraInfo.dokCard.copy(
                 expansions = extraInfo.dokCard.expansions.plus(savedExpansion)
             )
+        } else if (preexistingExpansion.card.cardTitleUrl != cardNameUrl) {
+            log.warn(
+                "We've got a really weird card going on. The expansion number ${preexistingExpansion.cardNumber} ${preexistingExpansion.expansion} " +
+                        "is associated with card ${preexistingExpansion.card.cardTitleUrl} instead of with $cardNameUrl"
+            )
+            val updatedExpansion = dokCardExpansionRepo.save(preexistingExpansion.copy(card = updatedDokCard))
+            updated = true
+            updatedDokCard = extraInfo.dokCard.copy(
+                expansions = extraInfo.dokCard.expansions.plus(updatedExpansion)
+            )
         }
         if (!card.maverick && !card.anomaly && !existingCard.houses.contains(card.house)) {
             this.log.info("Updating Card: ${card.cardTitle} Adding house: ${card.house}")
@@ -103,6 +113,11 @@ class DokCardUpdateDao(
 
             updated = true
             updatedDokCard = updatedDokCard.copy(houses = existingCard.houses.toSet().plus(card.house).toList())
+        }
+        if (existingCard.cardTitleUrl != cardNameUrl) {
+            log.warn("We've got a really weird card going on. Existing card ${existingCard.cardTitleUrl} is not the same as $cardNameUrl")
+            updatedDokCard = dokCardRepo.save(card.toDoKCard(updatedDokCard))
+            updated = true
         }
         if (updated) {
             cardCache.updateCache(cardExpansion, card.cardNumber, extraInfo.copy(dokCard = updatedDokCard))

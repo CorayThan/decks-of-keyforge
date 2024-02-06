@@ -64,7 +64,7 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                         }}
                         menuItem={true}
                     >
-                        Refresh MV Wins
+                        Refresh from MV
                     </DeckActionClickable>
                 )}
                 {username != null && !alliance && location.search.includes(`previousOwner=${username}`) && (

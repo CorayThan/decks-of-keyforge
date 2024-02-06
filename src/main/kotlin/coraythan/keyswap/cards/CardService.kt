@@ -3,11 +3,13 @@ package coraythan.keyswap.cards
 import coraythan.keyswap.cards.dokcards.DokCardUpdateService
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
+import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeCard
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeckDto
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -24,6 +26,12 @@ class CardService(
     private val dokCardUpdateService: DokCardUpdateService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun refreshAllCardsForDeck(mvDeck: KeyForgeDeckDto) {
+        if (mvDeck._linked.cards == null) throw BadRequestException("Must include card links in deck to refresh cards.")
+        this.importNewCards(mvDeck._linked.cards)
+    }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun importNewCardsForDeck(mvDeck: KeyForgeDeckDto): Boolean {
@@ -58,7 +66,12 @@ class CardService(
         val savedMvCardNames = mutableListOf<String>()
 
         cards.forEach {
-            if (!cardRepo.existsById(it.id)) {
+            val fromCardRepo = cardRepo.findByIdOrNull(it.id)
+            if (fromCardRepo == null) {
+                savedMvCardNames.add(it.cardTitle)
+                cardRepo.saveAndFlush(it)
+            } else if (fromCardRepo.cardTitle != it.cardTitle || fromCardRepo.maverick != it.maverick || fromCardRepo.house != it.house) {
+                cardRepo.deleteById(it.id)
                 savedMvCardNames.add(it.cardTitle)
                 cardRepo.saveAndFlush(it)
             }
