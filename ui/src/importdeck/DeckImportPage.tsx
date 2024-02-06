@@ -12,39 +12,48 @@ import { uiStore } from "../ui/UiStore"
 import { deckStore } from "../decks/DeckStore"
 import { observer } from "mobx-react"
 import { DeckViewSmall } from "../decks/DeckViewSmall"
+import { Alert } from "@material-ui/lab"
 
 export const DeckImportPage = observer(() => {
 
-    const [error, setError] = useState(false)
+    const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const [loadingMine, setLoadingMine] = useState(false)
     const [deckId, setDeckId] = useState("")
 
     const importDeck = async () => {
-        setError(false)
+        setError("")
         setLoading(true)
         const importWith = Utils.findUuid(deckId)
         if (importWith.length !== 36) {
-            setError(true)
+            setError("Please include a KeyForge deck UUID to import a deck.")
             setLoading(false)
             return
         }
-        await deckStore.importDeck(importWith)
-        await deckStore.findDeckForImportPage(importWith)
+        const errorMessage = await deckStore.importDeck(importWith)
+        if (errorMessage != null && errorMessage.length > 0) {
+            setError(errorMessage)
+        } else {
+            await deckStore.findDeckForImportPage(importWith)
+        }
         setLoading(false)
     }
 
     const importAndAdd = async () => {
-        setError(false)
+        setError("")
         setLoadingMine(true)
         const importWith = Utils.findUuid(deckId)
         if (importWith.length !== 36) {
-            setError(true)
+            setError("Please include a KeyForge deck UUID to import a deck.")
             setLoadingMine(false)
             return
         }
-        await deckStore.importDeckAndAddToMyDecks(importWith)
-        await deckStore.findDeckForImportPage(importWith)
+        const errorMessage = await deckStore.importDeckAndAddToMyDecks(importWith)
+        if (errorMessage != null && errorMessage.length > 0) {
+            setError(errorMessage)
+        } else {
+            await deckStore.findDeckForImportPage(importWith)
+        }
         setLoadingMine(false)
     }
 
@@ -59,7 +68,8 @@ export const DeckImportPage = observer(() => {
     const smallScreen = screenStore.screenSizeSm()
 
     return (
-        <Box display={"flex"} justifyContent={"center"} alignItems={smallScreen && "center"} flexDirection={smallScreen ? "column" : "row"}>
+        <Box display={"flex"} justifyContent={"center"} alignItems={smallScreen && "center"}
+             flexDirection={smallScreen ? "column" : "row"}>
             <Box maxWidth={600} m={2}>
                 <Card>
                     <Box m={2}>
@@ -79,6 +89,13 @@ export const DeckImportPage = observer(() => {
                         >
                             If this feature doesn't work, please try again later.
                         </Typography>
+                        {error.length > 0 && (
+                            <Box mb={2}>
+                                <Alert severity={"warning"}>
+                                    {error}
+                                </Alert>
+                            </Box>
+                        )}
                         <TextField
                             variant={"outlined"}
                             label={"KeyForge Deck Id or URL"}
@@ -87,7 +104,7 @@ export const DeckImportPage = observer(() => {
                             style={{marginBottom: spacing(2)}}
                             autoFocus={true}
                             helperText={"Id or Url from the deck url at keyforgegame.com e.g. 293f366d-af1d-46ea-9c0f-4cc956dae50d"}
-                            error={error}
+                            error={!!error}
                         />
                         <div
                             style={{marginBottom: spacing(2), display: "flex"}}

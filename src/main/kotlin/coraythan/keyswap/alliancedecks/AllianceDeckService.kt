@@ -10,10 +10,11 @@ import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.deckimports.DeckBuildingData
 import coraythan.keyswap.deckimports.DeckCreationService
 import coraythan.keyswap.deckimports.TheoryCard
-import coraythan.keyswap.decks.*
+import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.SortDirection
+import coraythan.keyswap.decks.UserHolder
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.patreon.PatreonRewardsTier
-import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
@@ -97,13 +98,9 @@ class AllianceDeckUpdateService(
                 )
             })
 
-        val allianceDeckWithBonusIcons = deck.withBonusIcons(bonusIcons)
-
-        if (deck.bonusIconsString != allianceDeckWithBonusIcons.bonusIconsString) {
-            allianceDeckRepo.save(allianceDeckWithBonusIcons)
-            return true
-        }
-        return false
+        val allianceDeckWithBonusIcons = deck.withBonusIcons(bonusIcons).copy(updatedPips = true)
+        allianceDeckRepo.save(allianceDeckWithBonusIcons)
+        return deck.bonusIconsString != allianceDeckWithBonusIcons.bonusIconsString
     }
 }
 
@@ -119,7 +116,6 @@ class AllianceDeckService(
     private val deckCreationService: DeckCreationService,
     private val allianceHouseRepo: AllianceHouseRepo,
     private val entityManager: EntityManager,
-    private val deckPageService: DeckPageService,
     private val allianceUpdateService: AllianceDeckUpdateService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -129,27 +125,22 @@ class AllianceDeckService(
 
     private var continueAllianceUpdate = true
 
-    @Scheduled(fixedDelayString = "PT10S", initialDelayString = "PT30S")
+    @Scheduled(fixedDelayString = "PT1M", initialDelayString = "PT30S")
     fun updateAlliancesWithoutPips() {
         if (continueAllianceUpdate) {
-            val currentPage = deckPageService.findCurrentPage(DeckPageType.ALLIANCE_UPDATE)
-            log.info("$scheduledStart Alliance decks pip update at page $currentPage")
-
-            val pageResult = deckPageService.allianceDecksForPage(currentPage, DeckPageType.ALLIANCE_UPDATE)
-
-            if (!pageResult.moreResults) {
-                log.info("We were done with the alliance update at page $currentPage")
+            val decks = allianceDeckRepo.findFirst100ByUpdatedPipsFalse()
+            if (decks.isEmpty()) {
+                log.info("We were done with the alliance update.")
                 continueAllianceUpdate = false
             }
 
             var updateCount = 0
 
-            pageResult.decks.forEach {
+            decks.forEach {
                 val updated = allianceUpdateService.updateAllianceDeckPips(it.id)
                 if (updated) updateCount++
             }
-            deckPageService.setCurrentPage(currentPage + 1, DeckPageType.ALLIANCE_UPDATE)
-            log.info("$scheduledStop Alliance decks pip updated $updateCount decks at page $currentPage")
+            log.info("$scheduledStop Alliance decks pip updated $updateCount decks out of ${decks.size}.")
         }
     }
 

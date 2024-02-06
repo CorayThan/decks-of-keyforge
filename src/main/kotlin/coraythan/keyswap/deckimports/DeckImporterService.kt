@@ -10,6 +10,7 @@ import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.expansions.activeExpansions
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeckDto
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
 import coraythan.keyswap.thirdpartyservices.mastervault.keyforgeApiDeckPageSize
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
@@ -18,7 +19,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.transaction.support.TransactionTemplate
 import org.springframework.web.client.HttpClientErrorException
 import kotlin.system.measureTimeMillis
 
@@ -33,7 +33,6 @@ class DeckImporterService(
     private val deckRepo: DeckRepo,
     private val deckPageService: DeckPageService,
     private val deckCreationService: DeckCreationService,
-    private val transactionTemplate: TransactionTemplate,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -60,7 +59,7 @@ class DeckImporterService(
                 if (pagesRequested != 0) Thread.sleep(3000)
                 log.info("Importing decks, making page request $currentPage")
                 try {
-                    val decks = keyforgeApi.findDecks(currentPage, useMasterVault = false, withCards = true)
+                    val decks = keyforgeApi.findDecks(currentPage, withCards = true)
                     if (decks == null) {
                         deckImportingUpToDate = true
                         log.info("Got null decks from the api for page $currentPage decks per page $keyforgeApiDeckPageSize")
@@ -80,9 +79,8 @@ class DeckImporterService(
                         val decksToSaveCount = decks.data.count()
 
                         // Import cards first, then save decks
-                        var updatedCards = false
                         decks.data.forEach {
-                            if (cardService.importNewCardsForDeck(it)) updatedCards = true
+                            cardService.importNewCardsForDeck(KeyForgeDeckDto(it))
                         }
 
                         val results = deckCreationService.saveDecks(decks.data, saveForLater = true)
@@ -132,7 +130,7 @@ class DeckImporterService(
                     throw BadRequestException("$expansion is not yet enabled for import in DoK.")
                 }
                 // Import cards first, then save deck
-                cardService.importNewCardsForDeck(deck.data)
+                cardService.importNewCardsForDeck(deck)
 
                 val deckList = listOf(deck.data.copy(cards = deck.data._links?.cards))
 

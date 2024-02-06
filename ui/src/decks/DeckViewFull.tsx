@@ -16,7 +16,6 @@ import { ForSaleView } from "./sales/ForSaleView"
 import { AllianceDeckPopover } from "../alliancedecks/AllianceDeckPopover";
 import { useParams } from "react-router-dom";
 import { DeckType } from "../generated-src/DeckType";
-import { deckImportPopStore } from "../importdeck/DeckImportPop"
 
 export const DeckViewPage = observer(() => {
     const {keyforgeDeckId} = useParams<{ keyforgeDeckId: string }>()
@@ -26,7 +25,6 @@ export const DeckViewPage = observer(() => {
         deckStore.saleInfo = undefined
         deckStore.randomDeckId = undefined
         deckStore.importedDeck = undefined
-        deckImportPopStore.popOpen = false
 
         uiStore.setTopbarValues("Deck", "Deck", "")
 

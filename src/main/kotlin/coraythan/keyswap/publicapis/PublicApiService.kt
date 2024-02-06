@@ -1,11 +1,11 @@
 package coraythan.keyswap.publicapis
 
-import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.DeckSearchResult
 import coraythan.keyswap.stats.StatsService
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.userdeck.FavoritedDeckRepo
 import coraythan.keyswap.userdeck.FunnyDeckRepo
 import coraythan.keyswap.userdeck.OwnedDeckRepo
@@ -22,7 +22,6 @@ class PublicApiService(
     private val currentUserService: CurrentUserService,
     private val keyUserRepo: KeyUserRepo,
     private val deckRepo: DeckRepo,
-    private val cardService: CardService,
     private val statsService: StatsService,
     private val userDeckRepo: UserDeckRepo,
     private val ownedDeckRepo: OwnedDeckRepo,
@@ -63,11 +62,15 @@ class PublicApiService(
             log.debug("Request for deck that doesn't exist $keyforgeId")
             return null
         }
+        val cards = cardCache.cardsForDeck(deck)
+        val token = cardCache.tokenForDeck(deck)
+        val synergies = DeckSynergyService.fromDeckWithCards(deck, cards, token)
         return deck.toDeckSearchResult(
             housesAndCards = cardCache.deckToHouseAndCards(deck),
-            cards = cardCache.cardsForDeck(deck),
+            cards = cards,
             stats = statsService.findCurrentStats(),
-            token = cardCache.tokenForDeck(deck),
+            token = token,
+            synergies = synergies,
         )
     }
 

@@ -172,10 +172,6 @@ object DeckSynergyService {
                 val count = cardsById.value.size
                 val cardInfo = card.extraCardInfo
 
-                if (card.card.cardTitleUrl == "full-moon") {
-                    log.info("Synergize full moon")
-                }
-
                 val matchedTraits: Map<String?, List<SynergyMatch>> = cardInfo.synergies
                     .map { synergy ->
 

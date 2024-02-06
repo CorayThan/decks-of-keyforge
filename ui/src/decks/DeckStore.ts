@@ -1,8 +1,7 @@
-import axios, { AxiosResponse, CancelTokenSource } from "axios"
+import axios, { AxiosError, AxiosResponse, CancelTokenSource } from "axios"
 import { clone } from "lodash"
 import { computed, makeObservable, observable } from "mobx"
-import { closeAllMenuStoresExcept, rightMenuStore } from "../components/KeyTopbar"
-import { HttpConfig } from "../config/HttpConfig"
+import { axiosWithoutErrors, HttpConfig } from "../config/HttpConfig"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { log } from "../config/Utils"
 import { CollectionStats } from "../generated-src/CollectionStats"
@@ -15,6 +14,7 @@ import { DeckCount, DeckPage, DeckSearchResult, DeckWithSynergyInfo } from "./mo
 import { DeckFilters } from "./search/DeckFilters"
 import { DeckStoreInterface } from "../alliancedecks/DeckStoreInterface"
 import { DecksToCompareDto } from "../generated-src/DecksToCompareDto"
+import { BadRequestException } from "../config/Exceptions"
 
 export class DeckStore implements DeckStoreInterface {
     static readonly DECK_PAGE_SIZE = 20
@@ -62,12 +62,6 @@ export class DeckStore implements DeckStoreInterface {
 
     @observable
     importedDeck?: boolean
-
-    @observable
-    importingDeck = false
-
-    @observable
-    importingAndAddingDeck = false
 
     @observable
     randomDeckId?: string
@@ -173,32 +167,36 @@ export class DeckStore implements DeckStoreInterface {
     }
 
     importDeck = async (keyforgeId: string) => {
-        this.importingDeck = true
-        const deckImportResponse: AxiosResponse<boolean> = await axios.post(`${DeckStore.CONTEXT}/${keyforgeId}/import`)
-
-        this.importedDeck = deckImportResponse.data
-        if (!deckImportResponse.data) {
-            messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
+        try {
+            const deckImportResponse: AxiosResponse<boolean> = await axiosWithoutErrors.post(`${DeckStore.CONTEXT}/${keyforgeId}/import`)
+            this.importedDeck = deckImportResponse.data
+        } catch (e) {
+            if (axios.isAxiosError(e)) {
+                const errorMessage = (e as AxiosError<BadRequestException>).response?.data?.message
+                if (errorMessage != null) {
+                    return errorMessage
+                }
+            }
+            return "Unexpected error importing deck."
         }
-
-        this.importingDeck = false
-        rightMenuStore.close()
-        closeAllMenuStoresExcept()
     }
 
     importDeckAndAddToMyDecks = async (keyforgeId: string) => {
-        this.importingAndAddingDeck = true
-        const deckImportResponse: AxiosResponse<boolean> = await axios.post(`${DeckStore.CONTEXT}/${keyforgeId}/import-and-add`)
-        this.importedDeck = deckImportResponse.data
-        if (!deckImportResponse.data) {
-            messageStore.setErrorMessage("Sorry, we couldn't find a deck with the given id")
-        } else {
-            userDeckStore.findOwnedDecks()
+        try {
+            const deckImportResponse: AxiosResponse<boolean> = await axiosWithoutErrors.post(`${DeckStore.CONTEXT}/${keyforgeId}/import-and-add`)
+            this.importedDeck = deckImportResponse.data
+            if (deckImportResponse.data) {
+                await userDeckStore.findOwnedDecks()
+            }
+        } catch (e) {
+            if (axios.isAxiosError(e)) {
+                const errorMessage = (e as AxiosError<BadRequestException>).response?.data?.message
+                if (errorMessage != null) {
+                    return errorMessage
+                }
+            }
+            return "Unexpected error importing deck."
         }
-
-        this.importingAndAddingDeck = false
-        rightMenuStore.close()
-        closeAllMenuStoresExcept()
     }
 
     findDeckSaleInfo = (keyforgeId: string) => {

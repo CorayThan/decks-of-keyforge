@@ -5,7 +5,7 @@ import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeCard
-import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
+import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeckDto
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyforgeApi
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -26,10 +26,11 @@ class CardService(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    fun importNewCardsForDeck(mvDeck: KeyForgeDeck): Boolean {
-        if (!deckRepo.existsByKeyforgeId(mvDeck.id)) {
+    fun importNewCardsForDeck(mvDeck: KeyForgeDeckDto): Boolean {
+        if (!deckRepo.existsByKeyforgeId(mvDeck.data.id)) {
             val checkCards =
-                (mvDeck.cards ?: mvDeck._links?.cards) ?: error("Cards in the deck ${mvDeck.id} are null.")
+                (mvDeck.data.cards ?: mvDeck.data._links?.cards)
+                    ?: error("Cards in the deck ${mvDeck.data.id} are null.")
             val cleanCards = checkCards.filter {
                 // Skip stupid tide card
                 it != "37377d67-2916-4d45-b193-bea6ecd853e3"
@@ -37,8 +38,12 @@ class CardService(
             val newCardExists = cleanCards.any { !cardRepo.existsById(it) }
 
             if (newCardExists) {
-                val deckWithCards = keyforgeApi.findDeck(mvDeck.id, true)
-                    ?: error("No deck for ${mvDeck.id} in KeyForge API")
+                val deckWithCards: KeyForgeDeckDto = if (mvDeck._linked.cards == null) {
+                    keyforgeApi.findDeck(mvDeck.data.id, true)
+                        ?: error("No deck for ${mvDeck.data.id} in KeyForge API")
+                } else {
+                    mvDeck
+                }
 
                 return this.importNewCards(deckWithCards._linked.cards!!)
             }
