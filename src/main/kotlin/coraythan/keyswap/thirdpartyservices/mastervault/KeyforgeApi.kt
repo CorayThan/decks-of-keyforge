@@ -60,8 +60,8 @@ class KeyforgeApi(
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
-    // private val mvProxyBaseUrl = "http://mvproxy.us-west-2.elasticbeanstalk.com/api/master-vault"
-    private val mvProxyBaseUrl = "http://localhost:5001/api/master-vault"
+    private val mvProxyBaseUrl = "http://mvproxy.us-west-2.elasticbeanstalk.com/api/master-vault"
+//    private val mvProxyBaseUrl = "http://localhost:5001/api/master-vault"
 
     /**
      * Null implies no decks available.
