@@ -5,8 +5,9 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.*
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
-import coraythan.keyswap.config.Env
-import coraythan.keyswap.decks.*
+import coraythan.keyswap.decks.DeckRepo
+import coraythan.keyswap.decks.DeckSasValuesSearchableRepo
+import coraythan.keyswap.decks.DeckSasValuesUpdatableRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.DeckSasValuesSearchable
 import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
@@ -15,9 +16,7 @@ import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeck
 import coraythan.keyswap.thirdpartyservices.mastervault.KeyForgeDeckDto
-import coraythan.keyswap.thirdpartyservices.mastervault.keyforgeApiDeckPageSize
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -32,15 +31,12 @@ class DeckCreationService(
     private val deckRepo: DeckRepo,
     private val deckSasValuesSearchableRepo: DeckSasValuesSearchableRepo,
     private val deckSasValuesUpdatableRepo: DeckSasValuesUpdatableRepo,
-    private val deckPageService: DeckPageService,
     private val objectMapper: ObjectMapper,
     private val cardRepo: CardRepo,
     private val postProcessDecksService: PostProcessDecksService,
     private val dokCardCacheService: DokCardCacheService,
     private val sasVersionService: SasVersionService,
     private val importSkippedDecksService: ImportSkippedDecksService,
-    @Value("\${env}")
-    private val env: Env,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -81,11 +77,6 @@ class DeckCreationService(
                     savedIds.add(savedId)
                 }
             }
-        if (currentPage != null && deck.count() >= keyforgeApiDeckPageSize) {
-            val nextPage = currentPage + 1
-            log.info("Updating next deck page to $nextPage")
-            deckPageService.setCurrentPage(nextPage, DeckPageType.IMPORT)
-        }
         return savedIds
     }
 
@@ -131,7 +122,12 @@ class DeckCreationService(
             val deckToSave = keyforgeDeck.toDeck(updateDeck).withBonusIcons(bonusIconSimpleCards)
 
             try {
-                val savedDeck = if (updateDeck != null) deckRepo.save(deckToSave) else saveDeck(deckToSave, houses, cardsList, token)
+                val savedDeck = if (updateDeck != null) deckRepo.save(deckToSave) else saveDeck(
+                    deckToSave,
+                    houses,
+                    cardsList,
+                    token
+                )
                 return savedDeck.id
             } catch (e: DataIntegrityViolationException) {
                 if (e.message?.contains("deck_keyforge_id_uk") == true) {

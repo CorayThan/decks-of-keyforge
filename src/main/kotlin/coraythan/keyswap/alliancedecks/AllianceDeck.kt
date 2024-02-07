@@ -55,9 +55,6 @@ data class AllianceDeck(
 
     val checkedUniqueness: Boolean = false,
 
-    // todo remove
-//    val updatedPips: Boolean = true,
-
     @Id
     val id: UUID = UUID.randomUUID()
 

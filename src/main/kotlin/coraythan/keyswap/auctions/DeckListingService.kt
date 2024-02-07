@@ -21,6 +21,7 @@ import coraythan.keyswap.userdeck.ListingInfo
 import coraythan.keyswap.userdeck.OwnedDeckRepo
 import coraythan.keyswap.userdeck.UserDeckService
 import coraythan.keyswap.users.CurrentUserService
+import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
@@ -66,7 +67,7 @@ class DeckListingService(
                 if (it.seller.autoRenewListings && it.seller.realPatreonTier() != null) {
                     deckListingRepo.save(it.copy(endDateTime = ZonedDateTime.now().plusYears(1)))
                 } else {
-                    removeDeckListingStatus(it)
+                    removeDeckListingStatus(it, it.deck.id, it.seller)
                     deckListingRepo.delete(it)
                 }
             }
@@ -220,7 +221,7 @@ class DeckListingService(
         if (user.id == auction.seller.id) throw UnauthorizedException("You can't buy your own deck.")
         if (auction.status == DeckListingStatus.COMPLETE) throw BadRequestException("Can't buy it now because it has already sold.")
 
-        removeDeckListingStatus(auction)
+        removeDeckListingStatus(auction, auction.deck.id, auction.seller)
 
         deckListingRepo.delete(auction)
 
@@ -277,7 +278,7 @@ class DeckListingService(
         if (auction.status == DeckListingStatus.AUCTION) {
             if (auction.bids.isNotEmpty()) return false
         }
-        removeDeckListingStatus(auction)
+        removeDeckListingStatus(auction, deckId, user)
         deckListingRepo.delete(auction)
         return true
     }
@@ -391,33 +392,21 @@ class DeckListingService(
         userDeckService.removeAllOwned()
     }
 
-    private fun removeDeckListingStatus(listing: DeckListing, soldOnAuction: Boolean = false) {
+    private fun removeDeckListingStatus(listing: DeckListing, deckId: Long, seller: KeyUser) {
 
-        val (stillForAuction, stillForTrade, stillForSale) = this.stillListed(listing)
+        val (stillForTrade, stillForSale) = this.stillListed(listing)
 
-        deckRepo.save(
-            listing.deck.copy(
-                forAuction = stillForAuction,
-                auctionEnd = if (stillForAuction) listing.deck.auctionEnd else null,
-                listedOn = if (stillForAuction) listing.deck.listedOn else null,
-                forSale = stillForSale,
-                forTrade = stillForTrade,
-                completedAuction = soldOnAuction || listing.deck.completedAuction
-            )
-        )
-        userSearchService.scheduleUserForUpdate(listing.seller)
+        deckRepo.updateForSaleAndTrade(deckId, stillForSale, stillForTrade)
+        userSearchService.scheduleUserForUpdate(seller)
     }
 
-    private fun stillListed(listing: DeckListing): Triple<Boolean, Boolean, Boolean> {
-        val auctionsForDeck = listing.deck.auctions
-        val otherListingsForDeck = auctionsForDeck
-            .filter { it.isActive && it.id != listing.id }
+    private fun stillListed(listing: DeckListing): Pair<Boolean, Boolean> {
+        val listingsForDeck = listing.deck.auctions
 
         // This might be someone else unlisting the deck for sale while a different person has an active auction for it
-        return Triple(
-            otherListingsForDeck.any { it.status == DeckListingStatus.AUCTION },
-            otherListingsForDeck.any { it.forTrade },
-            otherListingsForDeck.isNotEmpty()
+        return Pair(
+            listingsForDeck.any { it.forTrade },
+            listingsForDeck.isNotEmpty()
         )
     }
 

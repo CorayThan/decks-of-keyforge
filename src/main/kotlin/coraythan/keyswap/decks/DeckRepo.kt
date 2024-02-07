@@ -24,6 +24,10 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
     fun countByExpansion(expansion: Int): Long
 
     @Modifying
+    @Query("UPDATE Deck d SET d.forSale = :forSale, d.forTrade = :forTrade WHERE d.id = :id")
+    fun updateForSaleAndTrade(@Param(value = "id") id: Long, @Param(value = "forSale") forSale: Boolean, @Param(value = "forTrade") forTrade: Boolean)
+
+    @Modifying
     @Query("UPDATE Deck d SET d.hasOwnershipVerification = :updateOwnershipVerification WHERE d.id = :id")
     fun updateHasOwnershipVerification(@Param(value = "id") id: Long, @Param(value = "updateOwnershipVerification") updateOwnershipVerification: Boolean)
 }

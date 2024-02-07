@@ -87,7 +87,7 @@ class DeckImporterService(
 
                         if (decksToSaveCount >= keyforgeApiDeckPageSize) {
                             val nextPage = currentPage + 1
-                            log.info("Updating next deck page to $nextPage")
+                            log.info("Updating next deck page to $nextPage. Saved ${results.size} out of $decksToSaveCount")
                             deckPageService.setCurrentPage(nextPage, DeckPageType.IMPORT)
                         }
 
