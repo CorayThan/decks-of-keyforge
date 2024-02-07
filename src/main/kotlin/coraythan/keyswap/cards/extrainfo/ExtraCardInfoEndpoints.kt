@@ -4,6 +4,8 @@ import coraythan.keyswap.Api
 import coraythan.keyswap.cards.CardEditHistory
 import coraythan.keyswap.cards.FrontendCard
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
+import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.generatets.GenerateTs
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.web.bind.annotation.*
@@ -49,7 +51,19 @@ class ExtraCardInfoEndpoints(
     ): List<AercBlame> {
         return extraCardInfoService.editHistoryForCardById(extraInfoId, offsetMinutes)
     }
+
+    @GetMapping("/next-and-previous/{infoId}/{expansion}")
+    fun findNextAndPreviousCards(@PathVariable infoId: UUID, @PathVariable  expansion: Expansion): NextAndPreviousCardInfos {
+        return cardCache.findNextAndPreviousCards(infoId, expansion)
+    }
 }
+
+@GenerateTs
+data class NextAndPreviousCardInfos(
+    val nextInfo: UUID? = null,
+    val previousInfo: UUID? = null,
+)
+
 
 data class CardHistory(
     val card: FrontendCard,

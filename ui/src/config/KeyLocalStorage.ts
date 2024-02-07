@@ -37,6 +37,7 @@ interface GenericStorage {
     analyzeCount?: number
     buildAllianceDeck?: boolean
     addAllianceToMyAlliances?: boolean
+    cardScrollExpansion?: Expansion
 }
 
 class KeyLocalStorage {

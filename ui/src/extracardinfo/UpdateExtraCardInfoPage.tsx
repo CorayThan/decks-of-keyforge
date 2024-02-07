@@ -34,15 +34,24 @@ import { AercBlameView } from "./AercBlameView"
 import { AercBlame } from "../generated-src/AercBlame"
 import { CardView } from "../cards/views/CardView"
 import { FrontendCard } from "../generated-src/FrontendCard"
+import { ExpansionLabel, expansionsWithCards } from "../expansions/Expansions"
+import { keyLocalStorage } from "../config/KeyLocalStorage"
+import { Expansion } from "../generated-src/Expansion"
 
 export const UpdateExtraCardInfoPage = observer(() => {
 
     const {infoId} = useParams<{ infoId: string }>()
 
+    const expansion = keyLocalStorage.genericStorage.cardScrollExpansion
+
     useEffect(() => {
         extraCardInfoStore.findExtraCardInfo(infoId)
         extraCardInfoStore.findAERCBlame(infoId)
     }, [infoId])
+
+    useEffect(() => {
+        extraCardInfoStore.findNextAndPreviousExtraCardInfos(infoId, expansion)
+    }, [infoId, expansion])
 
     const extraCardInfo = extraCardInfoStore.extraCardInfo
     if (extraCardInfo == null || !cardStore.cardsLoaded) {
@@ -256,17 +265,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
 
     render() {
         const {card, aercBlame} = this.props
-        let nextId
-        let prevId
-        const filteredCards = cardStore.allCards
-        if (filteredCards.length > 0 && this.props.extraCardInfo != null) {
-            const findWith = filteredCards.find(filterCard => filterCard.id === card.id)
-            if (findWith != null) {
-                const idx = filteredCards.indexOf(findWith)
-                nextId = idx > -1 && idx < filteredCards.length - 1 ? filteredCards[idx + 1].extraCardInfo.id : undefined
-                prevId = idx > 0 ? filteredCards[idx - 1].extraCardInfo.id : undefined
-            }
-        }
+        const nextId = extraCardInfoStore.nextAndPrevInfoIds?.nextInfo
+        const prevId = extraCardInfoStore.nextAndPrevInfoIds?.previousInfo
         return (
             <Box
                 display={"flex"}
@@ -286,20 +286,40 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 {card.cardTitle}'s AERC
                             </Typography>
                             <div style={{flexGrow: 1}}/>
-                            {prevId != null && (
-                                <IconButton
-                                    href={Routes.editExtraCardInfo(prevId)}
-                                >
-                                    <ChevronLeft/>
-                                </IconButton>
-                            )}
-                            {nextId != null && (
-                                <IconButton
-                                    href={Routes.editExtraCardInfo(nextId)}
-                                >
-                                    <ChevronRight/>
-                                </IconButton>
-                            )}
+                            <Box minWidth={120}>
+                                <FormControl>
+                                    <Select
+                                        displayEmpty={true}
+                                        value={keyLocalStorage.genericStorage.cardScrollExpansion ?? ""}
+                                        label="Card Nav Expansion"
+                                        onChange={(event) => {
+                                            const value = event.target.value as (Expansion | "")
+                                            keyLocalStorage.updateGenericStorage({
+                                                cardScrollExpansion: value === "" ? undefined : value
+                                            })
+                                        }}
+                                    >
+                                        <MenuItem value={""}>Card Scroll Expansion</MenuItem>
+                                        {expansionsWithCards.map(expansion => (
+                                            <MenuItem key={expansion} value={expansion}>
+                                                <ExpansionLabel expansion={expansion} iconSize={16}/>
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <IconButton
+                                disabled={prevId == null}
+                                href={Routes.editExtraCardInfo(prevId)}
+                            >
+                                <ChevronLeft/>
+                            </IconButton>
+                            <IconButton
+                                disabled={nextId == null}
+                                href={Routes.editExtraCardInfo(nextId)}
+                            >
+                                <ChevronRight/>
+                            </IconButton>
                         </div>
                         <Grid
                             container={true}

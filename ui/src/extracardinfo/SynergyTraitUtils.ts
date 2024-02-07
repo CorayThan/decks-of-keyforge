@@ -58,7 +58,8 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         groupName: "Other",
         description: `Use "any" for a wild cart trait that matches anything applicable. Like all artifacts or all ` +
             "creatures with even power.",
-        traits: [SynergyTrait.any, SynergyTrait.scrapValue, SynergyTrait.makesTokens, SynergyTrait.preventsDamage, SynergyTrait.alpha,
+        traits: [SynergyTrait.any, SynergyTrait.scrapValue, SynergyTrait.haunted, SynergyTrait.makesTokens,
+            SynergyTrait.preventsDamage, SynergyTrait.alpha,
             SynergyTrait.omega, SynergyTrait.raisesTide, SynergyTrait.lowersTide],
     },
     {
@@ -78,7 +79,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         description: "These traits are generated for each house and deck and do not follow the normal rules of " +
             "trait strengths.",
         synergyOnly: true,
-        traits: [SynergyTrait.creatureCount, SynergyTrait.haunted, SynergyTrait.highValue,
+        traits: [SynergyTrait.creatureCount, SynergyTrait.highValue,
             SynergyTrait.tokenCount, SynergyTrait.totalArmor, SynergyTrait.totalCreaturePower,
             SynergyTrait.highExpectedAmber, SynergyTrait.lowExpectedAmber, SynergyTrait.hasMars],
     },

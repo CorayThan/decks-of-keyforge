@@ -6,6 +6,8 @@ import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.cards.*
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
+import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
+import coraythan.keyswap.cards.extrainfo.NextAndPreviousCardInfos
 import coraythan.keyswap.cards.extrainfo.QExtraCardInfo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.GenericDeck
@@ -16,14 +18,17 @@ import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.users.KeyUser
 import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 class DokCardCacheService(
     private val sasVersionService: SasVersionService,
     private val objectMapper: ObjectMapper,
     private val entityManager: EntityManager,
+    private val extraCardInfoRepo: ExtraCardInfoRepo,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -127,9 +132,6 @@ class DokCardCacheService(
         if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardName.toUrlFriendlyCardTitle()]
             ?: error("No card for ${cardName.toUrlFriendlyCardTitle()}")
 
-    fun findByCardNameOrNull(cardName: String) =
-        if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardName.toUrlFriendlyCardTitle()]
-
     fun findByCardNameUrlOrNull(cardNameUrl: String) =
         if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardNameUrl]
 
@@ -222,6 +224,31 @@ class DokCardCacheService(
             .sortedBy { it.house }
     }
 
+    fun findNextAndPreviousCards(infoId: UUID, expansion: Expansion): NextAndPreviousCardInfos {
+        val extraInfo = extraCardInfoRepo.findByIdOrNull(infoId) ?: error("No info for $infoId")
+        val dokCardExpansion = extraInfo.dokCard.expansions.find { it.expansion == expansion }
+        if (dokCardExpansion == null) {
+            return NextAndPreviousCardInfos()
+        }
+        val cardNumber = dokCardExpansion.cardNumber
+        val allCardNumbersForExpansion = cardsCachedByNumberSet.keys
+            .filter { it.expansion == expansion }
+            .map { it.cardNumber }
+            .sorted()
+        val indexOfCardNum = allCardNumbersForExpansion.indexOf(cardNumber)
+        if (indexOfCardNum == -1) {
+            return NextAndPreviousCardInfos()
+        }
+        val previousIndex = indexOfCardNum - 1
+        val nextIndex = indexOfCardNum + 1
+        val previousCardNum = allCardNumbersForExpansion.getOrNull(previousIndex)
+        val nextCardNum = allCardNumbersForExpansion.getOrNull(nextIndex)
+        return NextAndPreviousCardInfos(
+            nextInfo = findNextInfoIdByCardNumExpansion(nextCardNum, expansion),
+            previousInfo = findNextInfoIdByCardNumExpansion(previousCardNum, expansion)
+        )
+    }
+
     private fun findInfos(predicate: BooleanExpression): List<ExtraCardInfo> {
         val extraQ = QExtraCardInfo.extraCardInfo
         val infos = query.selectFrom(extraQ)
@@ -251,5 +278,11 @@ class DokCardCacheService(
             it.traits.size
             it.synergies.size
         }
+    }
+
+    private fun findNextInfoIdByCardNumExpansion(cardNumber: String?, expansion: Expansion): UUID? {
+        if (cardNumber == null) return null
+        val numSetPair = CardNumberSetPair(expansion, cardNumber)
+        return (futureCardsCachedByNumberSet[numSetPair] ?: cardsCachedByNumberSet[numSetPair])?.id
     }
 }

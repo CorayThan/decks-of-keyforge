@@ -32,8 +32,8 @@ export const AercBlameView = (props: { blame: AercBlame[] }) => {
                 </AccordionSummary>
                 <AccordionDetails>
                     <Box display={"flex"} flexDirection={"column"}>
-                        {blames.map(blame => (
-                            <Box>
+                        {blames.map((blame, idx) => (
+                            <Box key={idx}>
                                 <Typography variant={"subtitle1"}>Editor: {blame.editor}</Typography>
                                 <Typography variant={"subtitle1"}>On: {blame.editDate}</Typography>
                                 <Typography variant={"subtitle1"}>Prior Info</Typography>

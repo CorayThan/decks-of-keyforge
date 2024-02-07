@@ -5,7 +5,7 @@ import { computed, makeObservable, observable } from "mobx"
 import { HasAerc } from "../aerc/HasAerc"
 import { HttpConfig } from "../config/HttpConfig"
 import { IdbUtils } from "../config/IdbUtils"
-import { log, prettyJson, roundToHundreds, Utils } from "../config/Utils"
+import { log, roundToHundreds, Utils } from "../config/Utils"
 import { Cap } from "../decks/search/ConstraintDropdowns"
 import { expansionInfos, expansionNumberForExpansion } from "../expansions/Expansions"
 import { Expansion } from "../generated-src/Expansion"
@@ -258,14 +258,15 @@ export class CardStore {
         this.allTokens = cardsLoaded.filter(card => card.cardType === CardType.TokenCreature)
 
         if (userStore.contentCreator) {
-            this.findNextExtraInfo()
             this.loadCardTraits()
+        }
+        if (userStore.displayFutureSas) {
+            this.findNextExtraInfo()
         }
 
         log.debug(`End load all cards async`)
         this.cardsLoaded = true
         this.setupCardWinRates()
-
     }
 
     loadCardFlavors = () => {
@@ -321,17 +322,16 @@ export class CardStore {
         }
         this.findingPreviousInfo = true
         log.debug("Find previous extra card info")
-        const prevInfo = await axios.get(`${CardStore.CONTEXT}/historical`)
+        const prevInfo: AxiosResponse<FrontendCard[]> = await axios.get(`${CardStore.CONTEXT}/historical`)
         this.findingPreviousInfo = false
-        this.previousExtraInfo = prevInfo.data
+        this.previousExtraInfo = this.createCardsMap(prevInfo.data)
         log.debug("Found previous info")
-        log.debug("prev info for waking nightmare" + prettyJson(this.findPrevExtraInfoForCard("Waking Nightmare")))
     }
 
     findNextExtraInfo = async () => {
         if (this.nextExtraInfo == null) {
-            const nextInfo = await axios.get(`${CardStore.CONTEXT}/future`)
-            this.nextExtraInfo = nextInfo.data
+            const nextInfo: AxiosResponse<FrontendCard[]> = await axios.get(`${CardStore.CONTEXT}/future`)
+            this.nextExtraInfo = this.createCardsMap(nextInfo.data)
         }
     }
 
@@ -355,8 +355,8 @@ export class CardStore {
 
     findExtraInfoToUse = (card: FrontendCard) => {
         let extraInfo = card.extraCardInfo
-        if (this.showFutureCardInfo && this.nextExtraInfo && this.nextExtraInfo[card.cardTitle] != null) {
-            extraInfo = this.nextExtraInfo[card.cardTitleUrl].extraCardInfo
+        if ((userStore.displayFutureSas || this.showFutureCardInfo) && this.nextExtraInfo && this.nextExtraInfo[card.cardTitle] != null) {
+            extraInfo = this.nextExtraInfo[card.cardTitle].extraCardInfo
         }
         return extraInfo
     }
@@ -457,6 +457,12 @@ export class CardStore {
             aercScore: roundToHundreds(aercScore),
             averageAercScore
         }
+    }
+
+    private createCardsMap = (cards: FrontendCard[]): { [cardName: string]: FrontendCard } => {
+        const cardsMap: { [cardName: string]: FrontendCard } = {}
+        cards.forEach(card => cardsMap[card.cardTitle] = card)
+        return cardsMap
     }
 
     private cleanCardName = (cardName: string) => {

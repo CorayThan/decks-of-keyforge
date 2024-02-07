@@ -75,8 +75,8 @@ data class DeckSynergyStats(
         private fun calculateHauntingPercent(cards: List<DokCardInDeck>): Int {
             val hauntingScore = cards.sumOf { dokCardInDeck ->
                 val traitValues = dokCardInDeck.extraCardInfo.traits.sumOf {
-                    val mills =
-                        if (it.trait == SynergyTrait.mills && (it.player == SynTraitPlayer.ANY || it.player == SynTraitPlayer.FRIENDLY)) {
+                    val millsOrHauntingTrait =
+                        if ((it.trait == SynergyTrait.mills || it.trait == SynergyTrait.haunted) && (it.player == SynTraitPlayer.ANY || it.player == SynTraitPlayer.FRIENDLY)) {
                             when (it.strength()) {
                                 TraitStrength.EXTRA_WEAK -> 5
                                 TraitStrength.WEAK -> 10
@@ -103,7 +103,7 @@ data class DeckSynergyStats(
                             0
                         }
 
-                    mills + discards
+                    millsOrHauntingTrait + discards
                 }
 
                 val artifact = if (dokCardInDeck.card.cardType == CardType.Artifact) -5 else 0

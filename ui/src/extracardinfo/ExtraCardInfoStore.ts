@@ -5,10 +5,15 @@ import { messageStore } from "../ui/MessageStore"
 import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
 import { CardHistory } from "./CardHistory"
 import { AercBlame } from "../generated-src/AercBlame"
+import { Expansion } from "../generated-src/Expansion"
+import { NextAndPreviousCardInfos } from "../generated-src/NextAndPreviousCardInfos"
 
 export class ExtraCardInfoStore {
     static readonly CONTEXT = HttpConfig.API + "/extra-card-infos"
     static readonly SECURE_CONTEXT = HttpConfig.API + "/extra-card-infos/secured"
+
+    @observable
+    nextAndPrevInfoIds?: NextAndPreviousCardInfos
 
     @observable
     savingExtraCardInfo = false
@@ -34,6 +39,14 @@ export class ExtraCardInfoStore {
         this.extraCardInfo = extraCardInfo.data
         return this.extraCardInfo
     }
+
+    findNextAndPreviousExtraCardInfos = async (infoId: string, expansion?: Expansion) => {
+        this.nextAndPrevInfoIds = undefined
+        if (expansion != null) {
+            const extraCardInfo: AxiosResponse<NextAndPreviousCardInfos> = await axios.get(`${ExtraCardInfoStore.CONTEXT}/next-and-previous/${infoId}/${expansion}`)
+            this.nextAndPrevInfoIds = extraCardInfo.data
+        }
+}
 
     saveExtraCardInfo = async (extraCardInfo: ExtraCardInfo) => {
         this.savingExtraCardInfo = true
