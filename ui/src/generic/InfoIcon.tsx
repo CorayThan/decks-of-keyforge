@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Tooltip, Typography } from "@material-ui/core"
 import { TypographyClassKey } from "@material-ui/core/Typography"
 import * as React from "react"
 import { AercForCombos, AercForCombosProps } from "../aerc/AercForCombos"
@@ -10,6 +10,7 @@ export interface InfoIconValue {
     icon: React.ReactNode
     combosTips?: Omit<AercForCombosProps, "children">
     cardsTips?: Omit<CardsMatchSasTipProps, "children">
+    basicTip?: string
 }
 
 export const InfoIconList = (props: { values: InfoIconValue[], small?: boolean }) => {
@@ -31,7 +32,7 @@ export const InfoIconList = (props: { values: InfoIconValue[], small?: boolean }
 
 const InfoIcon = (props: { value: InfoIconValue, small?: boolean }) => {
     const {value, small} = props
-    const {info, combosTips, cardsTips} = value
+    const {info, combosTips, cardsTips, basicTip} = value
     let displayValue = info
     if (typeof displayValue === "number") {
         displayValue = displayValue.toFixed(displayValue < 10 && displayValue % 1 !== 0 ? 1 : 0)
@@ -84,6 +85,12 @@ const InfoIcon = (props: { value: InfoIconValue, small?: boolean }) => {
             <CardsMatchSasTip {...cardsTips}>
                 {content}
             </CardsMatchSasTip>
+        )
+    } else if (basicTip) {
+        return (
+            <Tooltip title={basicTip} >
+                {content}
+            </Tooltip>
         )
     } else {
         return content

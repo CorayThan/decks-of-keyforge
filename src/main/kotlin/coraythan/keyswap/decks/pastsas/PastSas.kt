@@ -26,7 +26,6 @@ data class PastSas(
         val sasRating: Int,
         val synergyRating: Int,
         val antisynergyRating: Int,
-        val meta: Int,
 
         val aercVersion: Int,
         val updateDateTime: LocalDateTime = LocalDateTime.now(),

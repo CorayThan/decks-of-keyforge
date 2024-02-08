@@ -50,7 +50,6 @@ export interface DeckSearchResult {
     sasRating: number
     synergyRating: number
     antisynergyRating: number
-    metaScores?: { [key: string]: number }
     efficiencyBonus: number
 
     totalPower: number
@@ -90,6 +89,7 @@ export interface DeckSearchResult {
 
     twinId?: string
     tokenInfo?: TokenInfo
+    hauntingOdds?: number
 
     allianceHouses?: AllianceHouseInfo[]
     validAlliance?: boolean
@@ -149,12 +149,6 @@ export class DeckUtils {
         }
 
         return undefined
-    }
-
-    static calculateMetaScore = (deck: DeckSearchResult) => {
-        return Object.entries(deck.metaScores ?? {})
-            .map(meta => meta[1])
-            .reduce((metaScore, nextMetaScore) => metaScore + nextMetaScore, 0)
     }
 
     static findPrice = (deck: DeckSearchResult, myPriceOnly?: boolean): number | undefined => {
@@ -267,7 +261,6 @@ export class DeckUtils {
                 synergies.antisynergyRating,
                 deck.sasPercentile,
                 synergies.aercScore,
-                DeckUtils.calculateMetaScore(deck),
                 synergies.amberControl,
                 synergies.expectedAmber,
                 synergies.creatureProtection,
@@ -330,7 +323,6 @@ export class DeckUtils {
             "Antisynergy Rating",
             "Sas Percentile",
             "Raw Aerc Score",
-            "META Score",
             "Amber Control",
             "Expected Amber",
             "Creature Protection",

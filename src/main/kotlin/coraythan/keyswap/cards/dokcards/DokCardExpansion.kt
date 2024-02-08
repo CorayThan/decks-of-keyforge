@@ -1,6 +1,7 @@
 package coraythan.keyswap.cards.dokcards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generatets.TsIgnore
@@ -14,6 +15,8 @@ data class DokCardExpansion(
     val cardNumber: String,
     @Enumerated(EnumType.STRING)
     val expansion: Expansion,
+    @Enumerated(EnumType.STRING)
+    val rarity: Rarity = Rarity.Common,
     val wins: Int = 0,
     val losses: Int = 0,
 

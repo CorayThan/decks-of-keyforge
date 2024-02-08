@@ -55,3 +55,9 @@ fun String.firstWord(): String {
         .substringBefore(" ")
         .filter { it.isLetter() }
 }
+
+fun Int.roundBetween(min: Int, max: Int): Int {
+    if (this < min) return min
+    if (this > max) return max
+    return this
+}

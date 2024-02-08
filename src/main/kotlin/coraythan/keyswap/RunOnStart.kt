@@ -1,5 +1,6 @@
 package coraythan.keyswap
 
+import coraythan.keyswap.alliancedecks.AllianceDeckService
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.cards.dokcards.DokCardUpdateService
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfoService
@@ -18,13 +19,13 @@ class RunOnStart(
     private val userSearchService: UserSearchService,
     private val extraCardInfoService: ExtraCardInfoService,
     private val dokCardUpdateService: DokCardUpdateService,
+    private val allianceDeckService: AllianceDeckService,
 ) : CommandLineRunner {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     override fun run(vararg args: String?) {
 
-        extraCardInfoService.fixBadExtraInfos()
 
         cardCache.loadCards()
 
@@ -34,11 +35,12 @@ class RunOnStart(
 
 //        dokCardUpdateService.downloadAllNewCardImages(
 //            setOf(
-//                Expansion.MENAGERIE_2024, Expansion.GRIM_REMINDERS, Expansion.ANOMALY_EXPANSION
+//                Expansion.GRIM_REMINDERS
+//            ),
+//            setOf(
+//                House.Ekwidon, House.Geistoid
 //            )
 //        )
-
-        userSearchService.updateSearchResults()
 
         startupComplete = true
 
@@ -55,6 +57,10 @@ class RunOnStart(
              '---'     '---'           `---'    `---`    '-----'    ''-'   `'-'  `--'   `'-'     `'-..-'  '-----'`    (_I_)  
         """.trimIndent() + "\n"
         )
+
+        userSearchService.updateSearchResults()
+        allianceDeckService.updateAllianceDeckValidity()
+        dokCardUpdateService.updateRarities()
     }
 
 }

@@ -20,7 +20,6 @@ data class DeckStatistics(
         val other: MutableMap<Int, Int> = mutableMapOf(),
         val effectivePower: MutableMap<Int, Int> = mutableMapOf(),
         val sas: MutableMap<Int, Int> = mutableMapOf(),
-        val meta: MutableMap<Int, Int> = mutableMapOf(),
         val synergy: MutableMap<Int, Int> = mutableMapOf(),
         val antisynergy: MutableMap<Int, Int> = mutableMapOf(),
         val creatureCount: MutableMap<Int, Int> = mutableMapOf(),
@@ -34,7 +33,6 @@ data class DeckStatistics(
         val power5OrHigher: MutableMap<Int, Int> = mutableMapOf(),
 
         val sasToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
-        val metaToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val cardRatingsToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val synergyToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
         val antisynergyToWinsLosses: MutableMap<Int, Wins> = mutableMapOf(),
@@ -111,7 +109,6 @@ data class DeckStatistics(
             averageOther = otherStats.median,
             averageEffectivePower = effectivePowerStats.median,
             sas = sas.map { BarData(it.key, it.value) },
-            meta = meta.map { BarData(it.key, it.value) },
             synergy = synergy.map { BarData(it.key, it.value) },
             antisynergy = antisynergy.map { BarData(it.key, it.value) },
             totalCreaturePower = groupCreaturePowerByTens(),
@@ -134,7 +131,6 @@ data class DeckStatistics(
             upgrades = upgradeCount.map { BarData(it.key, it.value) },
 
             sasWinRate = sasToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
-            metaWinRate = metaToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             cardRatingsWinRate = cardRatingsToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             synergyWinRate = synergyToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },
             antisynergyWinRate = antisynergyToWinsLosses.map { BarData(it.key, it.value.toWinPercent()) },

@@ -28,6 +28,7 @@ data class SynergyCombo(
         val synStart: Int? = null,
 )
 
+@GenerateTs
 data class DeckSynergyInfo(
         val rawAerc: Int,
         val sasRating: Int,
@@ -46,12 +47,10 @@ data class DeckSynergyInfo(
         val disruption: Double,
         val other: Double,
 
-        val metaScores: Map<String, Double>,
         val efficiencyBonus: Double,
         val tokenCreationValues: TokenCreationValues?,
-) {
-    fun meta() = metaScores.map { it.value }.sum()
-}
+        val hauntingOdds: Int?,
+)
 
 @GenerateTs
 data class TokenCreationValues(

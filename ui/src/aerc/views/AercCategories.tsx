@@ -25,6 +25,8 @@ import { HasAerc } from "../HasAerc"
 import { DeckType } from "../../generated-src/DeckType"
 import { TokenIcon } from "../../generic/icons/TokenIcon"
 import { FrontendCard } from "../../generated-src/FrontendCard"
+import { HauntedIcon } from "../../generic/icons/HauntedIcon"
+import { SynTraitPlayer } from "../../generated-src/SynTraitPlayer"
 
 interface AercCatProps {
     deck: DeckSearchResult
@@ -236,6 +238,44 @@ export const AercCategoryCounts = (props: AercCatProps) => {
 
 const expansionSpecificCounts = (props: AercCatProps, width: number | undefined): InfoIconValue | undefined => {
     const {deck, cards} = props
+
+    if (deck.expansion === Expansion.GRIM_REMINDERS) {
+
+        const customMatches = []
+        if ((deck.artifactCount ?? 0) > 0) {
+            customMatches.push(`${deck.artifactCount} Artifacts (less haunted)`)
+        }
+        if ((deck.actionCount ?? 0) > 0) {
+            customMatches.push(`${deck.actionCount} Actions (more haunted)`)
+        }
+        let discardPips = 0
+            cards.forEach(card => discardPips += (card.extraCardInfo?.enhancementDiscard ?? 0))
+        if (discardPips > 0) {
+            customMatches.push(`${discardPips} Discard Pips (more haunted)`)
+        }
+        return {
+            icon: <HauntedIcon width={width}/>,
+            info: `${deck.hauntingOdds ?? -1}`,
+            cardsTips: {
+                title: "Haunted Odds 0 to 10",
+                cards,
+                subtitle1: "Mills Friendly",
+                matches: card => card.extraCardInfo?.traits
+                    ?.find(trait => {
+                        if (trait.player === SynTraitPlayer.ENEMY) return false
+                        return trait.trait === SynergyTrait.mills
+                    }) != null,
+                subtitle2: "Discards Friendly",
+                matches2: card => card.extraCardInfo?.traits
+                    ?.find(trait => {
+                        if (trait.player === SynTraitPlayer.ENEMY) return false
+                        return trait.trait === SynergyTrait.discardsCards
+                    }) != null,
+                subtitle3: "Cards",
+                customMatches
+            }
+        }
+    }
 
     if (deck.expansion === Expansion.MASS_MUTATION) {
         return {

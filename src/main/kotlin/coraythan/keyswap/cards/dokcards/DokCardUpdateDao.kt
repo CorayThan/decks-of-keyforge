@@ -48,6 +48,7 @@ class DokCardUpdateDao(
         val dokCardExpansion = DokCardExpansion(
             cardNumber = card.cardNumber,
             expansion = cardExpansion,
+            rarity = card.rarity,
             wins = card.expansionWins?.get(cardExpansion)?.wins ?: 0,
             losses = card.expansionWins?.get(cardExpansion)?.losses ?: 0,
             card = savedDokCard,
@@ -80,6 +81,7 @@ class DokCardUpdateDao(
             val newExpansion = DokCardExpansion(
                 cardNumber = card.cardNumber,
                 expansion = Expansion.forExpansionNumber(card.expansion),
+                rarity = card.rarity,
                 wins = card.expansionWins?.get(cardExpansion)?.wins ?: 0,
                 losses = card.expansionWins?.get(cardExpansion)?.losses ?: 0,
                 card = existingCard,

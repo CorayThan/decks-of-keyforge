@@ -35,7 +35,6 @@ export class WinRateStatsView extends React.Component<{}> {
                 <WinRateBar name={"Antisynergy Win Rate"} data={stats.antisynergyWinRate} quantities={stats.antisynergy}/>
 
                 <WinRateBar name={"Base AERC Win Rate"} data={stats.aercWinRate} quantities={stats.aerc}/>
-                <WinRateBar name={"META Win Rate"} data={stats.metaWinRate} quantities={stats.meta}/>
                 <WinRateBar name={"Amber Control Win Rate"} data={stats.amberControlWinRate} secondary={true} quantities={stats.amberControl}/>
                 <WinRateBar name={"Expected Amber Win Rate"} data={stats.expectedAmberWinRate} secondary={true} quantities={stats.expectedAmber}/>
                 <WinRateBar name={"Artifact Control Win Rate"} data={stats.artifactControlWinRate} secondary={true} quantities={stats.artifactControl}/>

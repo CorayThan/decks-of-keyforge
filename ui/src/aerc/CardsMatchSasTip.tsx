@@ -10,9 +10,11 @@ export interface CardsMatchSasTipProps {
     title: string
     subtitle1?: string
     subtitle2?: string
+    subtitle3?: string
     matches: (card: FrontendCard) => boolean
     matches2?: (card: FrontendCard) => boolean
     cards: FrontendCard[]
+    customMatches?: string[]
     children: React.ReactNode
 }
 
@@ -20,7 +22,7 @@ export interface CardsMatchSasTipProps {
 export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
 
     render() {
-        const {title, subtitle1, subtitle2, cards, matches, matches2, children} = this.props
+        const {title, subtitle1, subtitle2, cards, matches, matches2, subtitle3, customMatches, children} = this.props
 
         if (!cardStore.cardsLoaded) {
             return null
@@ -58,6 +60,18 @@ export class CardsMatchSasTip extends React.Component<CardsMatchSasTipProps> {
                                 {matchedCards2.map((card, idx) => (
                                     <Typography variant={"body2"} key={idx}>
                                         {card!.cardTitle}
+                                    </Typography>
+                                ))}
+                            </>
+                        )}
+                        {customMatches != null && customMatches.length > 0 && (
+                            <>
+                                <Typography variant={"overline"} style={{marginTop: spacing(2)}}>
+                                    {subtitle3}
+                                </Typography>
+                                {customMatches.map((card, idx) => (
+                                    <Typography variant={"body2"} key={idx}>
+                                        {card}
                                     </Typography>
                                 ))}
                             </>

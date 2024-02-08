@@ -281,46 +281,48 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                 </Box>
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(2), padding: spacing(2)}}>
-                        <div style={{display: "flex", alignItems: "center", marginBottom: spacing(2)}}>
+                        <Box display={"flex"} alignItems={"center"} mb={2} flexDirection={"column"}>
                             <Typography variant={"h4"}>
                                 {card.cardTitle}'s AERC
                             </Typography>
                             <div style={{flexGrow: 1}}/>
-                            <Box minWidth={120}>
-                                <FormControl>
-                                    <Select
-                                        displayEmpty={true}
-                                        value={keyLocalStorage.genericStorage.cardScrollExpansion ?? ""}
-                                        label="Card Nav Expansion"
-                                        onChange={(event) => {
-                                            const value = event.target.value as (Expansion | "")
-                                            keyLocalStorage.updateGenericStorage({
-                                                cardScrollExpansion: value === "" ? undefined : value
-                                            })
-                                        }}
-                                    >
-                                        <MenuItem value={""}>Card Scroll Expansion</MenuItem>
-                                        {expansionsWithCards.map(expansion => (
-                                            <MenuItem key={expansion} value={expansion}>
-                                                <ExpansionLabel expansion={expansion} iconSize={16}/>
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                            <Box display={"flex"} alignItems={"center"}>
+                                <Box minWidth={120}>
+                                    <FormControl>
+                                        <Select
+                                            displayEmpty={true}
+                                            value={keyLocalStorage.genericStorage.cardScrollExpansion ?? ""}
+                                            label="Card Nav Expansion"
+                                            onChange={(event) => {
+                                                const value = event.target.value as (Expansion | "")
+                                                keyLocalStorage.updateGenericStorage({
+                                                    cardScrollExpansion: value === "" ? undefined : value
+                                                })
+                                            }}
+                                        >
+                                            <MenuItem value={""}>Card Scroll Expansion</MenuItem>
+                                            {expansionsWithCards.map(expansion => (
+                                                <MenuItem key={expansion} value={expansion}>
+                                                    <ExpansionLabel expansion={expansion} iconSize={16}/>
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                                <IconButton
+                                    disabled={prevId == null}
+                                    href={Routes.editExtraCardInfo(prevId)}
+                                >
+                                    <ChevronLeft/>
+                                </IconButton>
+                                <IconButton
+                                    disabled={nextId == null}
+                                    href={Routes.editExtraCardInfo(nextId)}
+                                >
+                                    <ChevronRight/>
+                                </IconButton>
                             </Box>
-                            <IconButton
-                                disabled={prevId == null}
-                                href={Routes.editExtraCardInfo(prevId)}
-                            >
-                                <ChevronLeft/>
-                            </IconButton>
-                            <IconButton
-                                disabled={nextId == null}
-                                href={Routes.editExtraCardInfo(nextId)}
-                            >
-                                <ChevronRight/>
-                            </IconButton>
-                        </div>
+                        </Box>
                         <Grid
                             container={true}
                             spacing={2}

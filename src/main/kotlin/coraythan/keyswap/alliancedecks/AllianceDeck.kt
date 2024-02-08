@@ -63,9 +63,15 @@ data class AllianceDeck(
     companion object {
 
         val restrictedCardsList = mapOf(
+            "Befuddle" to 100,
+            "Chronus" to 100,
             "Control the Weak" to 100,
             "Dark Æmber Vault" to 1,
+            "FOF Transponder" to 100,
             "Ghostform" to 100,
+            "Hallafest" to 100,
+            "Infurnace" to 100,
+            "Legionary Trainer" to 100,
             "Library Access" to 1,
             "Martian Generosity" to 100,
             "Restringuntus" to 1,
@@ -175,6 +181,7 @@ data class AllianceDeck(
             antisynergyRating = synergies?.antisynergyRating ?: -1,
             housesAndCards = housesAndCards?.addBonusIcons(bonusIcons()) ?: listOf(),
             tokenInfo = token?.toTokenInfo(),
+            hauntingOdds = synergies?.hauntingOdds,
 
             sasPercentile = stats?.sasStats?.closestPercentileForValue(synergies?.sasRating ?: 0) ?: 0.0,
 
@@ -184,7 +191,6 @@ data class AllianceDeck(
                 )
             },
             tokenCreationValues = synergies?.tokenCreationValues,
-            metaScores = synergies?.metaScores ?: mapOf(),
             efficiencyBonus = synergies?.efficiencyBonus ?: 0.0,
             allianceHouses = allianceHouses.map {
                 AllianceHouseInfo(

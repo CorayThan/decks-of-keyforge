@@ -5,7 +5,6 @@ import coraythan.keyswap.cards.CardEditHistory
 import coraythan.keyswap.cards.CardEditHistoryRepo
 import coraythan.keyswap.cards.dokcards.DokCard
 import coraythan.keyswap.cards.dokcards.DokCardRepo
-import coraythan.keyswap.cards.dokcards.toUrlFriendlyCardTitle
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
@@ -34,12 +33,6 @@ class ExtraCardInfoService(
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
-
-    fun fixBadExtraInfos() {
-        val updated = extraCardInfoRepo.findByCardNameUrl("")
-            .map { it.copy(cardNameUrl = it.cardName.toUrlFriendlyCardTitle()) }
-        extraCardInfoRepo.saveAll(updated)
-    }
 
     fun findExtraCardInfo(id: UUID): ExtraCardInfo {
 
@@ -81,7 +74,8 @@ class ExtraCardInfoService(
         log.info("Current version $currentVersion latest extra info version $latestPreexistingVersion prev base syn = ${latestExtraInfo.baseSynPercent} new ${sourceInfo.baseSynPercent}")
 
         check(nextVersion >= latestPreexistingVersion) { "latest pre existing version can't be more than next version!" }
-        val dokCard = dokCardRepo.findByCardTitleUrl(sourceInfo.cardNameUrl) ?: throw BadRequestException("No dok card for ${sourceInfo.cardNameUrl}")
+        val dokCard = dokCardRepo.findByCardTitleUrl(sourceInfo.cardNameUrl)
+            ?: throw BadRequestException("No dok card for ${sourceInfo.cardNameUrl}")
 
         val id = if (nextVersion == latestPreexistingVersion) {
             // update next version of extra card info

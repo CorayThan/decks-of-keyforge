@@ -13,7 +13,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.21"
+export const latestVersion = "6.22"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -41,6 +41,34 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"6.22"}
+                    date={"2/7/2024"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Grim Reminders + Menagerie",
+                            note: "As you may have noticed, we've got the new decks importing to DoK! SAS scores are " +
+                                "being actively worked on by the team that helps me rate SAS, " +
+                                "and if you have preview SAS turned on as a patron expect " +
+                                "it to be all over the place in the coming days. Soon we'll do an initial release " +
+                                "for Grim Reminders SAS."
+                        },
+                        {
+                            highlight: "Removal of META Score",
+                            note: "I've decided to remove the META Score from SAS, so this will change SAS scores. " +
+                                "The KeyForge meta is constantly evolving, and I think it's better in the long " +
+                                "term for SAS to concentrate on scoring the raw quality of a deck in a vacuum, not " +
+                                "in the context of the current meta."
+                        },
+                        {
+                            highlight: "Many other improvements",
+                            note: "I've also been trying to make various little improvements to the site while " +
+                                "I'm at it. For example, all Alliance decks now have bonus pips added to them. And " +
+                                "the deck import popover has been replaced with a new, hopefully superior page."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.21"}
                     date={"1/3/2024"}

@@ -6,7 +6,7 @@ import { DeckScoreView } from "../DeckScoreView"
 import { OrganizedPlayStats } from "../OrganizedPlayStats"
 import * as React from "react"
 import { DeckViewDeckName } from "./DeckViewDeckName"
-import { DeckTokenView } from "./DeckTokenView"
+import { DeckTokenView, deckTopTokenWidth } from "./DeckTokenView"
 import { DeckSaleIcons } from "./DeckSaleIcons"
 import { Expansion } from "../../generated-src/Expansion"
 import { DeckAllianceText } from "./DeckAllianceText"
@@ -36,7 +36,7 @@ const DeckTopBannerFull = (props: BannerProps) => {
             <CardAsLine
                 card={{cardTitle: token.name}}
                 deck={deck}
-                width={100}
+                width={deckTopTokenWidth}
                 img={true}
                 cardActualHouse={token.house}
                 copies={deck.tokenCreationValues?.tokensPerGame}

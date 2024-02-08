@@ -48,7 +48,6 @@ data class DeckSearchResult(
     val sasRating: Int = 0,
     val synergyRating: Int = 0,
     val antisynergyRating: Int = 0,
-    val metaScores: Map<String, Double> = mapOf(),
     val efficiencyBonus: Double = 0.0,
 
     val totalPower: Int = 0,
@@ -77,6 +76,7 @@ data class DeckSearchResult(
     val dateAdded: LocalDate? = null,
     val twinId: String? = null,
     val tokenInfo: TokenInfo? = null,
+    val hauntingOdds: Int? = null,
 
     val allianceHouses: List<AllianceHouseInfo>? = null,
     val validAlliance: Boolean? = null,

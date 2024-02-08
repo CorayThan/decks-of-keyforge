@@ -3,15 +3,13 @@ import { blue } from "@material-ui/core/colors"
 import Tooltip from "@material-ui/core/Tooltip"
 import { range } from "lodash"
 import * as React from "react"
-import { Fragment } from "react"
 import { spacing } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
-import { roundToInt, roundToTens, roundToThousands } from "../config/Utils"
+import { roundToTens, roundToThousands } from "../config/Utils"
 import { displaySas } from "../expansions/Expansions"
 import { StarIcon, StarType } from "../generic/imgs/stars/StarIcons"
 import { UnstyledLink } from "../generic/UnstyledLink"
-import { SasTip } from "../mui-restyled/SasTip"
-import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
+import { DeckSearchResult } from "./models/DeckSearchResult"
 import { PastSasButton } from "./PastSasButton"
 
 export enum DeckScoreSize {
@@ -61,8 +59,6 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
         efficiencyBonus,
     } = deck
 
-    const metaScore = roundToInt(DeckUtils.calculateMetaScore(deck))
-
     if (expansion != null && !displaySas(expansion)) {
         return (
             <Typography variant={"h5"} style={{color: "#FFFFFF"}}>Score Pending</Typography>
@@ -87,39 +83,21 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
 
     return (
         <Box display={"flex"} className={"deck-score-box"}>
-            <div style={{height: 148, ...props.style}}>
+            <div style={{height: 128, ...props.style}}>
                 <Tooltip title={"Total SAS / AERC score without synergies and antisynergies."}>
                     <div>
-                        <RatingRow value={aercScore} name={"BASE AERC"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
+                        <RatingRow value={aercScore} name={"BASE AERC"}
+                                   size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                     </div>
                 </Tooltip>
                 <Tooltip title={`Synergies + Efficiency Bonus. EB = ${roundToTens(efficiencyBonus)}`}>
                     <div>
-                        <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
+                        <RatingRow value={synergyRating} name={"SYNERGY"} operator={"+"}
+                                   size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                     </div>
                 </Tooltip>
-                <RatingRow value={antisynergyRating} name={"ANTISYNERGY"} operator={"-"} size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
-                <SasTip
-                    title={<Typography variant={"subtitle1"}>META Score</Typography>}
-                    contents={(
-                        <Box display={"grid"} gridTemplateColumns={"7fr 1fr"} gridColumnGap={16} gridRowGap={4}>
-                            {Object.entries(deck.metaScores ?? {})
-                                .map(meta => (
-                                    <Fragment key={meta[0]}>
-                                        <Typography variant={"body2"}>{meta[0]}</Typography>
-                                        <Typography variant={"body2"}>{roundToTens(meta[1])}</Typography>
-                                    </Fragment>
-                                ))}
-                        </Box>
-                    )}
-                >
-                    <RatingRow
-                        value={Math.abs(metaScore)}
-                        name={"META"}
-                        operator={metaScore > -1 ? "+" : "-"}
-                        size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}
-                    />
-                </SasTip>
+                <RatingRow value={antisynergyRating} name={"ANTISYNERGY"} operator={"-"}
+                           size={small ? DeckScoreSize.SMALL : DeckScoreSize.MEDIUM}/>
                 <div style={{borderBottom: "1px solid rgba(255,255,255)", paddingTop: 2}}/>
                 <div style={{display: "flex"}}>
                     <div style={{flexGrow: 1}}/>
@@ -127,10 +105,12 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
                         title={sasTooltip}>
                         <div>
                             {noLinks ? (
-                                <RatingRow value={sasRating} name={sasName} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
+                                <RatingRow value={sasRating} name={sasName}
+                                           size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
                             ) : (
                                 <UnstyledLink to={AboutSubPaths.sas}>
-                                    <RatingRow value={sasRating} name={sasName} size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
+                                    <RatingRow value={sasRating} name={sasName}
+                                               size={small ? DeckScoreSize.MEDIUM_LARGE : DeckScoreSize.LARGE}/>
                                 </UnstyledLink>
                             )}
                         </div>
@@ -153,7 +133,14 @@ export const DeckScoreView = (props: DeckScoreViewProps) => {
     )
 }
 
-export const SaStars = (props: { sasPercentile: number, small?: boolean, style?: React.CSSProperties, gray?: boolean, halfAtEnd?: boolean, noPercent?: boolean }) => {
+export const SaStars = (props: {
+    sasPercentile: number,
+    small?: boolean,
+    style?: React.CSSProperties,
+    gray?: boolean,
+    halfAtEnd?: boolean,
+    noPercent?: boolean
+}) => {
     const {sasPercentile, small, style, gray, halfAtEnd, noPercent} = props
     let includeHalf = false
     let type = StarType.NORMAL
@@ -259,9 +246,12 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
         <Tooltip title={tooltip}>
             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                 <div style={style}>
-                    {includeHalf && !halfAtEnd && <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
-                    {range(quantity).map((idx) => <StarIcon key={idx} starType={type} style={starStyle} small={small} gray={gray}/>)}
-                    {includeHalf && halfAtEnd && <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
+                    {includeHalf && !halfAtEnd &&
+                        <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
+                    {range(quantity).map((idx) => <StarIcon key={idx} starType={type} style={starStyle} small={small}
+                                                            gray={gray}/>)}
+                    {includeHalf && halfAtEnd &&
+                        <StarIcon starType={StarType.HALF} style={starStyle} small={small} gray={gray}/>}
                 </div>
                 {!noPercent && (
                     <Typography
@@ -278,7 +268,13 @@ export const SaStars = (props: { sasPercentile: number, small?: boolean, style?:
 
 type MuiTextTypes = "body1" | "body2" | "h3" | "h4" | "h5"
 
-const RatingRow = (props: { value: number, name: string, operator?: string, size?: DeckScoreSize, tooltip?: string }) => {
+const RatingRow = (props: {
+    value: number,
+    name: string,
+    operator?: string,
+    size?: DeckScoreSize,
+    tooltip?: string
+}) => {
     const {size} = props
     let largeText: MuiTextTypes = "body1"
     let smallText: MuiTextTypes = "body2"
@@ -316,7 +312,13 @@ const RatingRow = (props: { value: number, name: string, operator?: string, size
             </Typography>
             <Typography
                 variant={smallText}
-                style={{fontSize: smallFontSize, marginBottom: smallTextMarginBottom, color: "#FFFFFF", width, lineHeight}}
+                style={{
+                    fontSize: smallFontSize,
+                    marginBottom: smallTextMarginBottom,
+                    color: "#FFFFFF",
+                    width,
+                    lineHeight
+                }}
             >
                 {props.name}
             </Typography>

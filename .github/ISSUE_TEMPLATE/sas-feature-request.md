@@ -1,6 +1,6 @@
 ---
 name: SAS Feature request
-about: Suggest a change to SAS or AERC, like a new card trait or META score
+about: Suggest a change to SAS or AERC, like a new card trait
 title: ''
 labels: sas-feature
 assignees: CorayThan

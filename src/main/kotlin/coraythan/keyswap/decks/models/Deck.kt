@@ -192,7 +192,6 @@ data class Deck(
                 )
             },
             tokenCreationValues = synergies?.tokenCreationValues,
-            metaScores = synergies?.metaScores ?: mapOf(),
             efficiencyBonus = synergies?.efficiencyBonus ?: 0.0,
 
             hasOwnershipVerification = hasOwnershipVerification.falseToNull(),
@@ -201,6 +200,7 @@ data class Deck(
 
             twinId = twinId,
             tokenInfo = token?.toTokenInfo(),
+            hauntingOdds = synergies?.hauntingOdds,
         )
     }
 

@@ -9,4 +9,5 @@ interface CardRepo : JpaRepository<Card, String>, QuerydslPredicateExecutor<Card
     fun findByExpansion(expansion: Int): List<Card>
     fun findFirstByCardTitle(cardTitle: String): Card
     fun findFirstByCardTitleAndMaverickFalse(cardTitle: String): Card
+    fun findByExpansionAndCardTitle(expansion: Int, cardTitle: String): List<Card>
 }

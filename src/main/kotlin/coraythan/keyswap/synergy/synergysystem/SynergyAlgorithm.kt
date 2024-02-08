@@ -4,12 +4,13 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.decks.models.GenericDeck
+import coraythan.keyswap.expansions.Expansion
+import coraythan.keyswap.roundBetween
 import coraythan.keyswap.roundToTwoSigDig
 import coraythan.keyswap.synergy.*
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addDeckTraits
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addHouseTraits
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addOutOfHouseTraits
-import coraythan.keyswap.synergy.synergysystem.MetaScoreAlgorithm.generateMetaScores
 import coraythan.keyswap.synergy.synergysystem.SelfEnhancementAlgorithm.generateSelfEnhancementCombos
 import coraythan.keyswap.synergy.synergysystem.TokenSynergyService.makeTokenValues
 import org.slf4j.LoggerFactory
@@ -379,18 +380,15 @@ object DeckSynergyService {
 
         val antiSynergyToRound = synergyCombos.filter { it.netSynergy < 0 }.sumOf { it.netSynergy * it.copies }
         val antisynergy = antiSynergyToRound.roundToInt().absoluteValue
-        val preMetaSas =
+        val preSas =
             a + e + r + c + f + u + d + cp + o + powerValue + (creatureCount.toDouble() * StaticAercValues.creatureBonus)
 
-        val efficiencyBonus = calculateEfficiencyBonus(synergyCombos, preMetaSas)
-
-        val metaScores = generateMetaScores(a, c, traitsMap)
-        val metaScore = metaScores.values.sum()
+        val efficiencyBonus = calculateEfficiencyBonus(synergyCombos, preSas)
 
         val synergy = (synergyUnroundedRaw + efficiencyBonus).roundToInt()
 
-        val newSas = (preMetaSas + metaScore + efficiencyBonus).roundToInt()
-        val rawAerc = newSas + antisynergy - synergy - metaScore.roundToInt()
+        val newSas = (preSas + efficiencyBonus).roundToInt()
+        val rawAerc = newSas + antisynergy - synergy
 
         return DeckSynergyInfo(
             synergyRating = synergy,
@@ -410,12 +408,16 @@ object DeckSynergyService {
             creatureProtection = cp,
             other = o,
 
-            metaScores = metaScores,
             efficiencyBonus = efficiencyBonus,
             tokenCreationValues = if (tokenValues == null) null else TokenCreationValues(
                 tokensPerGame = tokenValues.tokensPerGame,
                 tokensPerHouse = tokenValues.tokensPerGamePerHouse.map { TokensPerGameForHouse(it.key, it.value) },
             ),
+            hauntingOdds = if (deck.expansionEnum == Expansion.GRIM_REMINDERS) {
+                deckStats.deckStats[SynergyTrait.haunted]?.toDouble()?.div(10)?.roundToInt()?.roundBetween(0, 10)
+            } else {
+                null
+            }
         )
     }
 

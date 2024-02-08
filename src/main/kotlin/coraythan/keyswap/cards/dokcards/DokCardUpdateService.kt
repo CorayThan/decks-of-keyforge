@@ -1,5 +1,6 @@
 package coraythan.keyswap.cards.dokcards
 
+import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardRepo
 import coraythan.keyswap.cards.CardsVersionService
@@ -8,6 +9,7 @@ import coraythan.keyswap.expansions.Expansion
 import org.slf4j.LoggerFactory
 import org.springframework.http.*
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.nio.file.Files
@@ -20,8 +22,35 @@ class DokCardUpdateService(
     private val dokCardRepo: DokCardRepo,
     private val dokCardUpdateDao: DokCardUpdateDao,
     private val restTemplate: RestTemplate,
+    private val dokCardExpansionRepo: DokCardExpansionRepo,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    @Transactional
+    fun updateRarities() {
+        log.info("Begin updating dok card expansion rarities.")
+        val allCards = dokCardRepo.findAll()
+        allCards.forEach { dokCard ->
+            dokCard.expansions.forEach { expansion ->
+                val cards = cardRepo.findByExpansionAndCardTitle(expansion.expansion.expansionNumber, dokCard.cardTitle)
+                val card = cards.firstOrNull { !it.maverick } ?: cards.firstOrNull()
+                if (card == null) {
+                    log.warn("No card for ${dokCard.cardTitle} $expansion")
+                    val cardNoExpansion = cardRepo.findFirstByCardTitle(dokCard.cardTitle)
+                    dokCardExpansionRepo.save(
+                        expansion.copy(rarity = cardNoExpansion.rarity)
+                    )
+                } else {
+                    if (expansion.rarity != card.rarity) {
+                        dokCardExpansionRepo.save(
+                            expansion.copy(rarity = card.rarity)
+                        )
+                    }
+                }
+            }
+        }
+        log.info("End updating dok card expansion rarities.")
+    }
 
     fun createDoKCardsFromKCards(cards: List<Card>): Boolean {
         var updatedCards = false
@@ -47,12 +76,15 @@ class DokCardUpdateService(
         return updatedCards
     }
 
-    fun downloadAllNewCardImages(fromExpansions: Set<Expansion>) {
-        val findDecks = fromExpansions.flatMap { cardRepo.findByExpansion(it.expansionNumber) }
-            .filter { it.frontImage.contains("mastervault-storage-prod.s3") }
+    fun downloadAllNewCardImages(fromExpansions: Set<Expansion>, fromHouses: Set<House> = setOf()) {
+        val findCards = fromExpansions.flatMap { cardRepo.findByExpansion(it.expansionNumber) }
+            .filter {
+                it.frontImage.contains("mastervault-storage-prod.s3")
+                        && (fromHouses.isEmpty() || (fromHouses.contains(it.house) && !it.maverick))
+            }
             .distinctBy { it.cardTitle }
 
-        val findDecksNotAlreadyFound = findDecks
+        val findDecksNotAlreadyFound = findCards
             .filter {
                 val titleMod = it.cardTitle.toUrlFriendlyCardTitle()
                 !File("card-imgs/$titleMod.png").exists()
@@ -60,7 +92,7 @@ class DokCardUpdateService(
             // Ghostform image is borked
             .filter { it.cardTitle != "Ghostform" }
 
-        log.info("${findDecks.size} deck images, ${findDecksNotAlreadyFound.size} not already found finding decks ${findDecksNotAlreadyFound.map { it.cardTitle }}")
+        log.info("${findCards.size} deck images, ${findDecksNotAlreadyFound.size} not already found finding cards ${findDecksNotAlreadyFound.map { it.cardTitle }}")
 
         findDecksNotAlreadyFound.forEach { card ->
 

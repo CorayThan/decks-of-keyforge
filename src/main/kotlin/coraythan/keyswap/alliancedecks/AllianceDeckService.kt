@@ -23,6 +23,7 @@ import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserService
 import jakarta.persistence.EntityManager
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -45,6 +46,30 @@ class AllianceDeckService(
     private val query = JPAQueryFactory(entityManager)
     private val matchFirstWord = "^\\S+".toRegex()
     private val matchLastWord = "\\S+$".toRegex()
+
+    fun updateAllianceDeckValidity() {
+        log.info("Update alliance deck validity")
+        var continueUpdating = true
+        var page = 0
+        while (continueUpdating) {
+            var updated = 0
+            val decks = allianceDeckRepo.findAll(PageRequest.of(page, 100))
+            if (decks.isEmpty) {
+                continueUpdating = false
+                log.info("Done updating alliance deck validity")
+            } else {
+                decks.forEach {
+                    val valid = AllianceDeck.determineIfValid(cardCache.cardsForDeck(it))
+                    if (it.validAlliance != valid) {
+                        allianceDeckRepo.save(it.copy(validAlliance = valid))
+                        updated++
+                    }
+                }
+                log.info("Updating alliances validity on page $page updated $updated alliances.")
+                page++
+            }
+        }
+    }
 
     @Transactional
     fun saveAllianceDeck(toSave: AllianceDeckHouses): UUID {

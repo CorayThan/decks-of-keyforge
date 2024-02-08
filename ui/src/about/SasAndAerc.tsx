@@ -146,17 +146,6 @@ export class SasAndAerc extends React.Component {
                         "the game.",
                     ]}/>
                     <div style={{marginBottom: spacing(4)}}/>
-                    <InfoListCard title={"META Score"} infos={[
-                        "The META Score represents how well a deck's AERC is distributed.",
-
-                        <List>
-                            <ListItem><Typography>A from less than 5 to less than 2 gives -1 to -4 META.</Typography></ListItem>
-                            <ListItem><Typography>C from less than 6 to less than 2 gives -1 to -3 META.</Typography></ListItem>
-                            <ListItem><Typography>R one or more hard R gives 1 META.</Typography></ListItem>
-                            <ListItem><Typography>3+ trait strength worth of board clears is worth 1 META.</Typography></ListItem>
-                        </List>
-                    ]}/>
-                    <div style={{marginBottom: spacing(4)}}/>
                     <InfoListCard title={"Efficiency Bonus Score"} infos={[
                         "The efficiency bonus score is a new experimental score for decks. I hope to take feedback on it for a period of time and eventually " +
                         "incorporate it into SAS.",
