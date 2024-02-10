@@ -538,13 +538,18 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                         </Grid>
                                         <Grid item={true} xs={12}>
                                             <TextField
-                                                label={"Public contact and trade info"}
+                                                label={
+                                                    "Public contact and trade info"
+                                                }
                                                 value={this.contactInfo}
                                                 multiline={true}
                                                 rows={3}
                                                 onChange={(event: EventValue) => this.contactInfo = event.target.value}
                                                 fullWidth={true}
                                                 variant={"outlined"}
+                                                helperText={"This information is publicly " +
+                                                    "visible. Include personally identifying " +
+                                                    "information at your own risk."}
                                             />
                                         </Grid>
                                         <Grid item={true} xs={12}>
@@ -566,41 +571,75 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                 </Grid>
                             </Grid>
                         </CardContent>
-                        <CardActions>
-                            <LinkButton href={Routes.userProfilePage(profile.username)}>Public Profile</LinkButton>
-                            <SafeKeyButton
-                                title={"Remove all decks from your account?"}
-                                description={
-                                    "This will unlist all decks for sale, and remove all decks you have marked as owned from your account. " +
-                                    "You cannot have any active auctions to perform this action."
-                                }
-                                warning={"All your decks will be gone!"}
-                                onConfirm={async (password) => {
-                                    await deckListingStore.removeAllDecks(password)
-                                }}
-                                image={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/destroy-them-all.png"}
-                                confirmButtonName={"Remove them all"}
-                            >
-                                Remove All Decks
-                            </SafeKeyButton>
+                        <CardActions
+                            style={{
+                                flexDirection: screenStore.screenSizeSm() ? "column" : undefined,
+                                alignItems: screenStore.screenSizeSm() ? "flex-end" : undefined,
+                        }}
+                        >
+                            <Box display={"flex"} mb={screenStore.screenSizeSm() && 2}>
+                                <div style={{flexGrow: 1}}/>
+                                <LinkButton href={Routes.userProfilePage(profile.username)}>Public
+                                    Profile</LinkButton>
+                                <SafeKeyButton
+                                    title={"Remove all decks from your account?"}
+                                    description={
+                                        "This action will unlist all decks for sale, and " +
+                                        "remove all decks you have marked as owned from your account. " +
+                                        "You cannot have any active auctions to perform this action."
+                                    }
+                                    warning={"All your decks will be gone!"}
+                                    onConfirm={async (password) => {
+                                        await deckListingStore.removeAllDecks(password)
+                                    }}
+                                    image={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/destroy-them-all.png"}
+                                    confirmButtonName={"Remove them all"}
+                                    confirmPassword={true}
+                                >
+                                    Remove All Decks
+                                </SafeKeyButton>
+                                <SafeKeyButton
+                                    title={"Remove personally identifying information?"}
+                                    description={
+                                        "While you cannot delete a Decks of KeyForge account, you can " +
+                                        "remove your personally identifying information and turn off all contact settings " +
+                                        "using this action. After performing this action, " +
+                                        "you can separately change and anonymize your username and email."
+                                    }
+                                    warning={"Deletes personally identifying information and turns off contact me settings"}
+                                    onConfirm={async () => {
+                                        await userStore.removePii()
+                                        await userStore.loadUserInfo()
+                                    }}
+                                    image={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/bad-penny.png"}
+                                    confirmButtonName={"Remove PII"}
+                                    confirmPassword={false}
+                                >
+                                    Remove PII
+                                </SafeKeyButton>
+                            </Box>
                             <div style={{flexGrow: 1}}/>
-                            <LinkPatreon redirectPath={MyDokSubPaths.profile}/>
-                            <Button
-                                variant={"contained"}
-                                type={"submit"}
-                                color={"primary"}
-                                style={{marginLeft: spacing(2)}}
-                            >
-                                Save
-                            </Button>
+                            <Box display={"flex"}>
+                                <div style={{flexGrow: 1}}/>
+                                <LinkPatreon redirectPath={MyDokSubPaths.profile}/>
+                                <Button
+                                    variant={"contained"}
+                                    type={"submit"}
+                                    color={"primary"}
+                                    style={{marginLeft: spacing(2)}}
+                                >
+                                    Save
+                                </Button>
+                            </Box>
                         </CardActions>
                     </KeyCard>
                 </form>
                 {userStore.featuredSeller && (
                     <Box maxWidth={560}>
                         <KeyCard
-                            topContents={<Typography variant={"h4"} style={{color: "#FFFFFF"}}>Store
-                                Details</Typography>}
+                            topContents={<Typography variant={"h4"} style={{color: "#FFFFFF"}}>
+                                Store Details
+                            </Typography>}
                             style={{margin: 0}}
                         >
                             <Box p={2}>
@@ -677,6 +716,7 @@ const EditUsername = () => {
             icon={true}
             size={"small"}
             style={{marginLeft: spacing(1)}}
+            confirmPassword={true}
             formComponents={(
                 <TextField
                     label={"New Username"}

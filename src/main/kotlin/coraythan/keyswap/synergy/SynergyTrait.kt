@@ -54,6 +54,7 @@ enum class SynergyTrait {
     returns_R_FromDiscard,
     shuffles_R_IntoDeck,
     replays,
+    puts_R_OnBottomOfDeck,
 
     // Creatures and Artifacts
     uses,

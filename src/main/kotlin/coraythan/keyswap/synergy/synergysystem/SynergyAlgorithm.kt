@@ -5,7 +5,6 @@ import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.expansions.Expansion
-import coraythan.keyswap.roundBetween
 import coraythan.keyswap.roundToTwoSigDig
 import coraythan.keyswap.synergy.*
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addDeckTraits
@@ -414,7 +413,7 @@ object DeckSynergyService {
                 tokensPerHouse = tokenValues.tokensPerGamePerHouse.map { TokensPerGameForHouse(it.key, it.value) },
             ),
             hauntingOdds = if (deck.expansionEnum == Expansion.GRIM_REMINDERS) {
-                deckStats.deckStats[SynergyTrait.haunted]?.toDouble()?.div(10)?.roundToInt()?.roundBetween(0, 10)
+                deckStats.deckStats[SynergyTrait.haunted]?.toDouble()?.div(10)?.roundToInt()
             } else {
                 null
             }

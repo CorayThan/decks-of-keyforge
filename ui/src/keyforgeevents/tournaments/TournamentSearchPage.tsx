@@ -189,6 +189,7 @@ const DeleteTournament = (props: { tournament: TournamentSearchResult }) => {
             warning={"This will also delete the event."}
             onConfirm={() => tournamentStore.deleteTournament(tournament.id)}
             style={{marginLeft: spacing(2)}}
+            confirmPassword={true}
         >
             Delete
         </SafeKeyButton>

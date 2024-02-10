@@ -41,6 +41,7 @@ export interface DeckSortOption {
 const deckSortOptions: DeckSortOption[] = [
     {value: DeckSortOptions.ADDED_DATE, name: "Date Added"},
     {value: DeckSortOptions.SAS_RATING, name: "SAS Rating"},
+    {value: DeckSortOptions.NAME, name: "Name"},
 ]
 
 const sortOptionsStrings = deckSortOptions.map(option => option.name)

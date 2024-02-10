@@ -59,8 +59,8 @@ class RunOnStart(
         )
 
         userSearchService.updateSearchResults()
-        allianceDeckService.updateAllianceDeckValidity()
-        dokCardUpdateService.updateRarities()
+//        allianceDeckService.updateAllianceDeckValidity()
+//        dokCardUpdateService.updateRarities()
     }
 
 }

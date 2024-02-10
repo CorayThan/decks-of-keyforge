@@ -3,7 +3,6 @@ package coraythan.keyswap.cards.dokcards
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.generatets.GenerateTs
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.*
@@ -31,8 +30,6 @@ data class DokCard(
 
     @Enumerated(EnumType.STRING)
     val cardType: CardType = CardType.Creature,
-    @Enumerated(EnumType.STRING)
-    val rarity: Rarity = Rarity.Common,
 
     val amber: Int = 0,
     val power: Int = 0,

@@ -40,8 +40,16 @@ class PublicApiService(
     fun findMyDecks(user: KeyUser): List<PublicMyDeckInfo> {
         return ownedDeckRepo.findAllByOwnerId(user.id)
             .map {
+                val cards = cardCache.cardsForDeck(it.deck)
+                val token = cardCache.tokenForDeck(it.deck)
+                val synergies = DeckSynergyService.fromDeckWithCards(it.deck, cards, token)
+
                 PublicMyDeckInfo(
                     deck = it.deck.toDeckSearchResult(
+                        housesAndCards = cardCache.deckToHouseAndCards(it.deck),
+                        cards = cards,
+                        token = token,
+                        synergies = synergies,
                         stats = statsService.cachedStats
                     ),
                     wishlist = favoritedDeckRepo.existsByDeckIdAndUserId(it.deck.id, user.id),
@@ -68,9 +76,9 @@ class PublicApiService(
         return deck.toDeckSearchResult(
             housesAndCards = cardCache.deckToHouseAndCards(deck),
             cards = cards,
-            stats = statsService.findCurrentStats(),
             token = token,
             synergies = synergies,
+            stats = statsService.findCurrentStats(),
         )
     }
 

@@ -471,7 +471,12 @@ export class CardStore {
 
     private includeCard = (filters: CardFilters, card: FrontendCard): boolean => {
         // Convert fixed rarity to Variant
-        const cardRarity = card.rarity == Rarity.Special || card.rarity == Rarity.Variant || card.rarity == Rarity.FIXED ? Rarity.Variant : card.rarity
+        let cardRarities: Rarity[] = []
+        card.expansions.forEach(expansion => {
+            const cardExpansionRarity = expansion.rarity == Rarity.Special || expansion.rarity == Rarity.Variant || expansion.rarity == Rarity.FIXED ? Rarity.Variant : expansion.rarity
+            cardRarities.push(cardExpansionRarity)
+        })
+
         const filtersRarities = filters.rarities.map(rarity => (rarity as Rarity | "Special") === "Special" ? Rarity.Variant : rarity)
 
         return (!filters.title || Utils.cardNameIncludes(card.cardTitle, filters.title))
@@ -485,7 +490,7 @@ export class CardStore {
             &&
             (filters.types.length === 0 || filters.types.indexOf(card.cardType) !== -1)
             &&
-            (filtersRarities.length === 0 || (cardRarity != null && filtersRarities.indexOf(cardRarity) !== -1))
+            (filtersRarities.length === 0 || (cardRarities.length > 0 && filtersRarities.find(filterRarity => cardRarities.includes(filterRarity)) != null))
             &&
             (filters.ambers.length === 0 || filters.ambers.indexOf(card.amber) !== -1)
     }

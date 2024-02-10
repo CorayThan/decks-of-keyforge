@@ -9,7 +9,6 @@ import coraythan.keyswap.expansions.Expansion
 import org.slf4j.LoggerFactory
 import org.springframework.http.*
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.nio.file.Files
@@ -22,35 +21,8 @@ class DokCardUpdateService(
     private val dokCardRepo: DokCardRepo,
     private val dokCardUpdateDao: DokCardUpdateDao,
     private val restTemplate: RestTemplate,
-    private val dokCardExpansionRepo: DokCardExpansionRepo,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
-
-    @Transactional
-    fun updateRarities() {
-        log.info("Begin updating dok card expansion rarities.")
-        val allCards = dokCardRepo.findAll()
-        allCards.forEach { dokCard ->
-            dokCard.expansions.forEach { expansion ->
-                val cards = cardRepo.findByExpansionAndCardTitle(expansion.expansion.expansionNumber, dokCard.cardTitle)
-                val card = cards.firstOrNull { !it.maverick } ?: cards.firstOrNull()
-                if (card == null) {
-                    log.warn("No card for ${dokCard.cardTitle} $expansion")
-                    val cardNoExpansion = cardRepo.findFirstByCardTitle(dokCard.cardTitle)
-                    dokCardExpansionRepo.save(
-                        expansion.copy(rarity = cardNoExpansion.rarity)
-                    )
-                } else {
-                    if (expansion.rarity != card.rarity) {
-                        dokCardExpansionRepo.save(
-                            expansion.copy(rarity = card.rarity)
-                        )
-                    }
-                }
-            }
-        }
-        log.info("End updating dok card expansion rarities.")
-    }
 
     fun createDoKCardsFromKCards(cards: List<Card>): Boolean {
         var updatedCards = false

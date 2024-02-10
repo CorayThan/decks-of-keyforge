@@ -4,6 +4,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.dokcards.DokCardExpansion
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.generatets.GenerateTs
+import coraythan.keyswap.roundToOneSigDig
 import coraythan.keyswap.roundToTwoSigDig
 
 @GenerateTs
@@ -18,7 +19,6 @@ data class FrontendCard(
     val amber: Int,
     val power: Int,
     val armor: Int,
-    val rarity: Rarity,
     val flavorText: String?,
     val big: Boolean,
     val token: Boolean,
@@ -29,5 +29,10 @@ data class FrontendCard(
     val cardNumbers: List<CardNumberSetPair>,
 ) {
     val winRate: Double
-        get() = if (wins + losses < 1) 0.0 else (wins.toDouble() / wins.toDouble() + losses.toDouble()).roundToTwoSigDig()
+        get() = if ((wins) < 1) 0.0 else if (losses < 1) 100.0 else {
+            val totalGames = (wins + losses).toDouble()
+            val winsNumerator = (wins * 100).toDouble()
+            val winRatePercent = winsNumerator / totalGames
+            winRatePercent.roundToOneSigDig()
+        }
 }

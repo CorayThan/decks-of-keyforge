@@ -32,6 +32,7 @@ data class MatchSynergiesToTraits(
                         cardTypes = extraCardInfo?.allCardTypes(),
                         traitTypes = it.value.cardTypes ?: listOf(),
                     )
+                val zoneMatch = fromZonesMatch(synFromZones = synergyValue.fromZones, traitFromZones = it.value.fromZones)
                 val playerMatch = playersMatch(synergyValue.player, it.value.player)
                 val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
 
@@ -54,7 +55,7 @@ data class MatchSynergiesToTraits(
                     nonMatchOnly = it.value.notCardTraits
                 )
                 val match =
-                    typeMatch && playerMatch && houseMatch && synergyPowerMatch && traitPowerMatch && synergyTraitsMatch && traitsTraitMatch
+                    typeMatch && zoneMatch && playerMatch && houseMatch && synergyPowerMatch && traitPowerMatch && synergyTraitsMatch && traitsTraitMatch
 
                 // log.debug("\ntrait ${synergyValue.trait} match $match\n ${it.value.trait} in ${it.card?.cardTitle ?: "Deck trait: ${it.deckTrait}"} \ntype $typeMatch player $playerMatch house $houseMatch power $powerMatch trait $traitMatch")
 
@@ -88,6 +89,14 @@ data class MatchSynergiesToTraits(
         } else {
             synTypes.isEmpty() || traitTypes.isEmpty() || synTypes.any { type1Type -> traitTypes.any { type1Type == it } }
         }
+    }
+
+    private fun fromZonesMatch(
+        synFromZones: List<PlayZone>?,
+        traitFromZones: List<PlayZone>?
+    ): Boolean {
+        if (synFromZones.isNullOrEmpty() || traitFromZones.isNullOrEmpty()) return true
+        return synFromZones.any { traitFromZones.contains(it) }
     }
 
     private fun playersMatch(player1: SynTraitPlayer, player2: SynTraitPlayer): Boolean {

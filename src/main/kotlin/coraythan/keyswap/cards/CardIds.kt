@@ -6,7 +6,7 @@ import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 
 data class CardIds(
-        val cardIds: Map<House, List<CardNumberSetPairOld>>
+    val cardIds: Map<House, List<CardNumberSetPairOld>>
 ) {
     companion object {
         fun fromCards(cards: List<Card>): CardIds {
@@ -20,6 +20,6 @@ data class CardIds(
 
 @GenerateTs
 data class CardNumberSetPair(
-        val expansion: Expansion,
-        val cardNumber: String
+    val expansion: Expansion,
+    val cardNumber: String,
 )

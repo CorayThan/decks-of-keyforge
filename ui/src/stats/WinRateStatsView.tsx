@@ -58,7 +58,6 @@ export class WinRateStatsView extends React.Component<{}> {
                 <WinRateBar name={"Action Count Win Rate"} data={stats.actionCountWinRate} quantities={stats.actions}/>
                 <WinRateBar name={"Artifact Count Win Rate"} data={stats.artifactCountWinRate} quantities={stats.artifacts}/>
                 <WinRateBar name={"Upgrade Count Win Rate"} data={stats.upgradeCountWinRate} quantities={stats.upgrades}/>
-                <WinRateBar name={"Rare Count Win Rate"} data={stats.raresWinRate} yDomain={[40, 60]}/>
 
                 <WinRateBar name={"House Win Rate"} data={stats.houseWinRate} secondary={true} yDomain={[40, 60]}/>
             </div>

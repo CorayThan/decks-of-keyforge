@@ -1,6 +1,7 @@
 package coraythan.keyswap.cards.dokcards
 
 import coraythan.keyswap.House
+import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.decks.models.SimpleCard
@@ -14,6 +15,7 @@ data class DokCardInDeck(
     val card: DokCard,
     val extraCardInfo: ExtraCardInfo,
     val house: House,
+    val rarity: Rarity,
     val maverick: Boolean = false,
     val anomaly: Boolean = false,
     val legacy: Boolean = false,
@@ -27,6 +29,7 @@ data class DokCardInDeck(
         card = card.dokCard,
         extraCardInfo = card,
         house = cardHouse,
+        rarity = card.dokCard.expansions.firstOrNull { it.expansion == cardExpansion }?.rarity ?: Rarity.Common,
         anomaly = cardExpansion === Expansion.ANOMALY_EXPANSION,
         maverick = card.dokCard.houses.isNotEmpty() && !card.dokCard.houses.contains(
             cardHouse
@@ -54,7 +57,7 @@ data class DokCardInDeck(
     fun toSimpleCard() = SimpleCard(
         cardTitle = card.cardTitle,
         cardTitleUrl = card.cardTitleUrl,
-        rarity = card.rarity,
+        rarity = rarity,
         maverick = maverick,
         anomaly = anomaly,
         enhanced = enhanced,

@@ -120,9 +120,16 @@ class DeckSearchService(
         val sortProperty = when (filters.sort) {
             DeckSortOptions.ADDED_DATE -> deckQ.id
             DeckSortOptions.SAS_RATING -> deckQ.sasRating
+            DeckSortOptions.NAME -> deckQ.name
         }
 
-        val sort = if (filters.sortDirection == SortDirection.DESC) {
+        val sort = if (filters.sort == DeckSortOptions.NAME) {
+            if (filters.sortDirection == SortDirection.DESC) {
+                (sortProperty as ComparableExpressionBase<*>).asc()
+            } else {
+                (sortProperty as ComparableExpressionBase<*>).desc()
+            }
+        } else if (filters.sortDirection == SortDirection.DESC) {
             (sortProperty as ComparableExpressionBase<*>).desc()
         } else {
             (sortProperty as ComparableExpressionBase<*>).asc()
@@ -399,6 +406,9 @@ class DeckSearchService(
                             .where(ownedDecksQ.owner.id.eq(userHolder.user?.id))
                     )
                 )
+                if (filters.notForSale) {
+                    predicate.andNot(deckQ.deck.forSale)
+                }
             } else if (filters.teamDecks) {
                 // team decks
                 val myTeamId = userHolder.user?.teamId
@@ -413,7 +423,9 @@ class DeckSearchService(
                             .where(ownedDecksQ.owner.id.`in`(allOwners.map { it.id }))
                     )
                 )
-
+                if (filters.notForSale) {
+                    predicate.andNot(deckQ.deck.forSale)
+                }
             } else if (allOwners.size == 1 && !allOwners[0].allowUsersToSeeDeckOwnership) {
                 // One user search and not public, show for sale
 
@@ -469,6 +481,11 @@ class DeckSearchService(
             predicate.and(deckQ.deck.forSale.isTrue)
         } else if (filters.forTrade) {
             predicate.and(deckQ.deck.forTrade.isTrue)
+        }
+
+        val listedWithinDays = filters.listedWithinDays
+        if ((filters.forSale == true || filters.forTrade) && listedWithinDays != null) {
+            predicate.and(deckQ.deck.auctions.any().dateListed.gt(now().minusDays(listedWithinDays.toLong())))
         }
 
         if ((filters.forSale == true || filters.forTrade) && filters.forSaleInCountry != null) {

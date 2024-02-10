@@ -37,6 +37,7 @@ import { FrontendCard } from "../generated-src/FrontendCard"
 import { ExpansionLabel, expansionsWithCards } from "../expansions/Expansions"
 import { keyLocalStorage } from "../config/KeyLocalStorage"
 import { Expansion } from "../generated-src/Expansion"
+import { screenStore } from "../ui/ScreenStore"
 
 export const UpdateExtraCardInfoPage = observer(() => {
 
@@ -281,7 +282,7 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                 </Box>
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(2), padding: spacing(2)}}>
-                        <Box display={"flex"} alignItems={"center"} mb={2} flexDirection={"column"}>
+                        <Box display={"flex"} alignItems={"center"} mb={2} flexDirection={screenStore.screenSizeSm() ? "column" : undefined}>
                             <Typography variant={"h4"}>
                                 {card.cardTitle}'s AERC
                             </Typography>

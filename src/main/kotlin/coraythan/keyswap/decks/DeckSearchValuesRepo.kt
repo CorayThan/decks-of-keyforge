@@ -43,6 +43,8 @@ interface DeckSasValuesUpdatableRepo : CrudRepository<DeckSasValuesUpdatable, Lo
             CREATE INDEX IF NOT EXISTS dsv1_sas_desc_id_idx ON deck_sas_values_updatable (sas_rating DESC, id);
             CREATE INDEX IF NOT EXISTS dsv1_import_date_time_asc_id_idx ON deck_sas_values_updatable (import_date_time, id);
             CREATE INDEX IF NOT EXISTS dsv1_import_date_time_desc_id_idx ON deck_sas_values_updatable (import_date_time DESC, id);
+            CREATE INDEX IF NOT EXISTS deck_search_values_name_desc_id_idx ON deck_sas_values_updatable (name DESC, id);
+            CREATE INDEX IF NOT EXISTS deck_search_values_name_asc_id_idx ON deck_sas_values_updatable (name ASC, id);
             
             CREATE INDEX IF NOT EXISTS dsv1_deck_name_lower ON deck_sas_values_updatable USING gin (LOWER(name) gin_trgm_ops);
             CREATE INDEX IF NOT EXISTS dsv1_expansion_idx ON deck_sas_values_updatable (expansion);
@@ -83,6 +85,8 @@ interface DeckSasValuesUpdatableRepo : CrudRepository<DeckSasValuesUpdatable, Lo
             DROP INDEX IF EXISTS dsv1_sas_desc_id_idx;
             DROP INDEX IF EXISTS dsv1_import_date_time_asc_id_idx;
             DROP INDEX IF EXISTS dsv1_import_date_time_desc_id_idx;
+            DROP INDEX IF EXISTS deck_search_values_name_desc_id_idx;
+            DROP INDEX IF EXISTS deck_search_values_name_asc_id_idx;
             
             DROP INDEX IF EXISTS dsv1_deck_name_lower;
             DROP INDEX IF EXISTS dsv1_expansion_idx;

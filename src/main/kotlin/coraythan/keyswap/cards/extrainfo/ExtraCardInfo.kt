@@ -283,7 +283,6 @@ data class ExtraCardInfo(
             amber = card.amber,
             power = card.power,
             armor = card.armor,
-            rarity = card.rarity,
             flavorText = card.flavorText,
             big = card.big,
             token = card.token,
@@ -296,4 +295,3 @@ data class ExtraCardInfo(
     }
 
 }
-

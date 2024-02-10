@@ -52,11 +52,14 @@ class UserEndpoints(
     @PostMapping("/secured/remove-patron/{username}")
     fun setManualPatronTier(@PathVariable username: String) = userService.makeManualPatron(username, null)
 
-    @PostMapping("/change-password")
+    @PostMapping("/secured/change-password")
     fun changePassword(@RequestBody request: ResetPasswordRequest) = userService.resetPasswordTo(request.resetCode, request.newPassword)
 
-    @PostMapping("/change-username")
+    @PostMapping("/secured/change-username")
     fun changeUsername(@RequestBody request: UsernameChange) = userService.changeUsername(request.password, request.username)
+
+    @PostMapping("/secured/remove-pii")
+    fun removePii() = userService.removePii()
 
     @PostMapping("/update-tier/{username}/{tier}")
     fun updatePatreonTier(@PathVariable username: String, @PathVariable tier: PatreonRewardsTier, @RequestParam apiKey: String) {

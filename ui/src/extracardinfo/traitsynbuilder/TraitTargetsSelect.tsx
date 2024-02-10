@@ -20,6 +20,8 @@ import { synTraitHouseShortLabel } from "../../synergy/SynTraitHouse"
 import { SynTraitPlayer } from "../../generated-src/SynTraitPlayer"
 import { startCase } from "lodash"
 import { observer } from "mobx-react"
+import { PlayZone } from "../../generated-src/PlayZone"
+import { synBuilderDialogStyle } from "./SelectTraitOrSyn"
 
 export const TraitTargetsSelect = observer((props: { store: TraitBuilderStore }) => {
     const store = props.store
@@ -27,7 +29,7 @@ export const TraitTargetsSelect = observer((props: { store: TraitBuilderStore })
         <>
             <DialogTitle
                 id="form-dialog-title">Select {Utils.camelCaseToTitleCase(store.traitOrSynergy)} Targets</DialogTitle>
-            <DialogContent>
+            <DialogContent style={synBuilderDialogStyle()}>
                 <Box display={"flex"} mb={1}>
                     <TraitBubble
                         traitValue={store.synTraitValue()}
@@ -54,6 +56,29 @@ export const TraitTargetsSelect = observer((props: { store: TraitBuilderStore })
                                     />
                                 }
                                 label={type}
+                            />
+                        ))}
+                    </FormGroup>
+                </FormControl>
+                <FormControl>
+                    <FormLabel>Target Zones</FormLabel>
+                    <FormGroup>
+                        {(Utils.enumValues(PlayZone) as PlayZone[]).map(type => (
+                            <FormControlLabel
+                                key={type}
+                                control={
+                                    <Checkbox
+                                        checked={store.playZones.includes(type)}
+                                        onChange={() => {
+                                            if (store.playZones.includes(type)) {
+                                                store.playZones = store.playZones.filter(toRemove => type !== toRemove)
+                                            } else {
+                                                store.playZones.push(type)
+                                            }
+                                        }}
+                                    />
+                                }
+                                label={Utils.camelCaseToTitleCase(type)}
                             />
                         ))}
                     </FormGroup>

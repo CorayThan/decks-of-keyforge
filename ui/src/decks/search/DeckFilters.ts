@@ -12,7 +12,7 @@ import { queryParamsFromObject, SearchFiltersBuilder } from "../../config/Search
 import { SortDirection } from "../../generated-src/SortDirection"
 import { DeckSortOptions } from "../../generated-src/DeckSortOptions"
 
-export class  DeckFilters {
+export class DeckFilters {
     static forSale = () => {
         const filters = new DeckFilters()
         filters.forSale = true
@@ -39,6 +39,7 @@ export class  DeckFilters {
             .value("notForSale")
             .value("forSale")
             .value("titleQl")
+            .value("listedWithinDays")
 
             .stringArrayValue("houses")
             .stringArrayValue("excludeHouses")
@@ -135,6 +136,8 @@ export class  DeckFilters {
     @observable
     tournamentIds: number[] = []
     @observable
+    listedWithinDays?: number
+    @observable
     previousOwner = ""
     pageSize = 20
 
@@ -163,6 +166,17 @@ export class  DeckFilters {
         this.teamDecks = false
         this.tournamentIds = []
         this.titleQl = false
+        this.listedWithinDays = undefined
+    }
+
+    handleListedWithinDaysUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        log.info("Listed within days to " + event.target.value)
+        if (event.target.value === "") {
+            log.info("Listed within days to undefined??")
+            this.listedWithinDays = undefined
+        } else {
+            this.listedWithinDays = Number(event.target.value)
+        }
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
@@ -220,6 +234,10 @@ export const deckFiltersToQueryString = (filters: DeckFilters | SaleNotification
 
     if (copied.forSale == null) {
         delete copied.forSale
+    }
+
+    if (copied.listedWithinDays == null) {
+        delete copied.listedWithinDays
     }
 
     if (copied.cards) {

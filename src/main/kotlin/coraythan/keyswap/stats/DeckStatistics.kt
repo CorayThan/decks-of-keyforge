@@ -53,7 +53,6 @@ data class DeckStatistics(
         val artifactWins: MutableMap<Int, Wins> = mutableMapOf(),
         val upgradeWins: MutableMap<Int, Wins> = mutableMapOf(),
 
-        val raresWins: MutableMap<Int, Wins> = mutableMapOf(),
         val housesWins: MutableMap<House, Wins> = mutableMapOf(),
 
         var aercDatas: List<AercData> = listOf()
@@ -151,7 +150,6 @@ data class DeckStatistics(
             artifactCountWinRate = artifactWins.map { BarData(it.key, it.value.toWinPercent()) },
             upgradeCountWinRate = upgradeWins.map { BarData(it.key, it.value.toWinPercent()) },
 
-            raresWinRate = raresWins.map { BarData(it.key, it.value.toWinPercent()) },
             houseWinRate = housesWins.map { BarData(it.key, it.value.toWinPercent()) }.sortedBy { it.x as House },
 
             actionCountPercentiles = actionCountStats.percentileForValue,

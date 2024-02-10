@@ -210,14 +210,17 @@ const findSynegyComboForCardFromDeck = (card: Partial<FrontendCard>, house?: Hou
 
 const CardLine = observer((props: CardAsLineProps & { fullCard: FrontendCard }) => {
     const {card, fullCard, hideRarity, deck} = props
-
+    const expansion = deck?.expansion
+    const cardRarity = card.rarity
+        ?? fullCard.expansions.find(cardExpansion => cardExpansion.expansion === expansion)?.rarity
+        ?? fullCard.expansions[0]?.rarity
     const enhanced = CardUtils.bonusIconCount(card) > 0
 
     return (
         <div
             style={{display: "flex", alignItems: "center", marginTop: props.marginTop, width: props.width}}
         >
-            {!hideRarity && <RarityIcon rarity={fullCard.rarity}/>}
+            {!hideRarity && <RarityIcon rarity={cardRarity}/>}
             <Typography
                 variant={"body2"}
                 style={{marginLeft: spacing(1), color: card.enhanced ? blue.A200 : undefined}}

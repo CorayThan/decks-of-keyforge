@@ -159,6 +159,7 @@ class KeyUserService(
                 emailVerified = emailVerified,
                 publicContactInfo = update.publicContactInfo,
                 allowsTrades = update.allowsTrades,
+                allowsMessages = update.allowsMessages,
                 allowUsersToSeeDeckOwnership = update.allowUsersToSeeDeckOwnership,
                 currencySymbol = update.currencySymbol,
                 country = update.country,
@@ -208,6 +209,30 @@ class KeyUserService(
         validateUsername(trimmedUsername)
 
         userRepo.save(user.copy(username = trimmedUsername))
+    }
+
+    fun removePii() {
+        val user = currentUserService.loggedInUserOrUnauthorized()
+        userRepo.save(
+            user
+                .copy(
+                    publicContactInfo = null,
+                    sellerEmail = null,
+                    sellerEmailVerified = false,
+                    discord = null,
+                    tcoUsername = null,
+                    shippingCost = null,
+                    storeIconKey = null,
+                    storeName = null,
+                    storeBannerKey = null,
+                    currencySymbol = "",
+                    country = null,
+                    allowUsersToSeeDeckOwnership = false,
+                    allowsTrades = false,
+                    allowsMessages = false,
+                    preferredCountries = null,
+                )
+        )
     }
 
     fun updateLatestUserVersion(version: String) {

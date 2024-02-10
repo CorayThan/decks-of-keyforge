@@ -220,7 +220,7 @@ export class UserStore {
 
     changePassword = (resetCode: string, newPassword: string) => {
         this.changingPassword = true
-        axiosWithoutErrors.post(`${UserStore.CONTEXT}/change-password`, {resetCode, newPassword})
+        axiosWithoutErrors.post(`${UserStore.SECURE_CONTEXT}/change-password`, {resetCode, newPassword})
             .then(() => {
                 this.changingPassword = false
                 messageStore.setSuccessMessage("Your password has been changed!")
@@ -232,7 +232,11 @@ export class UserStore {
     }
 
     changeUsername = async (password: string, username: string) => {
-        await axios.post(`${UserStore.CONTEXT}/change-username/`, {password, username})
+        await axios.post(`${UserStore.SECURE_CONTEXT}/change-username`, {password, username})
+    }
+
+    removePii = async () => {
+        await axios.post(`${UserStore.SECURE_CONTEXT}/remove-pii`)
     }
 
     verifyEmail = (verificationCode: string) => {

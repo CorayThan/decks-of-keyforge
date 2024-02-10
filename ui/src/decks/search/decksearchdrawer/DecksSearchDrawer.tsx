@@ -1,4 +1,4 @@
-import { Box, Divider, FormGroup, IconButton, Switch, Tooltip } from "@material-ui/core"
+import { Box, Divider, FormGroup, IconButton, MenuItem, Switch, Tooltip } from "@material-ui/core"
 import Checkbox from "@material-ui/core/Checkbox/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel"
 import List from "@material-ui/core/List/List"
@@ -90,6 +90,11 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
     clearSearch = () => {
         deckSearchDrawerStore.clear()
         this.props.filters.reset()
+    }
+
+    updateNotForSale = (notForSale: boolean) => {
+        const filters = this.props.filters
+        filters.notForSale = notForSale
     }
 
     updateForSale = (forSale?: boolean) => {
@@ -396,6 +401,49 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                             label={<Typography variant={"body2"}>Previously Owned</Typography>}
                                             style={{width: 136}}
                                         />
+                                        <FormControlLabel
+                                            disabled={this.props.filters.forSale || this.props.filters.forTrade
+                                                || (this.props.filters.owner !== userStore.username && !this.props.filters.teamDecks)}
+                                            control={
+                                                <Checkbox
+                                                    checked={this.props.filters.notForSale}
+                                                    onChange={(event) => this.updateNotForSale(event.target.checked)}
+                                                />
+                                            }
+                                            label={<Typography variant={"body2"}>Not For Sale</Typography>}
+                                            style={{width: 136}}
+                                        />
+                                        <Box width={136}>
+                                            <TextField
+                                                disabled={!this.props.filters.forSale}
+                                                size={"small"}
+                                                id="listed-within"
+                                                select={true}
+                                                fullWidth={true}
+                                                label="Listed Within"
+                                                value={this.props.filters.listedWithinDays ?? ""}
+                                                onChange={this.props.filters.handleListedWithinDaysUpdate}
+                                            >
+                                                <MenuItem value={""}>
+                                                    Any
+                                                </MenuItem>
+                                                <MenuItem value={1}>
+                                                    Today
+                                                </MenuItem>
+                                                <MenuItem value={2}>
+                                                    Two Days
+                                                </MenuItem>
+                                                <MenuItem value={3}>
+                                                    Three Days
+                                                </MenuItem>
+                                                <MenuItem value={7}>
+                                                    One Week
+                                                </MenuItem>
+                                                <MenuItem value={30}>
+                                                    Thirty Days
+                                                </MenuItem>
+                                            </TextField>
+                                        </Box>
                                     </div>
                                     {owners.length > 0 && (
                                         <div>

@@ -8,6 +8,7 @@ import { SynTraitRatingValues } from "../../synergy/SynTraitValue"
 import React from "react"
 import { HelperText } from "../../generic/CustomTypographies"
 import { SynergyTrait } from "../../generated-src/SynergyTrait"
+import { synBuilderDialogStyle } from "./SelectTraitOrSyn"
 
 export const TraitStrengthSelect = (props: { store: TraitBuilderStore }) => {
     const store = props.store
@@ -16,7 +17,7 @@ export const TraitStrengthSelect = (props: { store: TraitBuilderStore }) => {
         <>
             <DialogTitle
                 id="form-dialog-title">Select {Utils.camelCaseToTitleCase(store.traitOrSynergy)} Strength</DialogTitle>
-            <DialogContent>
+            <DialogContent style={synBuilderDialogStyle()}>
                 <Box display={"flex"}>
                     <TraitBubble
                         traitValue={store.synTraitValue()}
@@ -65,7 +66,7 @@ const TraitStrengthDescription = (props: { trait?: SynergyTrait }) => {
                 </HelperText>
                 <Box
                     display={"grid"}
-                    gridTemplateColumns={"1fr 3fr"}
+                    gridTemplateColumns={"1fr 4fr"}
                     gridColumnGap={spacing(2)}
                     gridRowGap={spacing(0.5)}
                 >

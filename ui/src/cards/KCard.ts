@@ -1,6 +1,6 @@
 import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
-import { Utils } from "../config/Utils"
+import { log, Utils } from "../config/Utils"
 import { activeSasExpansions } from "../expansions/Expansions"
 import { Expansion } from "../generated-src/Expansion"
 import { SimpleCard } from "../generated-src/SimpleCard"
@@ -88,10 +88,9 @@ export class CardUtils {
             })
         }
 
-        const totalWinRate = card.winRate
-        if (totalWinRate != null && winRates.length !== 1 && !isNaN(totalWinRate)) {
+        if (card.winRate != null && card.winRate > 0) {
             winRates.unshift({
-                winRatePercent: round(totalWinRate * 100, 1),
+                winRatePercent: card.winRate,
                 wins: card.wins,
                 losses: card.losses,
             })
@@ -124,9 +123,8 @@ export class CardUtils {
             return [
                 card.cardTitle,
                 card.houses,
-                card.cardNumbers?.map(numbers => `${numbers.expansion} – ${numbers.cardNumber}`),
+                card.expansions.map(expansions => `${expansions.expansion} – ${expansions.cardNumber} – ${expansions.rarity}`),
                 card.cardType,
-                card.rarity,
                 card.extraCardInfo.aercScore,
                 card.extraCardInfo.aercScoreMax,
                 card.extraCardInfo.amberControl,
@@ -166,9 +164,8 @@ export class CardUtils {
         data.unshift([
             "Name",
             "House",
-            "Expansion – #",
+            "Expansion – # – Rarity",
             "Type",
-            "Rarity",
             "Aerc Min",
             "Aerc Max",
             "Amber Control",

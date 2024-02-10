@@ -32,7 +32,12 @@ export const KeyButton = (props: KeyButtonProps) => {
             color={color}
             size={icon ? "small" : undefined}
             disabled={disabled || loading}
-            style={{width: icon ? 32 : undefined, height: icon ? 32 : undefined, minWidth: icon ? 32 : undefined, minHeight: icon ? 32 : undefined, ...style}}
+            style={{
+                width: icon ? 32 : undefined,
+                height: icon ? 32 : undefined,
+                minWidth: icon ? 32 : undefined,
+                minHeight: icon ? 32 : undefined, ...style
+            }}
             {...rest}
         >
             {children}
@@ -52,6 +57,7 @@ interface SafeButtonProps extends ButtonProps {
     description: string
     warning: string
     image?: string
+    confirmPassword: boolean
     onConfirm: (password: string) => void
     confirmButtonName?: string
     icon?: boolean
@@ -59,7 +65,18 @@ interface SafeButtonProps extends ButtonProps {
 }
 
 export const SafeKeyButton = (props: SafeButtonProps) => {
-    const {title, description, warning, image, onConfirm, confirmButtonName, icon, formComponents, ...rest} = props
+    const {
+        title,
+        description,
+        warning,
+        image,
+        onConfirm,
+        confirmButtonName,
+        confirmPassword,
+        icon,
+        formComponents,
+        ...rest
+    } = props
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [confirmed, setConfirmed] = useState("")
@@ -96,8 +113,8 @@ export const SafeKeyButton = (props: SafeButtonProps) => {
                     <DialogContentText style={{marginBottom: spacing(2)}} color={"error"}>
                         {warning} Please enter your password to continue.
                     </DialogContentText>
-
-                        {formComponents}
+                    {formComponents}
+                    {confirmPassword && (
                         <FormControl
                             variant={"outlined"}
                             style={{marginBottom: spacing(2)}}
@@ -121,6 +138,7 @@ export const SafeKeyButton = (props: SafeButtonProps) => {
                                 labelWidth={136}
                             />
                         </FormControl>
+                    )}
 
                 </DialogContent>
                 <DialogActions>
@@ -128,7 +146,7 @@ export const SafeKeyButton = (props: SafeButtonProps) => {
                     <KeyButton
                         loading={loading}
                         color={"primary"}
-                        disabled={loading || confirmed.trim().length === 0}
+                        disabled={loading || (confirmPassword && confirmed.trim().length === 0)}
                         onClick={async () => {
                             setLoading(true)
                             await onConfirm(confirmed)

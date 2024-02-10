@@ -69,7 +69,6 @@ data class GlobalStats(
         val artifactCountWinRate: List<BarData>? = listOf(),
         val upgradeCountWinRate: List<BarData>? = listOf(),
 
-        val raresWinRate: List<BarData>? = listOf(),
         val houseWinRate: List<BarData>? = listOf(),
 
         val actionCountPercentiles: Map<Int, Double> = mapOf(),

@@ -160,6 +160,7 @@ class DokCardCacheService(
             card = token.dokCard,
             extraCardInfo = token,
             house = token.dokCard.houses.first(),
+            rarity = Rarity.Special,
         )
     }
 
@@ -269,6 +270,7 @@ class DokCardCacheService(
             card = token.dokCard,
             extraCardInfo = token,
             house = token.dokCard.houses.first(),
+            rarity = Rarity.Special,
         )
     }
 

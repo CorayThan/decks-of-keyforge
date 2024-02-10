@@ -24,6 +24,7 @@ interface DeckQuery {
     val expansions: List<Int>
     val withOwners: Boolean
     val teamDecks: Boolean
+    val listedWithinDays: Int?
 
     val constraints: List<Constraint>
     val cards: List<DeckCardQuantity>
@@ -56,6 +57,7 @@ data class DeckFilters(
     override val expansions: List<Int> = listOf(),
     override val withOwners: Boolean = false,
     override val teamDecks: Boolean = false,
+    override val listedWithinDays: Int? = null,
 
     override val constraints: List<Constraint> = listOf(),
 
@@ -86,6 +88,7 @@ data class DeckCardQuantity(
 enum class DeckSortOptions {
     ADDED_DATE,
     SAS_RATING,
+    NAME,
 }
 
 @GenerateTs

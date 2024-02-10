@@ -8,6 +8,7 @@ import { TraitBuildStage } from "./TraitBuildStage"
 import { SynTraitValue } from "../../generated-src/SynTraitValue"
 import { SynGroup, SynOrTrait } from "./SynBuilderTypes"
 import { log } from "../../config/Utils"
+import { PlayZone } from "../../generated-src/PlayZone"
 
 export class TraitBuilderStore {
 
@@ -28,6 +29,9 @@ export class TraitBuilderStore {
 
     @observable
     cardTypes: CardType[] = []
+
+    @observable
+    playZones: PlayZone[] = []
 
     @observable
     cardTraits: string[] = []
@@ -68,15 +72,16 @@ export class TraitBuilderStore {
         trait: SynTraitValue
     }) => {
         if (trait == null) {
+            this.trait = SynergyTrait.any
             this.rating = 3
             this.house = SynTraitHouse.anyHouse
             this.cardTypes = []
             this.cardTraits = []
+            this.playZones = []
             this.notCardTraits = false
             this.powersString = ""
             this.player = SynTraitPlayer.ANY
             this.cardName = ""
-            this.trait = undefined
             this.group = ""
             this.groupMax = ""
             this.primaryGroup = false
@@ -88,6 +93,7 @@ export class TraitBuilderStore {
             this.house = vals.house
             this.cardTypes = vals.cardTypes ?? []
             this.cardTraits = vals.cardTraits ?? []
+            this.playZones = vals.fromZones ?? []
             this.notCardTraits = vals.notCardTraits
             this.powersString = vals.powersString
             this.player = vals.player
@@ -117,6 +123,7 @@ export class TraitBuilderStore {
             house: this.house,
             player: this.player,
             cardTypes: this.cardTypes.slice(),
+            fromZones: this.playZones.slice(),
             notCardTraits: this.notCardTraits,
             cardTraits: this.cardTraits.slice(),
             powersString: this.powersString.trim(),

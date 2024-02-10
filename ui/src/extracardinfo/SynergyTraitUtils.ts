@@ -45,7 +45,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
     {
         groupName: "Recursion",
         traits: [SynergyTrait.returns_R_ToHand, SynergyTrait.returns_R_FromDiscard, SynergyTrait.shuffles_R_IntoDeck,
-            SynergyTrait.replays],
+            SynergyTrait.replays, SynergyTrait.puts_R_OnBottomOfDeck],
     },
     {
         groupName: "Creatures and Artifacts",

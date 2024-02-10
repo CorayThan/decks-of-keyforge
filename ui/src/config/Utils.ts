@@ -163,6 +163,23 @@ export class Utils {
         return result.charAt(0).toUpperCase() + result.slice(1)
     }
 
+    static generateTraitsTypeList = (toJoin: string[], addToValues?: string): string => {
+        let joined = ""
+        for (let idx = 0; idx < toJoin.length; idx++) {
+            const joinValue = Utils.camelCaseToTitleCase(toJoin[idx].toLowerCase()) + (addToValues ?? "")
+            if (idx === toJoin.length - 1) {
+                // last
+                joined += joinValue
+            } else if (idx === toJoin.length - 2) {
+                // second to last
+                joined += joinValue + " and "
+            } else {
+                joined += joinValue + ", "
+            }
+        }
+        return joined
+    }
+
 }
 
 type EnumType = string | number

@@ -17,6 +17,7 @@ import { cardStore } from "../../cards/CardStore"
 import { spacing } from "../../config/MuiConfig"
 import { SynTraitValue } from "../../generated-src/SynTraitValue"
 import { SynergyGroupSelect } from "./SynergyGroupSelect"
+import { synBuilderDialogStyle } from "./SelectTraitOrSyn"
 
 export const TraitExtraSelect = observer((props: { store: TraitBuilderStore, existingSynergies: SynTraitValue[] }) => {
     const {store, existingSynergies} = props
@@ -26,7 +27,7 @@ export const TraitExtraSelect = observer((props: { store: TraitBuilderStore, exi
             <DialogTitle
                 id="form-dialog-title">Select {Utils.camelCaseToTitleCase(store.traitOrSynergy)} Other
                 Values</DialogTitle>
-            <DialogContent>
+            <DialogContent style={synBuilderDialogStyle()}>
                 <Box display={"flex"} mb={1}>
                     <TraitBubble
                         traitValue={store.synTraitValue()}

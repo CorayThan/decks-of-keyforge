@@ -9,6 +9,7 @@ import React, { useState } from "react"
 import { TraitBubble } from "../../synergy/TraitBubble"
 import { HelperText } from "../../generic/CustomTypographies"
 import { themeStore } from "../../config/MuiConfig"
+import { screenStore } from "../../ui/ScreenStore"
 
 const replaceRsAndConvertToTitleCase = (convert: string) => {
     return Utils.camelCaseToTitleCase(convert).replace(/_ R_/g, " ??? ")
@@ -32,7 +33,7 @@ export const SelectTraitOrSyn = observer((props: { store: TraitBuilderStore }) =
     return (
         <>
             <DialogTitle id="form-dialog-title">Add {Utils.camelCaseToTitleCase(store.traitOrSynergy)}</DialogTitle>
-            <DialogContent>
+            <DialogContent style={synBuilderDialogStyle()}>
                 <Box my={1}>
                     <TextField
                         size={"small"}
@@ -50,7 +51,7 @@ export const SelectTraitOrSyn = observer((props: { store: TraitBuilderStore }) =
                         />
                     </Box>
                 )}
-                <Box width={480} height={400}>
+                <Box width={448} height={400}>
                     {filteredTraitGroups
                         .map(traitGroup => (
                             <DiplayTraitSelectGroup traitGroup={traitGroup} store={store} key={traitGroup.groupName}/>
@@ -60,6 +61,13 @@ export const SelectTraitOrSyn = observer((props: { store: TraitBuilderStore }) =
         </>
     )
 })
+
+export const synBuilderDialogStyle = () => {
+    if (screenStore.screenSizeMd()) {
+        return undefined
+    }
+    return {width: 520, height: 336}
+}
 
 export const DiplayTraitSelectGroup = (props: { store: TraitBuilderStore, traitGroup: SynTraitDisplayGroup }) => {
     const {store, traitGroup} = props

@@ -2,7 +2,6 @@ package coraythan.keyswap.stats
 
 import coraythan.keyswap.*
 import coraythan.keyswap.cards.CardType
-import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.Env
 import coraythan.keyswap.decks.DeckPageService
@@ -182,6 +181,7 @@ class StatsService(
                         updateStats = false
                         log.info("Deck Stats were already completed updating for version ${stats.version}.")
                     }
+
                     else -> {
                         val currentPage = deckPageService.findCurrentPage(DeckPageType.STATS)
                         val deckResults =
@@ -292,7 +292,6 @@ class StatsService(
                         stats.artifactWins.addWinsLosses(ratedDeck.artifactCount, wins)
                         stats.upgradeWins.addWinsLosses(ratedDeck.upgradeCount, wins)
 
-                        stats.raresWins.addWinsLosses(cards.count { it.card.rarity == Rarity.Rare }, wins)
                         ratedDeck.deck.houses.forEach { house ->
                             stats.housesWins.addWinsLosses(house, wins)
                         }

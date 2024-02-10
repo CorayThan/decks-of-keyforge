@@ -48,8 +48,8 @@ export const activeExpansions = [
     Expansion.DARK_TIDINGS,
     Expansion.WINDS_OF_EXCHANGE,
     Expansion.GRIM_REMINDERS,
-    Expansion.UNCHAINED_2022,
     Expansion.VAULT_MASTERS_2023,
+    Expansion.UNCHAINED_2022,
     Expansion.MENAGERIE_2024,
 ]
 
@@ -123,10 +123,10 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.MM, name: "Mass Mutation", abbreviation: "MM", backendEnum: Expansion.MASS_MUTATION},
     {expansionNumber: ExpansionNumber.DT, name: "Dark Tidings", abbreviation: "DT", backendEnum: Expansion.DARK_TIDINGS},
     {expansionNumber: ExpansionNumber.WOE, name: "Winds of Exchange", abbreviation: "WoE", backendEnum: Expansion.WINDS_OF_EXCHANGE},
-    {expansionNumber: ExpansionNumber.UC22, name: "Unchained 2022", abbreviation: "UC22", backendEnum: Expansion.UNCHAINED_2022},
-    {expansionNumber: ExpansionNumber.VM23, name: "Vault Masters 2023", abbreviation: "VM23", backendEnum: Expansion.VAULT_MASTERS_2023},
+    {expansionNumber: ExpansionNumber.UC22, name: "Unchained", abbreviation: "UC22", backendEnum: Expansion.UNCHAINED_2022},
+    {expansionNumber: ExpansionNumber.VM23, name: "Vault Masters", abbreviation: "VM23", backendEnum: Expansion.VAULT_MASTERS_2023},
     {expansionNumber: ExpansionNumber.GR, name: "Grim Reminders", abbreviation: "GR", backendEnum: Expansion.GRIM_REMINDERS},
-    {expansionNumber: ExpansionNumber.MN24, name: "Menagerie 2024", abbreviation: "MN24", backendEnum: Expansion.MENAGERIE_2024},
+    {expansionNumber: ExpansionNumber.MN24, name: "Menagerie", abbreviation: "MN24", backendEnum: Expansion.MENAGERIE_2024},
 ]
 
 export const activeExpansionInfos: ExpansionInfo[] = expansionInfos.filter(info => activeExpansions.includes(info.backendEnum))

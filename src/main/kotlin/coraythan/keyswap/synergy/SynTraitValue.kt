@@ -28,6 +28,16 @@ data class SynTraitValue(
     @Type(
         value = ListArrayType::class,
         parameters = [Parameter(
+            value = "play_zone",
+            name = ListArrayType.SQL_ARRAY_TYPE,
+        )]
+    )
+    @Column(columnDefinition = "play_zone[]")
+    val fromZones: List<PlayZone>? = listOf(),
+
+    @Type(
+        value = ListArrayType::class,
+        parameters = [Parameter(
             value = "card_type",
             name = ListArrayType.SQL_ARRAY_TYPE,
         )]
