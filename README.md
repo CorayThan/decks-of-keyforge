@@ -26,11 +26,75 @@
 
 [Propose a new SAS Feature](https://github.com/CorayThan/decks-of-keyforge/issues/new?assignees=CorayThan&labels=sas-feature&template=sas-feature-request.md&title=)
 
+# Setting up a DoK Dev Environment
+
+## Install Tools
+
+### Install Postgres & Postgres tool of choice.
+
+DoK runs on version 13. Higher is probably fine. For working with Postgres I use a combination of my IDE's built in 
+tools, PGAdmin and the command line.
+
+### Install Java
+
+DoK uses amazon corretto version 17. I'd recommend installing that version specifically.
+
+https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/what-is-corretto-17.html
+
+### Install an IDE, for example Intellij or VSCode
+
+I use Intellij as that's what I'm accustomed to and it works with Kotlin as well as TypeScript. If you don't install
+Intellij you'll also need to install Kotlin.
+
+### Install additional tools, NPM, Git etc.
+
+## Download & Install Codebase & Data
+
+### Clone the git repository.
+
+`git clone https://github.com/CorayThan/decks-of-keyforge.git`
+
+### Setup the Dev Database
+
+DoK needs a working database to run. However, you can download a working copy of the database from 
+Amazon S3. First download the database dump: 
+
+https://dok-db-dumps.s3.us-west-2.amazonaws.com/dok-db.dump
+
+Then make a folder at: `/decks-of-keyforge/scripts/local-db-dump` and put the dump file there.
+
+Then run: 
+
+```pg_restore -h localhost -U postgres --no-tablespaces --no-privileges --no-owner -d keyswap ./scripts/local-db-dump/dok-db.dump```
+
+### Create configuration files
+
+In `/src/main/resources/appliaction-nocommit.yml` Set the following values:
+
+```yaml
+jwt-secret: ${JWT_SECRET:7f310842a0b446a99eb3da6b8b99efa57f310842a0b446a99eb3da6b8b99efa5}
+```
+ 
+
 # Developing in the DoK Codebase
+
+## Running the project:
+
+```
+./gradlew bootRun
+```
+
+```
+cd ui
+npm install
+npm run start
+```
+
+When you try to login locally, remember that all passwords for all users will be 'password'.
 
 ## Deploy new version:
 
-Run:
+Ensure you've revved the version in `build.gradle.kts` then run:
 
 ```
 ./scripts/build-and-push.ps1
@@ -42,18 +106,22 @@ Login to AWS Elastic Beanstalk. Go to Upload and deploy. For file choose:
 /docker/Dockerrun.aws.json
 ```
 
-## Running the project:
+# Maintenance
 
-```
-./gradlew bootRun
+## Make reduced size card images
+*Would be nice to automate this so the service uploads newly found card images to S3.*
+
+Delete `*.png` in `/card-imgs/`. Uncomment line in RunOnStart. Run app. In `/card-imgs/` run:
+
+```powershell
+.\pngquant.exe --ext=.png --force 256 *.png
 ```
 
-```
-cd ui
-yarn
-npm run start
-```
+upload to S3 public with headers: `Cache-Control: max-age=31536000`
 
+# Notes Section
+*The remainder of this readme are notes I've taken over time about how to manage the project. These may be confusing 
+and/or out of date.*
 
 making the db in RDS:
 
@@ -83,6 +151,7 @@ maintenance db keyswap
 coraythan
 
 ## Export deck data to CSV
+*This is out of date. It needs to be revised and then run again.*
 
 ```
 cd 'C:\Program Files\PostgreSQL\12\scripts\'
@@ -96,21 +165,9 @@ SET CLIENT_ENCODING TO 'utf8';
 
 Find it in downloads 
 
-
-## Dump the manual card data tables
-
-Run the `load-cards.cmd` with the Reload Cards run config.
-
-```powershell
-set PGPASSWORD=password
-pg_dump -h keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com -U coraythan -F c -a -t card_traits -t card_identifier -t extra_card_info -t card -t syn_trait_value -f .\scripts\extra-info.dump keyswap
-
-set PGPASSWORD=postgres
-psql -U postgres -d keyswap -f .\scripts\truncate-card-tables.sql
-pg_restore -h localhost -U postgres -d keyswap .\scripts\extra-info.dump
-```
-
-## Kill long queries stuff
+## Kill long queries
+*This is a useful postgresql query that will kill long running queries if DoK has deck searches going that will never 
+end.*
 ```postgresql
 SELECT pg_cancel_backend(pg_stat_activity.pid)
 from pg_stat_activity
@@ -139,39 +196,9 @@ Go to: https://www.patreon.com/portal/registration/register-clients
 
 Copy Creator's Access Token into the auth header
 
-## Make reduced size card images
-
-Delete `*.png` in `/card-imgs/`. Uncomment line in RunOnStart. Run app. In `/card-imgs/` run:
-
-```powershell
-.\pngquant.exe --ext=.png --force 256 *.png
-```
-
-upload to S3 public with headers: `Cache-Control: max-age=31536000`
-
-## auto generate table info
-
-Change `ddl-auto` in `application.yml` to `update`. `show-sql` to true. Run. Copy paste. Delete tables. Revert.
-
-## copy db and reload it
-
-```powershell
-set PGPASSWORD=password
-pg_dump --host keyswap-prod.cik0ar7sipfl.us-west-2.rds.amazonaws.com --username coraythan --format c --no-unlogged-table-data --file .\scripts\full-db.dump keyswap
-
-set PGPASSWORD=postgres
-pg_restore -h localhost -U postgres --clean --if-exists --no-tablespaces --no-privileges --no-owner -d keyswap .\scripts\full-db.dump
-```
-
 To update passwords run: 
 ```postgresql
 UPDATE key_user
 SET password = '$2a$10$N3UlNyYNgndwUQgYos1hq.jwIL.K4utk14pYtZki2Otc3Ii7WdvuW';
 ```
 The password for all users will be "password".
-
-In `/src/main/resources/appliaction-nocommit.yml` Set the following values:
-
-```yaml
-jwt-secret: ${JWT_SECRET:7f310842a0b446a99eb3da6b8b99efa57f310842a0b446a99eb3da6b8b99efa5}
-```

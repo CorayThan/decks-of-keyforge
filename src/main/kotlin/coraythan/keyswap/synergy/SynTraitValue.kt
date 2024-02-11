@@ -117,25 +117,32 @@ data class SynTraitValue(
             }
 
             powersString.contains(" or less") -> {
-                power <= powersString.replace(" or less", "").toInt()
+                power <= (powersString.replace(" or less", "").toIntOrNull() ?: 0)
             }
 
             powersString.contains("+") -> {
-                power >= powersString.replace("+", "").toInt()
+                power >= (powersString.replace("+", "").toIntOrNull() ?: 0)
             }
 
             powersString.contains("-") -> {
                 val nums = powersString.split("-")
-                power >= nums[0].toInt() && power <= nums[1].toInt()
+                    .mapNotNull {
+                        it.toIntOrNull()
+                    }
+                if (nums.size > 1) {
+                    power >= nums[0] && power <= nums[1]
+                } else {
+                    return false
+                }
             }
 
             powersString.contains(",") -> {
                 val nums = powersString.split(",")
-                nums.any { power == it.toInt() }
+                nums.any { power == it.toIntOrNull() }
             }
 
             powersString.toIntOrNull() != null -> {
-                powersString.toInt() == power
+                powersString.toIntOrNull() == power
             }
 
             else -> {

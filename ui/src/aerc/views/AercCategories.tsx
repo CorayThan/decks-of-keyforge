@@ -257,7 +257,7 @@ const expansionSpecificCounts = (props: AercCatProps, width: number | undefined)
             icon: <HauntedIcon width={width}/>,
             info: `${deck.hauntingOdds ?? -1}`,
             cardsTips: {
-                title: "Haunted Odds 0 to 10",
+                title: "Haunted Odds",
                 cards,
                 subtitle1: "Mills Friendly",
                 matches: card => card.extraCardInfo?.traits

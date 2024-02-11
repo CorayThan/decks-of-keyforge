@@ -2,19 +2,30 @@ TRUNCATE auction_bid, deck_note, favorited_deck, funny_deck, offer, previously_o
     sale_notification_query_constraints, sale_notification_constraint, sale_notification_deck_card_quantity,
     sale_notification_deck_card_quantity_card_names, sale_notification_query_cards,
     sale_notification_query_exclude_houses, sale_notification_query_expansions, sale_notification_query_houses,
-    sale_notification_query, team_invites, past_sas;
+    sale_notification_query, team_invites, past_sas, key_user_preferred_countries;
 
 DELETE
 FROM owned_deck od USING key_user ku
 WHERE ku.id = od.owner_id
   AND ku.allow_users_to_see_deck_ownership = FALSE;
 DELETE
-FROM owned_alliance_deck od USING key_user ku 
+FROM owned_alliance_deck od USING key_user ku
 WHERE ku.id = od.owner_id
   AND ku.allow_users_to_see_deck_ownership = FALSE;
 UPDATE key_user ku
-SET email    = (ku.username || '@dok.fake'),
-    password = '$2a$10$N3UlNyYNgndwUQgYos1hq.jwIL.K4utk14pYtZki2Otc3Ii7WdvuW';
+SET email                  = (ku.username || '@dok.fake'),
+    password               = '$2a$10$N3UlNyYNgndwUQgYos1hq.jwIL.K4utk14pYtZki2Otc3Ii7WdvuW',
+    seller_email           = NULL,
+    public_contact_info    = '',
+    shipping_cost          = '',
+    discord                = '',
+    manual_patreon_tier    = NULL,
+    view_future_sas        = FALSE,
+    country                = NULL,
+    patreon_id             = NULL,
+    patreon_tier           = NULL,
+    lifetime_support_cents = 0,
+    tco_username           = NULL;
 UPDATE deck_listing
 SET tag_id = NULL
 WHERE tag_id IS NOT NULL;
