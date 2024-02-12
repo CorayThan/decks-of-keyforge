@@ -22,7 +22,6 @@ import {
     displayMyDecksLinksFor,
     expansionInfoMap,
     recentExpansions,
-    tournamentInvalidExpansions,
 } from "../expansions/Expansions"
 import { DokIcon } from "../generic/icons/DokIcon"
 import { PatreonIcon } from "../generic/icons/PatreonIcon"
@@ -60,11 +59,6 @@ const myDeckLinks = () => {
             text: `My ${expansionInfoMap.get(expansion)!.abbreviation}`,
             mobileActive: false
         })),
-        {
-            to: Routes.decksForExpansions(tournamentInvalidExpansions, true),
-            text: `Tourney Invalid`,
-            mobileActive: false
-        },
         {to: Routes.userDecksForSale(userStore.username!), text: "For Sale"},
         {to: Routes.sellersView(), text: "Sellers View", onClick: () => keyLocalStorage.setDeckListViewType("table")},
     ]
@@ -460,11 +454,6 @@ const AppLinks = observer(() => (
                             primary={"Tournaments"}
                         />
                         <ListItemLink
-                            to={Routes.articles}
-                            onClick={rightMenuStore.close}
-                            primary={"Articles"}
-                        />
-                        <ListItemLink
                             to={Routes.thirdPartyTools}
                             onClick={rightMenuStore.close}
                             primary={"3rd Party Tools"}
@@ -480,7 +469,6 @@ const AppLinks = observer(() => (
                     {to: Routes.users, text: "Users", mobileActive: true},
                     {to: Routes.tags, text: "Tagged Decks", mobileActive: true},
                     {to: Routes.tournaments, text: "Tournaments", mobileActive: true},
-                    {to: Routes.articles, text: "Articles", mobileActive: true},
                     {to: Routes.thirdPartyTools, text: "3rd Party Tools", mobileActive: false},
                 ]}
                 linkMenuStore={communityMenuStore}

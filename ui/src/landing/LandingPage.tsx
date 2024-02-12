@@ -194,7 +194,6 @@ export class LandingPage extends React.Component<{}> {
                         <FeaturedSellersView/>
                         <div style={{marginLeft: spacing(2)}}>
                             <div style={{marginLeft: spacing(2)}}>
-                                {/*<LastTwoArticles/>*/}
                                 <UnstyledLink to={StatsSubPaths.winRates}>
                                     <LandingPageTitle>
                                         Stats

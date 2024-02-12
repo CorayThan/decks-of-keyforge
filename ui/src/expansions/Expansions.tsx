@@ -35,10 +35,6 @@ export const displayMyDecksLinksFor = [
     Expansion.GRIM_REMINDERS,
     Expansion.VAULT_MASTERS_2023,
 ]
-export const tournamentInvalidExpansions = [
-    ExpansionNumber.UC22,
-    ExpansionNumber.MN24,
-]
 
 export const activeExpansions = [
     Expansion.CALL_OF_THE_ARCHONS,

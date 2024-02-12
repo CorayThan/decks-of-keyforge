@@ -79,7 +79,6 @@ class Routes {
     static oldAlliancesRoute = "/alliances"
     static compareDecks = "/compare-decks"
     static stats = "/stats"
-    static articles = "/articles"
     static registration = "/registration"
     static forgotPassword = "/forgot-password"
     static privacyPolicy = "/privacy-policy"

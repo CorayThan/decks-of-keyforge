@@ -8,9 +8,16 @@ import { LinkButtonSafe } from "../mui-restyled/LinkButton"
 import { DiscordUser } from "../thirdpartysites/discord/DiscordUser"
 import KeyForgeBurgerInsertsIcon from "./about-images/burger-inserts-icon.png"
 import { AboutGridItem } from "./AboutPage"
+import { RouteComponentProps } from "react-router"
+import { uiStore } from "../ui/UiStore"
 
 @observer
 export class ThirdPartyIntegrations extends React.Component {
+
+    constructor(props: RouteComponentProps<{}>) {
+        super(props)
+        uiStore.setTopbarValues("3rd Party Tools", "Tools", "Third party tools")
+    }
 
     render() {
         return (
@@ -111,15 +118,6 @@ export class ThirdPartyIntegrations extends React.Component {
                         description={"A Chrome plugin that adds a button to go from a deck page on Master Vault to Decks of KeyForge"}
                         url={"https://chrome.google.com/webstore/detail/decksofkeyforgecom-redire/hoppohnelffeollapmhmgckjmhkhgnhn?hl=en"}
                         urlName={"Decks Of KeyForge redirect"}
-                        discord={"Aurore#3266"}
-                    />
-                    <DisplayIntegration
-                        name={"Hide SAS Scores"}
-                        description={
-                            "Instructions to use a Chrome Plugin to hide SAS scores on Decks of KeyForge."
-                        }
-                        url={"https://timeshapers.com/2020/11/19/hiding-sas-totals-on-decks-of-keyforge/"}
-                        urlName={"Hide SAS Scores instructions"}
                         discord={"Aurore#3266"}
                     />
                 </Grid>
