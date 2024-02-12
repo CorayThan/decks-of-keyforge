@@ -18,6 +18,7 @@ import { CardType } from "../generated-src/CardType"
 import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
 import { FrontendCard } from "../generated-src/FrontendCard"
 import { CardNumberSetPair } from "../generated-src/CardNumberSetPair"
+import { CardsMap } from "../generated-src/CardsMap"
 
 export class CardStore {
     static readonly CONTEXT = HttpConfig.API + "/cards"
@@ -57,10 +58,10 @@ export class CardStore {
     cardNameSearchResults: FrontendCard[] = []
 
     @observable
-    private previousExtraInfo?: { [cardName: string]: FrontendCard }
+    private previousCards?: CardsMap
 
     @observable
-    private nextExtraInfo?: { [cardName: string]: FrontendCard }
+    private futureCards?: CardsMap
 
     @observable
     findingPreviousInfo = false
@@ -72,13 +73,6 @@ export class CardStore {
     cardWinRatesLoaded = false
 
     private cardWinRates?: Map<string, CardWinRates[]>
-
-    nextAdaptiveScore = (cardName: string) => {
-        if (this.nextExtraInfo == null) {
-            return 0
-        }
-        return this.nextExtraInfo[cardName]?.extraCardInfo?.adaptiveScore ?? 0
-    }
 
     setupCardWinRates = () => {
         if (!cardStore.cardsLoaded || statsStore.stats == null || this.cardWinRatesLoaded) {
@@ -317,21 +311,21 @@ export class CardStore {
     }
 
     findPreviousExtraInfo = async () => {
-        if (this.previousExtraInfo != null || this.findingPreviousInfo) {
+        if (this.previousCards != null || this.findingPreviousInfo) {
             return
         }
         this.findingPreviousInfo = true
         log.debug("Find previous extra card info")
-        const prevInfo: AxiosResponse<FrontendCard[]> = await axios.get(`${CardStore.CONTEXT}/historical`)
+        const prevInfo: AxiosResponse<CardsMap> = await axios.get(`${CardStore.CONTEXT}/historical`)
         this.findingPreviousInfo = false
-        this.previousExtraInfo = this.createCardsMap(prevInfo.data)
+        this.previousCards = prevInfo.data
         log.debug("Found previous info")
     }
 
     findNextExtraInfo = async () => {
-        if (this.nextExtraInfo == null) {
-            const nextInfo: AxiosResponse<FrontendCard[]> = await axios.get(`${CardStore.CONTEXT}/future`)
-            this.nextExtraInfo = this.createCardsMap(nextInfo.data)
+        if (this.futureCards == null) {
+            const nextInfo: AxiosResponse<CardsMap> = await axios.get(`${CardStore.CONTEXT}/future`)
+            this.futureCards = nextInfo.data
         }
     }
 
@@ -355,24 +349,24 @@ export class CardStore {
 
     findExtraInfoToUse = (card: FrontendCard) => {
         let extraInfo = card.extraCardInfo
-        if ((userStore.displayFutureSas || this.showFutureCardInfo) && this.nextExtraInfo && this.nextExtraInfo[card.cardTitle] != null) {
-            extraInfo = this.nextExtraInfo[card.cardTitle].extraCardInfo
+        if ((userStore.displayFutureSas || this.showFutureCardInfo) && this.futureCards && this.futureCards.cards[card.cardTitleUrl] != null) {
+            extraInfo = this.futureCards.cards[card.cardTitleUrl].extraCardInfo
         }
         return extraInfo
     }
 
-    findPrevExtraInfoForCard = (cardName: string) => {
-        if (this.previousExtraInfo == null) {
+    findPrevExtraInfoForCard = (cardNameUrl: string) => {
+        if (this.previousCards == null) {
             return undefined
         }
-        return this.previousExtraInfo[this.cleanCardName(cardName)]
+        return this.previousCards.cards[cardNameUrl]
     }
 
-    findNextExtraInfoForCard = (cardName: string) => {
-        if (this.nextExtraInfo == null) {
+    findNextExtraInfoForCard = (cardNameUrl: string) => {
+        if (this.futureCards == null) {
             return undefined
         }
-        return this.nextExtraInfo[this.cleanCardName(cardName)]
+        return this.futureCards.cards[cardNameUrl]
     }
 
     constructor() {
@@ -457,12 +451,6 @@ export class CardStore {
             aercScore: roundToHundreds(aercScore),
             averageAercScore
         }
-    }
-
-    private createCardsMap = (cards: FrontendCard[]): { [cardName: string]: FrontendCard } => {
-        const cardsMap: { [cardName: string]: FrontendCard } = {}
-        cards.forEach(card => cardsMap[card.cardTitle] = card)
-        return cardsMap
     }
 
     private cleanCardName = (cardName: string) => {

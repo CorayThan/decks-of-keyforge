@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-class DokCardCacheService(
+class  DokCardCacheService(
     private val sasVersionService: SasVersionService,
     private val objectMapper: ObjectMapper,
     private val entityManager: EntityManager,
@@ -44,6 +44,9 @@ class DokCardCacheService(
 
     private var tokenCards: Map<String, ExtraCardInfo> = mapOf()
     private var futureTokenCards: Map<String, ExtraCardInfo> = mapOf()
+
+    private var frontendCardsMapPrevious: CardsMap = CardsMap(mapOf())
+    private var frontendCardsMapFuture: CardsMap = CardsMap(mapOf())
 
     private var loaded = false
 
@@ -99,6 +102,9 @@ class DokCardCacheService(
                 extraInfo.dokCard.cardTitle to extraInfo
             }.toMap()
 
+        frontendCardsMapPrevious = CardsMap(previousCardsCachedByUrlName.map { it.key to it.value.toCardForFrontend() }.toMap())
+        frontendCardsMapFuture = CardsMap(futureCardsCachedByUrlName.map { it.key to it.value.toCardForFrontend() }.toMap())
+
         loaded = true
         log.info("Loading cached cards complete.")
     }
@@ -116,16 +122,16 @@ class DokCardCacheService(
         cardsCachedByUrlName.values.map { it.toCardForFrontend() }
     }
 
-    fun futureCards() = if (!loaded) {
+    fun futureCards(): CardsMap = if (!loaded) {
         throw IllegalStateException("Site still loading cards")
     } else {
-        futureCardsCachedByUrlName.values.map { it.toCardForFrontend() }
+        frontendCardsMapFuture
     }
 
     fun previousCards() = if (!loaded) {
         throw IllegalStateException("Site still loading cards")
     } else {
-        previousCardsCachedByUrlName.values.map { it.toCardForFrontend() }
+        frontendCardsMapPrevious
     }
 
     fun findByCardName(cardName: String) =

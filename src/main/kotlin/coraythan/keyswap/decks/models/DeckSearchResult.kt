@@ -138,5 +138,6 @@ data class AllianceHouseInfo(
 @GenerateTs
 data class TokenInfo(
     val name: String,
+    val nameUrl: String,
     val house: House,
 )

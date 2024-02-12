@@ -51,6 +51,7 @@ data class DokCardInDeck(
 
     fun toTokenInfo() = TokenInfo(
         name = card.cardTitle,
+        nameUrl = card.cardTitleUrl,
         house = house,
     )
 

@@ -34,7 +34,7 @@ const DeckTopBannerFull = (props: BannerProps) => {
     if (token != null) {
         specialCard = (
             <CardAsLine
-                card={{cardTitle: token.name}}
+                card={{cardTitle: token.name, cardTitleUrl: token.nameUrl}}
                 deck={deck}
                 width={deckTopTokenWidth}
                 img={true}
@@ -43,7 +43,7 @@ const DeckTopBannerFull = (props: BannerProps) => {
             />
         )
     } else if (deck.expansion === Expansion.DARK_TIDINGS) {
-        specialCard = (<DeckTokenView tokenName={"Tide Card"}/>)
+        specialCard = (<DeckTokenView tokenNameUrl={"tide-card"}/>)
     }
 
     return (
@@ -83,7 +83,7 @@ const DeckTopBannerCompact = (props: BannerProps) => {
     if (token != null) {
         specialCard = (
             <CardAsLine
-                card={{cardTitle: token.name}}
+                card={{cardTitle: token.name, cardTitleUrl: token.nameUrl}}
                 deck={deck}
                 width={80}
                 img={true}

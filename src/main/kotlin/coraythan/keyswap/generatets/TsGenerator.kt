@@ -103,10 +103,13 @@ export class ${name}Utils {
 
     private fun writeInterface(name: String, fields: List<TsField>) {
 
-        val imports = fields
-                .filter { !listOf("boolean", "string", "number", "any", name).contains(it.type) }
-                .distinctBy { it.type }
-                .joinToString("\n") { "import { ${it.type} } from \"./${it.type}\"" }
+        val allTypes = fields.map { it.type }
+            .toSet()
+            .plus(fields.mapNotNull { it.type2 })
+
+        val imports = allTypes
+                .filter { !listOf("boolean", "string", "number", "any", name).contains(it) }
+                .joinToString("\n") { "import { $it } from \"./${it}\"" }
                 .let { if (it.isBlank()) "" else it + "\n\n" }
 
         val tsFields = fields.joinToString("\n    ") {

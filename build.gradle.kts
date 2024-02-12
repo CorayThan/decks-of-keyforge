@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "coraythan"
-version = "592"
+version = "593"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {

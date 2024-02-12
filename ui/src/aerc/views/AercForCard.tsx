@@ -1,11 +1,9 @@
 import { Box, Typography } from "@material-ui/core"
 import * as React from "react"
-import { cardStore } from "../../cards/CardStore"
 import { spacing, theme } from "../../config/MuiConfig"
 import { roundToHundreds, roundToTens } from "../../config/Utils"
 import { CardType } from "../../generated-src/CardType"
 import { SynergyCombo } from "../../generated-src/SynergyCombo"
-import { userStore } from "../../user/UserStore"
 import { ExtraCardInfoUtils } from "../../extracardinfo/ExtraCardInfoUtils"
 import { FrontendCard } from "../../generated-src/FrontendCard"
 
@@ -23,12 +21,6 @@ export const AercForCard = (props: {
     }
     return (
         <div style={{display: "grid", gridTemplateColumns: "6fr 4fr 2fr"}}>
-            {userStore.contentCreator && cardStore.nextAdaptiveScore(card.cardTitle) !== 0 && (
-                <AercScore
-                    score={cardStore.nextAdaptiveScore(card.cardTitle)}
-                    name={"Adaptive Score"}
-                />
-            )}
             <AercScore
                 score={info.amberControl}
                 max={info.amberControlMax}

@@ -119,9 +119,6 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     otherMax = "0"
 
     @observable
-    adaptiveScore = "0"
-
-    @observable
     baseSynPercent = ""
 
     @observable
@@ -186,7 +183,6 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.otherMax = extraCardInfo.otherMax == null ? "0" : extraCardInfo.otherMax.toString()
 
         this.baseSynPercent = extraCardInfo.baseSynPercent?.toString() ?? ""
-        this.adaptiveScore = extraCardInfo.adaptiveScore.toString()
 
         this.enhancementAmber = extraCardInfo.enhancementAmber.toString()
         this.enhancementCapture = extraCardInfo.enhancementCapture.toString()
@@ -250,7 +246,6 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
 
             // @ts-ignore
             baseSynPercent: this.baseSynPercent === "" ? undefined : Number(this.baseSynPercent),
-            adaptiveScore: Number(this.adaptiveScore),
 
             enhancementAmber: Number(this.enhancementAmber),
             enhancementCapture: Number(this.enhancementCapture),

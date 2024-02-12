@@ -4,17 +4,17 @@ import { findCardImageUrl } from "../../cards/KCard"
 export const deckTopTokenWidth = 88
 
 interface DeckTokenViewProps {
-    tokenName: string
+    tokenNameUrl: string
     width?: number
 }
 
 export const DeckTokenView = (props: DeckTokenViewProps) => {
-    const {tokenName, width} = props
+    const {tokenNameUrl, width} = props
     const realWidth = width ?? deckTopTokenWidth
     return (
         <img
-            alt={tokenName}
-            src={findCardImageUrl({cardTitle: tokenName})}
+            alt={tokenNameUrl}
+            src={findCardImageUrl(tokenNameUrl)}
             style={{width: realWidth, height: (realWidth * 420) / 300}}
         />
     )

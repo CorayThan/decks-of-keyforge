@@ -82,7 +82,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     {img ? (
                         <img
                             alt={card.cardTitle}
-                            src={findCardImageUrl({cardTitle: card.cardTitle})}
+                            src={findCardImageUrl(card.cardTitleUrl)}
                             style={{width: realWidth, height: (realWidth * 420) / 300}}
                         />
                     ) : (
@@ -165,7 +165,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 {img ? (
                     <img
                         alt={card.cardTitle}
-                        src={findCardImageUrl({cardTitle: card.cardTitle})}
+                        src={findCardImageUrl(card.cardTitleUrl)}
                         style={{width: imgWidth, height: (imgWidth * 420) / 300}}
                     />
                 ) : (

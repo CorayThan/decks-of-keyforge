@@ -1,6 +1,6 @@
 import { round } from "lodash"
 import { HasAerc } from "../aerc/HasAerc"
-import { log, Utils } from "../config/Utils"
+import { Utils } from "../config/Utils"
 import { activeSasExpansions } from "../expansions/Expansions"
 import { Expansion } from "../generated-src/Expansion"
 import { SimpleCard } from "../generated-src/SimpleCard"
@@ -13,14 +13,19 @@ import { FrontendCard } from "../generated-src/FrontendCard"
 
 const cardNameReplacementRegex = /[^\d\w\s]/g
 const spaceRegex = /\s/g
+
+/**
+ * Equivalent to cardNameUrl on the backend
+ * @param name
+ */
 export const cardNameToCardNameKey = (name: string) => {
     return name.replace(cardNameReplacementRegex, "")
         .replace(spaceRegex, "-")
         .toLowerCase()
 }
 
-export const findCardImageUrl = (card: SimpleCard) => {
-    return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameToCardNameKey(card.cardTitle)}.png`
+export const findCardImageUrl = (cardNameUrl: string) => {
+    return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameUrl}.png`
 }
 
 export interface CardWinRates {

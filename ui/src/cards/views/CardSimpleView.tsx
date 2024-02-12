@@ -20,7 +20,7 @@ export const CardSimpleView = (props: CardSimpleViewProps) => {
     const contents = (
         <img
             alt={props.card.cardTitle}
-            src={findCardImageUrl(props.card)}
+            src={findCardImageUrl(props.card.cardTitleUrl)}
             style={{width, height: (width * 420) / 300, margin: spacing(2), ...props.style}}
         />
     )

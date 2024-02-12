@@ -61,7 +61,7 @@ export const TraitTargetsSelect = observer((props: { store: TraitBuilderStore })
                     </FormGroup>
                 </FormControl>
                 <FormControl>
-                    <FormLabel>Target Zones</FormLabel>
+                    <FormLabel>From Zones</FormLabel>
                     <FormGroup>
                         {(Utils.enumValues(PlayZone) as PlayZone[]).map(type => (
                             <FormControlLabel

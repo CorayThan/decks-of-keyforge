@@ -26,6 +26,7 @@ import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { LoginPop } from "../../user/LoginPop"
 import { userStore } from "../../user/UserStore"
+import { cardNameToCardNameKey } from "../../cards/KCard"
 
 export interface CollectionStatsViewProps {
     stats: CollectionStats
@@ -49,7 +50,8 @@ export class CollectionStatsView extends React.Component<CollectionStatsViewProp
                 <Box maxWidth={600} mt={2}>
                     <Paper style={{padding: spacing(2)}}>
                         <Typography style={{marginBottom: spacing(2)}}>
-                            You must be logged in and a patron to analyze collections. Please consider becoming a patron to support the
+                            You must be logged in and a patron to analyze collections. Please consider becoming a patron
+                            to support the
                             the site!
                         </Typography>
                         <Box display={"flex"}>
@@ -319,7 +321,13 @@ const cardCountHeaders: SortableTableHeaderInfo<CardCounts>[] = [
         title: "Card Name",
         sortable: true,
 
-        transform: (data) => <CardAsLine card={{cardTitle: data.name, legacy: data.legacy > 0, maverick: data.mav > 0, anomaly: data.anomaly > 0}}/>
+        transform: (data) => <CardAsLine card={{
+            cardTitle: data.name,
+            cardTitleUrl: cardNameToCardNameKey(data.name),
+            legacy: data.legacy > 0,
+            maverick: data.mav > 0,
+            anomaly: data.anomaly > 0,
+        }}/>
     },
     {property: "count", title: "Count", sortable: true},
     {property: "mostInDeck", title: "Max/Deck", sortable: true},

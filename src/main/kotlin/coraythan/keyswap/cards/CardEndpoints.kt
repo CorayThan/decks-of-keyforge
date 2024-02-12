@@ -2,6 +2,7 @@ package coraythan.keyswap.cards
 
 import coraythan.keyswap.Api
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
+import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.users.CurrentUserService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
@@ -32,3 +33,8 @@ class CardEndpoints(
         cardCache.loadCards()
     }
 }
+
+@GenerateTs
+data class CardsMap(
+    val cards: Map<String, FrontendCard>
+)

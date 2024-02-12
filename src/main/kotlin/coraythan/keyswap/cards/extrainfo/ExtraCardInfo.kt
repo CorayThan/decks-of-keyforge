@@ -68,7 +68,7 @@ data class ExtraCardInfo(
     val other: Double = 0.0,
     val otherMax: Double? = null,
 
-    val adaptiveScore: Int = 0,
+    // TODO delete adaptive score from DB
 
     val enhancementAmber: Int = 0,
     val enhancementCapture: Int = 0,
@@ -184,7 +184,6 @@ data class ExtraCardInfo(
             enhancementDraw = info.enhancementDraw,
             enhancementDiscard = info.enhancementDiscard,
             baseSynPercent = info.baseSynPercent,
-            adaptiveScore = info.adaptiveScore,
             traits = mutableListOf(),
             synergies = mutableListOf()
         )

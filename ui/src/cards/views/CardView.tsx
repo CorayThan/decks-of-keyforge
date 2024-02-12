@@ -47,12 +47,12 @@ export const CardView = observer((props: CardViewProps) => {
 
     let previousCard
     if (displayHistory) {
-        previousCard = cardStore.findPrevExtraInfoForCard(card.cardTitle)
+        previousCard = cardStore.findPrevExtraInfoForCard(card.cardTitleUrl)
     }
 
     let futureCard
     if (userStore.displayFutureSas) {
-        futureCard = cardStore.findNextExtraInfoForCard(card.cardTitle)
+        futureCard = cardStore.findNextExtraInfoForCard(card.cardTitleUrl)
     }
 
     const sidebarProps = screenStore.screenSizeXs() ? {
@@ -65,7 +65,7 @@ export const CardView = observer((props: CardViewProps) => {
     return (
         <GraySidebar {...sidebarProps} >
             <div>
-                <img alt={card.cardTitle} src={findCardImageUrl(card)}/>
+                <img alt={card.cardTitle} src={findCardImageUrl(card.cardTitleUrl)}/>
             </div>
             <div style={{padding: spacing(2), width: "100%"}}>
                 <Box display={"flex"} alignItems={"center"} maxWidth={sidebarProps.width}>
