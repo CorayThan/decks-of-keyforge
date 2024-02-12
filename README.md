@@ -52,7 +52,7 @@ Intellij you'll also need to install Kotlin.
 
 ### Clone the git repository.
 
-`git clone https://github.com/CorayThan/decks-of-keyforge.git`
+`git clone https://github.com/CorayThan/decks-of-keyforge.git decks-of-keyforge`
 
 ### Setup the Dev Database
 
@@ -63,34 +63,71 @@ https://dok-db-dumps.s3.us-west-2.amazonaws.com/dok-db.dump
 
 Then make a folder at: `/decks-of-keyforge/scripts/local-db-dump` and put the dump file there.
 
-Then run: 
+Then run the following commands from the project directory: 
 
-```pg_restore -h localhost -U postgres --no-tablespaces --no-privileges --no-owner -d keyswap ./scripts/local-db-dump/dok-db.dump```
+```
+createdb -h localhost -U postgres -W keyswap
+pg_restore -h localhost -U postgres --clean --if-exists --no-tablespaces --no-privileges --no-owner -d keyswap ./scripts/local-db-dump/dok-db.dump
+```
 
 ### Create configuration files
 
-In `/src/main/resources/appliaction-nocommit.yml` Set the following values:
+Create a file `/decks-of-keyforge/src/main/resources/appliaction-nocommit.yml` with the following contents:
 
 ```yaml
 jwt-secret: ${JWT_SECRET:7f310842a0b446a99eb3da6b8b99efa57f310842a0b446a99eb3da6b8b99efa5}
+
+aws-secret-key: ${AWS_SECRET_KEY:fake}
+patreon-secret-key: ${PATREON_SECRET:fake}
+patreon-client-id: ${PATREON_CLIENT_ID:fake}
+secret-api-key: fake
 ```
- 
+
+Certain features will not work when you develop locally, for example emails, patreon refreshing, and uploading deck 
+verification pictures.
 
 # Developing in the DoK Codebase
 
-## Running the project:
+## Running the project
+
+One time run:
+
+
+
+Before you run the first time, and after you make changes to kotlin classes annotated with `@GenerateTs` you need to
+run:
+
+```
+./gradlew genSrc
+```
+
+To run the backend server run:
 
 ```
 ./gradlew bootRun
 ```
 
+Install the dependencies for the frontend with:
+
 ```
 cd ui
 npm install
+```
+
+To run the frontend run:
+
+```
+cd ui
 npm run start
 ```
 
 When you try to login locally, remember that all passwords for all users will be 'password'.
+
+## Setup Complete!
+
+The above should be all you need to get started to code and test a simple change to the Decks of KeyForge codebase.
+
+# Maintenance
 
 ## Deploy new version:
 
@@ -100,13 +137,11 @@ Ensure you've revved the version in `build.gradle.kts` then run:
 ./scripts/build-and-push.ps1
 ```
 
-Login to AWS Elastic Beanstalk. Go to Upload and deploy. For file choose: 
+Login to AWS Elastic Beanstalk. Go to Upload and deploy. For file choose:
 
 ```
 /docker/Dockerrun.aws.json
 ```
-
-# Maintenance
 
 ## Make reduced size card images
 *Would be nice to automate this so the service uploads newly found card images to S3.*
