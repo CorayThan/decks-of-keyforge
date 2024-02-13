@@ -81,6 +81,6 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         synergyOnly: true,
         traits: [SynergyTrait.creatureCount, SynergyTrait.highValue,
             SynergyTrait.tokenCount, SynergyTrait.totalArmor, SynergyTrait.totalCreaturePower,
-            SynergyTrait.highExpectedAmber, SynergyTrait.lowExpectedAmber, SynergyTrait.hasMars],
+            SynergyTrait.expectedAember, SynergyTrait.hasMars],
     },
 ]

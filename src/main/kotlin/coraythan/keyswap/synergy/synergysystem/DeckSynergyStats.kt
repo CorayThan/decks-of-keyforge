@@ -32,7 +32,8 @@ data class DeckSynergyStats(
             SynergyTrait.bonusDiscard to bonusIconBaseTraitStrengths,
             SynergyTrait.totalCreaturePower to TraitVals(90, 30, 45, 15),
             SynergyTrait.totalArmor to TraitVals(10, 5),
-            SynergyTrait.haunted to (TraitVals(100, 0))
+            SynergyTrait.haunted to (TraitVals(100, 0)),
+            SynergyTrait.expectedAember to TraitVals(30, 15, 10, 3),
         )
 
         private fun matches(trait: SynergyTrait) = traits.keys.contains(trait)
@@ -68,7 +69,12 @@ data class DeckSynergyStats(
                 SynergyTrait.totalCreaturePower to inputCards.sumOf { it.card.power },
                 SynergyTrait.tokenCount to tokensCount,
                 SynergyTrait.totalArmor to inputCards.sumOf { it.card.armor },
-                SynergyTrait.haunted to calculateHauntingPercent(inputCards)
+                SynergyTrait.haunted to calculateHauntingPercent(inputCards),
+                SynergyTrait.expectedAember to inputCards.sumOf {
+                    val max = it.extraCardInfo.expectedAmberMax ?: 0.0
+                    val min = it.extraCardInfo.expectedAmber
+                    if (max == 0.0) min else (min + max) / 2
+                }.roundToInt(),
             )
         }
 
