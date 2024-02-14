@@ -12,16 +12,16 @@ object AutomaticTraitsAlgorithm {
         // High value traits
         cards
             .filter {
-                it.extraCardInfo.aercScore >= 2.5
+                it.extraCardInfo.aercScoreAverage >= 2.5
             }
             .forEach { card ->
                 traits.addTrait(
                     traitValue = SynTraitValue(
                         trait = SynergyTrait.highValue,
                         rating = when {
-                            card.extraCardInfo.aercScore >= 3.5 -> 4
-                            card.extraCardInfo.aercScore >= 3.0 -> 3
-                            card.extraCardInfo.aercScore >= 2.5 -> 2
+                            card.extraCardInfo.aercScoreAverage >= 3.5 -> 4
+                            card.extraCardInfo.aercScoreAverage >= 3.0 -> 3
+                            card.extraCardInfo.aercScoreAverage >= 2.5 -> 2
                             else -> 0
                         },
                         cardTypes = card.extraCardInfo.allCardTypes().toList()

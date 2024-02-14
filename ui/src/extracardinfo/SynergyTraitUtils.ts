@@ -16,15 +16,19 @@ export interface SynTraitDisplayGroup {
     groupName: string
     description?: string
     synergyOnly?: boolean
-    traits: SynergyTrait[]
+    traits: SynergyTrait[],
+    synergyTraitsOnly?: SynergyTrait[],
+    traitTraitsOnly?: SynergyTrait[],
 }
 
 export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
     {
         groupName: "Aember and Keys",
-        traits: [SynergyTrait.stealsAmber, SynergyTrait.capturesAmber, SynergyTrait.increasesKeyCost,
-            SynergyTrait.scalingAmberControl, SynergyTrait.exalt, SynergyTrait.putsAmberOnTarget,
-            SynergyTrait.removesCapturedAmber, SynergyTrait.forgesKeys, SynergyTrait.forgesKeysWithoutAember],
+        traits: [SynergyTrait.stealsAmber, SynergyTrait.increasesKeyCost, SynergyTrait.scalingAmberControl,
+            SynergyTrait.exalt,SynergyTrait.forgesKeys, SynergyTrait.forgesKeysWithoutAember],
+        traitTraitsOnly: [
+            SynergyTrait.capturesAmber, SynergyTrait.putsAmberOnTarget,
+        ],
     },
     {
         groupName: "Board Control",
@@ -44,8 +48,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
     },
     {
         groupName: "Recursion",
-        traits: [SynergyTrait.returns_R_ToHand, SynergyTrait.returns_R_FromDiscard, SynergyTrait.shuffles_R_IntoDeck,
-            SynergyTrait.replays, SynergyTrait.puts_R_OnBottomOfDeck],
+        traits: [SynergyTrait.returns_R_ToHand, SynergyTrait.replays, SynergyTrait.puts_R_OnBottomOfDeck],
     },
     {
         groupName: "Creatures and Artifacts",
@@ -58,29 +61,34 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         groupName: "Other",
         description: `Use "any" for a wild cart trait that matches anything applicable. Like all artifacts or all ` +
             "creatures with even power.",
-        traits: [SynergyTrait.any, SynergyTrait.scrapValue, SynergyTrait.haunted, SynergyTrait.makesTokens,
-            SynergyTrait.preventsDamage, SynergyTrait.alpha,
-            SynergyTrait.omega, SynergyTrait.raisesTide, SynergyTrait.lowersTide],
+        traits: [SynergyTrait.any, SynergyTrait.scrapValue, SynergyTrait.haunted,
+            SynergyTrait.preventsDamage ],
+        synergyTraitsOnly: [SynergyTrait.alpha, SynergyTrait.omega],
+        traitTraitsOnly: [
+            SynergyTrait.makesTokens,
+        ]
     },
     {
         groupName: "Single Card Enhancements",
         description: "You can increase or reduce the value of pips on an individual card with Replays Self and " +
             "Dangerous Random Play.",
-        traits: [SynergyTrait.replaysSelf, SynergyTrait.dangerousRandomPlay],
+        traits: [SynergyTrait.dangerousRandomPlay],
+        traitTraitsOnly: [SynergyTrait.replaysSelf, ]
     },
     {
         groupName: "Enhancements",
         description: "You can synergize with bonus pips in a deck, house and/or out of house. ",
         synergyOnly: true,
-        traits: [SynergyTrait.bonusAmber, SynergyTrait.bonusDraw, SynergyTrait.bonusDamage, SynergyTrait.bonusCapture, SynergyTrait.bonusDiscard],
+        traits: [SynergyTrait.bonusAmber, SynergyTrait.bonusDraw, SynergyTrait.bonusDamage,
+            SynergyTrait.bonusCapture, SynergyTrait.bonusDiscard],
     },
     {
         groupName: "Generated Traits Synergies",
         description: "These traits are generated for each house and deck and do not follow the normal rules of " +
             "trait strengths.",
         synergyOnly: true,
-        traits: [SynergyTrait.creatureCount, SynergyTrait.highValue,
-            SynergyTrait.tokenCount, SynergyTrait.totalArmor, SynergyTrait.totalCreaturePower,
+        traits: [SynergyTrait.creatureCount, SynergyTrait.capturedAmber, SynergyTrait.targettedCapturedAmber,
+            SynergyTrait.highValue, SynergyTrait.tokenCount, SynergyTrait.totalArmor, SynergyTrait.totalCreaturePower,
             SynergyTrait.expectedAember, SynergyTrait.hasMars],
     },
 ]

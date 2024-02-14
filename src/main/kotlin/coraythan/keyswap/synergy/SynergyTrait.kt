@@ -19,10 +19,8 @@ enum class SynergyTrait {
     scalingAmberControl,
     exalt,
     putsAmberOnTarget,
-    removesCapturedAmber,
     forgesKeys,
     forgesKeysWithoutAember,
-    expectedAember,
 
     // Board Control
     destroys,
@@ -52,7 +50,6 @@ enum class SynergyTrait {
 
     // Recursion
     returns_R_ToHand,
-    returns_R_FromDiscard,
     shuffles_R_IntoDeck,
     replays,
     puts_R_OnBottomOfDeck,
@@ -92,15 +89,12 @@ enum class SynergyTrait {
     bonusDamage,
     bonusCapture,
     bonusDiscard,
+    expectedAember,
+    capturedAmber,
+    targettedCapturedAmber,
 
     // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4 +=1
     hasMars,
-
-    highExpectedAmber, // for house: 7=0, 8=1/4, 9=1/2, 10=3/4, 11=1
-    // for deck: 22+=1/4, 24+=1/2, 26=3/4, 27+=1
-
-    lowExpectedAmber, // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
-    // for deck: 18-=1/4, 17-=1/2, 16-=3/4, 14-=1
 
     creatureCount,
     haunted,
@@ -114,6 +108,15 @@ enum class SynergyTrait {
     highValue,
 
     // DEPRECATED
+
+    returns_R_FromDiscard,
+    highExpectedAmber, // for house: 7=0, 8=1/4, 9=1/2, 10=3/4, 11=1
+    // for deck: 22+=1/4, 24+=1/2, 26=3/4, 27+=1
+
+    lowExpectedAmber, // for house: 7=0, 6=1/4, 5=1/2, 4=3/4, 3=1
+    // for deck: 18-=1/4, 17-=1/2, 16-=3/4, 14-=1
+
+    removesCapturedAmber,
 
     highTotalArmor, // 4=1/4, 5=1/2, 7=3/4, 9=1
 

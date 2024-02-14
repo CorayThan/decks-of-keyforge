@@ -33,7 +33,9 @@ data class DeckSynergyStats(
             SynergyTrait.totalCreaturePower to TraitVals(90, 30, 45, 15),
             SynergyTrait.totalArmor to TraitVals(10, 5),
             SynergyTrait.haunted to (TraitVals(100, 0)),
-            SynergyTrait.expectedAember to TraitVals(30, 15, 10, 3),
+            SynergyTrait.expectedAember to TraitVals(30, 12, 10, 3),
+            SynergyTrait.capturedAmber to TraitVals(16, 8),
+            SynergyTrait.targettedCapturedAmber to TraitVals(16, 8),
         )
 
         private fun matches(trait: SynergyTrait) = traits.keys.contains(trait)
@@ -55,6 +57,7 @@ data class DeckSynergyStats(
         }
 
         private fun statsFromCards(inputCards: List<DokCardInDeck>, tokensCount: Int): Map<SynergyTrait, Int> {
+            val capturePips = inputCards.sumOf { it.bonusCapture }
             return mapOf(
                 SynergyTrait.creatureCount to inputCards.count {
                     it.card.cardType == CardType.Creature || it.card.cardType == CardType.TokenCreature || it.extraCardInfo.extraCardTypes?.contains(
@@ -62,7 +65,7 @@ data class DeckSynergyStats(
                     ) == true
                 },
                 SynergyTrait.bonusAmber to inputCards.sumOf { it.card.amber + it.bonusAember },
-                SynergyTrait.bonusCapture to inputCards.sumOf { it.bonusCapture },
+                SynergyTrait.bonusCapture to capturePips,
                 SynergyTrait.bonusDamage to inputCards.sumOf { it.bonusDamage },
                 SynergyTrait.bonusDraw to inputCards.sumOf { it.bonusDraw },
                 SynergyTrait.bonusDiscard to inputCards.sumOf { it.bonusDiscard },
@@ -75,7 +78,37 @@ data class DeckSynergyStats(
                     val min = it.extraCardInfo.expectedAmber
                     if (max == 0.0) min else (min + max) / 2
                 }.roundToInt(),
+                SynergyTrait.capturedAmber to calculateCapturePercentWithTraits(
+                    inputCards, capturePips, setOf(SynergyTrait.capturesAmber, SynergyTrait.exalt)
+                ),
+                SynergyTrait.targettedCapturedAmber to calculateCapturePercentWithTraits(
+                    inputCards, capturePips, setOf(SynergyTrait.putsAmberOnTarget)
+                ),
             )
+        }
+
+        private fun calculateCapturePercentWithTraits(
+            cards: List<DokCardInDeck>, capturePips: Int, checkTraits: Set<SynergyTrait>
+        ): Int {
+
+            val captureScore = cards.sumOf { dokCardInDeck ->
+                val traits = dokCardInDeck.extraCardInfo.traits
+
+                val capTrait = traits.firstOrNull { checkTraits.contains(it.trait) }
+
+                if (capTrait == null) {
+                    0.0
+                } else {
+                    when (capTrait.strength()) {
+                        TraitStrength.EXTRA_WEAK -> 0.5
+                        TraitStrength.WEAK -> 1.0
+                        TraitStrength.NORMAL -> 2.0
+                        TraitStrength.STRONG -> 3.0
+                    }
+                }
+            }
+
+            return capturePips + captureScore.roundToInt()
         }
 
         private fun calculateHauntingPercent(cards: List<DokCardInDeck>): Int {
@@ -139,16 +172,20 @@ data class DeckSynergyStats(
         }
 
         when (trait.house) {
+
+            // Checking for in house
             SynTraitHouse.house -> {
                 val actual = houseStats[house]?.get(trait.trait)?.toDouble() ?: return 0
                 return calculatePercent(actual, vals.minHouse.toDouble(), vals.maxHouse.toDouble(), multiplier)
             }
 
+            // Checking for deck trait
             SynTraitHouse.anyHouse -> {
                 val actual = deckStats[trait.trait]?.toDouble() ?: return 0
                 return calculatePercent(actual, vals.minDeck.toDouble(), vals.maxDeck.toDouble(), multiplier)
             }
 
+            // Checking for out of house trait
             else -> {
                 val actual = houseStats.filter { it.key != house }
                     .values.sumOf { it[trait.trait]?.toDouble() ?: 0.0 }
