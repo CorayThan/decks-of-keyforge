@@ -30,8 +30,12 @@ import { LinkButton } from "../mui-restyled/LinkButton"
 import { messageStore } from "../ui/MessageStore"
 import { userStore } from "../user/UserStore"
 import { TeamIcon } from "./TeamIcon"
-import { teamStore } from "./TeamStore"
+import { TeamStore, teamStore } from "./TeamStore"
 import { UploadTeamImage } from "./UploadTeamImage"
+import { EventValue } from "../generic/EventValue"
+import IconButton from "@material-ui/core/IconButton/IconButton"
+import axios from "axios"
+import { Check, Edit } from "@material-ui/icons"
 
 class TeamManagementStore {
     @observable
@@ -46,18 +50,30 @@ class TeamManagementStore {
     @observable
     leaveTeamOpen = false
 
+    @observable
+    editTeamName = false
+
+    @observable
+    teamName = ""
+
     cleanName = () => this.username.trim()
 
     valid = () => {
         const nameTrimmed = this.cleanName()
-        if (nameTrimmed.length === 0) return false
-
-        return true
+        return nameTrimmed.length !== 0;
     }
 
-    constructor(initialHomepage: string) {
+    constructor(initialHomepage: string, initialTeamName: string) {
         makeObservable(this)
         this.homepage = initialHomepage
+        this.teamName = initialTeamName
+    }
+
+    saveTeamName = async () => {
+        const name = this.teamName.trim()
+        this.editTeamName = false
+        await axios.post(`${TeamStore.SECURE_CONTEXT}/team-name/${name}`)
+        teamStore.findTeamInfo()
     }
 }
 
@@ -103,7 +119,7 @@ const memberTableHeaders = (isLeader: boolean, leaderUsername: string, store: Te
 export const MyTeamPage = observer((props: { team: TeamInfo }) => {
     const {name, leader, invites, members, teamImg, homepage} = props.team
 
-    const [teamManagementStore] = useState(new TeamManagementStore(homepage ?? ""))
+    const [teamManagementStore] = useState(new TeamManagementStore(homepage ?? "", name))
 
     const isLeader = leader === userStore.username
 
@@ -113,12 +129,39 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
     return (
         <div>
             <div style={{display: "flex", marginBottom: spacing(4), alignItems: "center"}}>
-                <Typography variant={"h4"}>{name}</Typography>
+                {teamManagementStore.editTeamName ? (
+                    <Box width={320}>
+                        <TextField
+                            label={"team name"}
+                            value={teamManagementStore.teamName}
+                            onChange={(event: EventValue) => teamManagementStore.teamName = event.target.value}
+                            fullWidth={true}
+                            variant={"outlined"}
+                        />
+                    </Box>
+                ) : (
+                    <Typography variant={"h4"}>{name}</Typography>
+                )}
                 {isLeader ? (
-                    <UploadTeamImage
-                        teamImg={teamImg}
-                        style={{marginLeft: spacing(4)}}
-                    />
+                    <>
+                        <IconButton
+                            style={{marginLeft: spacing(2)}}
+                            onClick={() => {
+                                if (teamManagementStore.editTeamName) {
+                                    // save
+                                    teamManagementStore.saveTeamName()
+                                } else {
+                                    teamManagementStore.editTeamName = true
+                                }
+                            }}
+                        >
+                            {teamManagementStore.editTeamName ? <Check/> : <Edit/>}
+                        </IconButton>
+                        <UploadTeamImage
+                            teamImg={teamImg}
+                            style={{marginLeft: spacing(2)}}
+                        />
+                    </>
                 ) : (
                     <TeamIcon size={36} teamImg={teamImg} style={{marginLeft: spacing(4)}}/>
                 )}

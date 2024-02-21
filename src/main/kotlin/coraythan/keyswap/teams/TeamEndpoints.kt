@@ -61,6 +61,9 @@ class TeamEndpoints(
 
     @PostMapping("/secured/homepage")
     fun updateHomepage(@RequestBody homepage: TeamHomepage) = teamService.updateHomepage(homepage.homepage)
+
+    @PostMapping("/secured/team-name/{name}")
+    fun updateTeamname(@PathVariable name: String) = teamService.updateTeamname(name)
 }
 
 data class TeamHomepage(val homepage: String)

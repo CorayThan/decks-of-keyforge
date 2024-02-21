@@ -25,7 +25,8 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
     {
         groupName: "Aember and Keys",
         traits: [SynergyTrait.stealsAmber, SynergyTrait.increasesKeyCost, SynergyTrait.scalingAmberControl,
-            SynergyTrait.exalt,SynergyTrait.forgesKeys, SynergyTrait.forgesKeysWithoutAember],
+            SynergyTrait.exalt, SynergyTrait.forgesKeys, SynergyTrait.forgesKeysWithoutAember,
+            SynergyTrait.preventsForging],
         traitTraitsOnly: [
             SynergyTrait.capturesAmber, SynergyTrait.putsAmberOnTarget,
         ],
@@ -61,19 +62,16 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         groupName: "Other",
         description: `Use "any" for a wild cart trait that matches anything applicable. Like all artifacts or all ` +
             "creatures with even power.",
-        traits: [SynergyTrait.any, SynergyTrait.scrapValue, SynergyTrait.haunted,
-            SynergyTrait.preventsDamage ],
-        synergyTraitsOnly: [SynergyTrait.alpha, SynergyTrait.omega],
-        traitTraitsOnly: [
-            SynergyTrait.makesTokens,
-        ]
+        traits: [SynergyTrait.any, SynergyTrait.scrapValue, SynergyTrait.preventsDamage],
+        synergyTraitsOnly: [SynergyTrait.haunted, SynergyTrait.alpha, SynergyTrait.omega],
+        traitTraitsOnly: [SynergyTrait.makesTokens,]
     },
     {
         groupName: "Single Card Enhancements",
         description: "You can increase or reduce the value of pips on an individual card with Replays Self and " +
             "Dangerous Random Play.",
         traits: [SynergyTrait.dangerousRandomPlay],
-        traitTraitsOnly: [SynergyTrait.replaysSelf, ]
+        traitTraitsOnly: [SynergyTrait.replaysSelf,]
     },
     {
         groupName: "Enhancements",

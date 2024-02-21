@@ -23,14 +23,14 @@ data class DeckSynergyStats(
         private val bonusIconBaseTraitStrengths = TraitVals(30, 10)
 
         private val traits = mapOf(
-            SynergyTrait.creatureCount to TraitVals(25, 10, 15, 3),
+            SynergyTrait.creatureCount to TraitVals(25, 10, 11, 3),
             SynergyTrait.tokenCount to TraitVals(25, 25),
             SynergyTrait.bonusAmber to bonusIconBaseTraitStrengths,
             SynergyTrait.bonusCapture to bonusIconBaseTraitStrengths,
             SynergyTrait.bonusDamage to bonusIconBaseTraitStrengths,
             SynergyTrait.bonusDraw to bonusIconBaseTraitStrengths,
             SynergyTrait.bonusDiscard to bonusIconBaseTraitStrengths,
-            SynergyTrait.totalCreaturePower to TraitVals(90, 30, 45, 15),
+            SynergyTrait.totalCreaturePower to TraitVals(100, 30, 30, 15),
             SynergyTrait.totalArmor to TraitVals(10, 5),
             SynergyTrait.haunted to (TraitVals(100, 0)),
             SynergyTrait.expectedAember to TraitVals(30, 12, 10, 3),

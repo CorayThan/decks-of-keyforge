@@ -63,10 +63,9 @@ class TeamService(
     }
 
     fun formOrUpdateTeam(nameParam: String) {
-        val name = nameParam.trim()
-        if (name.isBlank() || !name.matches(teamNameRegex)) throw BadRequestException("$name is invalid for a team name.")
+        val name = cleanAndValidateTeamName(nameParam)
+
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
-        if (teamRepo.findByName(name) != null) throw BadRequestException("Name taken.")
         val preexisting = teamRepo.findByTeamLeaderId(loggedInUser.id)
         if (preexisting == null) {
             if (loggedInUser.teamId != null) throw BadRequestException("Can't make a team when you're on a team.")
@@ -160,6 +159,15 @@ class TeamService(
         teamRepo.save(team.copy(teamImg = key))
     }
 
+    fun updateTeamname(nameParam: String) {
+        val name = cleanAndValidateTeamName(nameParam)
+        val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
+        val team = teamRepo.findByTeamLeaderId(loggedInUser.id)
+            ?: throw BadRequestException("No team for user ${loggedInUser.email}")
+
+        teamRepo.save(team.copy(name = name))
+    }
+
     fun updateHomepage(homepage: String) {
         val loggedInUser = currentUserService.loggedInUserOrUnauthorized()
         val team = teamRepo.findByTeamLeaderId(loggedInUser.id)
@@ -179,6 +187,13 @@ class TeamService(
         removeFromTeamAndDecks(loggedInUser, team)
 
         teamRepo.deleteById(team.id)
+    }
+
+    private fun cleanAndValidateTeamName(nameParam: String): String {
+        val name = nameParam.trim()
+        if (name.length < 2 || !name.matches(teamNameRegex)) throw BadRequestException("$name is invalid for a team name.")
+        if (teamRepo.findByName(name) != null) throw BadRequestException("Name taken.")
+        return name
     }
 
     private fun addUserToTeam(toAdd: KeyUser, team: Team) {

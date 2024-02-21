@@ -21,6 +21,7 @@ enum class SynergyTrait {
     putsAmberOnTarget,
     forgesKeys,
     forgesKeysWithoutAember,
+    preventsForging,
 
     // Board Control
     destroys,
