@@ -25,6 +25,8 @@ data class SasVersion(
      */
     val sasUpdateCompletedTimestamp: ZonedDateTime? = null,
 
+    val addedIndexes: Boolean = false,
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "sas_version_sequence")
     @SequenceGenerator(name = "sas_version_sequence", allocationSize = 1)

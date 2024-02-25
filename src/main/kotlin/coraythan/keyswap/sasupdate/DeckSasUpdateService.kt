@@ -4,7 +4,10 @@ import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.deckimports.DeckCreationService
-import coraythan.keyswap.decks.*
+import coraythan.keyswap.decks.DeckPageService
+import coraythan.keyswap.decks.DeckPageType
+import coraythan.keyswap.decks.DeckSasUpdatableValuesResult
+import coraythan.keyswap.decks.DeckSasValuesUpdatableRepo
 import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
 import coraythan.keyswap.now
 import coraythan.keyswap.users.CurrentUserService
@@ -16,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 import kotlin.system.measureTimeMillis
 
 private const val lockUpdateRatings = "PT10S"
-private const val lockCheckToPublishSAS = "PT3H"
+private const val lockCheckToPublishSAS = "PT2H"
 
 @Transactional
 @Service
@@ -139,26 +142,37 @@ class DeckSasUpdateService(
         if (updatingSasVersion != null) {
             log.info("SAS Update: Found complete SAS update to activate. $updatingSasVersion")
 
-            when (updatingSasVersion.activeUpdateTable) {
-                SasVersionTableForUpdates.DSV1 -> deckSasValuesUpdatableRepo.addIndexesToTable1()
-                SasVersionTableForUpdates.DSV2 -> deckSasValuesUpdatableRepo.addIndexesToTable2()
-            }
+            if (!updatingSasVersion.addedIndexes) {
 
-            log.info("SAS Update: Added Indexes")
+                // Add the indexes we still need to do that.
+                log.info("SAS Update: Add indexes")
 
-            val updated = sasVersionRepo.save(
-                updatingSasVersion.copy(
-                    sasUpdateCompletedTimestamp = now(),
+                when (updatingSasVersion.activeUpdateTable) {
+                    SasVersionTableForUpdates.DSV1 -> deckSasValuesUpdatableRepo.addIndexesToTable1()
+                    SasVersionTableForUpdates.DSV2 -> deckSasValuesUpdatableRepo.addIndexesToTable2()
+                }
+
+                sasVersionRepo.save(updatingSasVersion.copy(addedIndexes = true))
+
+                log.info("SAS Update: Added Indexes")
+
+            } else {
+
+                log.info("SAS Update: Swap Tables")
+                // Indexes already added swap table names
+
+                deckSasValuesUpdatableRepo.swapSearchAndUpdateTables()
+
+                val updated = sasVersionRepo.save(
+                    updatingSasVersion.copy(
+                        sasUpdateCompletedTimestamp = now(),
+                    )
                 )
-            )
+                sasVersionService.setUpdatingAndSasVersion(false, updatingSasVersion.version, false)
 
-            deckSasValuesUpdatableRepo.swapSearchAndUpdateTables()
-
-            sasVersionService.setUpdatingAndSasVersion(false, updatingSasVersion.version, false)
-
-            log.info("SAS Update: Complete! Switched from $updatingSasVersion to $updated")
+                log.info("SAS Update: Complete! Switched from $updatingSasVersion to $updated")
+            }
         }
-
     }
 
 }

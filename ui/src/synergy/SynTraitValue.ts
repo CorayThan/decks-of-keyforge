@@ -4,7 +4,7 @@ import { SynTraitPlayer } from "../generated-src/SynTraitPlayer"
 import { SynTraitValue } from "../generated-src/SynTraitValue"
 import { Utils } from "../config/Utils"
 
-export type SynTraitRatingValues = -4 | -3 | -2 | -1 | 1 | 2 | 3 | 4
+export type SynTraitRatingValues = -6 | -4 | -3 | -2 | -1 | 1 | 2 | 3 | 4 | 6
 
 export const synTraitValueToString = (value: SynTraitValue) => `${value.trait} – ${value.rating} – ${value.house}`
 

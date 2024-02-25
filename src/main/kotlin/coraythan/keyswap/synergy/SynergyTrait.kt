@@ -3,6 +3,7 @@ package coraythan.keyswap.synergy
 import coraythan.keyswap.generatets.GenerateTs
 
 enum class TraitStrength(val value: Int) {
+    EXTRA_STRONG(6),
     STRONG(4),
     NORMAL(3),
     WEAK(2),

@@ -25,25 +25,28 @@ export const TraitStrengthSelect = (props: { store: TraitBuilderStore }) => {
                     />
                 </Box>
 
-                <Box display={"grid"} gridTemplateColumns={"1fr 1fr 1fr 1fr"} gridGap={spacing(1)} my={2}>
+                <Box display={"grid"} gridTemplateColumns={"1fr 1fr 1fr 1fr 1fr"} gridGap={spacing(1)} my={2}>
                     {store.traitOrSynergy === "synergy" && (
                         <>
-                            <TraitStrengthButton name={"Extra Weak Antisynergy"} strength={-1} store={store}
+                            <TraitStrengthButton name={"Extra Weak"} strength={-1} store={store}
                                                  color={"secondary"}/>
-                            <TraitStrengthButton name={"Weak Antisynergy"} strength={-2} store={store}
+                            <TraitStrengthButton name={"Weak Antisyn"} strength={-2} store={store}
                                                  color={"secondary"}/>
-                            <TraitStrengthButton name={"Normal Antisynergy"} strength={-3} store={store}
+                            <TraitStrengthButton name={"Normal Antisyn"} strength={-3} store={store}
                                                  color={"secondary"}/>
-                            <TraitStrengthButton name={"Strong Antisynergy"} strength={-4} store={store}
+                            <TraitStrengthButton name={"Strong Antisyn"} strength={-4} store={store}
+                                                 color={"secondary"}/>
+                            <TraitStrengthButton name={"Extra Strong"} strength={-6} store={store}
                                                  color={"secondary"}/>
                         </>
                     )}
 
                     <>
-                        <TraitStrengthButton name={"Extra Weak " + postiveName} strength={1} store={store}/>
+                        <TraitStrengthButton name={"Extra Weak"} strength={1} store={store}/>
                         <TraitStrengthButton name={"Weak " + postiveName} strength={2} store={store}/>
                         <TraitStrengthButton name={"Normal " + postiveName} strength={3} store={store}/>
                         <TraitStrengthButton name={"Strong " + postiveName} strength={4} store={store}/>
+                        <TraitStrengthButton name={"Extra Strong"} strength={6} store={store}/>
                     </>
                 </Box>
 
@@ -120,9 +123,11 @@ const TraitStrengthDescription = (props: { trait?: SynergyTrait }) => {
             </HelperText>
             <Box display={"grid"} gridTemplateColumns={"1fr 1fr"} gridColumnGap={spacing(2)}
                  gridRowGap={spacing(0.5)}>
-                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Strong + Strong</Typography>
+                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Strong + Extra Strong</Typography>
+                <Typography>1 match</Typography>
+                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Strong + Strong / Weak + Extra Strong</Typography>
                 <Typography>2 matches</Typography>
-                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Normal + Strong</Typography>
+                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Normal + Strong / Extra Weak + Extra Strong</Typography>
                 <Typography>3 matches</Typography>
                 <Typography variant={"body2"} style={{fontWeight: "bold"}}>
                     Normal + Normal / Weak + Strong

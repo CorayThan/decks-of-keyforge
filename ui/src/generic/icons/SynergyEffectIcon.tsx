@@ -4,6 +4,7 @@ import { spacing } from "../../config/MuiConfig"
 import { AboveAverageIcon } from "./AboveAverageIcon"
 import { BelowAverageIcon } from "./BelowAverageIcon"
 import { WorstIcon } from "./WorstIcon"
+import { BestIcon } from "./BestIcon"
 
 export const SynergyEffectIcon = (props: { effect: number }) => {
     const quality = props.effect
@@ -18,6 +19,9 @@ export const SynergyEffectIcon = (props: { effect: number }) => {
     } else if (quality === 4 || quality === -4) {
         title = "Rating 4 – Strong Effect"
         Icon = AboveAverageIcon
+    } else if (quality === 6 || quality === -6) {
+        title = "Rating 6 – Strongest Effect"
+        Icon = BestIcon
     } else {
         return null
     }

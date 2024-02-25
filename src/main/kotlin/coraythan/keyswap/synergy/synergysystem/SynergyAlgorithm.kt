@@ -29,6 +29,10 @@ object DeckSynergyService {
             6 -> 25
             7 -> 33
             8 -> 50
+            9 -> 75
+            10 -> 100
+            11 -> 100
+            12 -> 100
             else -> {
                 log.warn("Bad ratings! $synRating $traitStrength")
                 0

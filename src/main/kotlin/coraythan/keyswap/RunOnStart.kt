@@ -26,11 +26,11 @@ class RunOnStart(
 
     override fun run(vararg args: String?) {
 
-
         cardCache.loadCards()
 
         fixSynergies.fix()
 
+        allianceDeckService.updateAllianceDeckValidity()
         // deckImporterService.updateDeckStats()
 
 //        dokCardUpdateService.downloadAllNewCardImages(

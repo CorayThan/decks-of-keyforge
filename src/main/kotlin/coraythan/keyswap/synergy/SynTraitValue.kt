@@ -91,6 +91,7 @@ data class SynTraitValue(
         2 -> TraitStrength.WEAK
         3 -> TraitStrength.NORMAL
         4 -> TraitStrength.STRONG
+        6 -> TraitStrength.EXTRA_STRONG
         else -> TraitStrength.NORMAL
     }
 

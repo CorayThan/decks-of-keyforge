@@ -33,6 +33,7 @@ object TokenSynergyService {
                 TraitStrength.WEAK -> 1.5
                 TraitStrength.NORMAL -> 2.0
                 TraitStrength.STRONG -> 3.0
+                TraitStrength.EXTRA_STRONG -> 4.0
             }
         }
     }
