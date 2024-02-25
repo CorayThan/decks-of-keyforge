@@ -57,8 +57,10 @@ export const activeSasExpansions = [
     Expansion.DARK_TIDINGS,
     Expansion.WORLDS_COLLIDE,
     Expansion.WINDS_OF_EXCHANGE,
+    Expansion.GRIM_REMINDERS,
     Expansion.UNCHAINED_2022,
     Expansion.VAULT_MASTERS_2023,
+    Expansion.MENAGERIE_2024,
 ]
 
 export const activeCardExpansions = [

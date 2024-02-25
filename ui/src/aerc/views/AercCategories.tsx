@@ -222,7 +222,7 @@ export const AercCategoryCounts = (props: AercCatProps) => {
                 <Box display={"flex"} flexDirection={"column"}>
                     <Box flexGrow={1}/>
                     <Tooltip
-                        title={"Date imported to DoK. Not recorded prior to Jun 1, 19"}
+                        title={`Date imported to DoK. Not recorded prior to Jun 1, 19. Exact date: ${deck.dateAdded}`}
                     >
                         <div style={{marginTop: spacing(1), display: "flex", justifyContent: "flex-end"}}>
                             <Typography variant={"body2"} color={"textSecondary"} style={{fontSize: "0.75rem"}}>

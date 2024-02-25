@@ -13,7 +13,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "6.22"
+export const latestVersion = "7.0"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -41,6 +41,36 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"7.0"}
+                    date={"2/24/2024"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Grim Reminders + Menagerie SAS Scores Released!",
+                            note: "V1 Grim Reminders SAS scores have officially been released. " +
+                                "These are a work in progress, but I'm hopefully these will be useful to the " +
+                                "community, and improve with time. In addition to the new SAS scores I've also " +
+                                "added a 'haunting' statistic that shows how good a deck is at getting itself " +
+                                "haunted quickly. A deck with a score of 0 is pretty bad at it, and one with a " +
+                                "score of 10 is pretty good, relatively speaking."
+                        },
+                        {
+                            highlight: "Kudos to the Keepers of the SAS",
+                            note: "I got a lot of help building these scores for this set. The following folks " +
+                                "helped create the SAS scores for Grim Reminders: jfilipeg, june, quickdraw3457, " +
+                                "r0gershrubber, Player Hurp, and Big Z. The community in the Decks of KeyForge " +
+                                "Discord server also helped provide feedback."
+                        },
+                        {
+                            highlight: "Revisions for Older Sets",
+                            note: "I've been putting in work upgrading the SAS algorithm, but a lot of those " +
+                                "improvements haven't been made for older cards. Our next goal is going to be to " +
+                                "improve Grim Reminders scores, but also revise many old cards to use the more " +
+                                "modern synergy system."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"6.22"}
                     date={"2/7/2024"}

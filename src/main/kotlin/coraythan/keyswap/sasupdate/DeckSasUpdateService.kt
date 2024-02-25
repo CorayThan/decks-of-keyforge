@@ -1,6 +1,7 @@
 package coraythan.keyswap.sasupdate
 
 import coraythan.keyswap.cards.CardService
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.deckimports.DeckCreationService
 import coraythan.keyswap.decks.*
@@ -26,6 +27,7 @@ class DeckSasUpdateService(
     private val cardService: CardService,
     private val deckCreationService: DeckCreationService,
     private val sasVersionRepo: SasVersionRepo,
+    private val cardCache: DokCardCacheService,
     private val currentUserService: CurrentUserService,
 ) {
 
@@ -36,6 +38,7 @@ class DeckSasUpdateService(
         val nextVersion = sasVersionService.findSasVersion() + 1
         log.info("SAS Update: Publishing $nextVersion of SAS.")
         cardService.publishNextInfo(nextVersion)
+        cardCache.loadCards()
         deckPageService.setCurrentPage(0, DeckPageType.RATING)
 
         val updatingSasVersion = sasVersionRepo.findFirstBySasUpdateCompletedTimestampNullOrderByIdDesc()

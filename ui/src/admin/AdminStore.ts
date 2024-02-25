@@ -12,6 +12,11 @@ export class AdminStore {
     @observable
     reloadingCards = false
 
+    @observable
+    publishingSas = false
+
+    @observable
+    startingStats = false
 
     @observable
     info = ""
@@ -24,13 +29,17 @@ export class AdminStore {
     }
 
     publishNewSas = async () => {
+        this.publishingSas = true
         const response: AxiosResponse<number> = await axios.post(`${AdminStore.SECURE_CONTEXT}/publish`)
         messageStore.setSuccessMessage(`Publishing SAS version ${response.data}`)
+        this.publishingSas = false
     }
 
     startNewStats = async () => {
+        this.startingStats = true
         const statsResponse: AxiosResponse<string> = await axios.post(`${StatsStore.CONTEXT}/start-new`)
         messageStore.setSuccessMessage(statsResponse.data)
+        this.startingStats = false
     }
 
     findStatsInfo = async () => {

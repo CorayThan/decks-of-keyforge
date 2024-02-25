@@ -40,6 +40,7 @@ export const AdminPanelView = observer(() => {
                         variant={"contained"}
                         color={"secondary"}
                         onClick={adminStore.publishNewSas}
+                        loading={adminStore.publishingSas}
                     >
                         Publish New SAS Version
                     </KeyButton>
@@ -49,6 +50,7 @@ export const AdminPanelView = observer(() => {
                         variant={"contained"}
                         color={"secondary"}
                         onClick={adminStore.startNewStats}
+                        loading={adminStore.startingStats}
                     >
                         Start New Stats
                     </KeyButton>
