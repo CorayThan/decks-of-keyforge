@@ -1,4 +1,4 @@
-import { Box, Dialog, FormControl, FormLabel, Link, Radio, RadioGroup, Tooltip, Typography } from "@material-ui/core"
+import { Dialog, FormControl, FormLabel, Link, Radio, RadioGroup, Tooltip, Typography } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -17,7 +17,6 @@ import { MyDokSubPaths } from "../../config/Routes"
 import { TimeUtils } from "../../config/TimeUtils"
 import { Utils } from "../../config/Utils"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
-import { ExtendedExpansionUtils } from "../../expansions/ExtendedExpansionUtils"
 import { DeckCondition } from "../../generated-src/DeckCondition"
 import { DeckLanguage } from "../../generated-src/DeckLanguage"
 import { DeckListingStatus } from "../../generated-src/DeckListingStatus"
@@ -31,7 +30,6 @@ import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
 import { DeckActionClickable } from "../buttons/DeckActionClickable"
 import { deckTableViewStore } from "../DeckTableViewStore"
 import { DeckSearchResult } from "../models/DeckSearchResult"
-import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
 import { SoldButton } from "./SoldButton"
 
 interface ListForSaleViewProps {
@@ -451,13 +449,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         <HelperText style={{marginTop: spacing(2)}}>
                             Add seller info and toggle trades on your <Link href={MyDokSubPaths.profile}>profile</Link>.
                         </HelperText>
-                        {deck != null && ExtendedExpansionUtils.allowsEnhancements(deck.expansion) && !deck.hasOwnershipVerification && (
-                            <Box mt={2}>
-                                <Typography variant={"subtitle2"} color={"error"}>
-                                    You can add a deck picture with enhanced cards. Use the image button below!
-                                </Typography>
-                            </Box>
-                        )}
                     </DialogContent>
                     <DialogActions>
                         <KeyButton
@@ -467,9 +458,6 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         >
                             {"Save Default"}
                         </KeyButton>
-                        {deck && (
-                            <DeckOwnershipButton deck={deck} hasVerification={deck.hasOwnershipVerification}/>
-                        )}
                         <div style={{flexGrow: 1}}/>
                         <KeyButton onClick={this.handleClose}>Cancel</KeyButton>
                         <KeyButton

@@ -54,6 +54,31 @@ class DeckListingService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    fun fixBadDeckListings() {
+        var count = 0
+        log.info("Begin fix bad deck listings.")
+        deckRepo.listedDeckIds().forEach {  deckId ->
+            val deck = deckRepo.findByIdOrNull(deckId) ?: error("No deck for id $deckId")
+            var updated = false
+            if (deck.forSale) {
+                if (deck.auctions.none { it.status == DeckListingStatus.SALE }) {
+                    log.info("Remove for sale from ${deck.name}")
+                    deckRepo.save(deck.copy(forSale = false))
+                    updated = true
+                }
+            }
+            if (deck.forTrade) {
+                if (deck.auctions.none { it.status == DeckListingStatus.SALE && it.forTrade }) {
+                    log.info("Remove for trade from ${deck.name}")
+                    deckRepo.save(deck.copy(forTrade = false))
+                    updated = true
+                }
+            }
+            if (updated) count++
+        }
+        log.info("Done fix bad deck listings fixed $count")
+    }
+
     @Scheduled(fixedDelayString = "PT6H", initialDelayString = SchedulingConfig.unexpiredDecksInitialDelay)
     fun unlistExpiredDecks() {
         try {
@@ -394,20 +419,12 @@ class DeckListingService(
 
     private fun removeDeckListingStatus(listing: DeckListing, deckId: Long, seller: KeyUser) {
 
-        val (stillForTrade, stillForSale) = this.stillListed(listing)
-
-        deckRepo.updateForSaleAndTrade(deckId, stillForSale, stillForTrade)
-        userSearchService.scheduleUserForUpdate(seller)
-    }
-
-    private fun stillListed(listing: DeckListing): Pair<Boolean, Boolean> {
         val listingsForDeck = listing.deck.auctions
+        val forSale = listingsForDeck.any { it.seller.id != seller.id && it.status == DeckListingStatus.SALE }
+        val forTrade = listingsForDeck.any { it.seller.id != seller.id && it.status == DeckListingStatus.SALE && it.forTrade }
 
-        // This might be someone else unlisting the deck for sale while a different person has an active auction for it
-        return Pair(
-            listingsForDeck.any { it.forTrade },
-            listingsForDeck.isNotEmpty()
-        )
+        deckRepo.updateForSaleAndTrade(deckId, forSale, forTrade)
+        userSearchService.scheduleUserForUpdate(seller)
     }
 
 }

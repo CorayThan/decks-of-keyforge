@@ -49,10 +49,10 @@ export class ReleaseNotes extends React.Component {
                         {
                             highlight: "Grim Reminders + Menagerie SAS Scores Released!",
                             note: "V1 Grim Reminders SAS scores have officially been released. " +
-                                "These are a work in progress, but I'm hopefully these will be useful to the " +
+                                "These are a work in progress, but hopefully they will be useful to the " +
                                 "community, and improve with time. In addition to the new SAS scores I've also " +
                                 "added a 'haunting' statistic that shows how good a deck is at getting itself " +
-                                "haunted quickly. A deck with a score of 0 is pretty bad at it, and one with a " +
+                                "haunted quickly. A deck with a score of 0 is bad at it, and one with a " +
                                 "score of 10 is pretty good, relatively speaking."
                         },
                         {

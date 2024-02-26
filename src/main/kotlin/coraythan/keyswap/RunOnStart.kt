@@ -1,6 +1,7 @@
 package coraythan.keyswap
 
 import coraythan.keyswap.alliancedecks.AllianceDeckService
+import coraythan.keyswap.auctions.DeckListingService
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.cards.dokcards.DokCardUpdateService
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfoService
@@ -20,6 +21,7 @@ class RunOnStart(
     private val extraCardInfoService: ExtraCardInfoService,
     private val dokCardUpdateService: DokCardUpdateService,
     private val allianceDeckService: AllianceDeckService,
+    private val deckListingService: DeckListingService,
 ) : CommandLineRunner {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -30,7 +32,6 @@ class RunOnStart(
 
         fixSynergies.fix()
 
-        allianceDeckService.updateAllianceDeckValidity()
         // deckImporterService.updateDeckStats()
 
 //        dokCardUpdateService.downloadAllNewCardImages(
@@ -59,8 +60,8 @@ class RunOnStart(
         )
 
         userSearchService.updateSearchResults()
-//        allianceDeckService.updateAllianceDeckValidity()
-//        dokCardUpdateService.updateRarities()
+        // allianceDeckService.updateAllianceDeckValidity()
+        deckListingService.fixBadDeckListings()
     }
 
 }

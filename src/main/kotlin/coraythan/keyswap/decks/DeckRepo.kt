@@ -15,6 +15,9 @@ interface DeckRepo : JpaRepository<Deck, Long>, QuerydslPredicateExecutor<Deck> 
 
     fun findByWinsGreaterThanOrLossesGreaterThan(wins: Int, losses: Int): List<Deck>
 
+    @Query("SELECT d.id FROM #{#entityName} d WHERE d.forTrade = true OR d.forSale = true")
+    fun listedDeckIds(): List<Long>
+
     @Query(
         value = "SELECT reltuples\\:\\:BIGINT AS estimate FROM pg_class WHERE relname='deck'",
         nativeQuery = true

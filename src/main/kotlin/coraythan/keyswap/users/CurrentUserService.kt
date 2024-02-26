@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class CurrentUserService(
-        private val userRepo: KeyUserRepo,
-        private val bCryptPasswordEncoder: BCryptPasswordEncoder,
+    private val userRepo: KeyUserRepo,
+    private val bCryptPasswordEncoder: BCryptPasswordEncoder,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -22,6 +22,11 @@ class CurrentUserService(
     }
 
     fun loggedInUserOrUnauthorized() = loggedInUser() ?: throw UnauthorizedException("Unauthorized")
+    fun loggedInContentCreatorOrUnauthorized(): KeyUser {
+        val user = loggedInUser()?: throw UnauthorizedException("Unauthorized")
+        if (user.type != UserType.ADMIN && user.type != UserType.CONTENT_CREATOR) throw UnauthorizedException("Must be content creator.")
+        return user
+    }
 
     fun loggedInUserDto(): KeyUserDto? {
         val userDto = loggedInUser()?.toDto()
