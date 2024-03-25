@@ -1,5 +1,6 @@
 package coraythan.keyswap.sasupdate
 
+import coraythan.keyswap.alliancedecks.AllianceDeckRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.SchedulingConfig
@@ -10,6 +11,7 @@ import coraythan.keyswap.decks.DeckSasUpdatableValuesResult
 import coraythan.keyswap.decks.DeckSasValuesUpdatableRepo
 import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
 import coraythan.keyswap.now
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.users.CurrentUserService
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
@@ -21,6 +23,8 @@ import kotlin.system.measureTimeMillis
 private const val lockUpdateRatings = "PT10S"
 private const val lockCheckToPublishSAS = "PT2H"
 
+private const val lockUpdateAllianceRatings = "PT1H"
+
 @Transactional
 @Service
 class DeckSasUpdateService(
@@ -31,10 +35,12 @@ class DeckSasUpdateService(
     private val deckCreationService: DeckCreationService,
     private val sasVersionRepo: SasVersionRepo,
     private val cardCache: DokCardCacheService,
+    private val allianceDeckRepo: AllianceDeckRepo,
     private val currentUserService: CurrentUserService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+    private var updateAllianceSas = true
 
     fun publishNewSasUpdate(): Int {
         currentUserService.adminOrUnauthorized()
@@ -72,6 +78,7 @@ class DeckSasUpdateService(
 
         sasVersionRepo.save(nextConfig)
         sasVersionService.setUpdatingAndSasVersion(true, nextVersion, false)
+        this.updateAllianceSas = true
 
         log.info("SAS Update: Published next version of SAS with config $nextConfig")
         return nextVersion
@@ -171,6 +178,34 @@ class DeckSasUpdateService(
                 sasVersionService.setUpdatingAndSasVersion(false, updatingSasVersion.version, false)
 
                 log.info("SAS Update: Complete! Switched from $updatingSasVersion to $updated")
+            }
+        }
+    }
+
+    @SchedulerLock(
+        name = "updateAllianceSasRatings",
+        lockAtLeastFor = lockUpdateAllianceRatings,
+        lockAtMostFor = lockUpdateAllianceRatings
+    )
+    @Scheduled(fixedDelayString = lockUpdateAllianceRatings, initialDelayString = SchedulingConfig.updateAllianceDecksInitialDelay)
+    fun updateAllianceRatings() {
+        if (updateAllianceSas) {
+            log.info("Alliance SAS Update: Check for more decks to update.")
+            val sasVersion = sasVersionService.findSasVersion()
+            val toUpdate = allianceDeckRepo.findFirst1000BySasVersionNot(sasVersion)
+            if (toUpdate.isEmpty()) {
+                log.info("Alliance SAS Update: Found no more decks to update for SAS Version $sasVersion.")
+                this.updateAllianceSas = false
+            } else {
+                toUpdate.forEach {
+                    val cards = cardCache.cardsForDeck(it)
+                    val token = cardCache.tokenForDeck(it)
+                    val allianceDeckSynergies = DeckSynergyService.fromDeckWithCards(it, cards, token)
+                    allianceDeckRepo.save(
+                        it.copy(sasVersion = sasVersion, sasRating = allianceDeckSynergies.sasRating)
+                    )
+                }
+                log.info("Alliance SAS Update: Updated ${toUpdate.size} alliance decks to version: $sasVersion.")
             }
         }
     }

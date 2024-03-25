@@ -25,6 +25,7 @@ data class AllianceDeck(
     override val name: String,
     override val expansion: Int,
     val sasRating: Int = 0,
+    val sasVersion: Int = 0,
 
     val validAlliance: Boolean = true,
     val createdDateTime: ZonedDateTime? = now(),

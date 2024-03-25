@@ -61,7 +61,7 @@ class RunOnStart(
 
         userSearchService.updateSearchResults()
         // allianceDeckService.updateAllianceDeckValidity()
-        deckListingService.fixBadDeckListings()
+//        deckListingService.fixBadDeckListings()
     }
 
 }
