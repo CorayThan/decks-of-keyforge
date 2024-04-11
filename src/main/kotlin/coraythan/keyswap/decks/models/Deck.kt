@@ -151,9 +151,8 @@ data class Deck(
             }?.size
                 ?: 0).zeroToNull(),
             keyCheatCount = (cards?.filter {
-                it.extraCardInfo.traits.containsTrait(SynergyTrait.forgesKeys) || it.extraCardInfo.traits.containsTrait(
-                    SynergyTrait.forgesKeysWithoutAember
-                )
+                it.extraCardInfo.traits.containsTrait(SynergyTrait.forgesKeys)
+                        || it.extraCardInfo.traits.containsTrait(SynergyTrait.forgesKeysWithoutAember)
             }?.size ?: 0).zeroToNull(),
             rawAmber = if (cards == null) -1 else cards.sumOf { it.card.amber } + this.bonusIcons().bonusIconHouses.sumOf { it.bonusIconCards.sumOf { it.bonusAember } },
             totalArmor = cards?.sumOf { it.card.armor },

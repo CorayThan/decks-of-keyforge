@@ -23,7 +23,8 @@ enum class Expansion(val expansionNumber: Int, val readable: String, val houses:
     MENAGERIE_2024(722, "MN24", setOf(
         House.Brobnar, House.Dis, House.Ekwidon, House.Geistoid, House.Mars, House.Sanctum, House.Saurian,
         House.Shadows, House.StarAlliance, House.Unfathomable, House.Untamed,
-    ), true);
+    ), true),
+    VAULT_MASTERS_2024(737, "VM24", setOf(House.Brobnar, House.Dis, House.Sanctum, House.Shadows, House.StarAlliance, House.Unfathomable, House.Untamed), false);
 
     companion object {
         fun forExpansionNumber(expansionNumber: Int?) = entries.find { it.expansionNumber == expansionNumber }
@@ -45,4 +46,5 @@ val activeExpansions = setOf(
     Expansion.VAULT_MASTERS_2023,
     Expansion.GRIM_REMINDERS,
     Expansion.MENAGERIE_2024,
+    Expansion.VAULT_MASTERS_2024,
 )

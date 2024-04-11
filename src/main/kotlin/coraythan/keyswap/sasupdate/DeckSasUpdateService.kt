@@ -1,5 +1,6 @@
 package coraythan.keyswap.sasupdate
 
+import coraythan.keyswap.alliancedecks.AllianceDeck
 import coraythan.keyswap.alliancedecks.AllianceDeckRepo
 import coraythan.keyswap.cards.CardService
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
@@ -187,7 +188,10 @@ class DeckSasUpdateService(
         lockAtLeastFor = lockUpdateAllianceRatings,
         lockAtMostFor = lockUpdateAllianceRatings
     )
-    @Scheduled(fixedDelayString = lockUpdateAllianceRatings, initialDelayString = SchedulingConfig.updateAllianceDecksInitialDelay)
+    @Scheduled(
+        fixedDelayString = lockUpdateAllianceRatings,
+        initialDelayString = SchedulingConfig.updateAllianceDecksInitialDelay
+    )
     fun updateAllianceRatings() {
         if (updateAllianceSas) {
             log.info("Alliance SAS Update: Check for more decks to update.")
@@ -201,8 +205,15 @@ class DeckSasUpdateService(
                     val cards = cardCache.cardsForDeck(it)
                     val token = cardCache.tokenForDeck(it)
                     val allianceDeckSynergies = DeckSynergyService.fromDeckWithCards(it, cards, token)
+
+                    // May as well ensure this is still accurate
+                    val valid = AllianceDeck.determineIfValid(cards)
                     allianceDeckRepo.save(
-                        it.copy(sasVersion = sasVersion, sasRating = allianceDeckSynergies.sasRating)
+                        it.copy(
+                            sasVersion = sasVersion,
+                            sasRating = allianceDeckSynergies.sasRating,
+                            validAlliance = valid,
+                        )
                     )
                 }
                 log.info("Alliance SAS Update: Updated ${toUpdate.size} alliance decks to version: $sasVersion.")

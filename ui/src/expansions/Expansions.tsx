@@ -23,6 +23,7 @@ export enum ExpansionNumber {
     VM23 = 609,
     GR = 700,
     MN24 = 722,
+    VM24 = 737,
 }
 
 export const displayMyDecksLinksFor = [
@@ -33,7 +34,6 @@ export const displayMyDecksLinksFor = [
     Expansion.DARK_TIDINGS,
     Expansion.WINDS_OF_EXCHANGE,
     Expansion.GRIM_REMINDERS,
-    Expansion.VAULT_MASTERS_2023,
 ]
 
 export const activeExpansions = [
@@ -45,6 +45,7 @@ export const activeExpansions = [
     Expansion.WINDS_OF_EXCHANGE,
     Expansion.GRIM_REMINDERS,
     Expansion.VAULT_MASTERS_2023,
+    Expansion.VAULT_MASTERS_2024,
     Expansion.UNCHAINED_2022,
     Expansion.MENAGERIE_2024,
 ]
@@ -61,6 +62,7 @@ export const activeSasExpansions = [
     Expansion.UNCHAINED_2022,
     Expansion.VAULT_MASTERS_2023,
     Expansion.MENAGERIE_2024,
+    Expansion.VAULT_MASTERS_2024,
 ]
 
 export const activeCardExpansions = [
@@ -83,6 +85,7 @@ export const expansionsWithCards = [
     Expansion.WINDS_OF_EXCHANGE,
     Expansion.GRIM_REMINDERS,
     Expansion.VAULT_MASTERS_2023,
+    Expansion.VAULT_MASTERS_2024,
     Expansion.MENAGERIE_2024,
 ]
 
@@ -90,6 +93,7 @@ export const recentExpansions = [
     Expansion.GRIM_REMINDERS,
     Expansion.WINDS_OF_EXCHANGE,
     Expansion.MENAGERIE_2024,
+    Expansion.VAULT_MASTERS_2024,
 ]
 
 export const activeCardLinksExpansions = [
@@ -122,7 +126,8 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.DT, name: "Dark Tidings", abbreviation: "DT", backendEnum: Expansion.DARK_TIDINGS},
     {expansionNumber: ExpansionNumber.WOE, name: "Winds of Exchange", abbreviation: "WoE", backendEnum: Expansion.WINDS_OF_EXCHANGE},
     {expansionNumber: ExpansionNumber.UC22, name: "Unchained", abbreviation: "UC22", backendEnum: Expansion.UNCHAINED_2022},
-    {expansionNumber: ExpansionNumber.VM23, name: "Vault Masters", abbreviation: "VM23", backendEnum: Expansion.VAULT_MASTERS_2023},
+    {expansionNumber: ExpansionNumber.VM23, name: "VM 23", abbreviation: "VM23", backendEnum: Expansion.VAULT_MASTERS_2023},
+    {expansionNumber: ExpansionNumber.VM24, name: "VM 24", abbreviation: "VM24", backendEnum: Expansion.VAULT_MASTERS_2024},
     {expansionNumber: ExpansionNumber.GR, name: "Grim Reminders", abbreviation: "GR", backendEnum: Expansion.GRIM_REMINDERS},
     {expansionNumber: ExpansionNumber.MN24, name: "Menagerie", abbreviation: "MN24", backendEnum: Expansion.MENAGERIE_2024},
 ]

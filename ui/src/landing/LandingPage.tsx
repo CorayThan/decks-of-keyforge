@@ -6,7 +6,7 @@ import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
-import { activeCardLinksExpansions, activeExpansions, expansionInfoMap } from "../expansions/Expansions"
+import { activeCardLinksExpansions, displayMyDecksLinksFor, expansionInfoMap } from "../expansions/Expansions"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -65,7 +65,7 @@ export class LandingPage extends React.Component<{}> {
                                     filters={topSas}
                                     style={{marginBottom: spacing(2)}}
                                 />
-                                {activeExpansions.map(expansion => {
+                                {displayMyDecksLinksFor.map(expansion => {
                                     const expansionFilters = new DeckFilters()
                                     expansionFilters.expansions = [expansionInfoMap.get(expansion)!.expansionNumber]
                                     return (
