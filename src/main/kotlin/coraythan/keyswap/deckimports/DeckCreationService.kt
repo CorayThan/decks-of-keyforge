@@ -36,22 +36,12 @@ class DeckCreationService(
     private val postProcessDecksService: PostProcessDecksService,
     private val dokCardCacheService: DokCardCacheService,
     private val sasVersionService: SasVersionService,
-    private val importSkippedDecksService: ImportSkippedDecksService,
+//    private val importSkippedDecksService: ImportSkippedDecksService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    private val disallowCards = listOf(
-        "Cincinnatus Resurrexit",
-        "Duma the Returned",
-        "Encounter Golem",
-        "Ghostly Dr. Verokter",
-        "Immortal Greking",
-        "Phantom Drummernaut",
-        "Portalmonster",
-        "Qyxxlyxx Grave Master",
-        "Revived Ză-Orhă",
-        "Spectral Ruth",
-        "Xenos Darkshadow",
+    private val disallowCards = listOf<String>(
+//        "Cincinnatus Resurrexit",
     )
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -139,7 +129,7 @@ class DeckCreationService(
         } else {
             if (saveForLater) {
                 log.info("Skipping ${keyforgeDeck.name} for now because it has cards $badCard")
-                importSkippedDecksService.addImportSkippedDeck(keyforgeDeck.id)
+                // importSkippedDecksService.addImportSkippedDeck(keyforgeDeck.id)
             } else {
                 throw BadRequestException(
                     "Master Vault currently has a bug with Revenants, so importing " +

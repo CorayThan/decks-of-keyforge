@@ -1,5 +1,6 @@
 package coraythan.keyswap.deckimports
 
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import jakarta.persistence.Entity
@@ -7,6 +8,7 @@ import jakarta.persistence.Id
 import org.slf4j.LoggerFactory
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -17,20 +19,21 @@ private const val lockImportSkippedDecksFor = "PT3M"
 @Service
 class ImportSkippedDecksService(
     private val repo: ImportSkippedDeckRepo,
+    private val deckImporterService: DeckImporterService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    //    @Scheduled(fixedDelayString = lockPostProcessDecksFor, initialDelayString = SchedulingConfig.postProcessDecksDelay)
+    @Scheduled(fixedDelayString = "PT3M", initialDelayString = SchedulingConfig.postProcessDecksDelay)
     fun processSkippedDecks() {
         log.info("$scheduledStart Process import skipped decks.")
 
-        val process = repo.findAllLimit100()
+        val process = repo.findAllLimit1()
 
         val processed = mutableListOf<UUID>()
 
         for (toProcess in process) {
-            // process futurely
+            deckImporterService.importDeck(toProcess.deckKeyforgeId)
         }
 
         processed.forEach {
@@ -57,7 +60,7 @@ data class ImportSkippedDeck(
 )
 
 interface ImportSkippedDeckRepo : CrudRepository<ImportSkippedDeck, UUID> {
-    @Query("SELECT * FROM import_skipped_deck LIMIT 100", nativeQuery = true)
-    fun findAllLimit100(): List<ImportSkippedDeck>
+    @Query("SELECT * FROM import_skipped_deck LIMIT 1", nativeQuery = true)
+    fun findAllLimit1(): List<ImportSkippedDeck>
     fun existsByDeckKeyforgeId(deckKeyforgeId: String): Boolean
 }
