@@ -21,7 +21,6 @@ import { uiStore } from "../ui/UiStore"
 import { AlliancesSearchLink, DeckSearchLink, LandingPageLink } from "./DeckSearchLink"
 import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils"
 import { SortDirection } from "../generated-src/SortDirection"
-import { AnnouncementPaper } from "../generic/AnnouncementPaper"
 
 const topSas = new DeckFilters()
 
@@ -149,42 +148,17 @@ export class LandingPage extends React.Component<{}> {
                     </KeyDrawer>
                     <Box style={{flexGrow: 1}}>
 
-                        <AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>
+                        {/*<AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>*/}
                             {/*<Typography variant={"h5"} gutterBottom={true}>*/}
-                            {/*    WoE be to those who Seek the SAS*/}
+                            {/*    Grim Reminders Quick Update*/}
                             {/*</Typography>*/}
                             {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
-                            {/*    The Architects of SAS are hard at work building SAS and AERC scores for Winds of Exchange! You should*/}
-                            {/*    expect scores to be released around early July, but no deadline has been set yet.*/}
+                            {/*    Most of the planned technical improvements have been made, but I'm still working on*/}
+                            {/*    fixing up lingering issues from those improvements. Grim Reminders decks can now be*/}
+                            {/*    imported! But they will not have meaningful SAS scores for another couple weeks while*/}
+                            {/*    the team that helps build SAS scores works on scoring the new cards.*/}
                             {/*</Typography>*/}
-                            {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
-                            {/*    I'm also planning on building a feature for $6+ patrons to preview SAS scores as they are built.*/}
-                            {/*</Typography>*/}
-                            {/*<Typography variant={"h5"} gutterBottom={true}>*/}
-                            {/*    DoKvelopments*/}
-                            {/*</Typography>*/}
-                            {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
-                            {/*    DoK is now a <LinkNewWindow href={"https://github.com/CorayThan/decks-of-keyforge"}>public*/}
-                            {/*    github repository</LinkNewWindow> and an open source code base!*/}
-                            {/*</Typography>*/}
-                            {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
-                            {/*    If you're a skilled TypeScript + React or Kotlin + Spring Boot developer and want*/}
-                            {/*    to donate some time to the KeyForge*/}
-                            {/*    community, <LinkNewWindow href={decksOfKeyForgeDiscord}>join the DoK*/}
-                            {/*    Discord</LinkNewWindow>!*/}
-                            {/*    I'm building a small team to maintain DoK and add new features.*/}
-                            {/*</Typography>*/}
-
-                            <Typography variant={"h5"} gutterBottom={true}>
-                                Grim Reminders Quick Update
-                            </Typography>
-                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                Most of the planned technical improvements have been made, but I'm still working on
-                                fixing up lingering issues from those improvements. Grim Reminders decks can now be
-                                imported! But they will not have meaningful SAS scores for another couple weeks while
-                                the team that helps build SAS scores works on scoring the new cards.
-                            </Typography>
-                        </AnnouncementPaper>
+                        {/*</AnnouncementPaper>*/}
                         {screenStore.screenSizeSm() ? (
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                                 <DeckSearchLink name={"Search"} filters={topSas} style={{marginTop: spacing(2)}}/>

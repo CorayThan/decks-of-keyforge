@@ -40,32 +40,11 @@ export class ThirdPartyIntegrations extends React.Component {
                 </Box>
                 <Grid container={true} spacing={4} justify={"center"}>
                     <DisplayIntegration
-                        name={"Android: Import to DoK from MV"}
-                        description={
-                            [
-                                <Typography key={"first"}>
-                                    <i>
-                                        Made by Decks of KeyForge
-                                    </i>
-                                </Typography>,
-                                <Typography key={"first"}>
-                                    <b>How to use:</b>
-                                </Typography>,
-                                <ol key={"second"}>
-                                    <li>Install the app to your device</li>
-                                    <li>
-                                        Open the app and use your DoK username and password to login. This is safe because this app is made by
-                                        Decks of KeyForge.
-                                    </li>
-                                    <li>Scan a deck with Master Vault</li>
-                                    <li>Click the "Share" Button in Master Vault</li>
-                                    <li>Select the Decks of KeyForge app to share with. Your deck will be imported to DoK and added to your decks.</li>
-                                </ol>,
-                            ]
-                        }
-                        url={"https://play.google.com/store/apps/details?id=coraythan.decksofkeyforgeutilities"}
-                        urlName={"DoK Utilities App"}
-                        discord={"CorayThan#9734"}
+                        name={"keyforj"}
+                        description={"Printable boxes for your KeyForge decks and Adventure Decks."}
+                        url={"https://kf.sirjorj.com/"}
+                        urlName={"Deck Boxes & Adventure Boxes Webapp"}
+                        discord={"sirjorj"}
                     />
                     <DisplayIntegration
                         name={"iOS: Import to DoK from MV App"}
