@@ -13,7 +13,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 
-export const latestVersion = "7.0"
+export const latestVersion = "7.1"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -41,6 +41,19 @@ export class ReleaseNotes extends React.Component {
                     <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"7.1"}
+                    date={"8/22/2024"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Added Martian Civil War",
+                            note: "I've added the Martian Civil War pods as decks to Decks of KeyForge. These are a " +
+                                "bit odd, as they're only one house. But I figure it's probably nicer to have them " +
+                                "available on DoK in some capacity rather than not at all."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"7.0"}
                     date={"2/24/2024"}

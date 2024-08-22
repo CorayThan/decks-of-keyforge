@@ -196,7 +196,7 @@ class StatsService(
                             log.info("Done updating deck stats! Final stats are: \n\n$stats\n\n")
                         }
 
-                        updateStats(statsWithVersion!!, deckResults.decks)
+                        updateStats(statsWithVersion!!, deckResults.decks.filter { it.deck.expansionEnum.tournamentLegal })
                         deckPageService.setCurrentPage(currentPage + 1, DeckPageType.STATS)
                     }
                 }

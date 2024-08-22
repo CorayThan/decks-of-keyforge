@@ -221,7 +221,6 @@ data class Deck(
 }
 
 fun List<DokCardInDeck>.genCardNamesIndexableString(): String {
-    if (this.size != 36) throw IllegalStateException("Can't gen card names indexed from wrong card list size ${this.size}")
     return "~" +
             // Add the cards themselves
             this

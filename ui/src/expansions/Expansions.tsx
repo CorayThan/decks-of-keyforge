@@ -24,6 +24,7 @@ export enum ExpansionNumber {
     GR = 700,
     MN24 = 722,
     VM24 = 737,
+    MCW = 892,
 }
 
 export const displayMyDecksLinksFor = [
@@ -48,6 +49,7 @@ export const activeExpansions = [
     Expansion.VAULT_MASTERS_2024,
     Expansion.UNCHAINED_2022,
     Expansion.MENAGERIE_2024,
+    Expansion.MARTIAN_CIVIL_WAR,
 ]
 
 export const activeSasExpansions = [
@@ -130,6 +132,7 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.VM24, name: "VM 24", abbreviation: "VM24", backendEnum: Expansion.VAULT_MASTERS_2024},
     {expansionNumber: ExpansionNumber.GR, name: "Grim Reminders", abbreviation: "GR", backendEnum: Expansion.GRIM_REMINDERS},
     {expansionNumber: ExpansionNumber.MN24, name: "Menagerie", abbreviation: "MN24", backendEnum: Expansion.MENAGERIE_2024},
+    {expansionNumber: ExpansionNumber.MCW, name: "Martian Civil War", abbreviation: "MCW", backendEnum: Expansion.MARTIAN_CIVIL_WAR},
 ]
 
 export const activeExpansionInfos: ExpansionInfo[] = expansionInfos.filter(info => activeExpansions.includes(info.backendEnum))

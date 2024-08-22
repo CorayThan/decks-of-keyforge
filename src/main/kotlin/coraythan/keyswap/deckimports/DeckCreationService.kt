@@ -11,6 +11,7 @@ import coraythan.keyswap.decks.DeckSasValuesUpdatableRepo
 import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.decks.models.DeckSasValuesSearchable
 import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.synergy.DeckSynergyInfo
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
@@ -101,11 +102,11 @@ class DeckCreationService(
         if (allHousesHave12 && badCard.size < 2) {
             val token = cardsListWithToken.firstOrNull { it.token }
 
-            if (cardsList.size != 36) error("Deck ${keyforgeDeck.id} must have 36 cards.")
-
+            val expansion = Expansion.forExpansionNumber(keyforgeDeck.expansion)
             val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
                 ?: throw IllegalStateException("Deck didn't have houses.")
-            check(houses.size == 3) { "Deck ${keyforgeDeck.id} doesn't have three houses!" }
+
+            checkHouseAndCardCounts(keyforgeDeck.id, expansion, houses, cardsList)
 
             val bonusIconSimpleCards = keyforgeDeck.createBonusIconsInfo(houses, cardsList)
 
@@ -165,8 +166,7 @@ class DeckCreationService(
     }
 
     private fun validateAndRateDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, tokenName: String?): Deck {
-        check(houses.size == 3) { "Deck doesn't have 3 houses! $deck" }
-        check(cardsList.size == 36) { "Can't have a deck without 36 cards deck: $deck" }
+        checkHouseAndCardCounts(deck.keyforgeId, deck.expansionEnum, houses, cardsList)
 
         val saveable = deck
             .copy(
@@ -201,6 +201,16 @@ class DeckCreationService(
             expansion = deckBuilderData.expansion.expansionNumber,
             tokenNumber = if (deckBuilderData.tokenTitle == null) null else TokenCard.ordinalByCardTitle(deckBuilderData.tokenTitle),
         ) to cards
+    }
+
+    private fun checkHouseAndCardCounts(id: String, expansion: Expansion, houses: List<House>, cards: List<Card>) {
+        if (expansion.singleHouse) {
+            if (cards.size != 12) error("Deck $id must have 12 cards.")
+            if (houses.toSet().size != 1) error("Deck $id must have 1 house.")
+        } else {
+            if (cards.size != 36) error("Deck $id must have 36 cards.")
+            if (houses.toSet().size != 3) error("Deck $id must have 3 houses.")
+        }
     }
 
 }

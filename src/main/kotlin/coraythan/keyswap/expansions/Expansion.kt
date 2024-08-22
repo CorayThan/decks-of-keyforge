@@ -4,33 +4,114 @@ import coraythan.keyswap.House
 import coraythan.keyswap.generatets.GenerateTs
 
 @GenerateTs
-enum class Expansion(val expansionNumber: Int, val readable: String, val houses: Set<House>, val hasTokens: Boolean) {
-    CALL_OF_THE_ARCHONS(341, "CotA", setOf(House.Brobnar, House.Dis, House.Logos, House.Mars, House.Sanctum, House.Shadows, House.Untamed), false),
-    AGE_OF_ASCENSION(435, "AoA", setOf(House.Brobnar, House.Dis, House.Logos, House.Mars, House.Sanctum, House.Shadows, House.Untamed), false),
-    WORLDS_COLLIDE(452, "WC", setOf(House.Brobnar, House.Dis, House.Logos, House.StarAlliance, House.Saurian, House.Shadows, House.Untamed), false),
-    ANOMALY_EXPANSION(453, "AE", setOf(), false),
-    MASS_MUTATION(479, "MM", setOf(House.StarAlliance, House.Dis, House.Logos, House.Saurian, House.Sanctum, House.Shadows, House.Untamed), false),
-    DARK_TIDINGS(496, "DT", setOf(House.StarAlliance, House.Unfathomable, House.Logos, House.Saurian, House.Sanctum, House.Shadows, House.Untamed), false),
-    WINDS_OF_EXCHANGE(600, "WoE", setOf(House.Brobnar, House.Ekwidon, House.Mars, House.Saurian, House.Sanctum, House.StarAlliance, House.Unfathomable), true),
-    UNCHAINED_2022(601, "UC22", setOf(
-        House.Brobnar, House.Dis, House.Logos, House.Mars, House.Sanctum, House.Shadows, House.Untamed,
-        House.StarAlliance, House.Saurian, House.Ekwidon, House.Unfathomable
-    ), true),
-    VAULT_MASTERS_2023(609, "VM23", setOf(House.Brobnar, House.Mars, House.Logos, House.Untamed, House.Dis, House.StarAlliance, House.Saurian), true),
-    GRIM_REMINDERS(700, "GR", setOf(
-        House.Brobnar, House.Ekwidon, House.Geistoid, House.Mars, House.StarAlliance, House.Unfathomable, House.Untamed,
-    ), false),
-    MENAGERIE_2024(722, "MN24", setOf(
-        House.Brobnar, House.Dis, House.Ekwidon, House.Geistoid, House.Mars, House.Sanctum, House.Saurian,
-        House.Shadows, House.StarAlliance, House.Unfathomable, House.Untamed,
-    ), true),
-    VAULT_MASTERS_2024(737, "VM24", setOf(House.Brobnar, House.Dis, House.Sanctum, House.Shadows, House.StarAlliance, House.Unfathomable, House.Untamed), false);
+enum class Expansion(
+    val expansionNumber: Int,
+    val readable: String,
+    val houses: Set<House>,
+    val hasTokens: Boolean = false,
+    val tournamentLegal: Boolean = true,
+    val singleHouse: Boolean = false
+) {
+    CALL_OF_THE_ARCHONS(
+        341,
+        "CotA",
+        setOf(House.Brobnar, House.Dis, House.Logos, House.Mars, House.Sanctum, House.Shadows, House.Untamed)
+    ),
+    AGE_OF_ASCENSION(
+        435,
+        "AoA",
+        setOf(House.Brobnar, House.Dis, House.Logos, House.Mars, House.Sanctum, House.Shadows, House.Untamed)
+    ),
+    WORLDS_COLLIDE(
+        452,
+        "WC",
+        setOf(House.Brobnar, House.Dis, House.Logos, House.StarAlliance, House.Saurian, House.Shadows, House.Untamed)
+    ),
+    ANOMALY_EXPANSION(453, "AE", setOf(), tournamentLegal = false),
+    MASS_MUTATION(
+        479,
+        "MM",
+        setOf(House.StarAlliance, House.Dis, House.Logos, House.Saurian, House.Sanctum, House.Shadows, House.Untamed)
+    ),
+    DARK_TIDINGS(
+        496,
+        "DT",
+        setOf(
+            House.StarAlliance,
+            House.Unfathomable,
+            House.Logos,
+            House.Saurian,
+            House.Sanctum,
+            House.Shadows,
+            House.Untamed
+        )
+    ),
+    WINDS_OF_EXCHANGE(
+        600,
+        "WoE",
+        setOf(
+            House.Brobnar,
+            House.Ekwidon,
+            House.Mars,
+            House.Saurian,
+            House.Sanctum,
+            House.StarAlliance,
+            House.Unfathomable
+        )
+    ),
+    UNCHAINED_2022(
+        601, "UC22", setOf(
+            House.Brobnar, House.Dis, House.Logos, House.Mars, House.Sanctum, House.Shadows, House.Untamed,
+            House.StarAlliance, House.Saurian, House.Ekwidon, House.Unfathomable
+        ),
+        hasTokens = true,
+        tournamentLegal = false
+    ),
+    VAULT_MASTERS_2023(
+        609,
+        "VM23",
+        setOf(House.Brobnar, House.Mars, House.Logos, House.Untamed, House.Dis, House.StarAlliance, House.Saurian),
+        hasTokens = true
+    ),
+    GRIM_REMINDERS(
+        700, "GR", setOf(
+            House.Brobnar,
+            House.Ekwidon,
+            House.Geistoid,
+            House.Mars,
+            House.StarAlliance,
+            House.Unfathomable,
+            House.Untamed,
+        )
+    ),
+    MENAGERIE_2024(
+        722, "MN24", setOf(
+            House.Brobnar, House.Dis, House.Ekwidon, House.Geistoid, House.Mars, House.Sanctum, House.Saurian,
+            House.Shadows, House.StarAlliance, House.Unfathomable, House.Untamed,
+        ),
+        hasTokens = true,
+        tournamentLegal = false
+    ),
+    VAULT_MASTERS_2024(
+        737,
+        "VM24",
+        setOf(
+            House.Brobnar,
+            House.Dis,
+            House.Sanctum,
+            House.Shadows,
+            House.StarAlliance,
+            House.Unfathomable,
+            House.Untamed
+        )
+    ),
+    MARTIAN_CIVIL_WAR(892, "MCW", setOf(House.Elders, House.IronyxRebels), tournamentLegal = false, singleHouse = true);
 
     companion object {
         fun forExpansionNumber(expansionNumber: Int?) = entries.find { it.expansionNumber == expansionNumber }
-                ?: throw IllegalStateException("No expansion for number $expansionNumber")
+            ?: throw IllegalStateException("No expansion for number $expansionNumber")
 
-        fun realExpansionValues() = entries.filter { it != ANOMALY_EXPANSION }
+        fun realExpansionValues() = entries.filter { it.tournamentLegal }
         fun expansionsWithTokens() = entries.filter { it.hasTokens }
     }
 }
@@ -47,4 +128,5 @@ val activeExpansions = setOf(
     Expansion.GRIM_REMINDERS,
     Expansion.MENAGERIE_2024,
     Expansion.VAULT_MASTERS_2024,
+    Expansion.MARTIAN_CIVIL_WAR,
 )

@@ -8,6 +8,8 @@ import geistoidImg from "./imgs/geistoid.png"
 import ekwidonImg from "./imgs/ekwidon.png"
 import logosImg from "./imgs/logos.png"
 import marsImg from "./imgs/mars.png"
+import eldersImg from "./imgs/elders.png"
+import rebelsImg from "./imgs/rebels.png"
 import sanctumImg from "./imgs/sanctum.png"
 import saurianRepublicImg from "./imgs/saurian.png"
 import shadowsImg from "./imgs/shadows.png"
@@ -48,6 +50,14 @@ export const houseValuesArray: HouseValue[] = [
     {
         house: House.Mars,
         img: marsImg
+    },
+    {
+        house: House.Elders,
+        img: eldersImg
+    },
+    {
+        house: House.IronyxRebels,
+        img: rebelsImg
     },
     {
         house: House.Sanctum,

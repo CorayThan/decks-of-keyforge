@@ -25,6 +25,8 @@ import gr from "./imgs/gr.svg"
 import grDark from "./imgs/gr-dark.svg"
 import menagerie from "./imgs/menagerie.svg"
 import menagerieDark from "./imgs/menagerie-dark.svg"
+import mcw from "./imgs/mcw.svg"
+import mcwDark from "./imgs/mcw-dark.svg"
 
 export const ExpansionIcon = observer((props: { expansion: Expansion, size?: number, white?: boolean, style?: React.CSSProperties }) => {
 
@@ -75,6 +77,10 @@ export const ExpansionIcon = observer((props: { expansion: Expansion, size?: num
         case Expansion.ANOMALY_EXPANSION:
             lightSrc = anomaly
             darkSrc = anomalyDark
+            break
+        case Expansion.MARTIAN_CIVIL_WAR:
+            lightSrc = mcw
+            darkSrc = mcwDark
             break
     }
     let src

@@ -2,9 +2,7 @@ package coraythan.keyswap.thirdpartyservices.mastervault
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.config.BadRequestException
-import coraythan.keyswap.config.Env
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -55,13 +53,23 @@ const val keyforgeApiDeckPageSize = 10
 @Service
 class KeyforgeApi(
     private val restTemplate: RestTemplate,
-    @Value("\${env}")
-    private val env: Env
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private val mvProxyBaseUrl = "http://mvproxy.us-west-2.elasticbeanstalk.com/api/master-vault"
 //    private val mvProxyBaseUrl = "http://localhost:5001/api/master-vault"
+
+    fun findDecksRequestUrl(
+        page: Int,
+        ordering: String = "date",
+        pageSize: Int = keyforgeApiDeckPageSize,
+        expansion: Int? = null,
+        withCards: Boolean = false
+    ): String {
+        return "?page=$page&page_size=$pageSize&ordering=$ordering" +
+                (if (expansion == null) "" else "&expansion=$expansion") +
+                (if (withCards) "&links=cards" else "")
+    }
 
     /**
      * Null implies no decks available.
@@ -73,12 +81,8 @@ class KeyforgeApi(
         expansion: Int? = null,
         withCards: Boolean = false
     ): KeyForgeDecksPageDto? {
-        return keyforgeGetRequest(
-            KeyForgeDecksPageDto::class.java,
-            "?page=$page&page_size=$pageSize&ordering=$ordering" +
-                    (if (expansion == null) "" else "&expansion=$expansion") +
-                    (if (withCards) "&links=cards" else "")
-        )
+        val url = findDecksRequestUrl(page, ordering, pageSize, expansion, withCards)
+        return keyforgeGetRequest(KeyForgeDecksPageDto::class.java, url)
     }
 
     fun findDeckToImport(deckId: String): KeyForgeDeckResponse? {
@@ -120,12 +124,3 @@ class KeyforgeApi(
         }
     }
 }
-
-data class KeyForgeDeckRequestFilters(
-    val page: Int,
-    // "date", "-wins", "-losses"
-    val ordering: String,
-    val pageSize: Int,
-    val expansion: Int?,
-    val withCards: Boolean,
-)
