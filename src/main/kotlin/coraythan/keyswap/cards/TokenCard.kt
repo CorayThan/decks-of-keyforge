@@ -30,6 +30,7 @@ enum class TokenCard(val cardTitle: String) {
     FISH("Fish"),
     PRIEST("Priest"),
     RAIDER("Raider"),
+    AEMBER_MUNCH("Æmber Munch"),
     MINUTE_MARTIAN("Minutemartian");
 
     companion object {

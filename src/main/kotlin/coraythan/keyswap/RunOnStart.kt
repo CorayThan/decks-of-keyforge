@@ -36,10 +36,10 @@ class RunOnStart(
 
 //        dokCardUpdateService.downloadAllNewCardImages(
 //            setOf(
-//                Expansion.GRIM_REMINDERS
+//                Expansion.MARTIAN_CIVIL_WAR
 //            ),
 //            setOf(
-//                House.Ekwidon, House.Geistoid
+//                House.Elders, House.IronyxRebels
 //            )
 //        )
 

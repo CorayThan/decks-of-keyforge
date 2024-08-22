@@ -57,7 +57,8 @@ export const houseValuesArray: HouseValue[] = [
     },
     {
         house: House.IronyxRebels,
-        img: rebelsImg
+        img: rebelsImg,
+        displayName: "Rebels"
     },
     {
         house: House.Sanctum,
