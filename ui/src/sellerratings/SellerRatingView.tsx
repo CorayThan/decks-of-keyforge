@@ -16,6 +16,7 @@ import { WhiteSpaceTypography } from "../mui-restyled/WhiteSpaceTypography"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { userStore } from "../user/UserStore"
 import { sellerRatingsStore } from "./SellerRatingsStore"
+import { DokLink } from "../generic/DokLink"
 
 type RatingValue = 0 | 1 | 2 | 3 | 4 | 5
 
@@ -134,12 +135,12 @@ export const SellerRatingView = observer((props: UserRatingProps) => {
                     size={"small"}
                     style={{marginRight: spacing(1)}}
                 />
-                <Link
+                <DokLink
                     variant={"subtitle2"}
                     style={{height: 18, paddingTop: 0, fontSize: "0.812rem"}}
                 >
                     {reviewsText}
-                </Link>
+                </DokLink>
             </Box>
             {store.open && (
                 <Dialog

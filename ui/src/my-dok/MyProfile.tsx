@@ -465,6 +465,19 @@ class MyProfileInner extends React.Component<MyProfileInnerProps> {
                                             <FormControlLabel
                                                 control={
                                                     <Switch
+                                                        checked={themeStore.altColors}
+                                                        onChange={() => {
+                                                            themeStore.toggleColors()
+                                                            messageStore.setSuccessMessage("Reload the page to see changes")
+                                                        }}
+                                                        tabIndex={8}
+                                                    />
+                                                }
+                                                label={"Alternative Color Scheme"}
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
                                                         checked={this.autoRenewListings}
                                                         onChange={() => this.autoRenewListings = !this.autoRenewListings}
                                                         tabIndex={9}

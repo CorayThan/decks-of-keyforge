@@ -1,9 +1,11 @@
 import * as React from "react"
 import GoldStar from "./gold-star.svg"
+import PurpleStar from "./purple-star.svg"
 import GrayHalfStar from "./gray-half-star.svg"
 import GrayStar from "./gray-star.svg"
 import HalfStar from "./half-star.svg"
 import Star from "./star.svg"
+import { themeStore } from "../../../config/MuiConfig"
 
 export enum StarType {
     NORMAL,
@@ -12,14 +14,23 @@ export enum StarType {
     GRAY
 }
 
-export const StarIcon = (props: { starType: StarType, small?: boolean, gray?: boolean, style?: React.CSSProperties }) => {
+export const StarIcon = (props: {
+    starType: StarType,
+    small?: boolean,
+    gray?: boolean,
+    style?: React.CSSProperties
+}) => {
     let height = props.small ? 12 : 16
     let starSrc = Star
     if (props.starType === StarType.HALF) {
         starSrc = props.gray ? GrayHalfStar : HalfStar
         height = height / 2
     } else if (props.starType === StarType.GOLD) {
-        starSrc = GoldStar
+        if (themeStore.altColors) {
+            starSrc = PurpleStar
+        } else {
+            starSrc = GoldStar
+        }
     } else if (props.gray) {
         starSrc = GrayStar
     }

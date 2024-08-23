@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { messageStore } from "../ui/MessageStore"
 import { emailStore } from "./EmailStore"
@@ -118,9 +118,9 @@ export class SendEmailDialog extends React.Component<SendSellerEmailDialogProps>
                         />
                     </DialogContent>
                     <DialogActions>
-                        <KeyButton color={"primary"} onClick={this.store.handleClose}>Cancel</KeyButton>
+                        <KeyButton onClick={this.store.handleClose}>Cancel</KeyButton>
                         <KeyButton
-                            color={"primary"}
+                            color={themeStore.darkMode ? "secondary" : "primary"}
                             onClick={() => this.store.sendMessage(this.props)}
                             disabled={this.store.message.trim().length === 0 || emailStore.sendingSellerMessage}
                             loading={emailStore.sendingSellerMessage}

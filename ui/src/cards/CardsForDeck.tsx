@@ -10,6 +10,7 @@ import { HouseAndCards } from "../generated-src/HouseAndCards"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { screenStore } from "../ui/ScreenStore"
 import { CardSimpleView } from "./views/CardSimpleView"
+import { themeStore } from "../config/MuiConfig"
 
 interface CardsForDeckProps {
     cards: HouseAndCards[]
@@ -71,7 +72,7 @@ export class CardsForDeck extends React.Component<CardsForDeckProps> {
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>
-                        <KeyButton color={"primary"} onClick={this.handleClose}>Close</KeyButton>
+                        <KeyButton color={themeStore.darkMode ? "secondary" : "primary"} onClick={this.handleClose}>Close</KeyButton>
                     </DialogActions>
                 </Dialog>
             </>

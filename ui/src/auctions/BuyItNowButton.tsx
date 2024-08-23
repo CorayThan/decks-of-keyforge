@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography }
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { deckStore } from "../decks/DeckStore"
 import { BuyingDisclaimer } from "../decks/sales/ForSaleView"
 import { SendEmailVerification } from "../emails/SendEmailVerification"
@@ -41,7 +41,7 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
         const disabled = !userStore.loggedIn() || sellerUsername === userStore.username
         return (
             <div>
-                <Button color={"primary"} onClick={() => this.open = true} disabled={disabled}>
+                <Button color={themeStore.darkMode ? "secondary" : "primary"} onClick={() => this.open = true} disabled={disabled}>
                     Buy It Now
                 </Button>
                 <Dialog
@@ -70,7 +70,7 @@ export class BuyItNowButton extends React.Component<BuyItNowButtonProps> {
                         </Button>
                         <Button
                             onClick={this.buyItNow}
-                            color="primary"
+                            color={themeStore.darkMode ? "secondary" : "primary"}
                             disabled={!userStore.emailIsVerified}
                         >
                             Buy

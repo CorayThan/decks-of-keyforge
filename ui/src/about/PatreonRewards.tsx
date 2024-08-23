@@ -1,4 +1,15 @@
-import { Button, Card, CardActionArea, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Link, Typography } from "@material-ui/core"
+import {
+    Button,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Typography
+} from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useState } from "react"
@@ -15,6 +26,7 @@ import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { screenStore } from "../ui/ScreenStore"
 import { userStore } from "../user/UserStore"
 import { AboutGridItem } from "./AboutPage"
+import { DokLink } from "../generic/DokLink"
 
 @observer
 export class PatreonRewards extends React.Component {
@@ -32,7 +44,8 @@ export class PatreonRewards extends React.Component {
                         <InfoListCard
                             title={"Thanks for being a Patron!"}
                             infos={[
-                                <Typography style={{marginBottom: spacing(2)}}>Patreon tier: {patronRewardLevelName(userStore.patronTier)}</Typography>,
+                                <Typography style={{marginBottom: spacing(2)}}>Patreon
+                                    tier: {patronRewardLevelName(userStore.patronTier)}</Typography>,
                                 "All tiers have the benefits of all lower tiers.",
                                 <div style={{paddingTop: spacing(1), display: "flex", justifyContent: "center"}}>
                                     <PatronButton/>
@@ -60,29 +73,41 @@ export class PatreonRewards extends React.Component {
                             <Typography style={{marginRight: spacing(2)}}>
                                 After becoming a patron link your account with the above "Link Patreon" button.
                             </Typography>,
-                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Deck Name Query Language – $3+</Typography>,
+                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Deck Name Query Language –
+                                $3+</Typography>,
                             <Typography>
                                 Use a special query language to query decks. Words match exactly, for example
                                 "Ice" will match a deck named "Anteater 'Ice'
                             </Typography>,
                             <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Dark Mode – $3+</Typography>,
-                            <Typography>Go to your <Link href={MyDokSubPaths.profile}>profile</Link> to toggle on dark mode.</Typography>,
-                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Discord Roles – $3+</Typography>,
-                            <Typography>Link your Discord account on your <Link href={"https://www.patreon.com/settings/apps"}>Patreon Profile</Link>.</Typography>,
-                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Theoretical Decks – $3+</Typography>,
+                            <Typography>Go to your <DokLink href={MyDokSubPaths.profile}>profile</DokLink> to toggle on
+                                dark mode.</Typography>,
+                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Discord Roles –
+                                $3+</Typography>,
+                            <Typography>Link your Discord account on your <DokLink
+                                href={"https://www.patreon.com/settings/apps"}>Patreon Profile</DokLink>.</Typography>,
+                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Theoretical Decks –
+                                $3+</Typography>,
                             <Typography>Use the toggle on the bottom left of the deck search window.</Typography>,
                             <Typography>Click the button on the "Import Deck" menu.</Typography>,
-                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Deck for sale notifications – $6+</Typography>,
+                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Deck for sale notifications –
+                                $6+</Typography>,
                             <Typography>
-                                Search <Link href={Routes.decksForSale()}>decks for sale</Link> and you will see a "Notify" button appear next to
-                                the "Search" button. Use that to save a custom search and get notified when someone lists a match.
+                                Search <DokLink href={Routes.decksForSale()}>decks for sale</DokLink> and you will see a
+                                "Notify" button appear next to
+                                the "Search" button. Use that to save a custom search and get notified when someone
+                                lists a match.
                             </Typography>,
-                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>SAS Preview Mode – $6+</Typography>,
-                            <Typography>Head to your <Link href={MyDokSubPaths.profile}>profile</Link> to toggle on SAS Preview Mode.</Typography>,
-                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Store listing on the landing page – $12+</Typography>,
+                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>SAS Preview Mode –
+                                $6+</Typography>,
+                            <Typography>Head to your <DokLink href={MyDokSubPaths.profile}>profile</DokLink> to toggle
+                                on SAS Preview Mode.</Typography>,
+                            <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>Store listing on the landing
+                                page – $12+</Typography>,
                             <Typography>
-                                You must have 10 or more decks listed for sale or trade for your store to show. You can change your store name,
-                                icon and banner from your <Link href={MyDokSubPaths.profile}>profile</Link>.
+                                You must have 10 or more decks listed for sale or trade for your store to show. You can
+                                change your store name,
+                                icon and banner from your <DokLink href={MyDokSubPaths.profile}>profile</DokLink>.
                             </Typography>,
                         ]}
                     />
@@ -157,16 +182,17 @@ export class PatreonRewards extends React.Component {
                 <AboutGridItem>
                     <BenefitPic name={"Dark Mode"} costPerMonth={3} src={DarkMode} mediaHeight={288}/>
                     <div style={{marginBottom: spacing(4)}}/>
-                    <BenefitPic name={"Collection Analysis"} costPerMonth={3} src={CollectionAnalysis} mediaHeight={400} />
+                    <BenefitPic name={"Collection Analysis"} costPerMonth={3} src={CollectionAnalysis}
+                                mediaHeight={400}/>
                     <div style={{marginBottom: spacing(4)}}/>
-                    <BenefitPic name={"Compare Decks"} costPerMonth={3} src={DeckComparison} mediaHeight={360} />
+                    <BenefitPic name={"Compare Decks"} costPerMonth={3} src={DeckComparison} mediaHeight={360}/>
                 </AboutGridItem>
             </>
         )
     }
 }
 
-export const BenefitPic = (props: {name: string, costPerMonth: number, src: string, mediaHeight: number}) => {
+export const BenefitPic = (props: { name: string, costPerMonth: number, src: string, mediaHeight: number }) => {
 
     const {name, costPerMonth, src, mediaHeight} = props
 
@@ -200,7 +226,7 @@ export const BenefitPic = (props: {name: string, costPerMonth: number, src: stri
             >
                 <DialogTitle>{name}</DialogTitle>
                 <DialogContent>
-                    <img alt={name} src={src} width={screenStore.screenWidth - 80} />
+                    <img alt={name} src={src} width={screenStore.screenWidth - 80}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpen(false)}>Close</Button>

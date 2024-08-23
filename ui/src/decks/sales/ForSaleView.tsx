@@ -1,4 +1,4 @@
-import { Box, Link } from "@material-ui/core"
+import { Box } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import { startCase } from "lodash"
@@ -29,7 +29,8 @@ import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
 import { DeckOwnershipButton } from "../ownership/DeckOwnershipButton"
 import { DeckFilters } from "../search/DeckFilters"
 import { SingleSaleInfoViewCompleteAuction } from "./SingleSaleInfoViewCompleteAuction"
-import { DeckType } from "../../generated-src/DeckType";
+import { DeckType } from "../../generated-src/DeckType"
+import { DokLink } from "../../generic/DokLink"
 
 interface ForSaleViewProps {
     saleInfo: DeckSaleInfo[]
@@ -282,7 +283,7 @@ export class SingleForSaleView extends React.Component<{ saleInfo: DeckSaleInfo,
                         </Typography>
                     </div>
                     <Typography style={{margin: spacing(1, 2, 0)}} variant={"subtitle2"}>
-                        Listed {TimeUtils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
+                        Listed {TimeUtils.formatDate(dateListed)} by <DokLink href={Routes.userProfilePage(username)}>{username}</DokLink>
                     </Typography>
                     {expiresAt != null && !forAuction ? (
                         <Typography style={{margin: spacing(1, 2, 2)}} variant={"subtitle2"}>

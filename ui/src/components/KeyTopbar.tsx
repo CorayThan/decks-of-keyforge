@@ -1,7 +1,7 @@
 import { Button, Divider, IconButton, List, ListItem, ListItemText, Tabs } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar/AppBar"
 import Collapse from "@material-ui/core/Collapse"
-import { blue } from "@material-ui/core/colors"
+import { blue, deepPurple } from "@material-ui/core/colors"
 import Drawer from "@material-ui/core/Drawer"
 import Toolbar from "@material-ui/core/Toolbar/Toolbar"
 import Typography from "@material-ui/core/Typography/Typography"
@@ -36,17 +36,6 @@ import { uiStore } from "../ui/UiStore"
 import { LoginPop } from "../user/LoginPop"
 import { userStore } from "../user/UserStore"
 import { ShareButton } from "./ShareButton"
-
-class KeyTopbarStore {
-    @observable
-    displayLeftHamburger = false
-
-    constructor() {
-        makeObservable(this)
-    }
-}
-
-export const keyTopbarStore = new KeyTopbarStore()
 
 interface KeyTopbarProps extends RouteComponentProps<{}> {
 }
@@ -232,14 +221,19 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
         const onMyDok = this.props.location.pathname.includes(Routes.myDok)
         const onAboutPage = this.props.location.pathname.includes(Routes.about)
         const onStatsPage = this.props.location.pathname.includes(Routes.stats)
-
+        let background
+        if (themeStore.altColors) {
+            background = themeStore.darkMode ? deepPurple["800"] : undefined
+        } else {
+            background = themeStore.darkMode ? blue["800"] : undefined
+        }
         return (
             <div>
                 <AppBar
                     position={"fixed"}
                     style={{
                         zIndex: screenStore.zindexes.keyTopBar,
-                        background: themeStore.darkMode ? blue["800"] : undefined
+                        background
                     }}
                 >
                     <Toolbar
@@ -285,8 +279,6 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
                                                  value={AboutSubPaths.releaseNotes}/>
                                         <LinkTab label="API" to={AboutSubPaths.sellersAndDevs}
                                                  value={AboutSubPaths.sellersAndDevs}/>
-                                        <LinkTab label="Team SAS" to={AboutSubPaths.teamSas}
-                                                 value={AboutSubPaths.teamSas}/>
                                     </Tabs>
                                 )}
                                 {onStatsPage && (
@@ -505,11 +497,6 @@ const AppLinks = observer(() => (
                             onClick={rightMenuStore.close}
                             primary={"APIs"}
                         />
-                        <ListItemLink
-                            to={AboutSubPaths.teamSas}
-                            onClick={rightMenuStore.close}
-                            primary={"Team SAS-LP"}
-                        />
                     </List>
                 </Collapse>
             </>
@@ -523,7 +510,6 @@ const AppLinks = observer(() => (
                     {to: AboutSubPaths.contact, text: "Contact Me"},
                     {to: AboutSubPaths.releaseNotes, text: "Release Notes"},
                     {to: AboutSubPaths.sellersAndDevs, text: "APIs"},
-                    {to: AboutSubPaths.teamSas, text: "Team SAS-LP"},
                 ]}
                 linkMenuStore={aboutMenuStore}
             />

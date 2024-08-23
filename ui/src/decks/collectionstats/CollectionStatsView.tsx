@@ -1,5 +1,5 @@
 import { Box, Checkbox, FormControlLabel, Paper, TextField, Tooltip, Typography } from "@material-ui/core"
-import { blue } from "@material-ui/core/colors"
+import { blue, deepPurple } from "@material-ui/core/colors"
 import { ResponsivePie } from "@nivo/pie"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
@@ -183,6 +183,12 @@ const SasGraph = (props: { sasValues: BarData[], height?: number }) => {
     if (props.sasValues.length < 2) {
         return null
     }
+    let fill
+    if (themeStore.altColors) {
+        fill = themeStore.darkMode ? deepPurple.A100 : deepPurple["500"]
+    } else {
+        fill = themeStore.darkMode ? blue.A100 : blue["500"]
+    }
     return (
         <Paper style={{display: "flex", flexDirection: "column", alignItems: "center", height: props.height}}>
             <Typography style={{marginTop: spacing(1)}} variant={"h5"} color={"primary"}>SAS Values</Typography>
@@ -201,7 +207,7 @@ const SasGraph = (props: { sasValues: BarData[], height?: number }) => {
                     }))}
                     style={{
                         data: {
-                            fill: themeStore.darkMode ? blue.A100 : blue["500"]
+                            fill
                         },
                     }}
                 />

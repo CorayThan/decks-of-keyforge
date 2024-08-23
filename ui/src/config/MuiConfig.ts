@@ -1,19 +1,29 @@
 import { createMuiTheme } from "@material-ui/core"
-import { amber, blue, grey } from "@material-ui/core/colors"
+import { amber, blue, cyan, deepPurple, grey } from "@material-ui/core/colors"
 import { computed, makeObservable, observable } from "mobx"
 import { VictoryTheme } from "victory"
 import { screenStore } from "../ui/ScreenStore"
 import { TextConfig } from "./TextConfig"
 
 export const darkModeKey = "DARK_MODE"
+export const altColorsKey = "ALT_COLORS"
 
 export class ThemeStore {
     @observable
     darkMode = window.localStorage.getItem(darkModeKey) === "true"
 
+    @observable
+    altColors = window.localStorage.getItem(altColorsKey) === "true"
+
     toggleMode = () => {
         this.darkMode = !this.darkMode
         window.localStorage.setItem(darkModeKey, this.darkMode ? "true" : "false")
+        updateTheme()
+    }
+
+    toggleColors = () => {
+        this.altColors = !this.altColors
+        window.localStorage.setItem(altColorsKey, this.altColors ? "true" : "false")
         updateTheme()
     }
 
@@ -62,16 +72,25 @@ export class ThemeStore {
 
     @computed
     get lightBlueBackground() {
+        if (this.altColors) {
+            return this.darkMode ? cyan["800"] : cyan["100"]
+        }
         return this.darkMode ? blue["800"] : blue["100"]
     }
 
     @computed
     get calendarBackground() {
+        if (this.altColors) {
+            return this.darkMode ? grey["700"] : cyan["50"]
+        }
         return this.darkMode ? grey["700"] : blue["50"]
     }
 
     @computed
     get lightAmberBackground() {
+        if (this.altColors) {
+            return this.darkMode ? grey["600"] : deepPurple["50"]
+        }
         return this.darkMode ? grey["600"] : amber["50"]
     }
 
@@ -154,9 +173,9 @@ export const themeStore = new ThemeStore()
 
 const makeTheme = () => createMuiTheme({
     palette: {
-        primary: blue,
-        secondary: amber,
-        type: themeStore.darkMode ? "dark" : "light"
+        primary: themeStore.altColors ? deepPurple : blue,
+        secondary: themeStore.altColors ? {main: '#84ffff'} : amber,
+        type: themeStore.darkMode ? "dark" : "light",
     },
     typography: {
         fontFamily: TextConfig.BODY,

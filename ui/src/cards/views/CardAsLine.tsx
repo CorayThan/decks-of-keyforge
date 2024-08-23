@@ -6,7 +6,7 @@ import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCard } from "../../aerc/views/AercForCard"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { log, prettyJson } from "../../config/Utils"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { Expansion } from "../../generated-src/Expansion"
@@ -105,7 +105,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>
-                        <KeyButton color={"primary"} onClick={this.handleClose}>Close</KeyButton>
+                        <KeyButton color={themeStore.darkMode ? "secondary" : "primary"} onClick={this.handleClose}>Close</KeyButton>
                     </DialogActions>
                 </Dialog>
             </div>

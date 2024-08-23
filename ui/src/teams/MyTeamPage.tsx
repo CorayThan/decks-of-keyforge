@@ -7,7 +7,6 @@ import {
     DialogTitle,
     FormControlLabel,
     Grid,
-    Link,
     List,
     ListItem,
     Paper,
@@ -18,7 +17,7 @@ import {
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useState } from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { MyDokSubPaths, Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { DeckFilters } from "../decks/search/DeckFilters"
@@ -36,6 +35,7 @@ import { EventValue } from "../generic/EventValue"
 import IconButton from "@material-ui/core/IconButton/IconButton"
 import axios from "axios"
 import { Check, Edit } from "@material-ui/icons"
+import { DokLink } from "../generic/DokLink"
 
 class TeamManagementStore {
     @observable
@@ -81,7 +81,7 @@ const memberTableHeaders = (isLeader: boolean, leaderUsername: string, store: Te
     const defaultHeaders: SortableTableHeaderInfo<UserSearchResult>[] = [
         {
             property: "username",
-            transform: (user) => <Link href={Routes.decksForUserOnMyTeam(user.username)}>{user.username}</Link>,
+            transform: (user) => <DokLink href={Routes.decksForUserOnMyTeam(user.username)}>{user.username}</DokLink>,
             sortFunction: (user) => user.username.toLowerCase()
         },
         {property: "deckCount"},
@@ -140,7 +140,7 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                         />
                     </Box>
                 ) : (
-                    <Typography variant={"h4"}>{name}</Typography>
+                    <Typography color={themeStore.darkMode ? "textSecondary" : undefined} variant={"h4"}>{name}</Typography>
                 )}
                 {isLeader ? (
                     <>
@@ -222,7 +222,7 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                             </div>
                             <HelperText style={{marginTop: spacing(2)}}>
                                 After sending an invite, users can join your team
-                                from <Link href={MyDokSubPaths.team}>this link</Link>.
+                                from <DokLink href={MyDokSubPaths.team}>this link</DokLink>.
                             </HelperText>
                         </Paper>
                     </Grid>
@@ -234,13 +234,13 @@ export const MyTeamPage = observer((props: { team: TeamInfo }) => {
                                 <List>
                                     {invites.map(invite => (
                                         <ListItem key={invite}>
-                                            <Link
+                                            <DokLink
                                                 href={Routes.decksForUser(invite)}
                                                 variant={"body1"}
                                                 style={{marginRight: spacing(1), width: 160}}
                                             >
                                                 {invite}
-                                            </Link>
+                                            </DokLink>
                                             <Button
                                                 onClick={() => teamStore.removeInvite(invite)}
                                             >

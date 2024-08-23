@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornme
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { BuyingDisclaimer } from "../../decks/sales/ForSaleView"
 import { SendEmailVerification } from "../../emails/SendEmailVerification"
 import { MakeOffer } from "../../generated-src/MakeOffer"
@@ -95,7 +95,7 @@ export class OfferButton extends React.Component<OfferButtonProps> {
         const title = (soldByMe ? "View Offers" : "Make Offer")
         return (
             <div style={style}>
-                <Button variant={"outlined"} color={"primary"} onClick={this.open} disabled={!loggedIn}>
+                <Button variant={"outlined"} color={themeStore.darkMode ? "secondary" : "primary"} onClick={this.open} disabled={!loggedIn}>
                     {title}
                 </Button>
                 <Dialog
@@ -161,7 +161,7 @@ export class OfferButton extends React.Component<OfferButtonProps> {
                         {!soldByMe && (
                             <Button
                                 onClick={this.offer}
-                                color="primary"
+                                color={themeStore.darkMode ? "secondary" : "primary"}
                                 disabled={!userStore.emailIsVerified || disabled}
                                 style={{marginLeft: spacing(2)}}
                             >

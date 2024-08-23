@@ -19,7 +19,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { TimeUtils } from "../config/TimeUtils"
 import { PublicityType } from "../generated-src/PublicityType"
 import { TagDto } from "../generated-src/TagDto"
@@ -170,7 +170,7 @@ export class ManageTagsButton extends React.Component {
                                 <FormHelperText>Semi-Private tags can be seen with direct links, but not publicly searched.</FormHelperText>
                             </FormControl>
                             <KeyButton
-                                color={"primary"}
+                                color={themeStore.darkMode ? "secondary" : "primary"}
                                 onClick={this.create}
                                 disabled={!this.valid()}
                                 loading={tagStore.loadingMyTags}

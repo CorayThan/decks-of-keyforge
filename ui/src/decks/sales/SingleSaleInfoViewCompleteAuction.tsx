@@ -1,4 +1,3 @@
-import { Link } from "@material-ui/core"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import { startCase } from "lodash"
@@ -15,6 +14,7 @@ import { SellerImg } from "../../sellers/imgs/SellerImgs"
 import { sellerStore } from "../../sellers/SellerStore"
 import { userStore } from "../../user/UserStore"
 import { deckConditionReadableValue } from "../../userdeck/DeckConditionUtils"
+import { DokLink } from "../../generic/DokLink"
 
 @observer
 export class SingleSaleInfoViewCompleteAuction extends React.Component<{ saleInfo: DeckSaleInfo, deckName: string, keyforgeId: string }> {
@@ -122,7 +122,7 @@ export class SingleSaleInfoViewCompleteAuction extends React.Component<{ saleInf
                     Deck language: {startCase(language!.toString().toLowerCase())}
                 </Typography>
                 <Typography style={{margin: spacing(2)}} variant={"subtitle2"}>
-                    Listed on {TimeUtils.formatDate(dateListed)} by <Link href={Routes.userProfilePage(username)}>{username}</Link>
+                    Listed on {TimeUtils.formatDate(dateListed)} by <DokLink href={Routes.userProfilePage(username)}>{username}</DokLink>
                 </Typography>
             </div>
         )

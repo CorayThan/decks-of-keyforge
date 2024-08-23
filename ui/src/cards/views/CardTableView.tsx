@@ -2,7 +2,7 @@ import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from "@materi
 import { observer } from "mobx-react"
 import React from "react"
 import { AercForCard } from "../../aerc/views/AercForCard"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { CsvDownloadButton } from "../../generic/CsvDownloadButton"
 import { KeyButton } from "../../mui-restyled/KeyButton"
@@ -57,7 +57,7 @@ export const CardTableView = observer((props: { cards: FrontendCard[] }) => {
                                         to={Routes.cardPage(card.cardTitle)}
                                         noStyle={true}
                                     >
-                                        <KeyButton color={"primary"} size={"small"}>View Card</KeyButton>
+                                        <KeyButton color={themeStore.darkMode ? "secondary" : "primary"} size={"small"}>View Card</KeyButton>
                                     </KeyLink>
                                 </TableCell>
                             </TableRow>

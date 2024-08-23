@@ -1,5 +1,4 @@
 import { Divider, List, ListItem, Typography } from "@material-ui/core"
-import Link from "@material-ui/core/Link"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing, themeStore } from "../config/MuiConfig"
@@ -11,6 +10,7 @@ import { InfoListCard } from "../generic/InfoListCard"
 import { screenStore } from "../ui/ScreenStore"
 import { uiStore } from "../ui/UiStore"
 import { AboutGridItem } from "./AboutPage"
+import { DokLink } from "../generic/DokLink"
 
 @observer
 export class SasAndAerc extends React.Component {
@@ -177,8 +177,8 @@ export class SasAndAerc extends React.Component {
                         </div>,
                         <CardExample
                             text={"Timetraveller is one of the highest AERC cards with a 3.5 average. Played by itself or with Help from Future Self it consistently provides " +
-                            "Aember, a creature, and often replaces itself with its draw effect. " +
-                            "Key of Darkness, on the other hand, is one of the lowest at 0.2. It provides no aember and is very difficult to use."}
+                                "Aember, a creature, and often replaces itself with its draw effect. " +
+                                "Key of Darkness, on the other hand, is one of the lowest at 0.2. It provides no aember and is very difficult to use."}
                             img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/timetraveller.png"}
                             img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/help-from-future-self.png"}
                         />,
@@ -190,7 +190,7 @@ export class SasAndAerc extends React.Component {
                         "its value goes up or down within that range based on its synergies and antisynergies.",
                         <CardExample
                             text={"Ember Imp and Shadow Self synergize because Ember Imp has a great effect but is easy to kill, and " +
-                            "Shadow Self provides protection. Ember Imp provides more Disruption points to decks when paired with Shadowself."}
+                                "Shadow Self provides protection. Ember Imp provides more Disruption points to decks when paired with Shadowself."}
                             img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ember-imp.png"}
                             img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/shadow-self.png"}
                         />,
@@ -200,7 +200,7 @@ export class SasAndAerc extends React.Component {
                         "low power. Some cards synergize with the traits of a deck, or a house in a deck.",
                         <CardExample
                             text={"Ammonia Clouds damages all creatures, but if your creatures have armor, it can prevent much of the damage dealt by " +
-                            "Ammonia clouds. Ammonia Clouds synergizes with decks with high armor."}
+                                "Ammonia clouds. Ammonia Clouds synergizes with decks with high armor."}
                             img1={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/ammonia-clouds.png"}
                             img2={"https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/staunch-knight.png"}
                         />,
@@ -229,12 +229,14 @@ export class SasAndAerc extends React.Component {
                         "some way, for example by the release of a new set that is rated better or worse than previous sets.",
                         "SAStars are calculated as follows:",
                         <List>
-                            <ListItem><Typography>Top 0.01% of decks (1/10,000) will be 5 gold stars</Typography></ListItem>
+                            <ListItem><Typography>Top 0.01% of decks (1/10,000) will be 5 gold
+                                stars</Typography></ListItem>
                             <ListItem><Typography>Top 0.1% of decks (1/1000) will be 5 stars</Typography></ListItem>
                             <ListItem><Typography>Top 1% of decks (1/100) will be 4.5 stars</Typography></ListItem>
                             <ListItem><Typography>Top 10% of decks will be 4 stars</Typography></ListItem>
                             <ListItem><Typography>Top 25% of decks will be 3.5 stars</Typography></ListItem>
-                            <ListItem><Typography>Middle 50% of decks will be 3 stars (Half of all decks)</Typography></ListItem>
+                            <ListItem><Typography>Middle 50% of decks will be 3 stars (Half of all
+                                decks)</Typography></ListItem>
                             <ListItem><Typography>Bottom 25% of decks will be 2.5 stars</Typography></ListItem>
                             <ListItem>
                                 <Typography>
@@ -274,9 +276,10 @@ export class SasAndAerc extends React.Component {
                         `but not a trait that read "Destroys friendly demon creatures" because the card with the synergy is not a demon.`,
                         "For more detailed notes on how AERC and SAS are calculated and rated, please take a look at this google doc.",
                         (
-                            <Link href={"https://docs.google.com/document/d/1WkphfSzWj-hZ8l7BMhAgNF6-8b3Qj9cFiV7gGkR9HBU/edit?usp=sharing"}>
+                            <DokLink
+                                href={"https://docs.google.com/document/d/1WkphfSzWj-hZ8l7BMhAgNF6-8b3Qj9cFiV7gGkR9HBU/edit?usp=sharing"}>
                                 AERC Rating Guidelines
-                            </Link>
+                            </DokLink>
                         )
                     ]}/>
                 </AboutGridItem>
@@ -285,7 +288,12 @@ export class SasAndAerc extends React.Component {
     }
 }
 
-export const AercTraitDescription = observer((props: { title: string, texts: string[], img: string, icon: AercType }) => (
+export const AercTraitDescription = observer((props: {
+    title: string,
+    texts: string[],
+    img: string,
+    icon: AercType
+}) => (
     <div>
         <div style={{display: "flex"}}>
             <div>
@@ -306,7 +314,11 @@ export const AercTraitDescription = observer((props: { title: string, texts: str
             </div>
             {screenStore.screenWidth > 500 && (
                 <div>
-                    <div style={{marginLeft: spacing(2), padding: spacing(2), backgroundColor: themeStore.aercViewBackground}}>
+                    <div style={{
+                        marginLeft: spacing(2),
+                        padding: spacing(2),
+                        backgroundColor: themeStore.aercViewBackground
+                    }}>
                         <img
                             style={{width: 200}}
                             src={props.img}

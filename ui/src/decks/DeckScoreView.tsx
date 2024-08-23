@@ -1,9 +1,9 @@
 import { Box, Typography } from "@material-ui/core"
-import { blue } from "@material-ui/core/colors"
+import { blue, cyan } from "@material-ui/core/colors"
 import Tooltip from "@material-ui/core/Tooltip"
 import { range } from "lodash"
 import * as React from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths } from "../config/Routes"
 import { roundToTens, roundToThousands } from "../config/Utils"
 import { displaySas } from "../expansions/Expansions"
@@ -31,7 +31,7 @@ export const DeckScorePill = (props: DeckScoreViewProps) => {
     return (
         <div
             style={{
-                backgroundColor: blue["500"],
+                backgroundColor: themeStore.altColors ? cyan["500"] : blue["500"],
                 padding: spacing(small ? 1 : 2),
                 paddingBottom: spacing(small ? 0 : 2),
                 width: small ? 168 : 216,
@@ -145,7 +145,7 @@ export const SaStars = (props: {
     let includeHalf = false
     let type = StarType.NORMAL
     let quantity = 0
-    let tooltip = ""
+    let tooltip
 
     const random = Math.random()
     if (sasPercentile >= 99.99) {

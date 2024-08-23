@@ -1,4 +1,4 @@
-import { Link, Paper } from "@material-ui/core"
+import { Paper } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import React, { useEffect } from "react"
@@ -15,6 +15,7 @@ import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
 import { userStore } from "../../user/UserStore"
 import { PurchaseSearchResult, PurchaseUtils } from "./PurchaseSearchResult"
 import { purchaseStore } from "./PurchaseStore"
+import { DokLink } from "../../generic/DokLink"
 
 export const BoughtAndSoldView = observer(() => {
 
@@ -53,13 +54,15 @@ export const BoughtAndSoldView = observer(() => {
             />
             <div style={{marginTop: spacing(2)}}/>
             <HelperText style={{marginBottom: spacing(1)}}>
-                For standard deck sales you can report a purchase from the three vertical dots on the bottom of a deck you have marked as owned.
+                For standard deck sales you can report a purchase from the three vertical dots on the bottom of a deck
+                you have marked as owned.
             </HelperText>
             <HelperText style={{marginBottom: spacing(1)}}>
                 Offer sales will be automatically recorded with buyer and seller.
             </HelperText>
             <HelperText>
-                If a buyer or seller has already created a sale or purchase in the past week for this deck with the same price they will automatically be
+                If a buyer or seller has already created a sale or purchase in the past week for this deck with the same
+                price they will automatically be
                 linked as the buyer or seller.
             </HelperText>
         </div>
@@ -75,7 +78,7 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
             title: "Seller",
             sortable: true,
             transform: (purchase) => (
-                <Link href={Routes.userProfilePage(purchase.sellerUsername)}>{purchase.sellerUsername}</Link>
+                <DokLink href={Routes.userProfilePage(purchase.sellerUsername)}>{purchase.sellerUsername}</DokLink>
             )
         }
         reviews = {
@@ -86,7 +89,8 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
                     return null
                 } else {
                     return (
-                        <SellerRatingView sellerId={purchase.sellerId} sellerName={purchase.sellerUsername ?? "Unknown"} countOnly={true}/>
+                        <SellerRatingView sellerId={purchase.sellerId} sellerName={purchase.sellerUsername ?? "Unknown"}
+                                          countOnly={true}/>
                     )
                 }
             }
@@ -101,7 +105,7 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
                     return null
                 }
                 return (
-                    <Link href={Routes.userProfilePage(purchase.buyerUsername)}>{purchase.buyerUsername}</Link>
+                    <DokLink href={Routes.userProfilePage(purchase.buyerUsername)}>{purchase.buyerUsername}</DokLink>
                 )
             }
         }
@@ -112,7 +116,8 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
             title: "Deck",
             sortable: true,
             transform: (purchase) => (
-                <KeyLink style={{color: themeStore.defaultTextColor}} noStyle={true} to={Routes.deckPage(purchase.deckKeyforgeId)}>
+                <KeyLink style={{color: themeStore.defaultTextColor}} noStyle={true}
+                         to={Routes.deckPage(purchase.deckKeyforgeId)}>
                     {purchase.deckName}
                 </KeyLink>
             )
@@ -135,7 +140,12 @@ const purchaseTableHeaders = (buyer: boolean): SortableTableHeaderInfo<PurchaseS
     return values
 }
 
-const PurchasesList = (props: { name: string, noneMessage: string, buyer: boolean, purchases: PurchaseSearchResult[] }) => {
+const PurchasesList = (props: {
+    name: string,
+    noneMessage: string,
+    buyer: boolean,
+    purchases: PurchaseSearchResult[]
+}) => {
     const {name, noneMessage, buyer, purchases} = props
     return (
         <div style={{marginBottom: spacing(4)}}>

@@ -1,7 +1,7 @@
 import { ButtonProps } from "@material-ui/core/Button"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { Utils } from "../../config/Utils"
 import { PatreonIcon } from "../../generic/icons/PatreonIcon"
 import { KeyButton } from "../../mui-restyled/KeyButton"
@@ -36,7 +36,7 @@ export class LinkPatreon extends React.Component<LinkPatreonProps> {
         } else if (userStore.patron) {
             return (
                 <KeyButton
-                    color={"primary"}
+                    color={themeStore.darkMode ? "secondary" : "primary"}
                     variant={"outlined"}
                     {...rest}
                     onClick={patreonStore.unlinkAccount}
@@ -49,7 +49,7 @@ export class LinkPatreon extends React.Component<LinkPatreonProps> {
         }
         return (
             <KeyButton
-                color={"primary"}
+                color={themeStore.darkMode ? "secondary" : "primary"}
                 variant={"outlined"}
                 href={patreonLink}
                 {...rest}

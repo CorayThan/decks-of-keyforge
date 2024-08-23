@@ -1,4 +1,4 @@
-import { Link, Typography } from "@material-ui/core"
+import { Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
@@ -8,6 +8,7 @@ import { publicApiStore } from "../sellers/PublicApiStore"
 import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { userStore } from "../user/UserStore"
 import { AboutGridItem } from "./AboutPage"
+import { DokLink } from "../generic/DokLink"
 
 @observer
 export class SellersAndDevs extends React.Component {
@@ -33,7 +34,8 @@ export class SellersAndDevs extends React.Component {
                         {publicApiStore.apiKey}
                     </Typography>
                     <Typography style={{marginTop: spacing(2), marginBottom: spacing(2)}}>
-                        To learn the API send an email to <Link href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</Link>
+                        To learn the API send an email to <DokLink
+                        href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</DokLink>
                         or join us on the Decks of KeyForge discord:
                     </Typography>
                     <DiscordButton/>
@@ -74,9 +76,11 @@ export class SellersAndDevs extends React.Component {
                     <InfoListCard title={"File with all SAS and AERC"} infos={[
                         "Please use this instead of the API if it fits your needs to help conserve DoK's server resources.",
                         "I've created csv files (spreadsheets) with the deck info for all decks up to the time they were generated.",
-                        <Link href={"https://drive.google.com/drive/folders/1Yk4x221rqeIr32WrC5hkMXyBmWC311rS?usp=sharing"} target={"_blank"} rel={"noopener noreferrer"} key={"sas-link4"}>
+                        <DokLink
+                            href={"https://drive.google.com/drive/folders/1Yk4x221rqeIr32WrC5hkMXyBmWC311rS?usp=sharing"}
+                            target={"_blank"} rel={"noopener noreferrer"} key={"sas-link4"}>
                             Folder with deck csv files
-                        </Link>,
+                        </DokLink>,
                         "Like with the API, if you use this please attribute decksofkeyforge.com on your site / material.",
                         "I plan to create a new file whenever I update SAS or AERC."
                     ]}/>

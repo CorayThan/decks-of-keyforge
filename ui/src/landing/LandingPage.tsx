@@ -1,4 +1,4 @@
-import { Box, Divider, Link, List, ListSubheader, Typography } from "@material-ui/core"
+import { Box, Divider, List, ListSubheader, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { KeyDrawer } from "../components/KeyDrawer"
@@ -21,6 +21,7 @@ import { uiStore } from "../ui/UiStore"
 import { AlliancesSearchLink, DeckSearchLink, LandingPageLink } from "./DeckSearchLink"
 import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils"
 import { SortDirection } from "../generated-src/SortDirection"
+import { DokLink } from "../generic/DokLink"
 
 const topSas = new DeckFilters()
 
@@ -202,7 +203,7 @@ export class LandingPage extends React.Component<{}> {
                             </Typography>
                             <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
                                 DoK is owned and operated by Graylake LLC. For questions or comments check out
-                                the <Link href={AboutSubPaths.contact}>contact me page</Link>!
+                                the <DokLink href={AboutSubPaths.contact}>contact me page</DokLink>!
                             </Typography>
                             <Typography style={{marginBottom: spacing(1)}} color={"textPrimary"}>
                                 When using DoK you buy and sell decks entirely at your own risk. We make no guarantees

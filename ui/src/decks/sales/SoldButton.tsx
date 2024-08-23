@@ -1,4 +1,4 @@
-import { Dialog, Link } from "@material-ui/core"
+import { Dialog } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -17,6 +17,7 @@ import { messageStore } from "../../ui/MessageStore"
 import { userStore } from "../../user/UserStore"
 import { DeckActionClickable } from "../buttons/DeckActionClickable"
 import { DeckSearchResult } from "../models/DeckSearchResult"
+import { DokLink } from "../../generic/DokLink"
 
 interface SoldButtonProps {
     deck: DeckSearchResult
@@ -83,7 +84,7 @@ export class SoldButton extends React.Component<SoldButtonProps> {
                             onChange={(event) => this.saleAmount = event.target.value}
                         />
                         <HelperText style={{marginTop: spacing(1)}}>
-                            If you are accepting an offer please accept it from <Link href={MyDokSubPaths.offers}>your offers page</Link>!
+                            If you are accepting an offer please accept it from <DokLink href={MyDokSubPaths.offers}>your offers page</DokLink>!
                         </HelperText>
                         <HelperText style={{marginTop: spacing(1)}}>
                             Sale amount should not include shipping and handling. It should be the amount paid by the buyer in the seller's currency.

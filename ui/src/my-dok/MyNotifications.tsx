@@ -7,6 +7,7 @@ import { PatreonRewardsTier } from "../generated-src/PatreonRewardsTier"
 import { Loader } from "../mui-restyled/Loader"
 import { PatreonRequired } from "../thirdpartysites/patreon/PatreonRequired"
 import { userStore } from "../user/UserStore"
+import { themeStore } from "../config/MuiConfig"
 
 @observer
 export class MyNotifications extends React.Component {
@@ -33,7 +34,7 @@ export class MyNotifications extends React.Component {
         if (forSaleQueries.length === 0) {
             return (
                 <div>
-                    <Typography>
+                    <Typography color={themeStore.darkMode ? "textSecondary" : undefined}>
                         To create some for sale notifications search for decks that are for sale that meet the criteria you are interested in.
                         Then click the "Notify" button next to the "Search" button.
                     </Typography>

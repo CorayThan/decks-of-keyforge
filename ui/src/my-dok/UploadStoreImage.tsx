@@ -5,7 +5,7 @@ import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useState } from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { log, Utils } from "../config/Utils"
 import { HelperText } from "../generic/CustomTypographies"
@@ -96,7 +96,7 @@ export const UploadStoreImage = observer((props: UploadStoreImageProps) => {
                 <FileUploadButton
                     id={type}
                     variant={"outlined"}
-                    color={"primary"}
+                    color={themeStore.darkMode ? "secondary" : "primary"}
                     fileType={FileUploadType.IMAGE}
                     disabled={loading}
                     handleUpload={async (event) => {
@@ -137,6 +137,7 @@ export const UploadStoreImage = observer((props: UploadStoreImageProps) => {
                         onClick={icon ? sellerStore.deleteStoreIcon : sellerStore.deleteStoreBanner}
                         variant={"outlined"}
                         style={{marginLeft: spacing(2)}}
+                        color={themeStore.darkMode ? "secondary" : "primary"}
                     >
                         Remove
                     </KeyButton>

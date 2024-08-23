@@ -72,7 +72,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                     <TableCell>
                                         <LinkButton
                                             href={Routes.deckSearchForSaleQuery(queryWithoutId)}
-                                            color={"primary"}
+                                            color={"inherit"}
                                         >
                                             {query.name.trim().length === 0 ? "Unnamed" : query.name}
                                         </LinkButton>

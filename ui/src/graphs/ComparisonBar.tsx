@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core"
-import { amber, blue } from "@material-ui/core/colors"
+import { amber, blue, cyan, deepPurple } from "@material-ui/core/colors"
 import * as React from "react"
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryContainer } from "victory"
 import { spacing, themeStore } from "../config/MuiConfig"
@@ -42,10 +42,17 @@ export const ComparisonBar = (props: ComparisonBarProps) => (
                 style={{
                     data: {
                         fill: ({datum}) => {
-                            if (themeStore.darkMode) {
-                                return datum.x === props.comparison ? amber.A100 : blue.A100
+                            if (themeStore.altColors) {
+                                if (themeStore.darkMode) {
+                                    return datum.x === props.comparison ? cyan.A100 : deepPurple.A100
+                                }
+                                return datum.x === props.comparison ? cyan["500"] : deepPurple["500"]
+                            } else {
+                                if (themeStore.darkMode) {
+                                    return datum.x === props.comparison ? amber.A100 : blue.A100
+                                }
+                                return datum.x === props.comparison ? amber["500"] : blue["500"]
                             }
-                            return datum.x === props.comparison ? amber["500"] : blue["500"]
                         }
                     }
                 }}

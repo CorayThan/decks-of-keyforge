@@ -96,6 +96,10 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
         goToCards = cardStore.searchAndReturnCards(cardFilters).length > 0
 
     }
+    let backgroundColor
+    if (!themeStore.altColors) {
+        backgroundColor = themeStore.darkMode ? blue[700] : blue[400]
+    }
     return (
         <>
             <div
@@ -103,7 +107,7 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
                 style={{
                     display: "flex",
                     borderRadius: 4,
-                    backgroundColor: themeStore.darkMode ? blue[700] : blue[400],
+                    backgroundColor,
                     marginLeft: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     marginRight: spacing(screenStore.screenSizeXs() ? 1 : 2),
                     alignItems: "center",

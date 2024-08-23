@@ -1,4 +1,4 @@
-import { Dialog, FormControl, FormLabel, Link, Radio, RadioGroup, Tooltip, Typography } from "@material-ui/core"
+import { Dialog, FormControl, FormLabel, Radio, RadioGroup, Tooltip, Typography } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -12,7 +12,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { deckListingStore } from "../../auctions/DeckListingStore"
 import { keyLocalStorage } from "../../config/KeyLocalStorage"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { MyDokSubPaths } from "../../config/Routes"
 import { TimeUtils } from "../../config/TimeUtils"
 import { Utils } from "../../config/Utils"
@@ -31,6 +31,7 @@ import { DeckActionClickable } from "../buttons/DeckActionClickable"
 import { deckTableViewStore } from "../DeckTableViewStore"
 import { DeckSearchResult } from "../models/DeckSearchResult"
 import { SoldButton } from "./SoldButton"
+import { DokLink } from "../../generic/DokLink"
 
 interface ListForSaleViewProps {
     deck?: DeckSearchResult
@@ -302,8 +303,8 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         {!userStore.hasCountryAndShippingCost && (
                             <Typography variant={"subtitle2"} color={"error"}
                                         style={{marginRight: spacing(2), marginBottom: spacing(2)}}>
-                                Please add a country and shipping costs to your <Link
-                                href={MyDokSubPaths.profile}>profile</Link>.
+                                Please add a country and shipping costs to your
+                                <DokLink href={MyDokSubPaths.profile}>profile</DokLink>.
                             </Typography>
                         )}
                         {!userStore.canListMoreSales && (
@@ -447,7 +448,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                             />
                         )}
                         <HelperText style={{marginTop: spacing(2)}}>
-                            Add seller info and toggle trades on your <Link href={MyDokSubPaths.profile}>profile</Link>.
+                            Add seller info and toggle trades on your <DokLink href={MyDokSubPaths.profile}>profile</DokLink>.
                         </HelperText>
                     </DialogContent>
                     <DialogActions>
@@ -462,7 +463,7 @@ export class ListForSaleView extends React.Component<ListForSaleViewProps> {
                         <KeyButton onClick={this.handleClose}>Cancel</KeyButton>
                         <KeyButton
                             style={{marginRight: spacing(1)}}
-                            color={"primary"}
+                            color={themeStore.darkMode ? "secondary" : "primary"}
                             onClick={() => this.list()}
                             disabled={!userStore.canListForSale}
                         >

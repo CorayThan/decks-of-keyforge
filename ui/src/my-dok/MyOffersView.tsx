@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControlLabel, Paper } from "@material-ui/core"
+import { Box, Button, Checkbox, FormControlLabel, Paper } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -35,7 +35,7 @@ export class MyOffersView extends React.Component {
         const {offersSent, offersRejected, offersCanceled, includeExpiredOffers} = keyLocalStorage.genericStorage
 
         return (
-            <div>
+            <Box style={themeStore.darkMode ? {padding: spacing(2), borderRadius: 8, backgroundColor: themeStore.lightBackgroundColor} : undefined}>
                 <div style={{marginBottom: spacing(2)}}>
                     <FormControlLabel
                         control={
@@ -95,15 +95,18 @@ export class MyOffersView extends React.Component {
                 />
                 <div style={{marginTop: spacing(2)}}>
                     <Typography color={"textSecondary"} variant={"body2"} style={{fontStyle: "italic"}}>
-                        We will send you an email when you receive an offer, or when an offer you've made has been accepted or rejected.
+                        We will send you an email when you receive an offer, or when an offer you've made has been
+                        accepted or rejected.
                         You will not receive an email when your offers expire, or an offer made to you is cancelled.
                     </Typography>
-                    <Typography color={"textSecondary"} variant={"body2"} style={{fontStyle: "italic", marginTop: spacing(1)}}>
+                    <Typography color={"textSecondary"} variant={"body2"}
+                                style={{fontStyle: "italic", marginTop: spacing(1)}}>
                         When a deck is no longer listed for sale its
-                        offers will be removed from this view, for example when you unlist a deck, or accept an offer on it.
+                        offers will be removed from this view, for example when you unlist a deck, or accept an offer on
+                        it.
                     </Typography>
                 </div>
-            </div>
+            </Box>
         )
     }
 }
@@ -128,7 +131,8 @@ const OffersList = (props: { name: string, noneMessage: string, offersToMe: bool
                     ))
                     .map(offersForDeck => {
                         return (
-                            <Paper key={offersForDeck.deck.id} style={{backgroundColor: themeStore.tableBackgroundColor, marginBottom: spacing(4)}}>
+                            <Paper key={offersForDeck.deck.id}
+                                   style={{backgroundColor: themeStore.tableBackgroundColor, marginBottom: spacing(4)}}>
                                 <div
                                     style={{
                                         display: "flex",
@@ -138,7 +142,8 @@ const OffersList = (props: { name: string, noneMessage: string, offersToMe: bool
                                         paddingTop: spacing(2)
                                     }}
                                 >
-                                    <UnstyledLink to={Routes.deckPage(offersForDeck.deck.id)} target={"_blank"} rel={"noopener noreferrer"}>
+                                    <UnstyledLink to={Routes.deckPage(offersForDeck.deck.id)} target={"_blank"}
+                                                  rel={"noopener noreferrer"}>
                                         <Typography variant={"h6"}>
                                             {offersForDeck.deck.name}
                                         </Typography>

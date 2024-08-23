@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { MyDokSubPaths } from "../../config/Routes"
 import { Utils } from "../../config/Utils"
 import { SaleNotificationQueryDto } from "../../generated-src/SaleNotificationQueryDto"
@@ -139,8 +139,8 @@ export class CreateForSaleQuery extends React.Component<CreateForSaleQueryProps>
                                 />
                             </DialogContent>
                             <DialogActions>
-                                <KeyButton color={"primary"} onClick={this.handleClose}>Cancel</KeyButton>
-                                <KeyButton color={"primary"} onClick={this.addQuery} disabled={!forSaleInCountry || maxNotifsExceeded}>
+                                <KeyButton color={themeStore.darkMode ? "secondary" : "primary"} onClick={this.handleClose}>Cancel</KeyButton>
+                                <KeyButton color={themeStore.darkMode ? "secondary" : "primary"} onClick={this.addQuery} disabled={!forSaleInCountry || maxNotifsExceeded}>
                                     Create
                                 </KeyButton>
                             </DialogActions>

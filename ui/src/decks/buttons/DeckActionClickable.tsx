@@ -1,6 +1,7 @@
 import MenuItem from "@material-ui/core/MenuItem"
 import * as React from "react"
 import { KeyButton } from "../../mui-restyled/KeyButton"
+import { themeStore } from "../../config/MuiConfig"
 
 interface DeckActionClickableProps {
     onClick: () => void
@@ -22,7 +23,7 @@ export const DeckActionClickable = (props: DeckActionClickableProps) => {
     }
     return (
         <KeyButton
-            color={"primary"}
+            color={themeStore.darkMode ? "secondary" : "primary"}
             onClick={props.onClick}
             disabled={props.disabled}
         >

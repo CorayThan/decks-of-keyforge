@@ -16,6 +16,7 @@ import coraythan.keyswap.decks.UserHolder
 import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.patreon.PatreonRewardsTier
+import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.tokenize
@@ -41,6 +42,7 @@ class AllianceDeckService(
     private val deckRepo: DeckRepo,
     private val deckCreationService: DeckCreationService,
     private val allianceHouseRepo: AllianceHouseRepo,
+    private val sasVersionService: SasVersionService,
     private val entityManager: EntityManager,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -179,7 +181,8 @@ class AllianceDeckService(
 
             val tempAllianceDeck = AllianceDeck.fromDeck(deck, cards, user)
                 .copy(
-                    housesUniqueId = allianceDeckUniqueKey
+                    housesUniqueId = allianceDeckUniqueKey,
+                    sasVersion = sasVersionService.findSasVersion()
                 )
                 .withBonusIcons(bonusIcons)
 

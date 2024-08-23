@@ -1,4 +1,4 @@
-import { Box, Link, Paper, Typography } from "@material-ui/core"
+import { Box, Paper, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import React, { useEffect } from "react"
 import { spacing } from "../config/MuiConfig"
@@ -9,10 +9,13 @@ import { TagDto } from "../generated-src/TagDto"
 import { SortableTable, SortableTableHeaderInfo } from "../generic/SortableTable"
 import { Loader } from "../mui-restyled/Loader"
 import { tagStore } from "./TagStore"
+import { DokLink } from "../generic/DokLink"
+import { uiStore } from "../ui/UiStore"
 
 export const TagSearchPage = observer(() => {
 
     useEffect(() => {
+        uiStore.setTopbarValues("Deck Tags", "Tags", "Publicly tagged decks")
         tagStore.findPublicTags()
     }, [])
 
@@ -44,12 +47,12 @@ const tagsTableHeaders: SortableTableHeaderInfo<TagDto>[] = [
         transform: (tag) => {
             const filters = new DeckFilters()
             filters.tags = [tag.id]
-            return <Link href={Routes.deckSearch(filters)}>{tag.name}</Link>
+            return <DokLink href={Routes.deckSearch(filters)}>{tag.name}</DokLink>
         }
     },
     {
         property: "creatorUsername",
-        transform: (tag) => <Link href={Routes.userProfilePage(tag.creatorUsername)}>{tag.creatorUsername}</Link>
+        transform: (tag) => <DokLink href={Routes.userProfilePage(tag.creatorUsername)}>{tag.creatorUsername}</DokLink>
     },
     {property: "deckQuantity"},
     {property: "views"},

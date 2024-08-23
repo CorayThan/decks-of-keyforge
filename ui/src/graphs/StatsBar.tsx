@@ -1,5 +1,5 @@
 import { Card, Typography } from "@material-ui/core"
-import { amber, blue, grey } from "@material-ui/core/colors"
+import { amber, blue, cyan, deepPurple, grey } from "@material-ui/core/colors"
 import { sortBy } from "lodash"
 import { observer } from "mobx-react"
 import * as React from "react"
@@ -71,6 +71,13 @@ export class StatsBar extends React.Component<StatsBarProps> {
             filteredData = improvedData.filter(value => value.quantity! >= filterQuantitiesBelow)
         }
 
+        let fill
+        if (themeStore.altColors) {
+            fill = secondary ? cyan["500"] : deepPurple["500"]
+        } else {
+            fill = secondary ? amber["500"] : blue["500"]
+        }
+
         return (
             <Card style={{margin: spacing(2)}}>
                 <div
@@ -136,7 +143,7 @@ export class StatsBar extends React.Component<StatsBarProps> {
                             yAxisId={"left"}
                             dataKey={"y"}
                             name={yAxisName}
-                            fill={secondary ? amber["500"] : blue["500"]}
+                            fill={fill}
                         />
                     </ComposedChart>
                 </div>

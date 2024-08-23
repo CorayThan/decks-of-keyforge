@@ -5,13 +5,14 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { CardFilters } from "../cards/CardFilters"
 import { cardStore } from "../cards/CardStore"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, MyDokSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { DiscordButton } from "../thirdpartysites/discord/DiscordButton"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
+import { DokLink } from "../generic/DokLink"
 
 export const latestVersion = "7.1"
 
@@ -20,7 +21,7 @@ decFirstUpdateCards.aercHistory = true
 decFirstUpdateCards.aercHistoryDate = "2019-12-01"
 
 const NotesLink = (props: { to: string, children: string, style?: React.CSSProperties }) => {
-    return <LinkButton style={props.style} href={props.to} variant={"outlined"} color={"primary"}>{props.children}</LinkButton>
+    return <LinkButton style={props.style} href={props.to} variant={"outlined"}>{props.children}</LinkButton>
 }
 
 @observer
@@ -31,14 +32,18 @@ export class ReleaseNotes extends React.Component {
         let cardsUpdateLink = null
         const lastUpdate = cardStore.mostRecentAercUpdateDate
         if (lastUpdate != null) {
-            cardsUpdateLink = <NotesLink style={{marginTop: spacing(2)}} to={Routes.cardsUpdate(lastUpdate)}>Most Recent Cards Update</NotesLink>
+            cardsUpdateLink =
+                <NotesLink style={{marginTop: spacing(2)}} to={Routes.cardsUpdate(lastUpdate)}>Most Recent Cards
+                    Update</NotesLink>
         }
 
         return (
             <AboutGridItem>
                 <Paper style={{padding: spacing(2)}}>
                     <Typography variant={"h5"} style={{marginBottom: spacing(2)}}>Ratings Updates</Typography>
-                    <Typography>You can always check out the changes made to AERC ratings for cards on the cards page.</Typography>
+                    <Typography>
+                        You can always check out the changes made to AERC ratings for cards on the cards page.
+                    </Typography>
                     {cardsUpdateLink}
                 </Paper>
                 <ReleaseNote
@@ -53,6 +58,16 @@ export class ReleaseNotes extends React.Component {
                                 "available on DoK in some capacity rather than not at all. You may build Alliances " +
                                 "out of Martian Civil War pods, with two other houses of the same expansion as each " +
                                 "other. Select the Martian Civil War pod first."
+                        },
+                        {
+                            highlight: "Purple & Cyan Color Scheme",
+                            note: (
+                                <Typography variant={"body2"}>
+                                    For no reason in particular I decided to add a new purple
+                                    and cyan color scheme to DoK! It's particularly cool with Dark Mode. You
+                                    can check it out on your <DokLink href={Routes.userProfilePage()}>Profile</DokLink>.
+                                </Typography>
+                            ),
                         },
                     ]}
                 />
@@ -371,41 +386,63 @@ export class ReleaseNotes extends React.Component {
                             note: (
                                 <Box>
                                     <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                        You can now see SAS scores for all Dark Tidings decks! Over the next couple days the site will be updating itself so that
+                                        You can now see SAS scores for all Dark Tidings decks! Over the next couple days
+                                        the site will be updating itself so that
                                         they will properly sort by SAS when searching decks.
                                     </Typography>
                                     <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                        Rating this set was and continues to be a challenge. More so than any other set it seems to have multi-card combos, which are
-                                        much harder for the SAS system to rate properly. It's hard to properly capture the synergy between United Action, triple
-                                        Final Analysis, a bunch of creatures, and a Data Forge for example. I do think these ratings are considerably more refined
-                                        than the first version of MM ratings though, so I hope people find them reasonably accurate.
+                                        Rating this set was and continues to be a challenge. More so than any other set
+                                        it seems to have multi-card combos, which are
+                                        much harder for the SAS system to rate properly. It's hard to properly capture
+                                        the synergy between United Action, triple
+                                        Final Analysis, a bunch of creatures, and a Data Forge for example. I do think
+                                        these ratings are considerably more refined
+                                        than the first version of MM ratings though, so I hope people find them
+                                        reasonably accurate.
                                     </Typography>
                                     <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                        I have a couple future changes planned that I think will further help improve deck scores, and DT scores in particular. One
-                                        of them is rebalancing how SAS rates creatures and their power. Currently all creatures get a hidden 0.4 SAS bonus, as well
-                                        as about 0.1 point per power / armor. I plan to make that more complex, and to rate lower power creatures a little less, and
+                                        I have a couple future changes planned that I think will further help improve
+                                        deck scores, and DT scores in particular. One
+                                        of them is rebalancing how SAS rates creatures and their power. Currently all
+                                        creatures get a hidden 0.4 SAS bonus, as well
+                                        as about 0.1 point per power / armor. I plan to make that more complex, and to
+                                        rate lower power creatures a little less, and
                                         higher power / armor creatures a little more.
                                     </Typography>
                                     <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                        The other change I have planned is to further refine the META scores. In particular I expect to increase the negative meta
-                                        score for low C decks, but I also plan to re-evaluate META scores in general for the new meta.
+                                        The other change I have planned is to further refine the META scores. In
+                                        particular I expect to increase the negative meta
+                                        score for low C decks, but I also plan to re-evaluate META scores in general for
+                                        the new meta.
                                     </Typography>
                                     <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
                                         <b>Thank you to the folks who helped rate and refine the scores for DT SAS!</b>
                                     </Typography>
                                     <Box mt={2} display={"flex"} flexWrap={"wrap"}>
-                                        <UserLink username={"Zarathustra05"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"AlexShepelev"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"drsheep"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"Eccoedo"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"PlayerHurp"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"mlvanbie"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"quickdraw3457"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"fakyrr"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"hydrophilic_attack"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"OotTheMonk"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"Gaxeco"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
-                                        <UserLink username={"PetitBOT"} style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"Zarathustra05"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"AlexShepelev"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"drsheep"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"Eccoedo"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"PlayerHurp"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"mlvanbie"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"quickdraw3457"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"fakyrr"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"hydrophilic_attack"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"OotTheMonk"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"Gaxeco"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
+                                        <UserLink username={"PetitBOT"}
+                                                  style={{marginRight: spacing(2), marginBottom: spacing(2)}}/>
                                     </Box>
                                 </Box>
                             )
@@ -617,7 +654,8 @@ export class ReleaseNotes extends React.Component {
                                 "$6+ patron head to your notifications page to check it out!"
                         },
                         {
-                            note: <LinkButton href={MyDokSubPaths.notifications} variant={"outlined"} color={"primary"}>Notifications</LinkButton>
+                            note: <LinkButton href={MyDokSubPaths.notifications} variant={"outlined"}
+                                              color={"primary"}>Notifications</LinkButton>
                         },
                         {
                             highlight: "Tagging Improvements",
@@ -883,7 +921,8 @@ export class ReleaseNotes extends React.Component {
                             note: "You can now see graphs displaying sale prices for decks by SAS! Head over to the stats area to check them out."
                         },
                         {
-                            note: <LinkButton href={StatsSubPaths.purchaseStats} variant={"outlined"} color={"primary"}>Sale Stats</LinkButton>
+                            note: <LinkButton href={StatsSubPaths.purchaseStats} variant={"outlined"} color={"primary"}>Sale
+                                Stats</LinkButton>
                         },
                         {
                             highlight: "Prettier Emails",
@@ -928,10 +967,13 @@ export class ReleaseNotes extends React.Component {
                             highlight: "Petition to add bonus icons to Master Vault",
                             note: (
                                 <Typography variant={"body2"}>
-                                    We can't currently see which cards are modified with what bonus icons, either on Master Vault's deck view, or in the API.
-                                    This is a big problem for deck content verification. We need to be able to verify deck contents to prevent cheating,
+                                    We can't currently see which cards are modified with what bonus icons, either on
+                                    Master Vault's deck view, or in the API.
+                                    This is a big problem for deck content verification. We need to be able to verify
+                                    deck contents to prevent cheating,
                                     safely sell second hand online, and play online. Please
-                                    consider signing <Link href={"https://www.change.org/keyforge-bonus-icons"} target={"_blank"}>this petition to FFG</Link> to
+                                    consider signing <DokLink href={"https://www.change.org/keyforge-bonus-icons"}
+                                                              target={"_blank"}>this petition to FFG</DokLink> to
                                     encourage them to add this data sooner than later!
                                 </Typography>
                             )
@@ -1126,7 +1168,8 @@ export class ReleaseNotes extends React.Component {
                                 "This will not save a deck that can be searched, however you can share the link."
                         },
                         {
-                            note: (<NotesLink style={{marginRight: spacing(2)}} to={Routes.createTheoreticalDeck}>Make a deck</NotesLink>)
+                            note: (<NotesLink style={{marginRight: spacing(2)}} to={Routes.createTheoreticalDeck}>Make a
+                                deck</NotesLink>)
                         },
                         {
                             highlight: "Trait system fixes",
@@ -1316,11 +1359,14 @@ export class ReleaseNotes extends React.Component {
                         {
                             note: (
                                 <div style={{display: "flex", flexWrap: "wrap"}}>
-                                    <NotesLink to={Routes.cardPage("Drummernaut")} style={{margin: spacing(2, 2, 0, 0)}}>Drummernaut</NotesLink>
-                                    <NotesLink to={Routes.cardPage("Sic Semper Tyrannosaurus")} style={{margin: spacing(2, 2, 0, 0)}}>
+                                    <NotesLink to={Routes.cardPage("Drummernaut")}
+                                               style={{margin: spacing(2, 2, 0, 0)}}>Drummernaut</NotesLink>
+                                    <NotesLink to={Routes.cardPage("Sic Semper Tyrannosaurus")}
+                                               style={{margin: spacing(2, 2, 0, 0)}}>
                                         Sic Semper Tyrannosaurus
                                     </NotesLink>
-                                    <NotesLink to={Routes.cardPage("Cincinnatus Rex")} style={{margin: spacing(2, 2, 0, 0)}}>Cincinnatus Rex</NotesLink>
+                                    <NotesLink to={Routes.cardPage("Cincinnatus Rex")}
+                                               style={{margin: spacing(2, 2, 0, 0)}}>Cincinnatus Rex</NotesLink>
                                 </div>
                             )
                         },
@@ -1633,7 +1679,8 @@ export class ReleaseNotes extends React.Component {
                     "AERC score of cards.",
                     "If you want to read the in-depth road map, take a look at the google doc: ",
                     <div style={{margin: spacing(1)}}>
-                        <Link href={"https://docs.google.com/document/d/1_Hg1K2XI2vViDyJUECsmiIyAeYsCMvTHys46dVvKETA/edit?usp=sharing"}>
+                        <Link
+                            href={"https://docs.google.com/document/d/1_Hg1K2XI2vViDyJUECsmiIyAeYsCMvTHys46dVvKETA/edit?usp=sharing"}>
                             SAS v6 Roadmap
                         </Link>
                     </div>,
@@ -1896,16 +1943,21 @@ export class ReleaseNotes extends React.Component {
 export const ReleaseNote = (props: {
     releaseNumber: string,
     releaseNotes?: (React.ReactNode | string)[],
-    releaseNotesWithHighlights?: { note?: React.ReactNode | string, highlight?: string, link?: string, linkName?: string }[],
+    releaseNotesWithHighlights?: {
+        note?: React.ReactNode | string,
+        highlight?: string,
+        link?: string,
+        linkName?: string
+    }[],
     expanded?: boolean,
     date: string
 }) => (
     <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandMore/>}>
             <div style={{display: "flex", alignItems: "flex-end", width: "100%"}}>
-                <Typography color={"primary"} style={{flexGrow: 1}} variant={"h6"}>{props.releaseNumber}</Typography>
+                <Typography color={themeStore.darkMode ? "textSecondary" : "primary"} style={{flexGrow: 1}} variant={"h6"}>{props.releaseNumber}</Typography>
                 {props.date ? (
-                    <Typography color={"primary"} variant={"subtitle1"}>{props.date}</Typography>
+                    <Typography color={themeStore.darkMode ? "textSecondary" : "primary"} variant={"subtitle1"}>{props.date}</Typography>
                 ) : null}
             </div>
         </AccordionSummary>
@@ -1929,7 +1981,8 @@ export const ReleaseNote = (props: {
                         >
                             {
                                 noteAndHighlight.highlight &&
-                                <Typography variant={"subtitle1"} style={{fontWeight: "bold"}}>{noteAndHighlight.highlight}</Typography>
+                                <Typography variant={"subtitle1"}
+                                            style={{fontWeight: "bold"}}>{noteAndHighlight.highlight}</Typography>
                             }
                             {note}
                             {noteAndHighlight.link && (
@@ -1948,7 +2001,8 @@ export const ReleaseNote = (props: {
                 {props.releaseNotes && props.releaseNotes.map((note, idx) => {
                     if (typeof note === "string") {
                         return (
-                            <Typography variant={"body2"} key={idx} style={{marginBottom: idx !== props.releaseNotes!.length - 1 ? spacing(1) : undefined}}>
+                            <Typography variant={"body2"} key={idx}
+                                        style={{marginBottom: idx !== props.releaseNotes!.length - 1 ? spacing(1) : undefined}}>
                                 {note}
                             </Typography>
                         )

@@ -1,4 +1,4 @@
-import { Button, Dialog, IconButton, Link, Tooltip } from "@material-ui/core"
+import { Button, Dialog, IconButton, Tooltip } from "@material-ui/core"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -8,11 +8,12 @@ import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useState } from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { HelperText } from "../generic/CustomTypographies"
 import { KeyButton } from "../mui-restyled/KeyButton"
 import { userMessageStore } from "./UserMessageStore"
+import { DokLink } from "../generic/DokLink"
 
 
 export const SendMessageButton = observer((props: {
@@ -33,7 +34,7 @@ export const SendMessageButton = observer((props: {
     return (
         <>
             {replyToId == null ? (
-                <Button style={style} onClick={() => store.open = true} color={color} variant={variant}>
+                <Button style={style} onClick={() => store.open = true} color={themeStore.darkMode ? "secondary" : color} variant={variant}>
                     Send Message
                 </Button>
             ) : (
@@ -75,7 +76,7 @@ export const SendMessageButton = observer((props: {
                     />
                     <HelperText style={{marginTop: spacing(2)}}>
                         This message will be sent through DoK, and the recipient will be able to view it here. Please
-                        check <Link href={Routes.messages}>your messages</Link> for a response.
+                        check <DokLink href={Routes.messages}>your messages</DokLink> for a response.
                     </HelperText>
                     {deckName != null && (
                         <HelperText style={{marginTop: spacing(1)}}>
@@ -86,7 +87,7 @@ export const SendMessageButton = observer((props: {
                 <DialogActions>
                     <KeyButton onClick={store.handleClose}>Cancel</KeyButton>
                     <KeyButton
-                        color={"primary"}
+                        color={themeStore.darkMode ? "secondary" : "primary"}
                         onClick={async () => {
                             await store.sendMessage()
                             if (onSent != null) {

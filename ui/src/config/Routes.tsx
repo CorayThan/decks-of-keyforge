@@ -452,7 +452,6 @@ export class AboutSubPaths {
     static contact = Routes.about + "/contact"
     static releaseNotes = Routes.about + "/release-notes"
     static sellersAndDevs = Routes.about + "/sellers-and-devs"
-    static teamSas = Routes.about + "/team-sas"
 }
 
 export class StatsSubPaths {

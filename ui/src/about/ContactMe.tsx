@@ -10,6 +10,7 @@ import { GithubTicketsButton } from "../thirdpartysites/github/GithubTicketsButt
 import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
 import { PatronButton } from "../thirdpartysites/patreon/PatronButton"
 import { AboutGridItem } from "./AboutPage"
+import { DokLink } from "../generic/DokLink"
 
 @observer
 export class ContactMe extends React.Component {
@@ -39,7 +40,7 @@ export class ContactMe extends React.Component {
                                 <Typography>
                                     Please request features and report bugs with the "Report an Issue" button above.
                                     You can also make comments and suggestions on the Discord server or send an email
-                                    to <a href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</a>
+                                    to <DokLink href={"mailto:decksofkeyforge@gmail.com"}>decksofkeyforge@gmail.com</DokLink>
                                 </Typography>
                             </span>,
                             <div style={{paddingTop: spacing(1)}}>

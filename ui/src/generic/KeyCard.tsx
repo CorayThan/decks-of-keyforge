@@ -1,5 +1,5 @@
 import Card, { CardProps } from "@material-ui/core/Card"
-import { blue } from "@material-ui/core/colors"
+import { blue, cyan } from "@material-ui/core/colors"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { spacing, themeStore } from "../config/MuiConfig"
@@ -15,10 +15,18 @@ export const KeyCard = observer((props: {
 
     const {topContents, rightContents, topContentsStyle, children, style, light, margin, ...rest} = props
     let backgroundColor
-    if (light) {
-        backgroundColor = themeStore.darkMode ? blue["500"] : blue["200"]
+    if (themeStore.altColors) {
+        if (light) {
+            backgroundColor = themeStore.darkMode ? cyan["500"] : cyan["200"]
+        } else {
+            backgroundColor = themeStore.darkMode ? cyan["800"] : cyan["500"]
+        }
     } else {
-        backgroundColor = themeStore.darkMode ? blue["800"] : blue["500"]
+        if (light) {
+            backgroundColor = themeStore.darkMode ? blue["500"] : blue["200"]
+        } else {
+            backgroundColor = themeStore.darkMode ? blue["800"] : blue["500"]
+        }
     }
     if (rightContents) {
         return (
