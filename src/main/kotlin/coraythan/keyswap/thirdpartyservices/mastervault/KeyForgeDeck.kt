@@ -3,6 +3,7 @@ package coraythan.keyswap.thirdpartyservices.mastervault
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.TokenCard
 import coraythan.keyswap.decks.models.BonusIconHouse
 import coraythan.keyswap.decks.models.BonusIconsCard
 import coraythan.keyswap.decks.models.Deck
@@ -60,21 +61,30 @@ data class KeyForgeDeck(
         )
     }
 
-    fun toDeck(copyIntoDeck: Deck? = null) = if (copyIntoDeck == null) Deck(
-        keyforgeId = id,
-        name = name,
-        expansion = expansion,
-        powerLevel = power_level,
-        chains = chains,
-        wins = wins,
-        losses = losses,
-    ) else copyIntoDeck.copy(
-        keyforgeId = id,
-        name = name,
-        expansion = expansion,
-        powerLevel = power_level,
-        chains = chains,
-        wins = wins,
-        losses = losses,
-    )
+    fun toDeck(copyIntoDeck: Deck? = null, token: Card? = null): Deck {
+        val deck = copyIntoDeck?.copy(
+            keyforgeId = id,
+            name = name,
+            expansion = expansion,
+            powerLevel = power_level,
+            chains = chains,
+            wins = wins,
+            losses = losses,
+        )
+            ?: Deck(
+                keyforgeId = id,
+                name = name,
+                expansion = expansion,
+                powerLevel = power_level,
+                chains = chains,
+                wins = wins,
+                losses = losses,
+            )
+
+        return if (token != null) {
+            deck.copy(tokenNumber = TokenCard.ordinalByCardTitle(token.cardTitle))
+        } else {
+            deck
+        }
+    }
 }

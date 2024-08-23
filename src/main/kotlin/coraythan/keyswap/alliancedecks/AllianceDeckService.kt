@@ -14,6 +14,7 @@ import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.SortDirection
 import coraythan.keyswap.decks.UserHolder
 import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.patreon.PatreonRewardsTier
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
@@ -59,7 +60,7 @@ class AllianceDeckService(
                 log.info("Done updating alliance deck validity")
             } else {
                 decks.forEach {
-                    val valid = AllianceDeck.determineIfValid(cardCache.cardsForDeck(it))
+                    val valid = AllianceDeck.determineIfValid(it, cardCache.cardsForDeck(it))
                     if (it.validAlliance != valid) {
                         allianceDeckRepo.save(it.copy(validAlliance = valid))
                         updated++
@@ -123,7 +124,12 @@ class AllianceDeckService(
                 .sortedBy { it.second.ordinal }
 
             val expansion = deckOne.expansionEnum
-            if (deckHousePairs.any { it.first.expansionEnum != expansion }) {
+            if (expansion == Expansion.MARTIAN_CIVIL_WAR) {
+                if (deckTwo.expansionEnum != deckThree.expansionEnum) {
+                    throw BadRequestException("When building a Martian Civil War deck the other two houses must be " +
+                            "from the same expansion.")
+                }
+            } else if (deckHousePairs.any { it.first.expansionEnum != expansion }) {
                 throw BadRequestException("All decks in alliance must be same expansion.")
             }
 
@@ -146,6 +152,7 @@ class AllianceDeckService(
                 },
                 expansion = expansion,
                 tokenTitle = toSave.tokenName,
+                alliance = true,
             )
 
             val bonusIcons = DeckBonusIcons(allianceDeckInfo.cards.entries

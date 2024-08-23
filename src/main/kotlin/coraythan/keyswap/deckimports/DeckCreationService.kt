@@ -110,7 +110,7 @@ class DeckCreationService(
 
             val bonusIconSimpleCards = keyforgeDeck.createBonusIconsInfo(houses, cardsList)
 
-            val deckToSave = keyforgeDeck.toDeck(updateDeck).withBonusIcons(bonusIconSimpleCards)
+            val deckToSave = keyforgeDeck.toDeck(updateDeck, token).withBonusIcons(bonusIconSimpleCards)
 
             try {
                 val savedDeck = if (updateDeck != null) deckRepo.save(deckToSave) else saveDeck(
@@ -143,7 +143,7 @@ class DeckCreationService(
 
     fun viewTheoreticalDeck(deck: DeckBuildingData): Deck {
         val deckAndCards = makeBasicDeckFromDeckBuilderData(deck)
-        return validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second, deck.tokenTitle)
+        return validateAndRateDeck(deckAndCards.first, deck.cards.keys.toList(), deckAndCards.second, deck.tokenTitle, deck.alliance)
     }
 
     fun rateDeck(inputDeck: Deck, majorRevision: Boolean = false): DeckSynergyInfo {
@@ -165,8 +165,8 @@ class DeckCreationService(
         return saved
     }
 
-    private fun validateAndRateDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, tokenName: String?): Deck {
-        checkHouseAndCardCounts(deck.keyforgeId, deck.expansionEnum, houses, cardsList)
+    private fun validateAndRateDeck(deck: Deck, houses: List<House>, cardsList: List<Card>, tokenName: String? = null, alliance: Boolean = false): Deck {
+        checkHouseAndCardCounts(deck.keyforgeId, deck.expansionEnum, houses, cardsList, alliance)
 
         val saveable = deck
             .copy(
@@ -203,8 +203,8 @@ class DeckCreationService(
         ) to cards
     }
 
-    private fun checkHouseAndCardCounts(id: String, expansion: Expansion, houses: List<House>, cards: List<Card>) {
-        if (expansion.singleHouse) {
+    private fun checkHouseAndCardCounts(id: String, expansion: Expansion, houses: List<House>, cards: List<Card>, alliance: Boolean = false) {
+        if (expansion.singleHouse && !alliance) {
             if (cards.size != 12) error("Deck $id must have 12 cards.")
             if (houses.toSet().size != 1) error("Deck $id must have 1 house.")
         } else {

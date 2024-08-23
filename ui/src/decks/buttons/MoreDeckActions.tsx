@@ -55,8 +55,8 @@ export const MoreDeckActions = (props: { deck: DeckSearchResult, compact: boolea
                 {compact ? <CompareDeckButton deck={deck} menuItem={true} onClick={handleClose}/> : null}
                 {!alliance && <ReportPurchaseButton deck={deck} onClick={handleClose}/>}
                 <CardsForDeck cards={deck.housesAndCards} deckName={deck.name} onClick={handleClose}/>
-                {!alliance && <ToggleDeckNotesMenuItem onClick={handleClose}/>}
-                {userStore.loggedIn() && !alliance && (
+                {userStore.loggedIn() && !alliance && <ToggleDeckNotesMenuItem onClick={handleClose}/>}
+                {!alliance && (
                     <DeckActionClickable
                         onClick={() => {
                             handleClose()

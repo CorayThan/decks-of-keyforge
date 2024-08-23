@@ -89,6 +89,7 @@ export const expansionsWithCards = [
     Expansion.VAULT_MASTERS_2023,
     Expansion.VAULT_MASTERS_2024,
     Expansion.MENAGERIE_2024,
+    Expansion.MARTIAN_CIVIL_WAR,
 ]
 
 export const recentExpansions = [

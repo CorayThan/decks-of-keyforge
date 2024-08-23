@@ -52,15 +52,6 @@ export const houseValuesArray: HouseValue[] = [
         img: marsImg
     },
     {
-        house: House.Elders,
-        img: eldersImg
-    },
-    {
-        house: House.IronyxRebels,
-        img: rebelsImg,
-        displayName: "Rebels"
-    },
-    {
         house: House.Sanctum,
         img: sanctumImg
     },
@@ -90,6 +81,15 @@ export const houseValuesArray: HouseValue[] = [
     {
         house: House.Keyraken,
         img: keyrakenImg,
+    },
+    {
+        house: House.Elders,
+        img: eldersImg
+    },
+    {
+        house: House.IronyxRebels,
+        img: rebelsImg,
+        displayName: "Rebels"
     },
 ]
     .map(value => {

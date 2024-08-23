@@ -6,6 +6,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.decks.models.*
+import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.now
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
@@ -80,7 +81,8 @@ data class AllianceDeck(
             "United Action" to 100,
         )
 
-        fun determineIfValid(cards: List<DokCardInDeck>): Boolean {
+        fun determineIfValid(deck: GenericDeck, cards: List<DokCardInDeck>): Boolean {
+            if (deck.expansionEnum == Expansion.MARTIAN_CIVIL_WAR) return false
             val restrictedCards = cards
                 .filter { restrictedCardsList.containsKey(it.card.cardTitle) }
                 .groupBy { it.card.cardTitle }
@@ -110,7 +112,7 @@ data class AllianceDeck(
                 houseNamesString = deck.houseNamesString,
                 bonusIconsString = deck.bonusIconsString,
                 discoverer = discoverer,
-                validAlliance = determineIfValid(cards),
+                validAlliance = determineIfValid(deck, cards),
                 tokenNumber = deck.tokenNumber,
             )
         }
@@ -135,7 +137,7 @@ data class AllianceDeck(
 
         return DeckSearchResult(
             deckType = DeckType.ALLIANCE,
-            validAlliance = if (cards == null) validAlliance else determineIfValid(cards),
+            validAlliance = if (cards == null) validAlliance else determineIfValid(this, cards),
             keyforgeId = id.toString(),
             expansion = expansionEnum,
             name = name,

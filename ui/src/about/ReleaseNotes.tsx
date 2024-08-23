@@ -50,7 +50,9 @@ export class ReleaseNotes extends React.Component {
                             highlight: "Added Martian Civil War",
                             note: "I've added the Martian Civil War pods as decks to Decks of KeyForge. These are a " +
                                 "bit odd, as they're only one house. But I figure it's probably nicer to have them " +
-                                "available on DoK in some capacity rather than not at all."
+                                "available on DoK in some capacity rather than not at all. You may build Alliances " +
+                                "out of Martian Civil War pods, with two other houses of the same expansion as each " +
+                                "other. Select the Martian Civil War pod first."
                         },
                     ]}
                 />

@@ -309,16 +309,26 @@ const AddHouseToAlliance = observer((props: {
     tokenName?: string
 }) => {
     const {deckId, deckName, house, expansion, tokenName} = props
+
+    let disabled = keyLocalStorage.allianceDeckSaveInfo.houses.length > 2
+        || keyLocalStorage.allianceDeckSaveInfo.houses.find(allianceDeck => allianceDeck.house === house) != null
+    if (!disabled) {
+        if (keyLocalStorage.allianceDeckSaveInfo.houses.find(allianceDeck => allianceDeck.expansion === Expansion.MARTIAN_CIVIL_WAR) != null) {
+            disabled = expansion === Expansion.MARTIAN_CIVIL_WAR || (
+                keyLocalStorage.allianceDeckSaveInfo.houses[1] != null
+                && (keyLocalStorage.allianceDeckSaveInfo.houses[1].house === house || keyLocalStorage.allianceDeckSaveInfo.houses[1].expansion !== expansion)
+            )
+        } else {
+            disabled = keyLocalStorage.allianceDeckSaveInfo.houses.find(allianceDeck => allianceDeck.expansion !== expansion) != null
+        }
+    }
+
     return (
         <Button
             onClick={() => {
                 keyLocalStorage.addAllianceHouse(deckId, deckName, house, expansion, tokenName)
             }}
-            disabled={
-                keyLocalStorage.allianceDeckSaveInfo.houses.length > 2 ||
-                keyLocalStorage.allianceDeckSaveInfo.houses.find(allianceDeck => allianceDeck.house === house) != null ||
-                keyLocalStorage.allianceDeckSaveInfo.houses.find(allianceDeck => allianceDeck.expansion !== expansion) != null
-            }
+            disabled={disabled}
         >
             Add to Alliance
         </Button>

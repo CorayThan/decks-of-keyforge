@@ -207,7 +207,7 @@ class DeckSasUpdateService(
                     val allianceDeckSynergies = DeckSynergyService.fromDeckWithCards(it, cards, token)
 
                     // May as well ensure this is still accurate
-                    val valid = AllianceDeck.determineIfValid(cards)
+                    val valid = AllianceDeck.determineIfValid(it, cards)
                     allianceDeckRepo.save(
                         it.copy(
                             sasVersion = sasVersion,
