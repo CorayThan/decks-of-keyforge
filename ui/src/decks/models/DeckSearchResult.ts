@@ -61,7 +61,6 @@ export interface DeckSearchResult {
 
     forSale?: boolean
     forTrade?: boolean
-    forAuction?: boolean
     wishlistCount?: number
     funnyCount?: number
 
@@ -299,7 +298,6 @@ export class DeckUtils {
                 deck.losses,
 
                 deck.forSale,
-                deck.forAuction,
                 deck.forTrade,
                 DeckUtils.findPrice(deck),
                 deck.housesAndCards[0].cards.map(card => card.cardTitle),
@@ -361,7 +359,6 @@ export class DeckUtils {
             "Losses",
 
             "For Sale",
-            "For Auction",
             "For Trade",
             "Price",
 

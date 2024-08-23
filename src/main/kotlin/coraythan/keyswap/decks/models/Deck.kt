@@ -177,7 +177,6 @@ data class Deck(
             antisynergyRating = synergies?.antisynergyRating ?: -1,
             forSale = forSale.falseToNull(),
             forTrade = forTrade.falseToNull(),
-            forAuction = forAuction.falseToNull(),
             wishlistCount = wishlistCount.zeroToNull(),
             funnyCount = funnyCount.zeroToNull(),
             housesAndCards = housesAndCards?.addBonusIcons(bonusIcons()) ?: listOf(),

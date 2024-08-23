@@ -3,7 +3,7 @@ import Typography from "@material-ui/core/Typography"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { RouteComponentProps } from "react-router"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { UserProfile } from "../generated-src/UserProfile"
@@ -166,7 +166,7 @@ export class ProfileView extends React.Component<ProfileViewProps> {
                             Decks For Sale
                         </LinkButton>
                         {profile.allowsMessages && (
-                            <SendMessageButton toUsername={profile.username} variant={"outlined"} color={"primary"}/>
+                            <SendMessageButton toUsername={profile.username} variant={"outlined"} color={themeStore.darkMode ? "secondary" : "primary"}/>
                         )}
                     </CardActions>
                 </Card>

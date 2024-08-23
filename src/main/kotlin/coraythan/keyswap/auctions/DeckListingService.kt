@@ -155,8 +155,6 @@ class DeckListingService(
             )
         ) throw BadRequestException("You must own ${deck.name} to list it for sale.")
 
-        if (deck.forAuction) throw BadRequestException("This deck is already listed as an auction.")
-
         val listingDate = now()
         val endTime = listingInfo.endTimeLocalTime?.withOffsetMinutes(offsetMinutes) ?: LocalTime.now()
         val endDateTime = listingDate.plusDays(listingInfo.expireInDays.toLong())

@@ -1,7 +1,7 @@
 import { Card, CardActions, CardContent, Divider, Typography } from "@material-ui/core"
 import { startCase } from "lodash"
 import * as React from "react"
-import { spacing, theme } from "../config/MuiConfig"
+import { spacing, theme, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { SellerDetails } from "../generated-src/SellerDetails"
 import { KeyLink } from "../mui-restyled/KeyLink"
@@ -50,14 +50,14 @@ export class SellerCard extends React.Component<SellerCardProps> {
                             <LinkButton
                                 href={`mailto:${email}`}
                                 newWindow={true}
-                                color={"primary"}
+                                color={themeStore.darkMode ? "secondary" : "primary"}
                             >
                                 Send Email
                             </LinkButton>
                         ) : null}
                         {/*<SendMessageButton toUsername={username}/>*/}
                         <div style={{flexGrow: 1}}/>
-                        <LinkButton color="primary" href={storeLink}>
+                        <LinkButton color={themeStore.darkMode ? "secondary" : "primary"} href={storeLink}>
                             View Store
                         </LinkButton>
                     </CardActions>

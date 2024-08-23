@@ -57,7 +57,8 @@ enum class Expansion(
             House.Sanctum,
             House.StarAlliance,
             House.Unfathomable
-        )
+        ),
+        hasTokens = true,
     ),
     UNCHAINED_2022(
         601, "UC22", setOf(
@@ -105,7 +106,14 @@ enum class Expansion(
             House.Untamed
         )
     ),
-    MARTIAN_CIVIL_WAR(892, "MCW", setOf(House.Elders, House.IronyxRebels), tournamentLegal = false, singleHouse = true);
+    MARTIAN_CIVIL_WAR(
+        892,
+        "MCW",
+        setOf(House.Elders, House.IronyxRebels),
+        hasTokens = true,
+        tournamentLegal = false,
+        singleHouse = true
+    );
 
     companion object {
         fun forExpansionNumber(expansionNumber: Int?) = entries.find { it.expansionNumber == expansionNumber }

@@ -1,6 +1,6 @@
 import { createStyles, Fade, IconButton, InputBase, List, makeStyles, Paper, Popper } from "@material-ui/core"
 import ClickAwayListener from "@material-ui/core/ClickAwayListener"
-import { blue } from "@material-ui/core/colors"
+import { blue, deepPurple } from "@material-ui/core/colors"
 import Divider from "@material-ui/core/Divider"
 import ListSubheader from "@material-ui/core/ListSubheader"
 import { PopperPlacementType } from "@material-ui/core/Popper"
@@ -97,7 +97,9 @@ export const DeckOrCardSearchSuggest = withRouter(observer((props: DeckSearchSug
 
     }
     let backgroundColor
-    if (!themeStore.altColors) {
+    if (themeStore.altColors) {
+        backgroundColor = themeStore.darkMode ? deepPurple[700] : deepPurple[500]
+    } else {
         backgroundColor = themeStore.darkMode ? blue[700] : blue[400]
     }
     return (

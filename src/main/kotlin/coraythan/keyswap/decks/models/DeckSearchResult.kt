@@ -59,7 +59,6 @@ data class DeckSearchResult(
 
     val forSale: Boolean? = null,
     val forTrade: Boolean? = null,
-    val forAuction: Boolean? = null,
     val wishlistCount: Int? = null,
     val funnyCount: Int? = null,
 
@@ -86,13 +85,11 @@ data class DeckSearchResult(
     fun printDeckSimple(saleInfo: DeckListing? = null): String {
 
         val buyItNow = saleInfo?.buyItNow
-        val highBid = saleInfo?.highestBid
         val highOffer = saleInfo?.highestOffer
         val currencySymbol = saleInfo?.currencySymbol
         val buyItNowMessage = if (buyItNow == null) "" else ", BIN: $currencySymbol$buyItNow"
 
         val forSaleMessage = when {
-            forAuction == true -> " • On Auction${if (highBid == null) "" else ", high bid: $currencySymbol$highBid"}$buyItNowMessage"
             forSale == true -> " • For Sale${if (highOffer == null) "" else ", high offer:  $currencySymbol$highOffer"}$buyItNowMessage"
             else -> ""
         }

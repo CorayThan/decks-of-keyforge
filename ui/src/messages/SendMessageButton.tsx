@@ -21,7 +21,7 @@ export const SendMessageButton = observer((props: {
     deckId?: number,
     deckName?: string,
     replyToId?: number,
-    color?: "primary" | undefined,
+    color?: "primary" | "secondary" | undefined,
     variant?: "outlined" | undefined,
     onSent?: () => void,
     style?: React.CSSProperties,
@@ -34,7 +34,7 @@ export const SendMessageButton = observer((props: {
     return (
         <>
             {replyToId == null ? (
-                <Button style={style} onClick={() => store.open = true} color={themeStore.darkMode ? "secondary" : color} variant={variant}>
+                <Button style={style} onClick={() => store.open = true} color={color} variant={variant}>
                     Send Message
                 </Button>
             ) : (
