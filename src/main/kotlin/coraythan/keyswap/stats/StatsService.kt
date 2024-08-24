@@ -3,26 +3,23 @@ package coraythan.keyswap.stats
 import coraythan.keyswap.*
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
-import coraythan.keyswap.config.Env
-import coraythan.keyswap.decks.DeckPageService
-import coraythan.keyswap.decks.DeckPageType
-import coraythan.keyswap.decks.Wins
-import coraythan.keyswap.decks.addWinsLosses
+import coraythan.keyswap.config.SchedulingConfig
+import coraythan.keyswap.decks.*
 import coraythan.keyswap.decks.models.DeckSasValuesSearchable
 import coraythan.keyswap.expansions.Expansion
-import coraythan.keyswap.expansions.activeExpansions
+import coraythan.keyswap.expansions.includeInGlobalStats
 import coraythan.keyswap.sasupdate.SasVersionService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.users.CurrentUserService
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.roundToInt
 import kotlin.system.measureTimeMillis
 
-private const val lockStatsVersionUpdate = "PT72H"
-private const val lockUpdateStats = "PT20S"
+private const val lockUpdateStats = "PT10M"
 private const val statsUpdateQuantity = 10000L
 
 @Transactional
@@ -33,8 +30,6 @@ class StatsService(
     private val deckStatisticsRepo: DeckStatisticsRepo,
     private val deckPageService: DeckPageService,
     private val sasVersionService: SasVersionService,
-    @Value("\${env}")
-    private val env: Env,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -105,18 +100,8 @@ class StatsService(
         """.trimIndent()
     }
 
-    //    @Scheduled(fixedDelayString = "PT1H", initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
-//    @SchedulerLock(
-//        name = "updateStatisticsVersion",
-//        lockAtLeastFor = lockStatsVersionUpdate,
-//        lockAtMostFor = lockStatsVersionUpdate
-//    )
+    // Can start manually, or is triggered automatically after SAS Update is complete
     fun startNewDeckStats(): String {
-
-        if (env == Env.qa) {
-            log.info("QA environment, skip stats.")
-            return "QA, no stats updates"
-        }
 
         try {
 
@@ -138,7 +123,7 @@ class StatsService(
                     DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
                         .copy(version = mostRecentVersion.version + 1)
                 )
-                Expansion.realExpansionValues().forEach {
+                Expansion.entries.forEach {
                     deckStatisticsRepo.save(
                         DeckStatisticsEntity.fromDeckStatistics(DeckStatistics())
                             .copy(version = mostRecentVersion.version + 1, expansion = it)
@@ -160,14 +145,16 @@ class StatsService(
         }
     }
 
-    //    @Scheduled(fixedDelayString = lockUpdateStats, initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
-//    @SchedulerLock(name = "updateStatistics", lockAtLeastFor = lockUpdateStats, lockAtMostFor = lockUpdateStats)
+    @Scheduled(fixedDelayString = lockUpdateStats, initialDelayString = SchedulingConfig.newDeckStatsInitialDelay)
+    @SchedulerLock(name = "updateStatistics", lockAtLeastFor = lockUpdateStats, lockAtMostFor = lockUpdateStats)
     fun updateStatsForDecks() {
         try {
 
             if (!updateStats) return
 
             log.info("$scheduledStart update stats for decks.")
+
+            var currentPage: Int? = null
 
             val millisTaken = measureTimeMillis {
 
@@ -183,9 +170,10 @@ class StatsService(
                     }
 
                     else -> {
-                        val currentPage = deckPageService.findCurrentPage(DeckPageType.STATS)
+                        val localPage = deckPageService.findCurrentPage(DeckPageType.STATS)
+                        currentPage = localPage
                         val deckResults =
-                            deckPageService.deckSasSearchableValuesForPage(currentPage, DeckPageType.STATS)
+                            deckPageService.deckSasSearchableValuesForPage(localPage, DeckPageType.STATS)
 
                         if (!deckResults.moreResults) {
                             updateStats = false
@@ -193,15 +181,25 @@ class StatsService(
                                 deckStatisticsRepo.save(it.copy(completeDateTime = now()))
                             }
                             updateCachedStats()
-                            log.info("Done updating deck stats! Final stats are: \n\n$stats\n\n")
+                            log.info("Done updating deck stats!")
                         }
 
-                        updateStats(statsWithVersion!!, deckResults.decks.filter { it.deck.expansionEnum.tournamentLegal })
-                        deckPageService.setCurrentPage(currentPage + 1, DeckPageType.STATS)
+                        updateStats(
+                            statsWithVersion!!,
+                            deckResults.decks
+                        )
+                        deckPageService.setCurrentPage(localPage + 1, DeckPageType.STATS)
                     }
                 }
             }
-            if (updateStats) log.info("$scheduledStop Took $millisTaken ms to update stats with $statsUpdateQuantity decks.")
+            if (updateStats) log.info(
+                "$scheduledStop Took $millisTaken ms to update stats with $statsUpdateQuantity " +
+                        "decks. Current page: $currentPage out of ${
+                            (DeckSearchService.deckCount ?: 1).div(
+                                statsUpdateQuantity
+                            )
+                        }"
+            )
         } catch (e: Throwable) {
             log.error("$scheduledException To update stats", e)
         }
@@ -218,10 +216,10 @@ class StatsService(
             }
 
             if (statsEntity.expansion == null) {
-                val datasToInclude = activeExpansions.map {
+                val datasToInclude = includeInGlobalStats.map {
                     AercData(0, it)
                 }.plus(
-                    activeExpansions.flatMap { expansion ->
+                    includeInGlobalStats.flatMap { expansion ->
                         expansion.houses.map {
                             AercData(0, expansion, it)
                         }

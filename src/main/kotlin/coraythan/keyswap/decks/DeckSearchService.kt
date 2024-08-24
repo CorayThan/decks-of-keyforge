@@ -53,8 +53,10 @@ class DeckSearchService(
     private val defaultFilters = DeckFilters()
     private val query = JPAQueryFactory(entityManager)
 
-    var deckCount: Long? = null
-    var deckCountByExpansion: Map<Expansion, Long>? = null
+    companion object {
+        var deckCount: Long? = null
+        var deckCountByExpansion: Map<Expansion, Long>? = null
+    }
 
     @Scheduled(
         fixedDelayString = lockCountDecks,

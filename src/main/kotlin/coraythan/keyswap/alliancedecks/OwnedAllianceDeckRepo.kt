@@ -10,6 +10,7 @@ interface OwnedAllianceDeckRepo : CrudRepository<OwnedAllianceDeck, Long> {
     fun findByDeckId(deckId: UUID): List<OwnedAllianceDeck>
     fun findByDeckIdAndTeamId(deckId: UUID, teamId: UUID): List<OwnedAllianceDeck>
     fun deleteByDeckIdAndOwnerId(deckId: UUID, ownerId: UUID)
+    fun findAllByOwnerId(ownerId: UUID): List<OwnedAllianceDeck>
 
     @Query("SELECT ownedAllianceDeck FROM OwnedAllianceDeck ownedAllianceDeck WHERE ownedAllianceDeck.deck.id = ?1 AND ownedAllianceDeck.owner.username IN ?2")
     fun findByDeckIdAndOwnedByIn(deckId: UUID, ownerUsernames: List<String>): List<OwnedAllianceDeck>

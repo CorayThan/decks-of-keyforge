@@ -1,9 +1,12 @@
 package coraythan.keyswap.publicapis
 
+import coraythan.keyswap.alliancedecks.AllianceDeckRepo
+import coraythan.keyswap.alliancedecks.OwnedAllianceDeckRepo
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.models.DeckSearchResult
+import coraythan.keyswap.decks.models.GenericDeck
 import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.userdeck.FavoritedDeckRepo
@@ -14,6 +17,7 @@ import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -22,9 +26,11 @@ class PublicApiService(
     private val currentUserService: CurrentUserService,
     private val keyUserRepo: KeyUserRepo,
     private val deckRepo: DeckRepo,
+    private val allianceDeckRepo: AllianceDeckRepo,
     private val statsService: StatsService,
     private val userDeckRepo: UserDeckRepo,
     private val ownedDeckRepo: OwnedDeckRepo,
+    private val ownedAllianceDeckRepo: OwnedAllianceDeckRepo,
     private val favoritedDeckRepo: FavoritedDeckRepo,
     private val funnyDeckRepo: FunnyDeckRepo,
     private val cardCache: DokCardCacheService,
@@ -60,6 +66,27 @@ class PublicApiService(
             }
     }
 
+    fun findMyAlliances(user: KeyUser): List<PublicMyDeckInfo> {
+
+        return ownedAllianceDeckRepo.findAllByOwnerId(user.id)
+            .map {
+                val cards = cardCache.cardsForDeck(it.deck)
+                val token = cardCache.tokenForDeck(it.deck)
+                val synergies = DeckSynergyService.fromDeckWithCards(it.deck, cards, token)
+
+                PublicMyDeckInfo(
+                    deck = it.deck.toDeckSearchResult(
+                        housesAndCards = cardCache.deckToHouseAndCards(it.deck),
+                        cards = cards,
+                        token = token,
+                        synergies = synergies,
+                        stats = statsService.cachedStats
+                    ),
+                    ownedByMe = true
+                )
+            }
+    }
+
     fun findDeckSimple(keyforgeId: String): DeckSearchResult? {
         if (keyforgeId.length != 36) {
             log.info("Request for deck with malformed id: $keyforgeId")
@@ -70,16 +97,16 @@ class PublicApiService(
             log.debug("Request for deck that doesn't exist $keyforgeId")
             return null
         }
-        val cards = cardCache.cardsForDeck(deck)
-        val token = cardCache.tokenForDeck(deck)
-        val synergies = DeckSynergyService.fromDeckWithCards(deck, cards, token)
-        return deck.toDeckSearchResult(
-            housesAndCards = cardCache.deckToHouseAndCards(deck),
-            cards = cards,
-            token = token,
-            synergies = synergies,
-            stats = statsService.findCurrentStats(),
-        )
+        return findDeckSimple(deck)
+    }
+
+    fun findAllianceDeckSimple(keyforgeId: UUID): DeckSearchResult? {
+        val deck = allianceDeckRepo.findByIdOrNull(keyforgeId)
+        if (deck == null) {
+            log.debug("Request for an alliance deck that doesn't exist {}", keyforgeId)
+            return null
+        }
+        return findDeckSimple(deck)
     }
 
     fun generateApiKey(): String {
@@ -93,6 +120,19 @@ class PublicApiService(
     fun userForApiKey(apiKey: String): KeyUser {
         return keyUserRepo.findByApiKey(apiKey)
             ?: throw BadRequestException("Your api key is invalid. Please generate a new one.")
+    }
+
+    private fun findDeckSimple(deck: GenericDeck): DeckSearchResult {
+        val cards = cardCache.cardsForDeck(deck)
+        val token = cardCache.tokenForDeck(deck)
+        val synergies = DeckSynergyService.fromDeckWithCards(deck, cards, token)
+        return deck.toDeckSearchResult(
+            housesAndCards = cardCache.deckToHouseAndCards(deck),
+            cards = cards,
+            token = token,
+            synergies = synergies,
+            stats = statsService.findCurrentStats(),
+        )
     }
 
 }

@@ -18,6 +18,7 @@ import coraythan.keyswap.users.KeyUserRepo
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 val maxApiRequests = 25
@@ -64,6 +65,17 @@ class PublicApiEndpoints(
     }
 
     @CrossOrigin
+    @GetMapping("/v1/alliance-decks/{id}")
+    fun findAllianceDeckSimple(@RequestHeader("Api-Key") apiKey: String, @PathVariable id: UUID): SimpleDeckResponse {
+
+        val publishedAercVersion = sasVersionService.findSasVersion()
+        this.rateLimit(apiKey)
+
+        val deck = publicApiService.findAllianceDeckSimple(id)
+        return SimpleDeckResponse(deck ?: Nothing(), publishedAercVersion)
+    }
+
+    @CrossOrigin
     @GetMapping("/v1/stats")
     fun findStats1(@RequestHeader("Api-Key") apiKey: String): DeckStatistics {
 
@@ -93,6 +105,15 @@ class PublicApiEndpoints(
         val user = publicApiService.userForApiKey(apiKey)
 
         return publicApiService.findMyDecks(user)
+    }
+
+    @CrossOrigin
+    @GetMapping("/v1/my-alliances")
+    fun findMyAlliances(@RequestHeader("Api-Key") apiKey: String): List<PublicMyDeckInfo> {
+        this.rateLimit(apiKey)
+        val user = publicApiService.userForApiKey(apiKey)
+
+        return publicApiService.findMyAlliances(user)
     }
 
     @CrossOrigin

@@ -6,6 +6,7 @@ import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
+import { themeStore } from "../../config/MuiConfig"
 
 interface WishlistDeckProps {
     deckId: number
@@ -42,6 +43,14 @@ export class FavoriteDeck extends React.Component<WishlistDeckProps> {
         } else {
             title = "Login to add decks to your favorites"
         }
+        let color: "primary" | "secondary" | undefined
+        if (wishlisted) {
+            if (themeStore.darkMode) {
+                color = "secondary"
+            } else {
+                color = "primary"
+            }
+        }
         return (
             <div style={{display: "flex", alignItems: "center"}}>
                 <Tooltip title={title}>
@@ -55,7 +64,7 @@ export class FavoriteDeck extends React.Component<WishlistDeckProps> {
                             disabled={!userDeckStore.userDecksLoaded()}
                             size={"small"}
                         >
-                            {wishlisted ? <FavoriteIcon color={"primary"}/> : <FavoriteIcon/>}
+                           <FavoriteIcon color={color}/>
                         </IconButton>
                     </div>
                 </Tooltip>

@@ -104,7 +104,9 @@ export class SellersAndDevs extends React.Component {
                         "2. I've included the version of SAS used. If possible, please cache or persist SAS scores until a new version is released.",
                         "The url to request deck info is:",
                         "https://decksofkeyforge.com/public-api/v3/decks/{deck-id-from-master-vault}",
-                        `You'll need to include the header "Api-Key: {your-api-key}`
+                        `You'll need to include the header "Api-Key: {your-api-key}`,
+                        "3. You may also make this request for Alliance decks. Perform the request as above, except with the request url:",
+                        "https://decksofkeyforge.com/public-api/v1/alliance-decks/{deck-id-from-dok}"
                     ]}/>
                 </AboutGridItem>
                 <AboutGridItem>
@@ -113,6 +115,8 @@ export class SellersAndDevs extends React.Component {
                         "Third party sites and tools may request their users' DoK API key. With it you can see the decks that user " +
                         "has listed as owned on DoK.",
                         "https://decksofkeyforge.com/public-api/v1/my-decks",
+                        "Or for alliance decks: ",
+                        "https://decksofkeyforge.com/public-api/v1/my-alliances",
                         `You'll need to include the header "Api-Key: {your-api-key}`
                     ]}/>
                 </AboutGridItem>

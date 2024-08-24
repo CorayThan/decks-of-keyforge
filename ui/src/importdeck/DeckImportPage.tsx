@@ -1,7 +1,7 @@
 import { Box, Card, TextField, Tooltip, Typography } from "@material-ui/core"
 import * as React from "react"
 import { useEffect, useState } from "react"
-import { spacing } from "../config/MuiConfig"
+import { spacing, themeStore } from "../config/MuiConfig"
 import { Routes } from "../config/Routes"
 import { Utils } from "../config/Utils"
 import { KeyButton } from "../mui-restyled/KeyButton"
@@ -98,6 +98,7 @@ export const DeckImportPage = observer(() => {
                         )}
                         <TextField
                             variant={"outlined"}
+                            color={themeStore.darkMode ? "secondary" : undefined}
                             label={"KeyForge Deck Id or URL"}
                             value={deckId}
                             onChange={(event) => setDeckId(event.target.value)}
@@ -116,7 +117,6 @@ export const DeckImportPage = observer(() => {
                                 <div>
                                     <LinkButton
                                         href={Routes.createTheoreticalDeck}
-                                        color={"primary"}
                                         style={{marginRight: spacing(2)}}
                                         disabled={!userStore.theoreticalDecksAllowed}
                                     >

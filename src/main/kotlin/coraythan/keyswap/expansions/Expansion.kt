@@ -119,7 +119,6 @@ enum class Expansion(
         fun forExpansionNumber(expansionNumber: Int?) = entries.find { it.expansionNumber == expansionNumber }
             ?: throw IllegalStateException("No expansion for number $expansionNumber")
 
-        fun realExpansionValues() = entries.filter { it.tournamentLegal }
         fun expansionsWithTokens() = entries.filter { it.hasTokens }
     }
 }
@@ -137,4 +136,17 @@ val activeExpansions = setOf(
     Expansion.MENAGERIE_2024,
     Expansion.VAULT_MASTERS_2024,
     Expansion.MARTIAN_CIVIL_WAR,
+)
+
+// Include Expansions which have had SAS scores created and are tournament legal
+val includeInGlobalStats = setOf(
+    Expansion.CALL_OF_THE_ARCHONS,
+    Expansion.AGE_OF_ASCENSION,
+    Expansion.WORLDS_COLLIDE,
+    Expansion.MASS_MUTATION,
+    Expansion.DARK_TIDINGS,
+    Expansion.WINDS_OF_EXCHANGE,
+    Expansion.VAULT_MASTERS_2023,
+    Expansion.GRIM_REMINDERS,
+    Expansion.VAULT_MASTERS_2024,
 )

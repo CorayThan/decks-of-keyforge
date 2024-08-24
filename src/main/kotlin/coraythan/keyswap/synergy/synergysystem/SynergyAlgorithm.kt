@@ -99,8 +99,13 @@ object DeckSynergyService {
 
         val cards: List<DokCardInDeck> = cardsNoToken
             .let {
-                if (token == null) it else it.plus(
-                    (0..(tokenValues?.tokensPerGame?.roundToInt() ?: 0)).map { token })
+                if (token == null) {
+                    it
+                } else {
+                    val tokenCards = (0..<((tokenValues?.tokensPerGame?.roundToInt() ?: 0))).map { token }
+                    it.plus(tokenCards)
+                }
+
             }
         val deckStats = DeckSynergyStats.createStats(deck, cards, tokenValues)
 

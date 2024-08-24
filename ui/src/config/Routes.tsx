@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Box, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
@@ -45,7 +45,7 @@ import { AgreeToTerms, TermsOfUse } from "../user/TermsOfUse"
 import { userStore } from "../user/UserStore"
 import { KeyLoaderBar } from "./KeyLoaderBar"
 import { LoggedInRoute } from "./LoggedInRoute"
-import { spacing } from "./MuiConfig"
+import { spacing, themeStore } from "./MuiConfig"
 import { serverStatusStore } from "./ServerStatusStore"
 import { ViewMyOldAllianceDecks } from "../importdeck/theoretical/ViewMyOldAllianceDecks"
 import { GamesSearchPage } from "../gamestracker/GamesSearchPage"
@@ -238,18 +238,33 @@ const KeyRouter = observer(() => {
 
     if (serverStatusStore.siteUpdating) {
         return (
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: spacing(4)
-            }}>
+            <Box
+                display={"flex"}
+                flexDirection={"column"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                mt={4}
+            >
                 <DokIcon height={80} style={{}}/>
-                <Typography variant={"h4"} style={{marginTop: spacing(2)}}>Site update in progress</Typography>
-                <Typography style={{marginTop: spacing(2)}}>Refresh this page to check if the update is
-                    complete.</Typography>
-            </div>
+                <Box
+                    mt={2}
+                    p={2}
+                    style={{borderRadius: 8, backgroundColor: themeStore.darkBackgroundColor}}
+                >
+                    <Typography
+                        variant={"h4"}
+                        color={"textPrimary"}
+                    >
+                        Site update in progress
+                    </Typography>
+                    <Typography
+                        style={{marginTop: spacing(2)}}
+                        color={"textSecondary"}
+                    >
+                        Refresh this page to check if the update is complete.
+                    </Typography>
+                </Box>
+            </Box>
         )
     }
 

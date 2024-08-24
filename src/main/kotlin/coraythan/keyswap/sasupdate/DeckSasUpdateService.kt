@@ -12,6 +12,7 @@ import coraythan.keyswap.decks.DeckSasUpdatableValuesResult
 import coraythan.keyswap.decks.DeckSasValuesUpdatableRepo
 import coraythan.keyswap.decks.models.DeckSasValuesUpdatable
 import coraythan.keyswap.now
+import coraythan.keyswap.stats.StatsService
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.users.CurrentUserService
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
@@ -19,6 +20,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
+import kotlin.concurrent.schedule
 import kotlin.system.measureTimeMillis
 
 private const val lockUpdateRatings = "PT10S"
@@ -38,6 +41,7 @@ class DeckSasUpdateService(
     private val cardCache: DokCardCacheService,
     private val allianceDeckRepo: AllianceDeckRepo,
     private val currentUserService: CurrentUserService,
+    private val statsService: StatsService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -179,6 +183,11 @@ class DeckSasUpdateService(
                 sasVersionService.setUpdatingAndSasVersion(false, updatingSasVersion.version, false)
 
                 log.info("SAS Update: Complete! Switched from $updatingSasVersion to $updated")
+
+                Timer().schedule(10000) {
+                    log.info("Start new deck stats post SAS update")
+                    statsService.startNewDeckStats()
+                }
             }
         }
     }

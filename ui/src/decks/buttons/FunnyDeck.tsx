@@ -6,6 +6,7 @@ import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { userDeckStore } from "../../userdeck/UserDeckStore"
+import { themeStore } from "../../config/MuiConfig"
 
 interface FunnyDeckProps {
     funnyCount: number
@@ -41,6 +42,14 @@ export class FunnyDeck extends React.Component<FunnyDeckProps> {
         } else {
             title = "Login to mark decks as funny"
         }
+        let color: "primary" | "secondary" | undefined
+        if (funny) {
+            if (themeStore.darkMode) {
+                color = "secondary"
+            } else {
+                color = "primary"
+            }
+        }
         return (
             <div style={{display: "flex", alignItems: "center"}}>
                 <Tooltip title={title}>
@@ -54,7 +63,7 @@ export class FunnyDeck extends React.Component<FunnyDeckProps> {
                             disabled={!userDeckStore.userDecksLoaded()}
                             size={"small"}
                         >
-                            {funny ? <TagFacesIcon color={"primary"}/> : <TagFacesIcon/>}
+                            <TagFacesIcon color={color}/>
                         </IconButton>
                     </div>
                 </Tooltip>

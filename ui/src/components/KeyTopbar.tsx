@@ -196,8 +196,11 @@ class KeyTopbarPlain extends React.Component<KeyTopbarProps> {
             menuContents = (
                 <>
                     {uiStore.displayBack && (
-                        <IconButton onClick={this.props.history.goBack} style={{marginRight: spacing(1)}}
-                                    color={"inherit"}>
+                        <IconButton
+                            onClick={this.props.history.goBack}
+                            style={{marginRight: spacing(1)}}
+                            color={"inherit"}
+                        >
                             <ArrowBack color={"inherit"}/>
                         </IconButton>
                     )}

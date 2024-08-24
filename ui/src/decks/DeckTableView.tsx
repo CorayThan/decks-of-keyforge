@@ -250,7 +250,7 @@ export class DeckTableView extends React.Component<DeckListViewProps> {
                             noStyle={true}
                             style={{marginRight: spacing(2)}}
                         >
-                            <KeyButton color={"primary"} size={"small"}>View Deck</KeyButton>
+                            <KeyButton size={"small"}>View Deck</KeyButton>
                         </KeyLink>
                         <MoreDeckActions deck={deck} compact={true}/>
                     </div>

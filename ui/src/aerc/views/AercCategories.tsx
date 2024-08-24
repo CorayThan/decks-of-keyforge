@@ -310,7 +310,8 @@ const expansionSpecificCounts = (props: AercCatProps, width: number | undefined)
         }
     }
 
-    if (deck.expansion === Expansion.WINDS_OF_EXCHANGE || deck.expansion === Expansion.UNCHAINED_2022 || deck.expansion === Expansion.MENAGERIE_2024) {
+    if (deck.expansion === Expansion.WINDS_OF_EXCHANGE || deck.expansion === Expansion.UNCHAINED_2022
+        || deck.expansion === Expansion.MENAGERIE_2024 || deck.expansion === Expansion.MARTIAN_CIVIL_WAR) {
 
         const makesTokensFakeCombos = cards
             .map(card => {

@@ -27,7 +27,7 @@ const topSas = new DeckFilters()
 
 const forSale = DeckFilters.forSale()
 const forTrade = new DeckFilters()
-forTrade.forSale = true
+forTrade.forTrade = true
 
 const worstSas = new DeckFilters()
 worstSas.sortDirection = SortDirection.ASC
@@ -118,8 +118,11 @@ export class LandingPage extends React.Component<{}> {
                             </ListSubheader>
                             <Box display={"flex"} flexWrap={"wrap"}>
                                 <DeckSearchLink name={"For Sale"} filters={forSale} style={{marginBottom: spacing(2)}}/>
-                                <DeckSearchLink name={"Trades"} filters={forTrade}
-                                                style={{marginBottom: spacing(2)}}/>
+                                <DeckSearchLink
+                                    name={"Trades"}
+                                    filters={forTrade}
+                                    style={{marginBottom: spacing(2)}}
+                                />
                             </Box>
 
                             <Divider/>
@@ -150,15 +153,15 @@ export class LandingPage extends React.Component<{}> {
                     <Box style={{flexGrow: 1}}>
 
                         {/*<AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>*/}
-                            {/*<Typography variant={"h5"} gutterBottom={true}>*/}
-                            {/*    Grim Reminders Quick Update*/}
-                            {/*</Typography>*/}
-                            {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
-                            {/*    Most of the planned technical improvements have been made, but I'm still working on*/}
-                            {/*    fixing up lingering issues from those improvements. Grim Reminders decks can now be*/}
-                            {/*    imported! But they will not have meaningful SAS scores for another couple weeks while*/}
-                            {/*    the team that helps build SAS scores works on scoring the new cards.*/}
-                            {/*</Typography>*/}
+                        {/*<Typography variant={"h5"} gutterBottom={true}>*/}
+                        {/*    Grim Reminders Quick Update*/}
+                        {/*</Typography>*/}
+                        {/*<Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
+                        {/*    Most of the planned technical improvements have been made, but I'm still working on*/}
+                        {/*    fixing up lingering issues from those improvements. Grim Reminders decks can now be*/}
+                        {/*    imported! But they will not have meaningful SAS scores for another couple weeks while*/}
+                        {/*    the team that helps build SAS scores works on scoring the new cards.*/}
+                        {/*</Typography>*/}
                         {/*</AnnouncementPaper>*/}
                         {screenStore.screenSizeSm() ? (
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>

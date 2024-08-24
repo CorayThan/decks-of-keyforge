@@ -15,18 +15,6 @@ export class ThemeStore {
     @observable
     altColors = window.localStorage.getItem(altColorsKey) === "true"
 
-    toggleMode = () => {
-        this.darkMode = !this.darkMode
-        window.localStorage.setItem(darkModeKey, this.darkMode ? "true" : "false")
-        updateTheme()
-    }
-
-    toggleColors = () => {
-        this.altColors = !this.altColors
-        window.localStorage.setItem(altColorsKey, this.altColors ? "true" : "false")
-        updateTheme()
-    }
-
     constructor() {
         makeObservable(this)
     }
@@ -167,39 +155,63 @@ export class ThemeStore {
         }
         return undefined
     }
+
+    toggleMode = () => {
+        this.darkMode = !this.darkMode
+        window.localStorage.setItem(darkModeKey, this.darkMode ? "true" : "false")
+        updateTheme()
+    }
+
+    toggleColors = () => {
+        this.altColors = !this.altColors
+        window.localStorage.setItem(altColorsKey, this.altColors ? "true" : "false")
+        updateTheme()
+    }
 }
 
 export const themeStore = new ThemeStore()
 
-const makeTheme = () => createMuiTheme({
-    palette: {
-        primary: themeStore.altColors ? deepPurple : blue,
-        secondary: themeStore.altColors ? {main: '#84ffff'} : amber,
-        type: themeStore.darkMode ? "dark" : "light",
-    },
-    typography: {
-        fontFamily: TextConfig.BODY,
-        h1: {
-            fontFamily: TextConfig.TITLE
-        },
-        h2: {
-            fontFamily: TextConfig.TITLE
-        },
-        h3: {
-            fontFamily: TextConfig.TITLE
-        },
-        h4: {
-            fontFamily: TextConfig.TITLE
-        },
-        h5: {
-            fontFamily: TextConfig.TITLE
-        },
-    },
-    zIndex: {
-        tooltip: screenStore.zindexes.tooltip,
-        modal: screenStore.zindexes.modals
+const makeTheme = () => {
+
+    let themeColorMetaTag: string
+    if (themeStore.altColors) {
+        themeColorMetaTag = themeStore.darkMode ? deepPurple[800] : deepPurple[500]
+    } else {
+        themeColorMetaTag = themeStore.darkMode ? blue[800] : blue[500]
     }
-})
+
+    document.querySelector("meta[name=\"theme-color\"]")?.setAttribute("content", themeColorMetaTag)
+
+    return createMuiTheme({
+        palette: {
+            primary: themeStore.altColors ? deepPurple : blue,
+            secondary: themeStore.altColors ? {main: "#84ffff"} : amber,
+            type: themeStore.darkMode ? "dark" : "light",
+        },
+        typography: {
+            fontFamily: TextConfig.BODY,
+            h1: {
+                fontFamily: TextConfig.TITLE
+            },
+            h2: {
+                fontFamily: TextConfig.TITLE
+            },
+            h3: {
+                fontFamily: TextConfig.TITLE
+            },
+            h4: {
+                fontFamily: TextConfig.TITLE
+            },
+            h5: {
+                fontFamily: TextConfig.TITLE
+            },
+        },
+        zIndex: {
+            tooltip: screenStore.zindexes.tooltip,
+            modal: screenStore.zindexes.modals
+        }
+    })
+}
 
 export let theme = makeTheme()
 
@@ -208,4 +220,3 @@ export const updateTheme = () => {
 }
 
 export const spacing = theme.spacing
-
