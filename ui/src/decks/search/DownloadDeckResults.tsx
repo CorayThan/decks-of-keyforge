@@ -3,7 +3,7 @@ import { GetApp } from "@material-ui/icons"
 import { makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import React, { useEffect, useState } from "react"
-import { spacing } from "../../config/MuiConfig"
+import { spacing, themeStore } from "../../config/MuiConfig"
 import { PatreonRewardsTier } from "../../generated-src/PatreonRewardsTier"
 import { CsvDownloadButton } from "../../generic/CsvDownloadButton"
 import { HelperText } from "../../generic/CustomTypographies"
@@ -65,7 +65,6 @@ export const DownloadDeckResults = observer((props: { filters: DeckFilters }) =>
                         </HelperText>
                         <KeyButton
                             variant={"outlined"}
-                            color={"primary"}
                             style={{marginRight: spacing(2)}}
                             disabled={!userStore.patron || deckStore.downloadingDecks || store.loading1000}
                             loading={deckStore.downloadingDecks && store.loading1000}
@@ -79,7 +78,6 @@ export const DownloadDeckResults = observer((props: { filters: DeckFilters }) =>
                         </KeyButton>
                         <KeyButton
                             variant={"outlined"}
-                            color={"primary"}
                             disabled={!userStore.patron || deckStore.downloadingDecks || store.loading5000}
                             loading={deckStore.downloadingDecks && store.loading5000}
                             onClick={() => {
@@ -113,7 +111,7 @@ export const DownloadDeckResults = observer((props: { filters: DeckFilters }) =>
                             )}
                             button={(
                                 <KeyButton
-                                    color={"primary"}
+                                    color={themeStore.darkMode ? "secondary" : "primary"}
                                     onClick={() => store.open = false}
                                     disabled={deckStore.downloadingDecks}
                                 >
