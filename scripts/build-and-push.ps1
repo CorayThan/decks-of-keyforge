@@ -20,7 +20,7 @@ cd ./docker
 
 docker build -t "keyswap:$VERSION" .
 
-aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 811687120814.dkr.ecr.us-west-2.amazonaws.com/decks-of-keyforge
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 811687120814.dkr.ecr.us-west-2.amazonaws.com
 
 docker tag "keyswap:$VERSION" 811687120814.dkr.ecr.us-west-2.amazonaws.com/decks-of-keyforge:$VERSION
 
