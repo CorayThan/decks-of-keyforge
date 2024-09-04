@@ -251,6 +251,27 @@ export class DeckUtils {
         const data = decks.map(deck => {
             const synergies = DeckUtils.synergiesRounded(deck)
             const enhancements = DeckUtils.calculateBonusIcons(deck)
+            const house1 = deck.housesAndCards[0]
+            const house2 = deck.housesAndCards[1]
+            const house3 = deck.housesAndCards[2]
+            let house1SAS = "House 1 missing"
+            let house2SAS = ""
+            let house3SAS = ""
+            let house1Cards = "House 1 missing"
+            let house2Cards = ""
+            let house3Cards = ""
+            if (house1 != null) {
+                house1SAS = DeckUtils.sasForHouse(synergies.synergyDetails!, undefined, house1.house).toString()
+                house1Cards = house1.cards.map(card => card.cardTitle).toString()
+            }
+            if (house2 != null) {
+                house2SAS = DeckUtils.sasForHouse(synergies.synergyDetails!, undefined, house2.house).toString()
+                house2Cards = house2.cards.map(card => card.cardTitle).toString()
+            }
+            if (house3 != null) {
+                house3SAS = DeckUtils.sasForHouse(synergies.synergyDetails!, undefined, house3.house).toString()
+                house3Cards = house3.cards.map(card => card.cardTitle).toString()
+            }
             return [
                 deck.name,
                 deck.housesAndCards.map(houseAndCards => houseAndCards.house),
@@ -271,9 +292,9 @@ export class DeckUtils {
                 synergies.disruption,
                 synergies.other,
 
-                DeckUtils.sasForHouse(synergies.synergyDetails!, undefined, deck.housesAndCards[0].house),
-                DeckUtils.sasForHouse(synergies.synergyDetails!, undefined, deck.housesAndCards[1].house),
-                DeckUtils.sasForHouse(synergies.synergyDetails!, undefined, deck.housesAndCards[2].house),
+                house1SAS,
+                house2SAS,
+                house3SAS,
 
                 deck.creatureCount,
                 deck.actionCount,
@@ -300,9 +321,9 @@ export class DeckUtils {
                 deck.forSale,
                 deck.forTrade,
                 DeckUtils.findPrice(deck),
-                deck.housesAndCards[0].cards.map(card => card.cardTitle),
-                deck.housesAndCards[1].cards.map(card => card.cardTitle),
-                deck.housesAndCards[2].cards.map(card => card.cardTitle),
+                house1Cards,
+                house2Cards,
+                house3Cards,
                 deck.wishlistCount,
                 deck.funnyCount,
                 `https://decksofkeyforge.com/decks/${deck.keyforgeId}`,
