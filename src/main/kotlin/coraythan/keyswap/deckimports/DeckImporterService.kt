@@ -98,8 +98,10 @@ class DeckImporterService(
                         if (decksToSaveCount < keyforgeApiDeckPageSize) {
                             deckImportingUpToDate = true
                             log.info(
-                                "Stopped getting decks, decks to save was $decksToSaveCount, added was ${results.size} < $keyforgeApiDeckPageSize. Expansions: ${
-                                    decks.data.map { it.toDeck().expansionEnum }.toSortedSet()
+                                "Stopped getting decks. Found $decksToSaveCount in this page. Added ${results.size} < $keyforgeApiDeckPageSize new decks. Expansions: ${
+                                    decks.data.map { 
+                                        Expansion.forExpansionNumberNullable(it.expansion)?.toString() ?: "Unknown expansion with id: ${it.expansion}"
+                                    }.toSortedSet()
                                 }"
                             )
                             break

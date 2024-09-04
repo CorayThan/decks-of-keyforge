@@ -118,6 +118,7 @@ enum class Expansion(
     companion object {
         fun forExpansionNumber(expansionNumber: Int?) = entries.find { it.expansionNumber == expansionNumber }
             ?: throw IllegalStateException("No expansion for number $expansionNumber")
+        fun forExpansionNumberNullable(expansionNumber: Int?) = entries.find { it.expansionNumber == expansionNumber }
 
         fun expansionsWithTokens() = entries.filter { it.hasTokens }
     }

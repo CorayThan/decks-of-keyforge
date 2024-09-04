@@ -94,9 +94,15 @@ const DeckTopBannerCompact = (props: BannerProps) => {
     }
 
     return (
-        <Box>
+        <Box width={"100%"}>
             <DeckAllianceText deck={deck}/>
-            <DeckViewDeckName deck={deck} fake={fake} fullVersion={fullVersion}/>
+            <Box display={"flex"} flexGrow={"Grow"}>
+                <DeckViewDeckName deck={deck} fake={fake} fullVersion={fullVersion}/>
+                <Box flexGrow={1}/>
+                <Box ml={1}>
+                    <ExpansionIcon expansion={deck.expansion} white={true} size={32}/>
+                </Box>
+            </Box>
             <Box display={"flex"} alignItems={"flex-end"} mt={1}>
                 <Box>
                     <DeckSaleIcons deck={deck}/>
