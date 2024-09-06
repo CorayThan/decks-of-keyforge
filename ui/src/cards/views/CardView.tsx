@@ -36,6 +36,7 @@ interface CardViewProps {
 
 export const CardView = observer((props: CardViewProps) => {
     const {card, simple, noLink, combo, displayHistory, copies} = props
+
     if (simple) {
         return <CardSimpleView card={card}/>
     }
@@ -64,9 +65,9 @@ export const CardView = observer((props: CardViewProps) => {
 
     return (
         <GraySidebar {...sidebarProps} >
-            <div>
+            <Box>
                 <img alt={card.cardTitle} src={findCardImageUrl(card.cardTitleUrl)}/>
-            </div>
+            </Box>
             <div style={{padding: spacing(2), width: "100%"}}>
                 <Box display={"flex"} alignItems={"center"} maxWidth={sidebarProps.width}>
                     <CardQualityIcon quality={CardUtils.fakeRatingFromAerc(cardAerc)}/>

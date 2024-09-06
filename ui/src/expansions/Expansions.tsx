@@ -24,6 +24,7 @@ export enum ExpansionNumber {
     GR = 700,
     MN24 = 722,
     VM24 = 737,
+    AS = 800,
     MCW = 892,
 }
 
@@ -35,6 +36,7 @@ export const displayMyDecksLinksFor = [
     Expansion.DARK_TIDINGS,
     Expansion.WINDS_OF_EXCHANGE,
     Expansion.GRIM_REMINDERS,
+    Expansion.AEMBER_SKIES,
 ]
 
 export const activeExpansions = [
@@ -50,6 +52,7 @@ export const activeExpansions = [
     Expansion.UNCHAINED_2022,
     Expansion.MENAGERIE_2024,
     Expansion.MARTIAN_CIVIL_WAR,
+    Expansion.AEMBER_SKIES,
 ]
 
 export const activeSasExpansions = [
@@ -90,11 +93,12 @@ export const expansionsWithCards = [
     Expansion.VAULT_MASTERS_2024,
     Expansion.MENAGERIE_2024,
     Expansion.MARTIAN_CIVIL_WAR,
+    Expansion.AEMBER_SKIES,
 ]
 
 export const recentExpansions = [
+    Expansion.AEMBER_SKIES,
     Expansion.GRIM_REMINDERS,
-    Expansion.WINDS_OF_EXCHANGE,
     Expansion.MENAGERIE_2024,
     Expansion.VAULT_MASTERS_2024,
 ]
@@ -107,6 +111,7 @@ export const activeCardLinksExpansions = [
     Expansion.DARK_TIDINGS,
     Expansion.WINDS_OF_EXCHANGE,
     Expansion.GRIM_REMINDERS,
+    Expansion.AEMBER_SKIES,
 ]
 
 export const possibleCardExpansionsForExpansion = (exp: ExpansionNumber): ExpansionNumber[] => {
@@ -134,6 +139,7 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.GR, name: "Grim Reminders", abbreviation: "GR", backendEnum: Expansion.GRIM_REMINDERS},
     {expansionNumber: ExpansionNumber.MN24, name: "Menagerie", abbreviation: "MN24", backendEnum: Expansion.MENAGERIE_2024},
     {expansionNumber: ExpansionNumber.MCW, name: "Martian Civil War", abbreviation: "MCW", backendEnum: Expansion.MARTIAN_CIVIL_WAR},
+    {expansionNumber: ExpansionNumber.AS, name: "Aember Skies", abbreviation: "AS", backendEnum: Expansion.AEMBER_SKIES},
 ]
 
 export const activeExpansionInfos: ExpansionInfo[] = expansionInfos.filter(info => activeExpansions.includes(info.backendEnum))

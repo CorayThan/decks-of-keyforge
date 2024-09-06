@@ -41,7 +41,15 @@ export const minCardWinsToDisplay = 250
 export class CardUtils {
 
     static bonusIconCount = (card: SimpleCard): number => {
-        return (card.bonusAember ?? 0) + (card.bonusDamage ?? 0) + (card.bonusDraw ?? 0) + (card.bonusCapture ?? 0) + (card.bonusDiscard ?? 0)
+        return (card.bonusAember ?? 0) + (card.bonusDamage ?? 0) + (card.bonusDraw ?? 0) + (card.bonusCapture ?? 0)
+            + (card.bonusDiscard ?? 0)
+            + (card.bonusBobnar ? 1 : 0)
+            + (card.bonusDis ? 1 : 0)
+            + (card.bonusEkwidon ? 1 : 0)
+            + (card.bonusGeistoid ? 1 : 0)
+            + (card.bonusLogos ? 1 : 0)
+            + (card.bonusMars ? 1 : 0)
+            + (card.bonusSkyBorn ? 1 : 0)
     }
 
     static cardMatchesFriendlyTrait = (card: FrontendCard, trait: SynergyTrait): boolean => {
@@ -102,10 +110,6 @@ export class CardUtils {
         }
 
         return winRates
-    }
-
-    private static calcWinRate = (wins: number, losses: number) => {
-        return (wins / (wins + losses)) * 100
     }
 
     static fakeRatingFromAerc = (card: HasAerc) => {
@@ -209,5 +213,9 @@ export class CardUtils {
             "Flavor Text"
         ])
         return data
+    }
+
+    private static calcWinRate = (wins: number, losses: number) => {
+        return (wins / (wins + losses)) * 100
     }
 }

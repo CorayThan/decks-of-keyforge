@@ -72,7 +72,7 @@ class DeckImporterService(
                             }.contains(it.expansion)
                         }) {
 
-                        log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}. Request URL: ${keyforgeApi.findDecksRequestUrl(currentPage, withCards = true)}")
+                        log.info("Stopping deck import. Unknown expansion number among ${decks.data.map { it.expansion }}. Request URL: https://www.keyforgegame.com/api/decks/v2${keyforgeApi.findDecksRequestUrl(currentPage, withCards = true)}")
                         break
                     } else {
 

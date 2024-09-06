@@ -23,11 +23,32 @@ data class KeyForgeDeck(
     val bonus_icons: List<KeyForgeCardBonusIcons>? = null,
 ) {
 
+    companion object {
+        val existingBonusIcons = setOf(
+            "amber",
+            "capture",
+            "draw",
+            "damage",
+            "discard",
+            "brobnar",
+            "dis",
+            "ekwidon",
+            "geistoid",
+            "logos",
+            "mars",
+        )
+    }
+
     fun createBonusIconsInfo(houses: List<House>, cards: List<Card>): DeckBonusIcons {
         if (bonus_icons.isNullOrEmpty()) {
             return DeckBonusIcons(
                 bonusIconHouses = listOf()
             )
+        } else {
+            val allIcons = this.bonus_icons.flatMap { it.bonus_icons }.toSet()
+            if (allIcons.any { !existingBonusIcons.contains(it) }) {
+                throw RuntimeException("Found an unknown bonus icon among $allIcons for deck id $id")
+            }
         }
 
         val icons: MutableList<Pair<String, List<String>>> =
@@ -53,6 +74,13 @@ data class KeyForgeDeck(
                                     bonusDamage = iconsForCard.second.count { icon -> icon == "damage" },
                                     bonusDraw = iconsForCard.second.count { icon -> icon == "draw" },
                                     bonusDiscard = iconsForCard.second.count { icon -> icon == "discard" },
+                                    bonusBobnar = iconsForCard.second.any { icon -> icon == "brobnar" },
+                                    bonusDis = iconsForCard.second.any { icon -> icon == "dis" },
+                                    bonusEkwidon = iconsForCard.second.any { icon -> icon == "ekwidon" },
+                                    bonusGeistoid = iconsForCard.second.any { icon -> icon == "geistoid" },
+                                    bonusLogos = iconsForCard.second.any { icon -> icon == "logos" },
+                                    bonusMars = iconsForCard.second.any { icon -> icon == "mars" },
+                                    bonusSkyBorn = iconsForCard.second.any { icon -> icon == "skyBorn" },
                                 )
                             }
                         }

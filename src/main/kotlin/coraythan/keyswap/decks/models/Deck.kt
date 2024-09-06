@@ -282,6 +282,13 @@ data class BonusIconsCard(
     val bonusDamage: Int = 0,
     val bonusDraw: Int = 0,
     val bonusDiscard: Int = 0,
+    val bonusBobnar: Boolean = false,
+    val bonusDis: Boolean = false,
+    val bonusEkwidon: Boolean = false,
+    val bonusGeistoid: Boolean = false,
+    val bonusLogos: Boolean = false,
+    val bonusMars: Boolean = false,
+    val bonusSkyBorn: Boolean = false,
 )
 
 fun List<DokCardInDeck>.withBonusIcons(icons: DeckBonusIcons): List<DokCardInDeck> {
@@ -300,6 +307,13 @@ fun List<DokCardInDeck>.withBonusIcons(icons: DeckBonusIcons): List<DokCardInDec
                     bonusDamage = bonusIcons?.bonusDamage ?: 0,
                     bonusDraw = bonusIcons?.bonusDraw ?: 0,
                     bonusDiscard = bonusIcons?.bonusDiscard ?: 0,
+                    bonusBobnar = bonusIcons?.bonusBobnar ?: false,
+                    bonusDis = bonusIcons?.bonusDis ?: false,
+                    bonusEkwidon = bonusIcons?.bonusEkwidon ?: false,
+                    bonusGeistoid = bonusIcons?.bonusGeistoid ?: false,
+                    bonusLogos = bonusIcons?.bonusLogos ?: false,
+                    bonusMars = bonusIcons?.bonusMars ?: false,
+                    bonusSkyBorn = bonusIcons?.bonusSkyBorn ?: false,
                 )
             }
         }

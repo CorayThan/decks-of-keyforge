@@ -5,6 +5,13 @@ import EnhancedCapture from "../imgs/enhancements/enhanced-capture.png"
 import EnhancedDamage from "../imgs/enhancements/enhanced-damage.png"
 import EnhancedDraw from "../imgs/enhancements/enhanced-draw.png"
 import EnhancedDiscard from "../imgs/enhancements/enhanced-discard.png"
+import EnhancedBrobnar from "../../houses/imgs/brobnar.png"
+import EnhancedDis from "../../houses/imgs/dis.png"
+import EnhancedEkwidon from "../../houses/imgs/ekwidon.png"
+import EnhancedGeistoid from "../../houses/imgs/geistoid.png"
+import EnhancedLogos from "../../houses/imgs/logos.png"
+import EnhancedMars from "../../houses/imgs/mars.png"
+import EnhancedSkyBorn from "../../houses/imgs/keyraken.png"
 
 export const EnhancementIcon = (props: { type: EnhancementType }) => {
     let iconSrc
@@ -19,6 +26,20 @@ export const EnhancementIcon = (props: { type: EnhancementType }) => {
         iconSrc = EnhancedDraw
     } else if (props.type === EnhancementType.DISCARD) {
         iconSrc = EnhancedDiscard
+    } else if (props.type === EnhancementType.BROBNAR) {
+        iconSrc = EnhancedBrobnar
+    } else if (props.type === EnhancementType.DIS) {
+        iconSrc = EnhancedDis
+    } else if (props.type === EnhancementType.EKWIDON) {
+        iconSrc = EnhancedEkwidon
+    } else if (props.type === EnhancementType.GEISTOID) {
+        iconSrc = EnhancedGeistoid
+    } else if (props.type === EnhancementType.LOGOS) {
+        iconSrc = EnhancedLogos
+    } else if (props.type === EnhancementType.MARS) {
+        iconSrc = EnhancedMars
+    } else if (props.type === EnhancementType.SKY_BORN) {
+        iconSrc = EnhancedSkyBorn
     } else {
         throw new Error(`No enhancement icon for ${props.type}`)
     }

@@ -106,6 +106,11 @@ enum class Expansion(
             House.Untamed
         )
     ),
+    AEMBER_SKIES(
+        800,
+        "AS",
+        setOf(House.Brobnar, House.Dis, House.Ekwidon, House.Geistoid, House.Logos, House.Mars),
+    ),
     MARTIAN_CIVIL_WAR(
         892,
         "MCW",
@@ -137,6 +142,7 @@ val activeExpansions = setOf(
     Expansion.MENAGERIE_2024,
     Expansion.VAULT_MASTERS_2024,
     Expansion.MARTIAN_CIVIL_WAR,
+    Expansion.AEMBER_SKIES,
 )
 
 // Include Expansions which have had SAS scores created and are tournament legal

@@ -223,7 +223,7 @@ const CardLine = observer((props: CardAsLineProps & { fullCard: FrontendCard }) 
             {!hideRarity && <RarityIcon rarity={cardRarity}/>}
             <Typography
                 variant={"body2"}
-                style={{marginLeft: spacing(1), color: card.enhanced ? blue.A200 : undefined}}
+                style={{marginLeft: spacing(1), color: card.enhanced ? (themeStore.darkBackgroundColor ? blue.A100 : blue.A200) : undefined}}
                 noWrap={true}
             >
                 {card.cardTitle}
@@ -246,6 +246,27 @@ const CardLine = observer((props: CardAsLineProps & { fullCard: FrontendCard }) 
                     {[...Array(card.bonusDiscard ?? 0)].map((n, idx) => (
                         <EnhancementIcon type={EnhancementType.DISCARD} key={idx}/>
                     ))}
+                    {card.bonusBobnar && (
+                        <EnhancementIcon type={EnhancementType.BROBNAR}/>
+                    )}
+                    {card.bonusDis && (
+                        <EnhancementIcon type={EnhancementType.DIS}/>
+                    )}
+                    {card.bonusEkwidon && (
+                        <EnhancementIcon type={EnhancementType.EKWIDON}/>
+                    )}
+                    {card.bonusGeistoid && (
+                        <EnhancementIcon type={EnhancementType.GEISTOID}/>
+                    )}
+                    {card.bonusLogos && (
+                        <EnhancementIcon type={EnhancementType.LOGOS}/>
+                    )}
+                    {card.bonusMars && (
+                        <EnhancementIcon type={EnhancementType.MARS}/>
+                    )}
+                    {card.bonusSkyBorn && (
+                        <EnhancementIcon type={EnhancementType.SKY_BORN}/>
+                    )}
                 </Box>
             )}
             {card.anomaly ? (

@@ -119,6 +119,13 @@ export class DeckUtils {
             let enhancedDamage = 0
             let enhancedDraw = 0
             let enhancedDiscard = 0
+            let enhancedBrobnar = 0
+            let enhancedDis = 0
+            let enhancedEkwidon = 0
+            let enhancedGeistoid = 0
+            let enhancedLogos = 0
+            let enhancedMars = 0
+            let enhancedSkyBorn = 0
 
             const cards = deck.housesAndCards
                 .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
@@ -131,6 +138,13 @@ export class DeckUtils {
                 enhancedDamage += card.extraCardInfo.enhancementDamage
                 enhancedDraw += card.extraCardInfo.enhancementDraw
                 enhancedDiscard += card.extraCardInfo.enhancementDiscard
+                enhancedBrobnar += card.extraCardInfo.enhancementBrobnar ? 1 : 0
+                enhancedDis += card.extraCardInfo.enhancementDis ? 1 : 0
+                enhancedEkwidon += card.extraCardInfo.enhancementEkwidon ? 1 : 0
+                enhancedGeistoid += card.extraCardInfo.enhancementGeistoid ? 1 : 0
+                enhancedLogos += card.extraCardInfo.enhancementLogos ? 1 : 0
+                enhancedMars += card.extraCardInfo.enhancementMars ? 1 : 0
+                enhancedSkyBorn += card.extraCardInfo.enhancementSkyBorn ? 1 : 0
             })
 
             if (enhancedAmber + enhancedCapture + enhancedDamage + enhancedDraw + enhancedDiscard === 0) {
@@ -143,6 +157,13 @@ export class DeckUtils {
             enhancements.set(EnhancementType.DAMAGE, enhancedDamage)
             enhancements.set(EnhancementType.DRAW, enhancedDraw)
             enhancements.set(EnhancementType.DISCARD, enhancedDiscard)
+            enhancements.set(EnhancementType.BROBNAR, enhancedBrobnar)
+            enhancements.set(EnhancementType.DIS, enhancedDis)
+            enhancements.set(EnhancementType.EKWIDON, enhancedEkwidon)
+            enhancements.set(EnhancementType.GEISTOID, enhancedGeistoid)
+            enhancements.set(EnhancementType.LOGOS, enhancedLogos)
+            enhancements.set(EnhancementType.MARS, enhancedMars)
+            enhancements.set(EnhancementType.SKY_BORN, enhancedSkyBorn)
 
             return enhancements
         }
@@ -306,6 +327,13 @@ export class DeckUtils {
                 enhancements?.get(EnhancementType.DAMAGE) ?? 0,
                 enhancements?.get(EnhancementType.DRAW) ?? 0,
                 enhancements?.get(EnhancementType.DISCARD) ?? 0,
+                enhancements?.get(EnhancementType.BROBNAR) ?? 0,
+                enhancements?.get(EnhancementType.DIS) ?? 0,
+                enhancements?.get(EnhancementType.EKWIDON) ?? 0,
+                enhancements?.get(EnhancementType.GEISTOID) ?? 0,
+                enhancements?.get(EnhancementType.LOGOS) ?? 0,
+                enhancements?.get(EnhancementType.MARS) ?? 0,
+                enhancements?.get(EnhancementType.SKY_BORN) ?? 0,
 
                 deck.keyCheatCount,
                 deck.cardDrawCount,
@@ -367,6 +395,13 @@ export class DeckUtils {
             "Bonus Damage",
             "Bonus Draw",
             "Bonus Discard",
+            "Bonus Brobnar",
+            "Bonus Dis",
+            "Bonus Ekwidon",
+            "Bonus Geistoid",
+            "Bonus Logos",
+            "Bonus Mars",
+            "Bonus Sky Born",
 
             "Key Cheat Count",
             "Card Draw Count",
