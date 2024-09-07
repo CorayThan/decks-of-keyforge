@@ -13,10 +13,11 @@ enum class House(val masterVaultValue: String) {
     Keyraken("Keyraken"),
     Logos("Logos"),
     Mars("Mars"),
+    Redemption("Redemption"),
     Sanctum("Sanctum"),
     Saurian("Saurian"),
     Shadows("Shadows"),
-//    SkyBorn("Sky Born"),
+    Skyborn("Skyborn"),
     StarAlliance("Star Alliance"),
     Unfathomable("Unfathomable"),
     Untamed("Untamed");

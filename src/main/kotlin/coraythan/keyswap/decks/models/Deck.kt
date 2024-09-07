@@ -275,6 +275,7 @@ data class BonusIconHouse(
     val bonusIconCards: List<BonusIconsCard> = listOf(),
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class BonusIconsCard(
     val cardTitle: String,
     val bonusAember: Int = 0,
@@ -288,7 +289,7 @@ data class BonusIconsCard(
     val bonusGeistoid: Boolean = false,
     val bonusLogos: Boolean = false,
     val bonusMars: Boolean = false,
-    val bonusSkyBorn: Boolean = false,
+    val bonusSkyborn: Boolean = false,
 )
 
 fun List<DokCardInDeck>.withBonusIcons(icons: DeckBonusIcons): List<DokCardInDeck> {
@@ -313,7 +314,7 @@ fun List<DokCardInDeck>.withBonusIcons(icons: DeckBonusIcons): List<DokCardInDec
                     bonusGeistoid = bonusIcons?.bonusGeistoid ?: false,
                     bonusLogos = bonusIcons?.bonusLogos ?: false,
                     bonusMars = bonusIcons?.bonusMars ?: false,
-                    bonusSkyBorn = bonusIcons?.bonusSkyBorn ?: false,
+                    bonusSkyborn = bonusIcons?.bonusSkyborn ?: false,
                 )
             }
         }

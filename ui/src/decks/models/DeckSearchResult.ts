@@ -125,7 +125,7 @@ export class DeckUtils {
             let enhancedGeistoid = 0
             let enhancedLogos = 0
             let enhancedMars = 0
-            let enhancedSkyBorn = 0
+            let enhancedSkyborn = 0
 
             const cards = deck.housesAndCards
                 .flatMap(house => house.cards.map(simpleCard => cardStore.fullCardFromCardName(simpleCard.cardTitle)))
@@ -144,7 +144,7 @@ export class DeckUtils {
                 enhancedGeistoid += card.extraCardInfo.enhancementGeistoid ? 1 : 0
                 enhancedLogos += card.extraCardInfo.enhancementLogos ? 1 : 0
                 enhancedMars += card.extraCardInfo.enhancementMars ? 1 : 0
-                enhancedSkyBorn += card.extraCardInfo.enhancementSkyBorn ? 1 : 0
+                enhancedSkyborn += card.extraCardInfo.enhancementSkyborn ? 1 : 0
             })
 
             if (enhancedAmber + enhancedCapture + enhancedDamage + enhancedDraw + enhancedDiscard === 0) {
@@ -163,7 +163,7 @@ export class DeckUtils {
             enhancements.set(EnhancementType.GEISTOID, enhancedGeistoid)
             enhancements.set(EnhancementType.LOGOS, enhancedLogos)
             enhancements.set(EnhancementType.MARS, enhancedMars)
-            enhancements.set(EnhancementType.SKY_BORN, enhancedSkyBorn)
+            enhancements.set(EnhancementType.SKYBORN, enhancedSkyborn)
 
             return enhancements
         }
@@ -333,7 +333,7 @@ export class DeckUtils {
                 enhancements?.get(EnhancementType.GEISTOID) ?? 0,
                 enhancements?.get(EnhancementType.LOGOS) ?? 0,
                 enhancements?.get(EnhancementType.MARS) ?? 0,
-                enhancements?.get(EnhancementType.SKY_BORN) ?? 0,
+                enhancements?.get(EnhancementType.SKYBORN) ?? 0,
 
                 deck.keyCheatCount,
                 deck.cardDrawCount,
@@ -401,7 +401,7 @@ export class DeckUtils {
             "Bonus Geistoid",
             "Bonus Logos",
             "Bonus Mars",
-            "Bonus Sky Born",
+            "Bonus Skyborn",
 
             "Key Cheat Count",
             "Card Draw Count",

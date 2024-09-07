@@ -14,7 +14,7 @@ import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 import { DokLink } from "../generic/DokLink"
 
-export const latestVersion = "7.1"
+export const latestVersion = "7.2"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -46,6 +46,20 @@ export class ReleaseNotes extends React.Component {
                     </Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"7.2"}
+                    date={"9/6/2024"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Adding Aember Skies & Tokens of Change WIP",
+                            note: "We have a couple decks from each sets in the Master Vault, " +
+                                "so I'm gradually going to be " +
+                                "allowing these decks onto Decks of KeyForge. Card images will be added when " +
+                                "more decks and cards become available."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"7.1"}
                     date={"8/22/2024"}

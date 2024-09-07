@@ -31,7 +31,9 @@ enum class TokenCard(val cardTitle: String) {
     PRIEST("Priest"),
     RAIDER("Raider"),
     AEMBER_MUNCH("Æmber Munch"),
-    MINUTE_MARTIAN("Minutemartian");
+    MINUTE_MARTIAN("Minutemartian"),
+    STEPPE_WOLF("Steppe Wolf"),
+    SENTINEL("Sentinel");
 
     companion object {
         fun ordinalByCardTitle(cardTitle: String): Int {

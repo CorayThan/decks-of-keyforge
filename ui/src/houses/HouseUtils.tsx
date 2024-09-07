@@ -16,6 +16,8 @@ import shadowsImg from "./imgs/shadows.png"
 import starAllianceImg from "./imgs/star-alliance.png"
 import unfathomableImg from "./imgs/unfathomable.png"
 import untamedImg from "./imgs/untamed.png"
+import redemptionImg from "./imgs/redemption.png"
+import skybornImg from "./imgs/skyborn.png"
 import { SynergyCombo } from "../generated-src/SynergyCombo"
 import { AercForCombos } from "../aerc/AercForCombos"
 import { Box } from "@material-ui/core"
@@ -90,6 +92,16 @@ export const houseValuesArray: HouseValue[] = [
         house: House.IronyxRebels,
         img: rebelsImg,
         displayName: "Rebels"
+    },
+    {
+        house: House.Redemption,
+        img: redemptionImg,
+        displayName: "Redemption"
+    },
+    {
+        house: House.Skyborn,
+        img: skybornImg,
+        displayName: "Skyborn"
     },
 ]
     .map(value => {

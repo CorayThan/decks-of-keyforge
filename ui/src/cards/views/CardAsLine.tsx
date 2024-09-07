@@ -264,8 +264,8 @@ const CardLine = observer((props: CardAsLineProps & { fullCard: FrontendCard }) 
                     {card.bonusMars && (
                         <EnhancementIcon type={EnhancementType.MARS}/>
                     )}
-                    {card.bonusSkyBorn && (
-                        <EnhancementIcon type={EnhancementType.SKY_BORN}/>
+                    {card.bonusSkyborn && (
+                        <EnhancementIcon type={EnhancementType.SKYBORN}/>
                     )}
                 </Box>
             )}

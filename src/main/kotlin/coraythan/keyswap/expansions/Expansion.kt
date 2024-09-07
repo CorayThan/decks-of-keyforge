@@ -109,7 +109,13 @@ enum class Expansion(
     AEMBER_SKIES(
         800,
         "AS",
-        setOf(House.Brobnar, House.Dis, House.Ekwidon, House.Geistoid, House.Logos, House.Mars),
+        setOf(House.Brobnar, House.Dis, House.Ekwidon, House.Geistoid, House.Logos, House.Mars, House.Skyborn),
+    ),
+    TOKENS_OF_CHANGE(
+        855,
+        "ToC",
+        setOf(House.Logos, House.Redemption, House.Shadows, House.Skyborn, House.Untamed),
+        hasTokens = true,
     ),
     MARTIAN_CIVIL_WAR(
         892,
@@ -123,6 +129,7 @@ enum class Expansion(
     companion object {
         fun forExpansionNumber(expansionNumber: Int?) = entries.find { it.expansionNumber == expansionNumber }
             ?: throw IllegalStateException("No expansion for number $expansionNumber")
+
         fun forExpansionNumberNullable(expansionNumber: Int?) = entries.find { it.expansionNumber == expansionNumber }
 
         fun expansionsWithTokens() = entries.filter { it.hasTokens }
@@ -143,6 +150,7 @@ val activeExpansions = setOf(
     Expansion.VAULT_MASTERS_2024,
     Expansion.MARTIAN_CIVIL_WAR,
     Expansion.AEMBER_SKIES,
+    Expansion.TOKENS_OF_CHANGE
 )
 
 // Include Expansions which have had SAS scores created and are tournament legal

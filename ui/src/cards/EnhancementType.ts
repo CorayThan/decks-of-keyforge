@@ -11,5 +11,5 @@ export enum EnhancementType {
     GEISTOID = "GEISTOID",
     LOGOS = "LOGOS",
     MARS = "MARS",
-    SKY_BORN = "SKY_BORN",
+    SKYBORN = "SKYBORN",
 }

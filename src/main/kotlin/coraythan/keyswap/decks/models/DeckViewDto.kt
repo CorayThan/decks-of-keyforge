@@ -41,7 +41,7 @@ fun List<HouseAndCards>.addBonusIcons(bonusIcons: DeckBonusIcons): List<HouseAnd
                             bonusGeistoid = iconsForCard.bonusGeistoid,
                             bonusLogos = iconsForCard.bonusLogos,
                             bonusMars = iconsForCard.bonusMars,
-                            bonusSkyBorn = iconsForCard.bonusSkyBorn,
+                            bonusSkyborn = iconsForCard.bonusSkyborn,
                         )
                     }
                 }
@@ -72,5 +72,5 @@ data class SimpleCard(
     val bonusGeistoid: Boolean? = null,
     val bonusLogos: Boolean? = null,
     val bonusMars: Boolean? = null,
-    val bonusSkyBorn: Boolean? = null,
+    val bonusSkyborn: Boolean? = null,
 )

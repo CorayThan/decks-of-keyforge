@@ -29,6 +29,8 @@ import mcw from "./imgs/mcw.svg"
 import mcwDark from "./imgs/mcw-dark.svg"
 import as from "./imgs/as.svg"
 import asDark from "./imgs/as-dark.svg"
+import toc from "./imgs/toc.svg"
+import tocDark from "./imgs/toc-dark.svg"
 
 export const ExpansionIcon = observer((props: { expansion: Expansion, size?: number, white?: boolean, style?: React.CSSProperties }) => {
 
@@ -87,6 +89,10 @@ export const ExpansionIcon = observer((props: { expansion: Expansion, size?: num
         case Expansion.AEMBER_SKIES:
             lightSrc = as
             darkSrc = asDark
+            break
+        case Expansion.TOKENS_OF_CHANGE:
+            lightSrc = toc
+            darkSrc = tocDark
             break
     }
     let src

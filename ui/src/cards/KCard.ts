@@ -49,7 +49,7 @@ export class CardUtils {
             + (card.bonusGeistoid ? 1 : 0)
             + (card.bonusLogos ? 1 : 0)
             + (card.bonusMars ? 1 : 0)
-            + (card.bonusSkyBorn ? 1 : 0)
+            + (card.bonusSkyborn ? 1 : 0)
     }
 
     static cardMatchesFriendlyTrait = (card: FrontendCard, trait: SynergyTrait): boolean => {

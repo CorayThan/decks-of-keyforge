@@ -30,7 +30,7 @@ data class DokCardInDeck(
     val bonusGeistoid: Boolean = false,
     val bonusLogos: Boolean = false,
     val bonusMars: Boolean = false,
-    val bonusSkyBorn: Boolean = false,
+    val bonusSkyborn: Boolean = false,
 ) : Comparable<DokCardInDeck> {
     constructor(deck: GenericDeck, card: ExtraCardInfo, cardHouse: House, cardExpansion: Expansion) : this(
         card = card.dokCard,
@@ -52,7 +52,7 @@ data class DokCardInDeck(
 
     val enhanced: Boolean
         get() = bonusAember > 0 || bonusCapture > 0 || bonusDamage > 0 || bonusDraw > 0 || bonusDiscard > 0
-                || bonusBobnar || bonusDis || bonusEkwidon || bonusGeistoid || bonusLogos || bonusMars || bonusSkyBorn
+                || bonusBobnar || bonusDis || bonusEkwidon || bonusGeistoid || bonusLogos || bonusMars || bonusSkyborn
 
     val totalAmber: Int
         get() = this.bonusAember + this.card.amber
@@ -82,7 +82,7 @@ data class DokCardInDeck(
         bonusGeistoid = bonusGeistoid,
         bonusLogos = bonusLogos,
         bonusMars = bonusMars,
-        bonusSkyBorn = bonusSkyBorn,
+        bonusSkyborn = bonusSkyborn,
     )
 
 }

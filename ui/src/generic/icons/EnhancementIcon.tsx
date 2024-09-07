@@ -11,7 +11,7 @@ import EnhancedEkwidon from "../../houses/imgs/ekwidon.png"
 import EnhancedGeistoid from "../../houses/imgs/geistoid.png"
 import EnhancedLogos from "../../houses/imgs/logos.png"
 import EnhancedMars from "../../houses/imgs/mars.png"
-import EnhancedSkyBorn from "../../houses/imgs/keyraken.png"
+import EnhancedSkyborn from "../../houses/imgs/skyborn.png"
 
 export const EnhancementIcon = (props: { type: EnhancementType }) => {
     let iconSrc
@@ -38,8 +38,8 @@ export const EnhancementIcon = (props: { type: EnhancementType }) => {
         iconSrc = EnhancedLogos
     } else if (props.type === EnhancementType.MARS) {
         iconSrc = EnhancedMars
-    } else if (props.type === EnhancementType.SKY_BORN) {
-        iconSrc = EnhancedSkyBorn
+    } else if (props.type === EnhancementType.SKYBORN) {
+        iconSrc = EnhancedSkyborn
     } else {
         throw new Error(`No enhancement icon for ${props.type}`)
     }

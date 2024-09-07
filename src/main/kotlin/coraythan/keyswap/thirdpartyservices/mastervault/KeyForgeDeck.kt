@@ -80,7 +80,7 @@ data class KeyForgeDeck(
                                     bonusGeistoid = iconsForCard.second.any { icon -> icon == "geistoid" },
                                     bonusLogos = iconsForCard.second.any { icon -> icon == "logos" },
                                     bonusMars = iconsForCard.second.any { icon -> icon == "mars" },
-                                    bonusSkyBorn = iconsForCard.second.any { icon -> icon == "skyBorn" },
+                                    bonusSkyborn = iconsForCard.second.any { icon -> icon == "skyborn" },
                                 )
                             }
                         }
