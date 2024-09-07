@@ -1,6 +1,5 @@
 import { observer } from "mobx-react"
 import * as React from "react"
-import { memo } from "react"
 import { themeStore } from "../../config/MuiConfig"
 import { Rarity } from "../../generated-src/Rarity"
 import anomalyDark from "../imgs/anomaly-dark.svg"
@@ -19,6 +18,8 @@ import specialDark from "../imgs/special-dark.svg"
 import special from "../imgs/special.svg"
 import uncommonDark from "../imgs/uncommon-dark.svg"
 import uncommon from "../imgs/uncommon.svg"
+import { log } from "../../config/Utils"
+import { memo } from "react"
 
 export interface RarityValue {
     rarity: Rarity
@@ -89,9 +90,18 @@ export const rarityValues: Map<Rarity, RarityValue> = new Map(rarityValuesArray.
     [rarityValue.rarity, rarityValue] as [Rarity, RarityValue]
 )))
 
-export const RarityIcon = observer((props: { rarity: Rarity }) => {
-    const value = rarityValues.get(props.rarity)!
+export const RarityIcon = memo((props: { rarity: Rarity, darkMode: boolean }) => {
+    const value = rarityValues.get(props.rarity)
+    if (value == null) {
+        log.warn(`No rarity icon available for rarity ${props.rarity}`)
+        return (
+            <img
+                alt={props.rarity}
+                style={{width: 16, height: 16}}
+            />
+        )
+    }
     return (
-        <img alt={props.rarity} src={themeStore.darkMode ? value.imgDark : value.img} style={{width: 16, height: 16}}/>
+        <img alt={props.rarity} src={props.darkMode ? value.imgDark : value.img} style={{width: 16, height: 16}}/>
     )
 })

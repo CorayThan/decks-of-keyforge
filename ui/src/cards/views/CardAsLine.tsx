@@ -216,11 +216,15 @@ const CardLine = observer((props: CardAsLineProps & { fullCard: FrontendCard }) 
         ?? fullCard.expansions[0]?.rarity
     const enhanced = CardUtils.bonusIconCount(card) > 0
 
+    if (cardRarity == null && !hideRarity) {
+        log.warn(`Found null rarity for card ${card.cardTitle} in deck ${deck?.keyforgeId}`)
+    }
+
     return (
         <div
             style={{display: "flex", alignItems: "center", marginTop: props.marginTop, width: props.width}}
         >
-            {!hideRarity && <RarityIcon rarity={cardRarity}/>}
+            {!hideRarity && <RarityIcon rarity={cardRarity} darkMode={themeStore.darkMode}/>}
             <Typography
                 variant={"body2"}
                 style={{marginLeft: spacing(1), color: card.enhanced ? (themeStore.darkBackgroundColor ? blue.A100 : blue.A200) : undefined}}
