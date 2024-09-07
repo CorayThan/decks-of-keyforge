@@ -89,7 +89,7 @@ export const rarityValues: Map<Rarity, RarityValue> = new Map(rarityValuesArray.
     [rarityValue.rarity, rarityValue] as [Rarity, RarityValue]
 )))
 
-export const RarityIcon = memo((props: { rarity: Rarity }) => {
+export const RarityIcon = observer((props: { rarity: Rarity }) => {
     const value = rarityValues.get(props.rarity)!
     return (
         <img alt={props.rarity} src={themeStore.darkMode ? value.imgDark : value.img} style={{width: 16, height: 16}}/>

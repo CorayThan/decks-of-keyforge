@@ -41,6 +41,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object":  "^7.21.11",
     "@types/browser-image-compression": "^1.0.1",
     "@types/lodash": "^4.14.168",
     "@types/node": "^18.16.17",
