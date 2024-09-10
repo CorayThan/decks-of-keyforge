@@ -5,4 +5,5 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor
 
 interface DokCardRepo : JpaRepository<DokCard, Long>, QuerydslPredicateExecutor<DokCard> {
     fun findByCardTitleUrl(cardTitleUrl: String): DokCard?
+    fun existsByCardTitleUrl(cardTitleUrl: String): Boolean
 }

@@ -1,6 +1,8 @@
 package coraythan.keyswap.cards
 
+import coraythan.keyswap.cards.dokcards.DokCardRepo
 import coraythan.keyswap.cards.dokcards.DokCardUpdateService
+import coraythan.keyswap.cards.dokcards.toLegacyUrlFriendlyCardTitle
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfoRepo
 import coraythan.keyswap.config.BadRequestException
@@ -24,7 +26,8 @@ class CardService(
     private val versionService: CardsVersionService,
     private val keyforgeApi: KeyforgeApi,
     private val dokCardUpdateService: DokCardUpdateService,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
+    private val dokCardRepo: DokCardRepo
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -46,7 +49,10 @@ class CardService(
                 it != "37377d67-2916-4d45-b193-bea6ecd853e3"
             }
 
-            val newCardExists = cleanCards.any { !cardRepo.existsById(it) }
+            val newCardExists = cleanCards.any {
+                val card = cardRepo.findByIdOrNull(it)
+                card == null || !dokCardRepo.existsByCardTitleUrl(card.cardTitle.toLegacyUrlFriendlyCardTitle())
+            }
 
             if (newCardExists) {
                 val deckWithCards: KeyForgeDeckDto = if (mvDeck._linked.cards == null) {
