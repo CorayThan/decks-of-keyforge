@@ -1,5 +1,6 @@
 package coraythan.keyswap
 
+import coraythan.keyswap.cards.TokenService
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.synergy.FixSynergies
 import coraythan.keyswap.users.search.UserSearchService
@@ -14,12 +15,14 @@ class RunOnStart(
     private val cardCache: DokCardCacheService,
     private val fixSynergies: FixSynergies,
     private val userSearchService: UserSearchService,
+    private val tokenService: TokenService,
 ) : CommandLineRunner {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     override fun run(vararg args: String?) {
 
+        tokenService.loadTokens()
         cardCache.loadCards()
 
         fixSynergies.fix()

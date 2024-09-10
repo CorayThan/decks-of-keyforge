@@ -3,7 +3,6 @@ package coraythan.keyswap.thirdpartyservices.mastervault
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
-import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.decks.models.BonusIconHouse
 import coraythan.keyswap.decks.models.BonusIconsCard
 import coraythan.keyswap.decks.models.Deck
@@ -90,7 +89,7 @@ data class KeyForgeDeck(
         )
     }
 
-    fun toDeck(copyIntoDeck: Deck? = null, token: Card? = null): Deck {
+    fun toDeck(copyIntoDeck: Deck? = null, tokenId: Int? = null): Deck {
         val deck = copyIntoDeck?.copy(
             keyforgeId = id,
             name = name,
@@ -110,8 +109,8 @@ data class KeyForgeDeck(
                 losses = losses,
             )
 
-        return if (token != null) {
-            deck.copy(tokenNumber = DokCardCacheService.tokenIdFromName(token.cardTitle))
+        return if (tokenId != null) {
+            deck.copy(tokenNumber = tokenId)
         } else {
             deck
         }

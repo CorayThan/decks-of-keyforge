@@ -9,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.*
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.QDeckListing
+import coraythan.keyswap.cards.TokenService
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
@@ -47,6 +48,7 @@ class DeckSearchService(
     private val ownedDeckRepo: OwnedDeckRepo,
     private val ownedDeckService: OwnedDeckService,
     private val cardCache: DokCardCacheService,
+    private val tokenService: TokenService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
     private val defaultFilters = DeckFilters()
@@ -529,7 +531,7 @@ class DeckSearchService(
         if (filters.tokens.isNotEmpty()) {
             predicate.and(
                 deckQ.tokenNumber.`in`(
-                    *filters.tokens.map { DokCardCacheService.tokenIdFromName(it) }.toTypedArray()
+                    *filters.tokens.map { tokenService.cardTitleToTokenId(it) }.toTypedArray()
                 )
             )
         }

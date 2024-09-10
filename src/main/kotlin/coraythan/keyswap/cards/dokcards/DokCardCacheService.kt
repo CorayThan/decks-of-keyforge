@@ -29,7 +29,7 @@ class  DokCardCacheService(
     private val objectMapper: ObjectMapper,
     private val entityManager: EntityManager,
     private val extraCardInfoRepo: ExtraCardInfoRepo,
-    private val tokenRepo: TokenRepo,
+    private val tokenService: TokenService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -51,39 +51,6 @@ class  DokCardCacheService(
 
     private var loaded = false
 
-    companion object {
-        private val log = LoggerFactory.getLogger(this::class.java)
-        private val tokenIdsToNamesMap: MutableMap<Int, String> = mutableMapOf()
-        private val tokenNamesToIdsMap: MutableMap<String, Int> = mutableMapOf()
-
-        fun tokenNameFromId(id: Int): String {
-            val name = tokenIdsToNamesMap[id]
-            if (name == null) {
-                log.error("No token name registered for token id $id")
-                throw IllegalStateException("No token name registered for token id $id")
-            } else {
-                return name
-            }
-        }
-        fun tokenIdFromName(name: String): Int {
-            val id = tokenNamesToIdsMap[name]
-            if (id == null) {
-                log.error("No token id registered for token name $name")
-                throw IllegalStateException("No token id registered for token name $name")
-            } else {
-                return id
-            }
-        }
-        fun tokenIdFromNameNullable(name: String): Int? {
-            return tokenNamesToIdsMap[name]
-        }
-
-        fun addToken(id: Int, name: String) {
-            tokenIdsToNamesMap[id] = name
-            tokenNamesToIdsMap[name] = id
-        }
-    }
-
     @Transactional
     fun loadCards() {
         log.info("Begin loading cached cards.")
@@ -101,10 +68,6 @@ class  DokCardCacheService(
                 }
             }"
         )
-
-        tokenRepo.findAll().forEach {
-            addToken(it.id, it.cardTitle)
-        }
 
         cardsCachedByUrlName = currentInfos.map { extraInfo ->
             extraInfo.dokCard.cardTitleUrl to extraInfo
@@ -199,7 +162,7 @@ class  DokCardCacheService(
     fun tokenForDeck(deck: GenericDeck): DokCardInDeck? {
         if (!loaded) throw IllegalStateException("Site still loading cards")
         val deckTokenNum = deck.tokenNumber ?: return null
-        val token = tokenCards[tokenNameFromId(deckTokenNum).toLegacyUrlFriendlyCardTitle()] ?: return null
+        val token = tokenCards[tokenService.tokenIdToCardTitle(deckTokenNum).toLegacyUrlFriendlyCardTitle()] ?: return null
         return DokCardInDeck(
             card = token.dokCard,
             extraCardInfo = token,
@@ -309,7 +272,7 @@ class  DokCardCacheService(
     private fun futureTokenForDeck(deck: GenericDeck): DokCardInDeck? {
         if (!loaded) throw IllegalStateException("Site still loading cards")
         val deckTokenNum = deck.tokenNumber ?: return null
-        val token = futureTokenCards[tokenNameFromId(deckTokenNum).toLegacyUrlFriendlyCardTitle()] ?: return tokenForDeck(deck)
+        val token = futureTokenCards[tokenService.tokenIdToCardTitle(deckTokenNum).toLegacyUrlFriendlyCardTitle()] ?: return tokenForDeck(deck)
         return DokCardInDeck(
             card = token.dokCard,
             extraCardInfo = token,

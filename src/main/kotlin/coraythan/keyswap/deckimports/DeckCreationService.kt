@@ -102,6 +102,7 @@ class DeckCreationService(
 
         if (allHousesHave12 && badCard.size < 2) {
             val token = cardsListWithToken.firstOrNull { it.token }
+            val tokenId = if (token == null) null else tokenService.cardTitleToTokenId(token.cardTitle)
 
             val expansion = Expansion.forExpansionNumber(keyforgeDeck.expansion)
             val houses = keyforgeDeck._links?.houses?.mapNotNull { House.fromMasterVaultValue(it) }
@@ -111,7 +112,7 @@ class DeckCreationService(
 
             val bonusIconSimpleCards = keyforgeDeck.createBonusIconsInfo(houses, cardsList)
 
-            val deckToSave = keyforgeDeck.toDeck(updateDeck, token).withBonusIcons(bonusIconSimpleCards)
+            val deckToSave = keyforgeDeck.toDeck(updateDeck, tokenId).withBonusIcons(bonusIconSimpleCards)
 
             try {
                 val savedDeck = if (updateDeck != null) deckRepo.save(deckToSave) else saveDeck(
@@ -177,16 +178,7 @@ class DeckCreationService(
                 tokenNumber = if (tokenName == null) {
                     null
                 } else {
-                    val tokenId = DokCardCacheService.tokenIdFromNameNullable(tokenName)
-                    if (tokenId == null) {
-                        log.warn("Token $tokenName should exist in cached cards, but doesn't so make one instead. Deck ID: ${deck.keyforgeId}")
-                        // Weird token shouldn't be null but save a new one I guess
-                        val tokenCard = cardRepo.findFirstByCardTitleAndMaverickFalse(tokenName)
-                        // Returns ID of newly saved token
-                        tokenService.updateTokenCard(tokenCard)
-                    } else {
-                        tokenId
-                    }
+                    tokenService.cardTitleToTokenId(tokenName)
                 }
             )
 
@@ -213,7 +205,7 @@ class DeckCreationService(
             keyforgeId = UUID.randomUUID().toString(),
             name = deckBuilderData.name,
             expansion = deckBuilderData.expansion.expansionNumber,
-            tokenNumber = if (deckBuilderData.tokenTitle == null) null else DokCardCacheService.tokenIdFromName(deckBuilderData.tokenTitle),
+            tokenNumber = if (deckBuilderData.tokenTitle == null) null else tokenService.cardTitleToTokenId(deckBuilderData.tokenTitle),
         ) to cards
     }
 
