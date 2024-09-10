@@ -18,13 +18,11 @@ class DokCardUpdateService(
     private val dokCardUpdateDao: DokCardUpdateDao,
     private val s3Service: S3Service,
     private val restTemplate: RestTemplate,
-    private val tokenRepo: TokenRepo,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    fun createDoKCardsFromKCards(cards: List<Card>): CardsImportResults {
+    fun createDoKCardsFromKCards(cards: List<Card>): Boolean {
         var updatedCards = false
-        var updatedTokens = false
 
         cards.forEach { card ->
             val existingCard = dokCardRepo.findByCardTitleUrl(card.cardTitle.toLegacyUrlFriendlyCardTitle())
@@ -34,11 +32,6 @@ class DokCardUpdateService(
             } else if (existingCard == null) {
                 // Brand new card! Let's save it.
                 dokCardUpdateDao.saveDokCard(card.id)
-                if (card.token && !tokenRepo.existsByCardTitle(card.cardTitle)) {
-                    val token = tokenRepo.save(Token(card.cardTitle))
-                    DokCardCacheService.addToken(token.id, token.cardTitle)
-                    updatedTokens = true
-                }
                 updatedCards = true
             } else {
                 // Existing card. Let's update it if necessary
@@ -52,7 +45,7 @@ class DokCardUpdateService(
             }
             versionService.revVersion()
         }
-        return CardsImportResults(updatedCards, updatedTokens)
+        return updatedCards
     }
 
 //    suspend fun uploadAllCardsFromKFDecks() {

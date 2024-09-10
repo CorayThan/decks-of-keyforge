@@ -3,6 +3,7 @@ package coraythan.keyswap.patreon
 import com.patreon.PatreonOAuth
 import coraythan.keyswap.config.AppLinks
 import coraythan.keyswap.config.Env
+import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.keyforgeevents.KeyForgeEventService
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
@@ -23,29 +24,29 @@ import org.springframework.web.client.RestTemplate
 @Service
 @Transactional
 class PatreonService(
-        @Value("\${patreon-secret-key}")
-        private val patreonSecretKey: String,
-        @Value("\${patreon-client-id}")
-        private val patreonClientId: String,
-        @Value("\${env}")
-        private val env: Env,
-        private val restTemplate: RestTemplate,
-        private val currentUserService: CurrentUserService,
-        private val userRepo: KeyUserRepo,
-        private val patreonAccountRepo: PatreonAccountRepo,
-        private val appLinks: AppLinks,
-        private val keyForgeEventService: KeyForgeEventService,
+    @Value("\${patreon-secret-key}")
+    private val patreonSecretKey: String,
+    @Value("\${patreon-client-id}")
+    private val patreonClientId: String,
+    @Value("\${env}")
+    private val env: Env,
+    private val restTemplate: RestTemplate,
+    private val currentUserService: CurrentUserService,
+    private val userRepo: KeyUserRepo,
+    private val patreonAccountRepo: PatreonAccountRepo,
+    private val appLinks: AppLinks,
+    private val keyForgeEventService: KeyForgeEventService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private val patreonClient = PatreonOAuth(
-            patreonClientId,
-            patreonSecretKey,
-            appLinks.myProfileUrl
+        patreonClientId,
+        patreonSecretKey,
+        appLinks.myProfileUrl
     )
     private var topPatrons = listOf<String>()
 
-    @Scheduled(fixedDelayString = "PT3H")
+    @Scheduled(fixedDelayString = "PT3H", initialDelayString = SchedulingConfig.updatePatronsInitialDelay)
     fun refreshCreatorAccount() {
         log.info("$scheduledStart refresh patreon creator account.")
         try {
@@ -67,7 +68,7 @@ class PatreonService(
             }
 
             topPatrons = userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS)
-                    .map { it.username }
+                .map { it.username }
         } catch (e: Throwable) {
             log.error("$scheduledException Couldn't refresh creator account due to exception.", e)
         }
@@ -100,12 +101,12 @@ class PatreonService(
 
     fun savePatUser(patAccount: PatreonAccount, user: KeyUser) {
         val patreonUserResponse = restTemplate.exchange(
-                "https://www.patreon.com/api/oauth2/v2/identity",
-                HttpMethod.GET,
-                HttpEntity<Unit>(HttpHeaders().apply {
-                    setBearerAuth(patAccount.accessToken)
-                }),
-                PatreonUser::class.java
+            "https://www.patreon.com/api/oauth2/v2/identity",
+            HttpMethod.GET,
+            HttpEntity<Unit>(HttpHeaders().apply {
+                setBearerAuth(patAccount.accessToken)
+            }),
+            PatreonUser::class.java
         )
 
         val patreonUser = patreonUserResponse.body ?: throw RuntimeException("Didn't get a body from patreon request.")
@@ -129,11 +130,11 @@ class PatreonService(
         }
 
         val updatedAccount = preexistingAccount?.copy(
-                accessToken = account.accessToken,
-                refreshToken = account.refreshToken,
-                scope = account.scope,
-                tokenType = account.tokenType,
-                refreshedAt = account.refreshedAt
+            accessToken = account.accessToken,
+            refreshToken = account.refreshToken,
+            scope = account.scope,
+            tokenType = account.tokenType,
+            refreshedAt = account.refreshedAt
         ) ?: account
 
         return patreonAccountRepo.save(updatedAccount)
@@ -155,16 +156,17 @@ class PatreonService(
 
         val paging = if (nextPage == null) "" else "&page[cursor]=$nextPage"
 
-        val patreonMembersUrl = "https://www.patreon.com/api/oauth2/v2/campaigns/2412294/members?include=currently_entitled_tiers,user&fields[member]=lifetime_support_cents$paging"
+        val patreonMembersUrl =
+            "https://www.patreon.com/api/oauth2/v2/campaigns/2412294/members?include=currently_entitled_tiers,user&fields[member]=lifetime_support_cents$paging"
         // log.info("Start refreshing patreon with $patreonMembersUrl")
 
         val patreonCampaignResponse = restTemplate.exchange(
-                patreonMembersUrl,
-                HttpMethod.GET,
-                HttpEntity<Unit>(HttpHeaders().apply {
-                    setBearerAuth(token)
-                }),
-                PatreonCampaigns::class.java
+            patreonMembersUrl,
+            HttpMethod.GET,
+            HttpEntity<Unit>(HttpHeaders().apply {
+                setBearerAuth(token)
+            }),
+            PatreonCampaigns::class.java
         )
 
         val patreonCampaign = patreonCampaignResponse.body ?: throw RuntimeException("No body in patreon campaigns")
@@ -188,7 +190,8 @@ class PatreonService(
             val user = userRepo.findByPatreonId(patreonId)
             if (user != null && (user.patreonTier != bestTier || user.lifetimeSupportCents != lifetimeSupportCents)) {
                 log.info("Found patreon user to save: ${user.email}. Updating their tier to $bestTier and contribution to $lifetimeSupportCents.")
-                val storeName = if (bestTier.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION)) user.storeName else null
+                val storeName =
+                    if (bestTier.levelAtLeast(PatreonRewardsTier.SUPPORT_SOPHISTICATION)) user.storeName else null
                 userRepo.updatePatronTierAndLifetimeSupportCents(bestTier, lifetimeSupportCents, storeName, user.id)
                 keyForgeEventService.updatePromotedEventsForUser(user)
             }

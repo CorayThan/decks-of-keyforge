@@ -1,6 +1,5 @@
 package coraythan.keyswap.deckimports
 
-import coraythan.keyswap.config.SchedulingConfig
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
 import jakarta.persistence.Entity
@@ -8,7 +7,6 @@ import jakarta.persistence.Id
 import org.slf4j.LoggerFactory
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -24,7 +22,7 @@ class ImportSkippedDecksService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @Scheduled(fixedDelayString = "PT3M", initialDelayString = SchedulingConfig.postProcessDecksDelay)
+    //    @Scheduled(fixedDelayString = "PT3M", initialDelayString = SchedulingConfig.postProcessDecksDelay)
     fun processSkippedDecks() {
         log.info("$scheduledStart Process import skipped decks.")
 

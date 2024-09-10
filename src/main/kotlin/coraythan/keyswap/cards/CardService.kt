@@ -24,6 +24,7 @@ class CardService(
     private val versionService: CardsVersionService,
     private val keyforgeApi: KeyforgeApi,
     private val dokCardUpdateService: DokCardUpdateService,
+    private val tokenService: TokenService
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -34,7 +35,8 @@ class CardService(
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    fun importNewCardsForDeck(mvDeck: KeyForgeDeckDto): CardsImportResults {
+    fun importNewCardsForDeck(mvDeck: KeyForgeDeckDto): Boolean {
+        var updated = false
         if (!deckRepo.existsByKeyforgeId(mvDeck.data.id)) {
             val checkCards =
                 (mvDeck.data.cards ?: mvDeck.data._links?.cards)
@@ -43,6 +45,14 @@ class CardService(
                 // Skip stupid tide card
                 it != "37377d67-2916-4d45-b193-bea6ecd853e3"
             }
+
+            val tokens = mvDeck._linked.cards?.filter { it.rarity == "Token" } ?: listOf()
+
+            if (tokens.isNotEmpty()) {
+                val updatedToken = tokenService.updateTokens(tokens)
+                if (updatedToken) updated = true
+            }
+
             val newCardExists = cleanCards.any { !cardRepo.existsById(it) }
 
             if (newCardExists) {
@@ -53,13 +63,14 @@ class CardService(
                     mvDeck
                 }
 
-                return this.importNewCards(deckWithCards._linked.cards!!)
+                val updatedCard = this.importNewCards(deckWithCards._linked.cards!!)
+                if (updatedCard) updated = true
             }
         }
-        return CardsImportResults()
+        return updated
     }
 
-    private fun importNewCards(keyforgeApiCards: List<KeyForgeCard>): CardsImportResults {
+    private fun importNewCards(keyforgeApiCards: List<KeyForgeCard>): Boolean {
 
         val cards = keyforgeApiCards.mapNotNull { it.toCard() }
 
@@ -79,7 +90,7 @@ class CardService(
         log.info("Saved new MV Cards $savedMvCardNames")
 
         val updateResult = dokCardUpdateService.createDoKCardsFromKCards(cards)
-        if (updateResult.changed || updateResult.addedToken) {
+        if (updateResult) {
             versionService.revVersion()
         }
         return updateResult
@@ -142,8 +153,3 @@ class CardService(
     fun findByCardName(cardName: String) = cardRepo.findFirstByCardTitleAndMaverickFalse(cardName)
 
 }
-
-data class CardsImportResults(
-    val changed: Boolean = false,
-    val addedToken: Boolean = false,
-)

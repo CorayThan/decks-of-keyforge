@@ -52,11 +52,28 @@ class  DokCardCacheService(
     private var loaded = false
 
     companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
         private val tokenIdsToNamesMap: MutableMap<Int, String> = mutableMapOf()
         private val tokenNamesToIdsMap: MutableMap<String, Int> = mutableMapOf()
 
-        fun tokenNameFromId(id: Int) = tokenIdsToNamesMap[id]!!
-        fun tokenIdFromName(name: String) = tokenNamesToIdsMap[name]!!
+        fun tokenNameFromId(id: Int): String {
+            val name = tokenIdsToNamesMap[id]
+            if (name == null) {
+                log.error("No token name registered for token id $id")
+                throw IllegalStateException("No token name registered for token id $id")
+            } else {
+                return name
+            }
+        }
+        fun tokenIdFromName(name: String): Int {
+            val id = tokenNamesToIdsMap[name]
+            if (id == null) {
+                log.error("No token id registered for token name $name")
+                throw IllegalStateException("No token id registered for token name $name")
+            } else {
+                return id
+            }
+        }
 
         fun addToken(id: Int, name: String) {
             tokenIdsToNamesMap[id] = name
