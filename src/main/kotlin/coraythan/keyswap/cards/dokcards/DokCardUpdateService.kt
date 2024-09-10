@@ -22,8 +22,9 @@ class DokCardUpdateService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    fun createDoKCardsFromKCards(cards: List<Card>): Boolean {
+    fun createDoKCardsFromKCards(cards: List<Card>): CardsImportResults {
         var updatedCards = false
+        var updatedTokens = false
 
         cards.forEach { card ->
             val existingCard = dokCardRepo.findByCardTitleUrl(card.cardTitle.toLegacyUrlFriendlyCardTitle())
@@ -36,6 +37,7 @@ class DokCardUpdateService(
                 if (card.token && !tokenRepo.existsByCardTitle(card.cardTitle)) {
                     val token = tokenRepo.save(Token(card.cardTitle))
                     DokCardCacheService.addToken(token.id, token.cardTitle)
+                    updatedTokens = true
                 }
                 updatedCards = true
             } else {
@@ -50,7 +52,7 @@ class DokCardUpdateService(
             }
             versionService.revVersion()
         }
-        return updatedCards
+        return CardsImportResults(updatedCards, updatedTokens)
     }
 
 //    suspend fun uploadAllCardsFromKFDecks() {

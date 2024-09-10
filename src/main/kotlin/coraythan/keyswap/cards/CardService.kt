@@ -34,7 +34,7 @@ class CardService(
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    fun importNewCardsForDeck(mvDeck: KeyForgeDeckDto): Boolean {
+    fun importNewCardsForDeck(mvDeck: KeyForgeDeckDto): CardsImportResults {
         if (!deckRepo.existsByKeyforgeId(mvDeck.data.id)) {
             val checkCards =
                 (mvDeck.data.cards ?: mvDeck.data._links?.cards)
@@ -56,10 +56,10 @@ class CardService(
                 return this.importNewCards(deckWithCards._linked.cards!!)
             }
         }
-        return false
+        return CardsImportResults()
     }
 
-    private fun importNewCards(keyforgeApiCards: List<KeyForgeCard>): Boolean {
+    private fun importNewCards(keyforgeApiCards: List<KeyForgeCard>): CardsImportResults {
 
         val cards = keyforgeApiCards.mapNotNull { it.toCard() }
 
@@ -79,7 +79,7 @@ class CardService(
         log.info("Saved new MV Cards $savedMvCardNames")
 
         val updateResult = dokCardUpdateService.createDoKCardsFromKCards(cards)
-        if (updateResult) {
+        if (updateResult.changed || updateResult.addedToken) {
             versionService.revVersion()
         }
         return updateResult
@@ -142,3 +142,8 @@ class CardService(
     fun findByCardName(cardName: String) = cardRepo.findFirstByCardTitleAndMaverickFalse(cardName)
 
 }
+
+data class CardsImportResults(
+    val changed: Boolean = false,
+    val addedToken: Boolean = false,
+)

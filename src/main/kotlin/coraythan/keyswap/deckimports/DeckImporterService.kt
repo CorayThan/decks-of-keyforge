@@ -78,9 +78,18 @@ class DeckImporterService(
 
                         val decksToSaveCount = decks.data.count()
 
+                        var addedToken = false
+
                         // Import cards first, then save decks
                         decks.data.forEach {
-                            cardService.importNewCardsForDeck(KeyForgeDeckDto(it))
+                            val cards = KeyForgeDeckDto(it)
+                            val results = cardService.importNewCardsForDeck(cards)
+                            if (results.addedToken) addedToken = true
+                        }
+
+                        if (addedToken) {
+                            log.info("Added token, so ending deck imports before saving decks.")
+                            return
                         }
 
                         val results = deckCreationService.saveDecks(decks.data, saveForLater = true)
