@@ -1,11 +1,15 @@
 package coraythan.keyswap.thirdpartyservices
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.regions.Regions
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.s3.model.ObjectMetadata
-import com.amazonaws.services.s3.model.PutObjectRequest
+import aws.sdk.kotlin.runtime.auth.credentials.StaticCredentialsProvider
+import aws.sdk.kotlin.services.s3.S3Client
+import aws.sdk.kotlin.services.s3.model.DeleteObjectRequest
+import aws.sdk.kotlin.services.s3.model.HeadObjectRequest
+import aws.sdk.kotlin.services.s3.model.NotFound
+import aws.sdk.kotlin.services.s3.model.PutObjectRequest
+import aws.smithy.kotlin.runtime.auth.awscredentials.Credentials
+import aws.smithy.kotlin.runtime.content.ByteStream
+import aws.smithy.kotlin.runtime.http.engine.crt.CrtHttpEngine
+import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -14,27 +18,30 @@ import java.util.*
 
 @Service
 class S3Service(
-        @Value("\${aws-secret-key}")
-        private val awsSecretkey: String,
+    @Value("\${aws-secret-key}")
+    private val awsSecretkey: String,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     companion object {
         private const val userContentBucket = "dok-user-content"
+        private const val cardImagesBucket = "keyforge-card-images"
+        const val cardImagesFolder = "card-images-houses"
 
-        fun userContentUrl(key: String) = "${urlStart(userContentBucket)}$key"
-        private fun urlStart(bucket: String) = "https://$bucket.s3-us-west-2.amazonaws.com/"
+        fun userContentUrl(key: String) = "https://$userContentBucket.s3-us-west-2.amazonaws.com/$key"
     }
 
-    private val s3client = AmazonS3ClientBuilder
-            .standard()
-            .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials(
-                    "AKIAJDCMSGEGUEAQIVLQ",
-                    awsSecretkey
-            )))
-            .withRegion(Regions.US_WEST_2)
-            .build()
+    private fun s3Client(): S3Client = S3Client {
+        httpClient = CrtHttpEngine()
+        region = "us-west-2"
+        credentialsProvider = StaticCredentialsProvider(
+            credentials = Credentials(
+                accessKeyId = "AKIAJDCMSGEGUEAQIVLQ",
+                secretAccessKey = awsSecretkey
+            )
+        )
+    }
 
     fun addDeckImage(deckImage: MultipartFile, deckId: Long, userId: UUID, extension: String): String {
         return addImage(deckImage, "deck-ownership", "$deckId-$userId", extension)
@@ -56,29 +63,85 @@ class S3Service(
         return addImage(img, "teams", teamId.toString(), extension)
     }
 
-    fun deleteUserContent(key: String) {
-        s3client.deleteObject(
-                userContentBucket,
-                key
-        )
+    fun deleteUserContent(objKey: String) {
+        runBlocking {
+            s3Client().use { s3 ->
+                s3.deleteObject(DeleteObjectRequest {
+                    bucket = userContentBucket
+                    key = objKey
+                })
+            }
+        }
     }
 
-    private fun addImage(image: MultipartFile, folderName: String, details: String, extension: String? = null): String {
+    private fun cardObjKey(cardUrl: String) = "$cardImagesFolder/$cardUrl.png"
 
-        val key = "$folderName/$details-${UUID.randomUUID()}${if (extension.isNullOrBlank()) "" else ".$extension"}"
+    suspend fun checkIfCardImageExists(cardUrl: String): Boolean {
 
-        s3client.putObject(
-                PutObjectRequest(
-                        userContentBucket,
-                        key,
-                        image.inputStream,
-                        ObjectMetadata()
-                                .apply {
-                                    this.cacheControl = "max-age=31536000"
-                                    this.contentType = "image/jpeg"
-                                }
+        val objKey = cardObjKey(cardUrl)
+
+        var found = false
+
+        s3Client().use { s3 ->
+
+            try {
+                s3.headObject(HeadObjectRequest {
+                    bucket = cardImagesBucket
+                    key = objKey
+                })
+                log.debug("Already have card image for $cardUrl")
+                found = true
+            } catch (e: NotFound) {
+                log.debug("Found no image for $cardUrl so uploading it fresh!")
+                found = false
+            }
+        }
+        return found
+    }
+
+    suspend fun addCardImage(image: ByteArray, cardUrl: String) {
+
+        val objKey = cardObjKey(cardUrl)
+
+        s3Client().use { s3 ->
+
+            s3.putObject(PutObjectRequest {
+                bucket = cardImagesBucket
+                key = objKey
+                body = ByteStream.fromBytes(image)
+                metadata = mapOf(
+                    "Cache-Control" to "max-age=31536000",
+                    "Content-Type" to "image/png",
                 )
-        )
-        return key
+            })
+
+            log.debug("Uploaded image for: $cardUrl")
+        }
+    }
+
+    private fun addImage(
+        image: MultipartFile,
+        folderName: String,
+        details: String,
+        extension: String? = null
+    ): String {
+
+        val objKey = "$folderName/$details-${UUID.randomUUID()}${if (extension.isNullOrBlank()) "" else ".$extension"}"
+
+        runBlocking {
+            s3Client().use { s3 ->
+                s3.putObject(PutObjectRequest {
+                    bucket = userContentBucket
+                    key = objKey
+                    body = ByteStream.fromBytes(image.bytes)
+                    metadata = mapOf(
+                        "Cache-Control" to "max-age=31536000",
+                        "Content-Type" to "image/jpeg",
+                    )
+                })
+            }
+        }
+
+        return objKey
     }
 }

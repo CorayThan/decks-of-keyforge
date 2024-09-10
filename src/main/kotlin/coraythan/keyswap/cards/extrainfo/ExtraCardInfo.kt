@@ -7,6 +7,7 @@ import coraythan.keyswap.cards.CardNumberSetPair
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.FrontendCard
 import coraythan.keyswap.cards.dokcards.DokCard
+import coraythan.keyswap.cards.dokcards.cardUrlFull
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.now
@@ -285,11 +286,12 @@ data class ExtraCardInfo(
 
     fun toCardForFrontend(): FrontendCard {
         val card = dokCard
+        val firstHouse = card.houses.firstOrNull()
         return FrontendCard(
             id = card.id,
             houses = card.houses,
             cardTitle = card.cardTitle,
-            cardTitleUrl = card.cardTitleUrl,
+            cardTitleUrl = cardUrlFull(card.cardTitle, firstHouse, firstHouse == null),
             cardType = card.cardType,
             cardText = card.cardText ?: "",
             traits = card.traits,

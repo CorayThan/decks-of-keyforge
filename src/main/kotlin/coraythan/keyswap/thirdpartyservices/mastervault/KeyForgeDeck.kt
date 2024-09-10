@@ -3,7 +3,7 @@ package coraythan.keyswap.thirdpartyservices.mastervault
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.Card
-import coraythan.keyswap.cards.TokenCard
+import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.decks.models.BonusIconHouse
 import coraythan.keyswap.decks.models.BonusIconsCard
 import coraythan.keyswap.decks.models.Deck
@@ -36,6 +36,7 @@ data class KeyForgeDeck(
             "geistoid",
             "logos",
             "mars",
+            "skyborn"
         )
     }
 
@@ -110,7 +111,7 @@ data class KeyForgeDeck(
             )
 
         return if (token != null) {
-            deck.copy(tokenNumber = TokenCard.ordinalByCardTitle(token.cardTitle))
+            deck.copy(tokenNumber = DokCardCacheService.tokenIdFromName(token.cardTitle))
         } else {
             deck
         }

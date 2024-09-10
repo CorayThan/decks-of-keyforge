@@ -29,6 +29,7 @@ class  DokCardCacheService(
     private val objectMapper: ObjectMapper,
     private val entityManager: EntityManager,
     private val extraCardInfoRepo: ExtraCardInfoRepo,
+    private val tokenRepo: TokenRepo,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -50,6 +51,19 @@ class  DokCardCacheService(
 
     private var loaded = false
 
+    companion object {
+        private val tokenIdsToNamesMap: MutableMap<Int, String> = mutableMapOf()
+        private val tokenNamesToIdsMap: MutableMap<String, Int> = mutableMapOf()
+
+        fun tokenNameFromId(id: Int) = tokenIdsToNamesMap[id]!!
+        fun tokenIdFromName(name: String) = tokenNamesToIdsMap[name]!!
+
+        fun addToken(id: Int, name: String) {
+            tokenIdsToNamesMap[id] = name
+            tokenNamesToIdsMap[name] = id
+        }
+    }
+
     @Transactional
     fun loadCards() {
         log.info("Begin loading cached cards.")
@@ -68,6 +82,10 @@ class  DokCardCacheService(
             }"
         )
 
+        tokenRepo.findAll().forEach {
+            addToken(it.id, it.cardTitle)
+        }
+
         cardsCachedByUrlName = currentInfos.map { extraInfo ->
             extraInfo.dokCard.cardTitleUrl to extraInfo
         }.toMap()
@@ -80,7 +98,7 @@ class  DokCardCacheService(
         tokenCards = currentInfos
             .filter { it.dokCard.token }
             .map { extraInfo ->
-                extraInfo.dokCard.cardTitle to extraInfo
+                extraInfo.dokCard.cardTitleUrl to extraInfo
             }.toMap()
 
         previousCardsCachedByUrlName = previousInfos.map { extraInfo ->
@@ -99,7 +117,7 @@ class  DokCardCacheService(
         futureTokenCards = nextInfos
             .filter { it.dokCard.token }
             .map { extraInfo ->
-                extraInfo.dokCard.cardTitle to extraInfo
+                extraInfo.dokCard.cardTitleUrl to extraInfo
             }.toMap()
 
         frontendCardsMapPrevious = CardsMap(previousCardsCachedByUrlName.map { it.key to it.value.toCardForFrontend() }.toMap())
@@ -135,8 +153,8 @@ class  DokCardCacheService(
     }
 
     fun findByCardName(cardName: String) =
-        if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardName.toUrlFriendlyCardTitle()]
-            ?: error("No card for ${cardName.toUrlFriendlyCardTitle()}")
+        if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardName.toLegacyUrlFriendlyCardTitle()]
+            ?: error("No card for ${cardName.toLegacyUrlFriendlyCardTitle()}")
 
     fun findByCardNameUrlOrNull(cardNameUrl: String) =
         if (!loaded) throw IllegalStateException("Site still loading cards") else cardsCachedByUrlName[cardNameUrl]
@@ -161,7 +179,7 @@ class  DokCardCacheService(
     fun tokenForDeck(deck: GenericDeck): DokCardInDeck? {
         if (!loaded) throw IllegalStateException("Site still loading cards")
         val deckTokenNum = deck.tokenNumber ?: return null
-        val token = tokenCards[TokenCard.cardTitleFromOrdinal(deckTokenNum)] ?: return null
+        val token = tokenCards[tokenNameFromId(deckTokenNum).toLegacyUrlFriendlyCardTitle()] ?: return null
         return DokCardInDeck(
             card = token.dokCard,
             extraCardInfo = token,
@@ -224,7 +242,7 @@ class  DokCardCacheService(
                         .filter { it.house == house }
                         .sorted()
                         .map {
-                            it.toSimpleCard()
+                            it.toSimpleCard(house)
                         }
                 )
             }
@@ -271,7 +289,7 @@ class  DokCardCacheService(
     private fun futureTokenForDeck(deck: GenericDeck): DokCardInDeck? {
         if (!loaded) throw IllegalStateException("Site still loading cards")
         val deckTokenNum = deck.tokenNumber ?: return null
-        val token = futureTokenCards[TokenCard.cardTitleFromOrdinal(deckTokenNum)] ?: return tokenForDeck(deck)
+        val token = futureTokenCards[tokenNameFromId(deckTokenNum).toLegacyUrlFriendlyCardTitle()] ?: return tokenForDeck(deck)
         return DokCardInDeck(
             card = token.dokCard,
             extraCardInfo = token,

@@ -173,7 +173,7 @@ class DeckCreationService(
                 evilTwin = cardsList.any { it.isEvilTwin() },
                 houseNamesString = houses.sorted().joinToString("|"),
                 cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList)),
-                tokenNumber = if (tokenName == null) null else TokenCard.ordinalByCardTitle(tokenName)
+                tokenNumber = if (tokenName == null) null else DokCardCacheService.tokenIdFromName(tokenName)
             )
 
         check(saveable.cardIds.isNotBlank()) { "Can't save a deck without its card ids: $deck" }
@@ -199,7 +199,7 @@ class DeckCreationService(
             keyforgeId = UUID.randomUUID().toString(),
             name = deckBuilderData.name,
             expansion = deckBuilderData.expansion.expansionNumber,
-            tokenNumber = if (deckBuilderData.tokenTitle == null) null else TokenCard.ordinalByCardTitle(deckBuilderData.tokenTitle),
+            tokenNumber = if (deckBuilderData.tokenTitle == null) null else DokCardCacheService.tokenIdFromName(deckBuilderData.tokenTitle),
         ) to cards
     }
 

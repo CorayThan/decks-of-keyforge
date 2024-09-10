@@ -1,4 +1,4 @@
-import { CardUtils, findCardImageUrl } from "../KCard"
+import { CardUtils } from "../KCard"
 import { SynergyCombo } from "../../generated-src/SynergyCombo"
 import { ExtraCardInfo } from "../../generated-src/ExtraCardInfo"
 import { observer } from "mobx-react"
@@ -25,6 +25,7 @@ import { FrontendCard } from "../../generated-src/FrontendCard"
 
 interface CardViewProps {
     card: FrontendCard
+    cardUrl?: string
     simple?: boolean
     noLink?: boolean
     combo?: SynergyCombo
@@ -35,7 +36,7 @@ interface CardViewProps {
 }
 
 export const CardView = observer((props: CardViewProps) => {
-    const {card, simple, noLink, combo, displayHistory, copies} = props
+    const {card, cardUrl, simple, noLink, combo, displayHistory, copies} = props
 
     if (simple) {
         return <CardSimpleView card={card}/>
@@ -66,7 +67,7 @@ export const CardView = observer((props: CardViewProps) => {
     return (
         <GraySidebar {...sidebarProps} >
             <Box>
-                <img alt={card.cardTitle} src={findCardImageUrl(card.cardTitleUrl)}/>
+                <img alt={card.cardTitle} src={cardUrl ?? card.cardTitleUrl}/>
             </Box>
             <div style={{padding: spacing(2), width: "100%"}}>
                 <Box display={"flex"} alignItems={"center"} maxWidth={sidebarProps.width}>

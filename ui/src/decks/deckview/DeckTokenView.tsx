@@ -1,5 +1,4 @@
 import * as React from "react"
-import { findCardImageUrl } from "../../cards/KCard"
 
 export const deckTopTokenWidth = 88
 
@@ -14,7 +13,7 @@ export const DeckTokenView = (props: DeckTokenViewProps) => {
     return (
         <img
             alt={tokenNameUrl}
-            src={findCardImageUrl(tokenNameUrl)}
+            src={tokenNameUrl}
             style={{width: realWidth, height: (realWidth * 420) / 300}}
         />
     )

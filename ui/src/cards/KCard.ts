@@ -24,10 +24,6 @@ export const cardNameToCardNameKey = (name: string) => {
         .toLowerCase()
 }
 
-export const findCardImageUrl = (cardNameUrl: string) => {
-    return `https://keyforge-card-images.s3-us-west-2.amazonaws.com/card-imgs/${cardNameUrl}.png`
-}
-
 export interface CardWinRates {
     expansion?: Expansion
     winRatePercent?: number

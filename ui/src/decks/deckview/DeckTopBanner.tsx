@@ -43,7 +43,11 @@ const DeckTopBannerFull = (props: BannerProps) => {
             />
         )
     } else if (deck.expansion === Expansion.DARK_TIDINGS) {
-        specialCard = (<DeckTokenView tokenNameUrl={"tide-card"}/>)
+        specialCard = (
+            <DeckTokenView
+                tokenNameUrl={"https://keyforge-card-images.s3.us-west-2.amazonaws.com/card-images-houses/tide-card.png"}
+            />
+        )
     }
 
     return (

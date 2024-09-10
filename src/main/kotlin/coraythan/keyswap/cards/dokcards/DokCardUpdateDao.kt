@@ -66,7 +66,7 @@ class DokCardUpdateDao(
         var updated = false
         val card = cardRepo.findByIdOrNull(cardId) ?: throw IllegalStateException("No card for $cardId")
         cardWinsService.addWinsToCards(listOf(card))
-        val cardNameUrl = card.cardTitle.toUrlFriendlyCardTitle()
+        val cardNameUrl = card.cardTitle.toLegacyUrlFriendlyCardTitle()
 
         val existingCard = dokCardRepo.findByCardTitleUrl(cardNameUrl)
             ?: throw IllegalStateException("Updating Card: No DoK card for ${card.cardTitle}")

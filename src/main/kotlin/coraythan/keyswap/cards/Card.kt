@@ -2,7 +2,7 @@ package coraythan.keyswap.cards
 
 import coraythan.keyswap.House
 import coraythan.keyswap.cards.dokcards.DokCard
-import coraythan.keyswap.cards.dokcards.toUrlFriendlyCardTitle
+import coraythan.keyswap.cards.dokcards.toLegacyUrlFriendlyCardTitle
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.decks.Wins
 import coraythan.keyswap.expansions.Expansion
@@ -70,7 +70,7 @@ data class Card(
 
     fun toDoKCard(copyInto: DokCard? = null) = if (copyInto == null) DokCard(
         cardTitle = this.cardTitle,
-        cardTitleUrl = this.cardTitle.toUrlFriendlyCardTitle(),
+        cardTitleUrl = this.cardTitle.toLegacyUrlFriendlyCardTitle(),
         houses = if (this.maverick || this.anomaly) listOf() else listOf(this.house),
         cardType = this.cardType,
         amber = this.amber,
@@ -84,7 +84,7 @@ data class Card(
         traits = this.traits.toList(),
     ) else copyInto.copy(
         cardTitle = this.cardTitle,
-        cardTitleUrl = this.cardTitle.toUrlFriendlyCardTitle(),
+        cardTitleUrl = this.cardTitle.toLegacyUrlFriendlyCardTitle(),
         houses = if (this.maverick || this.anomaly) listOf() else listOf(this.house),
         cardType = this.cardType,
         amber = this.amber,

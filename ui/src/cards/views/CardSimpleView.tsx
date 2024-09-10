@@ -3,7 +3,6 @@ import { spacing } from "../../config/MuiConfig"
 import { Routes } from "../../config/Routes"
 import { SimpleCard } from "../../generated-src/SimpleCard"
 import { UnstyledLink } from "../../generic/UnstyledLink"
-import { findCardImageUrl } from "../KCard"
 
 interface CardSimpleViewProps {
     card: SimpleCard
@@ -20,7 +19,7 @@ export const CardSimpleView = (props: CardSimpleViewProps) => {
     const contents = (
         <img
             alt={props.card.cardTitle}
-            src={findCardImageUrl(props.card.cardTitleUrl)}
+            src={props.card.cardTitleUrl}
             style={{width, height: (width * 420) / 300, margin: spacing(2), ...props.style}}
         />
     )

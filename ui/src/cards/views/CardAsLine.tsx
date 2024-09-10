@@ -17,7 +17,7 @@ import { KeyButton } from "../../mui-restyled/KeyButton"
 import { screenStore } from "../../ui/ScreenStore"
 import { cardStore } from "../CardStore"
 import { EnhancementType } from "../EnhancementType"
-import { CardUtils, findCardImageUrl } from "../KCard"
+import { CardUtils } from "../KCard"
 import { AnomalyIcon, LegacyIcon, MaverickIcon, RarityIcon } from "../rarity/Rarity"
 import { CardSimpleView } from "./CardSimpleView"
 import { CardView } from "./CardView"
@@ -82,7 +82,7 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     {img ? (
                         <img
                             alt={card.cardTitle}
-                            src={findCardImageUrl(card.cardTitleUrl)}
+                            src={card.cardTitleUrl}
                             style={{width: realWidth, height: (realWidth * 420) / 300}}
                         />
                     ) : (
@@ -100,12 +100,15 @@ class CardAsLineSimple extends React.Component<CardAsLineProps> {
                     <DialogContent style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                         <CardSimpleView card={card} size={250} style={{margin: 4}}/>
                         <div style={{marginTop: spacing(2)}}>
-                            <AercForCard card={fullCard as FrontendCard}
-                                         realValue={findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)}/>
+                            <AercForCard
+                                card={fullCard as FrontendCard}
+                                realValue={findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)}
+                            />
                         </div>
                     </DialogContent>
                     <DialogActions style={{display: "flex", justifyContent: "center"}}>
-                        <KeyButton color={themeStore.darkMode ? "secondary" : "primary"} onClick={this.handleClose}>Close</KeyButton>
+                        <KeyButton color={themeStore.darkMode ? "secondary" : "primary"}
+                                   onClick={this.handleClose}>Close</KeyButton>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -155,6 +158,8 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
             log.info(`Found synergies for Berserker: ${prettyJson(synergies)}`)
         }
 
+        log.info(`Card URL is ${card.cardTitleUrl}`)
+
         return (
             <div
                 onWheel={this.handlePopoverClose}
@@ -165,7 +170,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 {img ? (
                     <img
                         alt={card.cardTitle}
-                        src={findCardImageUrl(card.cardTitleUrl)}
+                        src={card.cardTitleUrl}
                         style={{width: imgWidth, height: (imgWidth * 420) / 300}}
                     />
                 ) : (
@@ -190,6 +195,7 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
                 >
                     <CardView
                         card={fullCard}
+                        cardUrl={card.cardTitleUrl}
                         combo={synergies}
                         noLink={true}
                         copies={copies}
@@ -224,15 +230,17 @@ const CardLine = observer((props: CardAsLineProps & { fullCard: FrontendCard }) 
         <div
             style={{display: "flex", alignItems: "center", marginTop: props.marginTop, width: props.width}}
         >
-            {!hideRarity && <RarityIcon rarity={cardRarity} darkMode={themeStore.darkMode}/>}
+            {!hideRarity && cardRarity != null && <RarityIcon rarity={cardRarity} darkMode={themeStore.darkMode}/>}
             <Typography
                 variant={"body2"}
-                style={{marginLeft: spacing(1), color: card.enhanced ? (themeStore.darkBackgroundColor ? blue.A100 : blue.A200) : undefined}}
+                style={{
+                    marginLeft: spacing(1),
+                    color: card.enhanced ? (themeStore.darkBackgroundColor ? blue.A100 : blue.A200) : undefined
+                }}
                 noWrap={true}
             >
                 {card.cardTitle}
             </Typography>
-            {}
             {enhanced && (
                 <Box display={"flex"} ml={1}>
                     {[...Array(card.bonusAember ?? 0)].map((n, idx) => (

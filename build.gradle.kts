@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "coraythan"
-version = "614"
+version = "615"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -73,8 +73,10 @@ tasks.withType<Test> {
 dependencies {
 
     val queryDslVersion = "5.0.0"
-    val jjwtVersion = "0.12.2"
+    val jjwtVersion = "0.12.5"
     val shedlockVersion = "5.8.0"
+    val kotlinAwsSdkVersion = "1.0.41"
+    val smithyKotlinVersion = "1.0.10"
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -86,6 +88,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.9.1")
 
+    implementation("com.github.depsypher:pngtastic:1.7")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
     implementation("org.flywaydb:flyway-core")
@@ -94,7 +98,15 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("org.logback-extensions:logback-ext-loggly:0.1.5")
     implementation("com.patreon:patreon:0.4.2")
-    implementation("com.amazonaws:aws-java-sdk-s3:1.12.565")
+
+    implementation("aws.sdk.kotlin:s3:$kotlinAwsSdkVersion")
+    implementation("aws.sdk.kotlin:s3control:$kotlinAwsSdkVersion")
+    implementation("aws.sdk.kotlin:sts:$kotlinAwsSdkVersion")
+    implementation("aws.sdk.kotlin:secretsmanager:$kotlinAwsSdkVersion")
+    implementation("aws.smithy.kotlin:http-client-engine-crt:$smithyKotlinVersion")
+    implementation("aws.smithy.kotlin:aws-signing-crt:$smithyKotlinVersion")
+    implementation("aws.smithy.kotlin:http-auth-aws:$smithyKotlinVersion")
+
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")

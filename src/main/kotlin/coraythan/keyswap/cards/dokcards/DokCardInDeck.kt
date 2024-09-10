@@ -59,13 +59,13 @@ data class DokCardInDeck(
 
     fun toTokenInfo() = TokenInfo(
         name = card.cardTitle,
-        nameUrl = card.cardTitleUrl,
+        nameUrl = cardUrlFull(card.cardTitle, house),
         house = house,
     )
 
-    fun toSimpleCard() = SimpleCard(
+    fun toSimpleCard(house: House) = SimpleCard(
         cardTitle = card.cardTitle,
-        cardTitleUrl = card.cardTitleUrl,
+        cardTitleUrl = cardUrlFull(card.cardTitle, house, anomaly),
         rarity = rarity,
         maverick = maverick,
         anomaly = anomaly,

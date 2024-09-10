@@ -1,49 +1,19 @@
 package coraythan.keyswap.cards
 
-enum class TokenCard(val cardTitle: String) {
+import jakarta.persistence.*
+import org.springframework.data.repository.CrudRepository
 
-    BERSERKER("Berserker"),
-    WARRIOR("Warrior"),
-    SKIRMISHER("Skirmisher"),
-    GRUMPUS("Grumpus"),
-    STRANGE_SHELL("Strange Shell"),
-    DIPLOMAT("Diplomat"),
-    TRADER("Trader"),
-    PROSPECTOR("Prospector"),
-    BLORB("Blorb"),
-    GRUNT("Grunt"),
-    REBEL("Rebel"),
-    RESEARCHER("Researcher"),
-    DISCIPLE("Disciple"),
-    CLERIC("Cleric"),
-    DEFENDER("Defender"),
-    SQUIRE("Squire"),
-    BELLATORAN_WARRIOR("Bellatoran Warrior"),
-    SCHOLAR("Scholar"),
-    SENATOR("Senator"),
-    TROOPER("Trooper"),
-    AEMBERLING("Æmberling"),
-    CADET("Cadet"),
-    EXPLORER("Explorer"),
-    BOT("B0-T"),
-    CULTIST("Cultist"),
-    FISH("Fish"),
-    PRIEST("Priest"),
-    RAIDER("Raider"),
-    AEMBER_MUNCH("Æmber Munch"),
-    MINUTE_MARTIAN("Minutemartian"),
-    STEPPE_WOLF("Steppe Wolf"),
-    SENTINEL("Sentinel");
+@Entity
+data class Token(
 
-    companion object {
-        fun ordinalByCardTitle(cardTitle: String): Int {
-            return entries.find { it.cardTitle == cardTitle }
-                ?.ordinal ?: throw IllegalArgumentException("No token for card title $cardTitle")
-        }
+    val cardTitle: String,
 
-        fun cardTitleFromOrdinal(ordinal: Int): String {
-            return entries[ordinal].cardTitle
-        }
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "token_sequence")
+    @SequenceGenerator(name = "token_sequence", allocationSize = 1)
+    val id: Int = -1
+)
 
+interface TokenRepo : CrudRepository<Token, Int> {
+    fun existsByCardTitle(cardTitle: String): Boolean
 }

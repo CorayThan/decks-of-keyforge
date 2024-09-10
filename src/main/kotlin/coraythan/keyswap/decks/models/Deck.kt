@@ -6,7 +6,7 @@ import coraythan.keyswap.*
 import coraythan.keyswap.auctions.DeckListing
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardInDeck
-import coraythan.keyswap.cards.dokcards.toUrlFriendlyCardTitle
+import coraythan.keyswap.cards.dokcards.toLegacyUrlFriendlyCardTitle
 import coraythan.keyswap.keyforgeevents.tournaments.TournamentDeck
 import coraythan.keyswap.stats.DeckStatistics
 import coraythan.keyswap.synergy.DeckSynergyInfo
@@ -300,7 +300,7 @@ fun List<DokCardInDeck>.withBonusIcons(icons: DeckBonusIcons): List<DokCardInDec
                 icons.bonusIconHouses.first { it.house == houseAndCards.key }.bonusIconCards.toMutableList()
             houseAndCards.value.map { dokCardInDeck ->
                 val bonusIcons =
-                    bonusIconsCards.find { cardIcons -> cardIcons.cardTitle.toUrlFriendlyCardTitle() == dokCardInDeck.card.cardTitle.toUrlFriendlyCardTitle() }
+                    bonusIconsCards.find { cardIcons -> cardIcons.cardTitle.toLegacyUrlFriendlyCardTitle() == dokCardInDeck.card.cardTitle.toLegacyUrlFriendlyCardTitle() }
                 bonusIconsCards.remove(bonusIcons)
                 dokCardInDeck.copy(
                     bonusAember = bonusIcons?.bonusAember ?: 0,

@@ -1,10 +1,6 @@
 package coraythan.keyswap
 
-import coraythan.keyswap.alliancedecks.AllianceDeckService
-import coraythan.keyswap.auctions.DeckListingService
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
-import coraythan.keyswap.cards.dokcards.DokCardUpdateService
-import coraythan.keyswap.cards.extrainfo.ExtraCardInfoService
 import coraythan.keyswap.synergy.FixSynergies
 import coraythan.keyswap.users.search.UserSearchService
 import org.slf4j.LoggerFactory
@@ -18,10 +14,6 @@ class RunOnStart(
     private val cardCache: DokCardCacheService,
     private val fixSynergies: FixSynergies,
     private val userSearchService: UserSearchService,
-    private val extraCardInfoService: ExtraCardInfoService,
-    private val dokCardUpdateService: DokCardUpdateService,
-    private val allianceDeckService: AllianceDeckService,
-    private val deckListingService: DeckListingService,
 ) : CommandLineRunner {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -31,17 +23,6 @@ class RunOnStart(
         cardCache.loadCards()
 
         fixSynergies.fix()
-
-        // deckImporterService.updateDeckStats()
-
-//        dokCardUpdateService.downloadAllNewCardImages(
-//            setOf(
-//                Expansion.MARTIAN_CIVIL_WAR
-//            ),
-//            setOf(
-//                House.Elders, House.IronyxRebels
-//            )
-//        )
 
         startupComplete = true
 

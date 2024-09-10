@@ -9,7 +9,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import coraythan.keyswap.*
 import coraythan.keyswap.auctions.DeckListingStatus
 import coraythan.keyswap.auctions.QDeckListing
-import coraythan.keyswap.cards.TokenCard
 import coraythan.keyswap.cards.dokcards.DokCardCacheService
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.SchedulingConfig
@@ -530,7 +529,7 @@ class DeckSearchService(
         if (filters.tokens.isNotEmpty()) {
             predicate.and(
                 deckQ.tokenNumber.`in`(
-                    *filters.tokens.map { TokenCard.ordinalByCardTitle(it) }.toTypedArray()
+                    *filters.tokens.map { DokCardCacheService.tokenIdFromName(it) }.toTypedArray()
                 )
             )
         }
