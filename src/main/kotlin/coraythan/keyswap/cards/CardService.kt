@@ -46,13 +46,6 @@ class CardService(
                 it != "37377d67-2916-4d45-b193-bea6ecd853e3"
             }
 
-            val tokens = mvDeck._linked.cards?.filter { it.rarity == "Token" } ?: listOf()
-
-            if (tokens.isNotEmpty()) {
-                val updatedToken = tokenService.updateTokens(tokens)
-                if (updatedToken) updated = true
-            }
-
             val newCardExists = cleanCards.any { !cardRepo.existsById(it) }
 
             if (newCardExists) {
@@ -61,6 +54,13 @@ class CardService(
                         ?: error("No deck for ${mvDeck.data.id} in KeyForge API")
                 } else {
                     mvDeck
+                }
+
+                val tokens = deckWithCards._linked.cards?.filter { it.card_type == "TokenCreature" } ?: listOf()
+
+                if (tokens.isNotEmpty()) {
+                    val updatedToken = tokenService.updateTokens(tokens)
+                    if (updatedToken) updated = true
                 }
 
                 val updatedCard = this.importNewCards(deckWithCards._linked.cards!!)
