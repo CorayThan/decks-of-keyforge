@@ -9,10 +9,8 @@ export interface CardSortOption {
 
 const cardSortOptions: CardSortOption[] = [
     {value: "SET_NUMBER", name: "Set Number"},
-    {value: "AERC", name: "Total Aerc"},
-    {value: "RELATIVE_WIN_RATE", name: "Relative Win Rate"},
-    {value: "WIN_RATE", name: "Win Rate"},
     {value: "NAME", name: "Card Name"},
+    {value: "AERC", name: "Total Aerc"},
     {value: "EXPECTED_AMBER", name: "Expected Aember"},
     {value: "AMBER_CONTROL", name: "Aember Control"},
     {value: "CREATURE_CONTROL", name: "Creature Control"},

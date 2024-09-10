@@ -13,6 +13,65 @@ import { SortDirection } from "../../generated-src/SortDirection"
 import { DeckSortOptions } from "../../generated-src/DeckSortOptions"
 
 export class DeckFilters {
+    houses: House[] = []
+    excludeHouses: House[] = []
+    @observable
+    title = ""
+    @observable
+    notes = ""
+    @observable
+    tags: number[] = []
+    @observable
+    notTags: number[] = []
+    @observable
+    notesUser = ""
+    page = 0
+    @observable
+    sort: DeckSortOptions = defaultSort.value
+    @observable
+    titleQl = false
+    @observable
+    forSale?: boolean
+    @observable
+    notForSale = false
+    @observable
+    forTrade = false
+    @observable
+    withOwners = false
+    @observable
+    teamDecks = false
+    @observable
+    forSaleInCountry?: string
+    @observable
+    myFavorites = false
+    constraints: Constraint[] = []
+    expansions: number[] = []
+    @observable
+    cards: DeckCardQuantity[] = []
+    @observable
+    tokens: string[] = []
+    @observable
+    sortDirection: SortDirection = SortDirection.DESC
+    @observable
+    owner = ""
+    @observable
+    owners: string[] = []
+    @observable
+    tournamentIds: number[] = []
+    @observable
+    listedWithinDays?: number
+    @observable
+    previousOwner = ""
+    pageSize = 20
+
+    constructor() {
+        makeObservable(this)
+    }
+
+    get isForSaleOrTrade() {
+        return this.forTrade || this.forSale
+    }
+
     static forSale = () => {
         const filters = new DeckFilters()
         filters.forSale = true
@@ -90,57 +149,6 @@ export class DeckFilters {
         return built
     }
 
-    houses: House[] = []
-    excludeHouses: House[] = []
-    @observable
-    title = ""
-    @observable
-    notes = ""
-    @observable
-    tags: number[] = []
-    @observable
-    notTags: number[] = []
-    @observable
-    notesUser = ""
-    page = 0
-    @observable
-    sort: DeckSortOptions = defaultSort.value
-    @observable
-    titleQl = false
-    @observable
-    forSale?: boolean
-    @observable
-    notForSale = false
-    @observable
-    forTrade = false
-    @observable
-    withOwners = false
-    @observable
-    teamDecks = false
-    @observable
-    forSaleInCountry?: string
-    @observable
-    myFavorites = false
-    constraints: Constraint[] = []
-    expansions: number[] = []
-    @observable
-    cards: DeckCardQuantity[] = []
-    @observable
-    tokens: string[] = []
-    @observable
-    sortDirection: SortDirection = SortDirection.DESC
-    @observable
-    owner = ""
-    @observable
-    owners: string[] = []
-    @observable
-    tournamentIds: number[] = []
-    @observable
-    listedWithinDays?: number
-    @observable
-    previousOwner = ""
-    pageSize = 20
-
     reset = () => {
         this.title = ""
         this.notes = ""
@@ -180,6 +188,7 @@ export class DeckFilters {
     }
 
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
+
     handleMyDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
             const username = userStore.username
@@ -188,6 +197,7 @@ export class DeckFilters {
             this.owner = ""
         }
     }
+
     handleMyPreviouslyOwnedDecksUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
             const username = userStore.username
@@ -196,6 +206,7 @@ export class DeckFilters {
             this.previousOwner = ""
         }
     }
+
     handleMyFavoritesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.myFavorites = event.target.checked
     }
@@ -204,14 +215,6 @@ export class DeckFilters {
         const cloned = clone(this)
         cloned.cards = cloned.cards.filter(card => card.cardNames.length > 0 && card.cardNames[0].length > 0)
         return cloned
-    }
-
-    constructor() {
-        makeObservable(this)
-    }
-
-    get isForSaleOrTrade() {
-        return this.forTrade || this.forSale
     }
 }
 

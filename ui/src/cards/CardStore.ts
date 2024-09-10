@@ -22,57 +22,65 @@ import { CardsMap } from "../generated-src/CardsMap"
 
 export class CardStore {
     static readonly CONTEXT = HttpConfig.API + "/cards"
-    private nonAlphanumericSpaceRegex = /[^a-zA-Z0-9\s\-,]/g
-    private cardsVersionKey = "cardsVersion"
-    private cardsKey = "cards"
-
     @observable
     cards?: FrontendCard[]
-
     @observable
     searchingForCards = false
-
     @observable
     cardsLoaded = false
-
     @observable
     allCards: FrontendCard[] = []
     @observable
     allCardsNoTokens: FrontendCard[] = []
     @observable
     allTokens: FrontendCard[] = []
-
-    private cardNameLowercaseToCard?: Map<string, FrontendCard>
-    private cardNameLowercaseToHasAerc?: Map<string, HasAerc>
-
     @observable
     cardNames: string[] = []
-
     @observable
     cardTraits: string[] = []
-
     @observable
     cardFlavors: string[] = ["Gotta go, gotta go, gotta go..."]
-
     @observable
     cardNameSearchResults: FrontendCard[] = []
-
-    @observable
-    private previousCards?: CardsMap
-
-    @observable
-    private futureCards?: CardsMap
-
     @observable
     findingPreviousInfo = false
-
     @observable
     showFutureCardInfo = false
-
     @observable
     cardWinRatesLoaded = false
-
+    private nonAlphanumericSpaceRegex = /[^a-zA-Z0-9\s\-,]/g
+    private cardsVersionKey = "cardsVersion"
+    private cardsKey = "cards"
+    private cardNameLowercaseToCard?: Map<string, FrontendCard>
+    private cardNameLowercaseToHasAerc?: Map<string, HasAerc>
+    @observable
+    private previousCards?: CardsMap
+    @observable
+    private futureCards?: CardsMap
     private cardWinRates?: Map<string, CardWinRates[]>
+
+    constructor() {
+        makeObservable(this)
+    }
+
+    @computed
+    get aercUpdateDates(): string[] {
+        if (this.allCards != null) {
+            const datesSet = new Set(this.allCards.filter(card => card.extraCardInfo.publishedDate != null).map(card => card.extraCardInfo.publishedDate!))
+            log.debug("Update dates: " + Array.from(datesSet.values()).sort().reverse())
+            return Array.from(datesSet.values()).filter(date => date != null).sort().slice(1).reverse()
+        }
+        return []
+    }
+
+    @computed
+    get mostRecentAercUpdateDate(): string | undefined {
+        const dates = this.aercUpdateDates
+        if (dates.length > 0) {
+            return dates[0]
+        }
+        return undefined
+    }
 
     setupCardWinRates = () => {
         if (!cardStore.cardsLoaded || statsStore.stats == null || this.cardWinRatesLoaded) {
@@ -156,16 +164,8 @@ export class CardStore {
             filtered = sortBy(filtered, ["extraCardInfo.creatureControl", "cardNumber"])
         } else if (filters.sort === "ARTIFACT_CONTROL") {
             filtered = sortBy(filtered, ["extraCardInfo.artifactControl", "cardNumber"])
-        } else if (filters.sort === "WIN_RATE") {
-            filtered = sortBy(
-                filtered
-                    .filter(card => ((card.wins ?? 0) + (card.losses ?? 0)) > 1000),
-                ["winRate", "cardNumber"])
-        } else if (filters.sort === "RELATIVE_WIN_RATE") {
-            filtered = sortBy(filtered, card => CardUtils.cardAverageRelativeWinRate(card))
         } else if (filters.sort === "NAME") {
             filtered = sortBy(filtered, ["cardTitle", "cardNumber"])
-
         } else if (filters.sort === "SET_NUMBER" && filters.expansions.length !== 1) {
             log.info("Sort by house then card name")
             filtered = sortBy(filtered, (card: FrontendCard) => {
@@ -196,20 +196,6 @@ export class CardStore {
     searchCards = (filters: CardFilters) => {
         this.cards = this.searchAndReturnCards(filters)
         log.debug(`Changed this.cards to ${this.cards.length}`)
-    }
-
-    /**
-     * Returns new version if there is one.
-     */
-    private checkCardsVersion = async () => {
-        const versionResponse: AxiosResponse<number> = await axios.get(`${CardStore.CONTEXT}-version`)
-        const version = versionResponse.data
-        const preexistingVersion = await get(this.cardsVersionKey)
-        if (version !== preexistingVersion) {
-            log.info(`Cards data versions did not match. New version: ${version} Old: ${preexistingVersion}`)
-            return version
-        }
-        return undefined
     }
 
     loadAllCards = async () => {
@@ -369,25 +355,16 @@ export class CardStore {
         return this.futureCards.cards[cardNameUrl]
     }
 
-    constructor() {
-        makeObservable(this)
-    }
-
-    @computed
-    get aercUpdateDates(): string[] {
-        if (this.allCards != null) {
-            const datesSet = new Set(this.allCards.filter(card => card.extraCardInfo.publishedDate != null).map(card => card.extraCardInfo.publishedDate!))
-            log.debug("Update dates: " + Array.from(datesSet.values()).sort().reverse())
-            return Array.from(datesSet.values()).filter(date => date != null).sort().slice(1).reverse()
-        }
-        return []
-    }
-
-    @computed
-    get mostRecentAercUpdateDate(): string | undefined {
-        const dates = this.aercUpdateDates
-        if (dates.length > 0) {
-            return dates[0]
+    /**
+     * Returns new version if there is one.
+     */
+    private checkCardsVersion = async () => {
+        const versionResponse: AxiosResponse<number> = await axios.get(`${CardStore.CONTEXT}-version`)
+        const version = versionResponse.data
+        const preexistingVersion = await get(this.cardsVersionKey)
+        if (version !== preexistingVersion) {
+            log.info(`Cards data versions did not match. New version: ${version} Old: ${preexistingVersion}`)
+            return version
         }
         return undefined
     }

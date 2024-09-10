@@ -26,6 +26,14 @@ export const DeckSearchDrawerCards = observer((props: { filters: DeckFilters }) 
         <SearchDrawerExpansionPanel
             initiallyOpen={initiallyOpen}
             title={"Cards"}
+            onClick={() => {
+                if (props.filters.cards.length === 0) {
+                    props.filters.cards.push({
+                        cardNames: [],
+                        quantity: 1,
+                    })
+                }
+            }}
         >
             {cards.length === 0 || tokens.length === 0 ? (
                 <Loader size={LoaderSize.SMALL}/>
@@ -57,7 +65,7 @@ const DeckSearchDrawerCardsInternal = observer((props: DeckSearchDrawerCardsInte
                 <HelperText>Select expansions for better performance</HelperText>
             </Box>
             <DeckCardSelect cardNames={cards} filters={filters}/>
-            <Box marginTop={2}>
+            <Box marginTop={1}>
                 <DeckTokenCardSelect tokenNames={tokens} filters={filters}/>
             </Box>
         </Box>

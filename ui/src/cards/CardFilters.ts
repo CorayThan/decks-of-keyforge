@@ -29,6 +29,7 @@ export class CardFilters {
         // log.debug(`Rehydrating from : ${prettyJson(queryObject)}`)
 
         const builtFilters = new SearchFiltersBuilder(params, new CardFilters())
+            .value("sort")
             .value("title")
             .value("description")
             .value("trait")
@@ -45,7 +46,7 @@ export class CardFilters {
             .numberArrayValue("excludedExpansions")
             .value("aercHistory")
             .customArrayValue("constraints", (val: string) => {
-                const split = val.split("-")
+                const split = val.split("_")
                 return {
                     property: split[0],
                     cap: split[1],

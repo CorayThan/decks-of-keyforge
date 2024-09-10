@@ -9,6 +9,7 @@ export interface ExpansionInfo {
     name: string
     abbreviation: string
     backendEnum: Expansion
+    hasTokens?: boolean
 }
 
 export enum ExpansionNumber {
@@ -137,15 +138,15 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.ANOM, name: "Anomalies", abbreviation: "ANOM", backendEnum: Expansion.ANOMALY_EXPANSION},
     {expansionNumber: ExpansionNumber.MM, name: "Mass Mutation", abbreviation: "MM", backendEnum: Expansion.MASS_MUTATION},
     {expansionNumber: ExpansionNumber.DT, name: "Dark Tidings", abbreviation: "DT", backendEnum: Expansion.DARK_TIDINGS},
-    {expansionNumber: ExpansionNumber.WOE, name: "Winds of Exchange", abbreviation: "WoE", backendEnum: Expansion.WINDS_OF_EXCHANGE},
-    {expansionNumber: ExpansionNumber.UC22, name: "Unchained", abbreviation: "UC22", backendEnum: Expansion.UNCHAINED_2022},
+    {expansionNumber: ExpansionNumber.WOE, name: "Winds of Exchange", abbreviation: "WoE", backendEnum: Expansion.WINDS_OF_EXCHANGE, hasTokens: true},
+    {expansionNumber: ExpansionNumber.UC22, name: "Unchained", abbreviation: "UC22", backendEnum: Expansion.UNCHAINED_2022, hasTokens: true},
     {expansionNumber: ExpansionNumber.VM23, name: "Vault Masters 23", abbreviation: "VM23", backendEnum: Expansion.VAULT_MASTERS_2023},
     {expansionNumber: ExpansionNumber.VM24, name: "Vault Masters 24", abbreviation: "VM24", backendEnum: Expansion.VAULT_MASTERS_2024},
     {expansionNumber: ExpansionNumber.GR, name: "Grim Reminders", abbreviation: "GR", backendEnum: Expansion.GRIM_REMINDERS},
-    {expansionNumber: ExpansionNumber.MN24, name: "Menagerie", abbreviation: "MN24", backendEnum: Expansion.MENAGERIE_2024},
-    {expansionNumber: ExpansionNumber.MCW, name: "Martian Civil War", abbreviation: "MCW", backendEnum: Expansion.MARTIAN_CIVIL_WAR},
+    {expansionNumber: ExpansionNumber.MN24, name: "Menagerie", abbreviation: "MN24", backendEnum: Expansion.MENAGERIE_2024, hasTokens: true},
+    {expansionNumber: ExpansionNumber.MCW, name: "Martian Civil War", abbreviation: "MCW", backendEnum: Expansion.MARTIAN_CIVIL_WAR, hasTokens: true},
     {expansionNumber: ExpansionNumber.AS, name: "Aember Skies", abbreviation: "AS", backendEnum: Expansion.AEMBER_SKIES},
-    {expansionNumber: ExpansionNumber.ToC, name: "Tokens of Change", abbreviation: "ToC", backendEnum: Expansion.TOKENS_OF_CHANGE},
+    {expansionNumber: ExpansionNumber.ToC, name: "Tokens of Change", abbreviation: "ToC", backendEnum: Expansion.TOKENS_OF_CHANGE, hasTokens: true},
 ]
 
 export const activeExpansionInfos: ExpansionInfo[] = expansionInfos.filter(info => activeExpansions.includes(info.backendEnum))

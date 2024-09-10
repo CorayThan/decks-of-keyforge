@@ -27,6 +27,7 @@ import { TokenIcon } from "../../generic/icons/TokenIcon"
 import { FrontendCard } from "../../generated-src/FrontendCard"
 import { HauntedIcon } from "../../generic/icons/HauntedIcon"
 import { SynTraitPlayer } from "../../generated-src/SynTraitPlayer"
+import { expansionInfoMap } from "../../expansions/Expansions"
 
 interface AercCatProps {
     deck: DeckSearchResult
@@ -310,8 +311,8 @@ const expansionSpecificCounts = (props: AercCatProps, width: number | undefined)
         }
     }
 
-    if (deck.expansion === Expansion.WINDS_OF_EXCHANGE || deck.expansion === Expansion.UNCHAINED_2022
-        || deck.expansion === Expansion.MENAGERIE_2024 || deck.expansion === Expansion.MARTIAN_CIVIL_WAR) {
+    const expansionInfo = expansionInfoMap.get(deck.expansion)
+    if (expansionInfo?.hasTokens) {
 
         const makesTokensFakeCombos = cards
             .map(card => {
