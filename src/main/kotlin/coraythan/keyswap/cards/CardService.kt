@@ -72,8 +72,8 @@ class CardService(
 
         cards.forEach {
             if (it.token) {
-                val updatedToken = tokenService.updateTokenCard(it)
-                if (updatedToken) tokenUpdated = true
+                val updatedTokenId = tokenService.updateTokenCard(it)
+                if (updatedTokenId != null) tokenUpdated = true
             }
             val fromCardRepo = cardRepo.findByIdOrNull(it.id)
             if (fromCardRepo == null) {

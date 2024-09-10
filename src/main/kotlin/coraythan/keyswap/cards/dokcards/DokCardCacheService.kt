@@ -74,6 +74,9 @@ class  DokCardCacheService(
                 return id
             }
         }
+        fun tokenIdFromNameNullable(name: String): Int? {
+            return tokenNamesToIdsMap[name]
+        }
 
         fun addToken(id: Int, name: String) {
             tokenIdsToNamesMap[id] = name

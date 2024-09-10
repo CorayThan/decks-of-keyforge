@@ -30,13 +30,13 @@ class TokenService(
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    fun updateTokenCard(card: Card): Boolean {
+    fun updateTokenCard(card: Card): Int? {
         if (!tokenRepo.existsByCardTitle(card.cardTitle)) {
             val token = tokenRepo.save(Token(card.cardTitle))
             DokCardCacheService.addToken(token.id, token.cardTitle)
             log.info("Saving new token with id: ${token.id} name: ${token.cardTitle}")
-            return true
+            return token.id
         }
-        return false
+        return null
     }
 }

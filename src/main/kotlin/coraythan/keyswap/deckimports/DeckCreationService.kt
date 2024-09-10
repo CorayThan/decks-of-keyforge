@@ -37,6 +37,7 @@ class DeckCreationService(
     private val postProcessDecksService: PostProcessDecksService,
     private val dokCardCacheService: DokCardCacheService,
     private val sasVersionService: SasVersionService,
+    private val tokenService: TokenService,
 //    private val importSkippedDecksService: ImportSkippedDecksService,
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -173,7 +174,20 @@ class DeckCreationService(
                 evilTwin = cardsList.any { it.isEvilTwin() },
                 houseNamesString = houses.sorted().joinToString("|"),
                 cardIds = objectMapper.writeValueAsString(CardIds.fromCards(cardsList)),
-                tokenNumber = if (tokenName == null) null else DokCardCacheService.tokenIdFromName(tokenName)
+                tokenNumber = if (tokenName == null) {
+                    null
+                } else {
+                    val tokenId = DokCardCacheService.tokenIdFromNameNullable(tokenName)
+                    if (tokenId == null) {
+                        log.warn("Token $tokenName should exist in cached cards, but doesn't so make one instead. Deck ID: ${deck.keyforgeId}")
+                        // Weird token shouldn't be null but save a new one I guess
+                        val tokenCard = cardRepo.findFirstByCardTitleAndMaverickFalse(tokenName)
+                        // Returns ID of newly saved token
+                        tokenService.updateTokenCard(tokenCard)
+                    } else {
+                        tokenId
+                    }
+                }
             )
 
         check(saveable.cardIds.isNotBlank()) { "Can't save a deck without its card ids: $deck" }
