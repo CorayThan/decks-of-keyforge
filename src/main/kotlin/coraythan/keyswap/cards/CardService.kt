@@ -56,13 +56,6 @@ class CardService(
                     mvDeck
                 }
 
-                val tokens = deckWithCards._linked.cards?.filter { it.card_type == "TokenCreature" } ?: listOf()
-
-                if (tokens.isNotEmpty()) {
-                    val updatedToken = tokenService.updateTokens(tokens)
-                    if (updatedToken) updated = true
-                }
-
                 val updatedCard = this.importNewCards(deckWithCards._linked.cards!!)
                 if (updatedCard) updated = true
             }
@@ -75,8 +68,13 @@ class CardService(
         val cards = keyforgeApiCards.mapNotNull { it.toCard() }
 
         val savedMvCardNames = mutableListOf<String>()
+        var tokenUpdated = false
 
         cards.forEach {
+            if (it.token) {
+                val updatedToken = tokenService.updateTokenCard(it)
+                if (updatedToken) tokenUpdated = true
+            }
             val fromCardRepo = cardRepo.findByIdOrNull(it.id)
             if (fromCardRepo == null) {
                 savedMvCardNames.add(it.cardTitle)
@@ -90,10 +88,10 @@ class CardService(
         log.info("Saved new MV Cards $savedMvCardNames")
 
         val updateResult = dokCardUpdateService.createDoKCardsFromKCards(cards)
-        if (updateResult) {
+        if (updateResult || tokenUpdated) {
             versionService.revVersion()
         }
-        return updateResult
+        return updateResult || tokenUpdated
     }
 
     fun publishNextInfo(publishVersion: Int) {
