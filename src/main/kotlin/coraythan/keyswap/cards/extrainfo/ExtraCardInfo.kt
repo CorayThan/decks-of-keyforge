@@ -69,20 +69,18 @@ data class ExtraCardInfo(
     val other: Double = 0.0,
     val otherMax: Double? = null,
 
-    // TODO delete adaptive score from DB
-
     val enhancementAmber: Int = 0,
     val enhancementCapture: Int = 0,
     val enhancementDraw: Int = 0,
     val enhancementDamage: Int = 0,
     val enhancementDiscard: Int = 0,
-    val enhancementBrobnar: Boolean = false,
-    val enhancementDis: Boolean = false,
-    val enhancementEkwidon: Boolean = false,
-    val enhancementGeistoid: Boolean = false,
-    val enhancementLogos: Boolean = false,
-    val enhancementMars: Boolean = false,
-    val enhancementSkyborn: Boolean = false,
+    val enhancementBrobnar: Int = 0,
+    val enhancementDis: Int = 0,
+    val enhancementEkwidon: Int = 0,
+    val enhancementGeistoid: Int = 0,
+    val enhancementLogos: Int = 0,
+    val enhancementMars: Int = 0,
+    val enhancementSkyborn: Int = 0,
 
     /**
      * Changes the starting base match strength. For example, starts at -50 for Grumpy Buggy. This means you need

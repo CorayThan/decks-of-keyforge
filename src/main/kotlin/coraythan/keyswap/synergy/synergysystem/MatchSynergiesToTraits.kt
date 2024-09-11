@@ -11,10 +11,6 @@ data class MatchSynergiesToTraits(
     val traitValues: MutableList<SynTraitValueWithHouse> = mutableListOf()
 ) {
 
-    companion object {
-        private val log = LoggerFactory.getLogger(this::class.java)
-    }
-
     fun matches(card: DokCardInDeck, synergyValue: SynTraitValue): SynMatchInfo {
         val house = card.house
         val cardName = card.card.cardTitle
@@ -168,13 +164,19 @@ data class MatchSynergiesToTraits(
 fun MutableMap<SynergyTrait, MatchSynergiesToTraits>.addTrait(
     traitValue: SynTraitValue,
     card: DokCardInDeck?,
-    house: House?,
+    houses: Set<House>?,
     deckTrait: Boolean = false
 ) {
     if (!this.containsKey(traitValue.trait)) {
         this[traitValue.trait] = MatchSynergiesToTraits()
     }
-    this[traitValue.trait]!!.traitValues.add(SynTraitValueWithHouse(traitValue, card, house, deckTrait))
+    if (houses == null) {
+        this[traitValue.trait]!!.traitValues.add(SynTraitValueWithHouse(traitValue, card, null, deckTrait))
+    } else {
+        houses.forEach {
+            this[traitValue.trait]!!.traitValues.add(SynTraitValueWithHouse(traitValue, card, it, deckTrait))
+        }
+    }
 }
 
 fun MutableMap<SynergyTrait, MatchSynergiesToTraits>.addDeckTrait(
@@ -185,7 +187,7 @@ fun MutableMap<SynergyTrait, MatchSynergiesToTraits>.addDeckTrait(
     strength: TraitStrength = TraitStrength.NORMAL
 ) {
     repeat(count) {
-        this.addTrait(SynTraitValue(trait, strength.value, traitHouse), null, house, true)
+        this.addTrait(SynTraitValue(trait, strength.value, traitHouse), null, if (house == null) null else setOf(house), true)
     }
 }
 

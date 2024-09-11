@@ -17,6 +17,7 @@ enum Keys {
     SALE_DEFAULTS = "SALE_DEFAULTS_2",
     DECKS_TO_COMPARE = "DECKS_TO_COMPARE",
     ALLIANCE_DECKS = "ALLIANCE_DECKS",
+    ADD_BONUS_ICONS = "ADD_BONUS_ICONS",
     GENERIC_STORAGE = "GENERIC_STORAGE"
 }
 
@@ -72,6 +73,9 @@ class KeyLocalStorage {
     @observable
     allianceDeckSaveInfo: AllianceDeckSaveInfo = {houses: []}
 
+    @observable
+    addBonusIcons = false
+
     private localStorage = window.localStorage
 
     constructor() {
@@ -85,6 +89,7 @@ class KeyLocalStorage {
         this.loadSaleDefaults()
         this.loadDecksToCompare()
         this.loadAllianceDecks()
+        this.loadAddBonusIcons()
         this.loadGenericStorage()
     }
 
@@ -132,6 +137,11 @@ class KeyLocalStorage {
     toggleSmallTableView = () => {
         this.smallTableView = !this.smallTableView
         this.localStorage.setItem(Keys.SMALL_TABLE_VIEW, this.smallTableView.toString())
+    }
+
+    toggleAddBonusIcons = () => {
+        this.addBonusIcons = !this.addBonusIcons
+        this.localStorage.setItem(Keys.ADD_BONUS_ICONS, this.addBonusIcons.toString())
     }
 
     setDeckPageSize = (size: number) => {
@@ -297,6 +307,10 @@ class KeyLocalStorage {
 
     private loadShowAllCards = () => {
         this.showAllCards = this.localStorage.getItem(Keys.SHOW_ALL_CARDS) === "true"
+    }
+
+    private loadAddBonusIcons = () => {
+        this.addBonusIcons = this.localStorage.getItem(Keys.ADD_BONUS_ICONS) === "true"
     }
 
     private loadDisplayExtraDeckStats = () => {

@@ -10,6 +10,7 @@ import coraythan.keyswap.synergy.*
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addDeckTraits
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addHouseTraits
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addOutOfHouseTraits
+import coraythan.keyswap.synergy.synergysystem.HouseEnhancementAlgorithm.generateHouseEnhancementCombos
 import coraythan.keyswap.synergy.synergysystem.SelfEnhancementAlgorithm.generateSelfEnhancementCombos
 import coraythan.keyswap.synergy.synergysystem.TokenSynergyService.makeTokenValues
 import org.slf4j.LoggerFactory
@@ -144,7 +145,7 @@ object DeckSynergyService {
                 }
             cardAllTraits
                 .forEach { traitValue ->
-                    traitsMap.addTrait(traitValue, dokCardInDeck, dokCardInDeck.house)
+                    traitsMap.addTrait(traitValue, dokCardInDeck, dokCardInDeck.allHouses)
                     if (traitValue.trait == SynergyTrait.uses && (traitValue.cardTypes.isNullOrEmpty() || traitValue.cardTypes.contains(
                             CardType.Creature
                         ))
@@ -152,19 +153,19 @@ object DeckSynergyService {
                         traitsMap.addTrait(
                             traitValue.copy(trait = SynergyTrait.causesReaping),
                             dokCardInDeck,
-                            dokCardInDeck.house
+                            dokCardInDeck.allHouses
                         )
                         if (traitValue.rating > 1) {
                             traitsMap.addTrait(
                                 traitValue.copy(
                                     trait = SynergyTrait.causesFighting,
                                     rating = traitValue.rating - 1
-                                ), dokCardInDeck, dokCardInDeck.house
+                                ), dokCardInDeck, dokCardInDeck.allHouses
                             )
                         }
                     }
                 }
-            traitsMap.addTrait(SynTraitValue(SynergyTrait.any), dokCardInDeck, dokCardInDeck.house)
+            traitsMap.addTrait(SynTraitValue(SynergyTrait.any), dokCardInDeck, dokCardInDeck.allHouses)
         }
 
         // log.info("Traits map is: ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitsMap)}")
@@ -190,7 +191,12 @@ object DeckSynergyService {
                         // First check if the synergy matches a deck stat. If not then calculate a cards based trait
                         val synPercent = deckStats.synPercent(synergy, cardsById.key.second)
                             ?: TraitStrength.entries.sumOf { strength ->
-                                val matches = if (synergy.cardName == null) {
+                                val matches: SynMatchInfo? = if (synergy.trait == SynergyTrait.enhancedHouses) {
+                                    SynMatchInfo(
+                                        matches = mapOf(TraitStrength.NORMAL to card.enhancedHouses),
+                                        cardNames = card.allHouses.minus(card.house).map { it.masterVaultValue }
+                                    )
+                                } else  if (synergy.cardName == null) {
                                     traitsMap[synergyTrait]?.matches(card, synergy)
                                 } else {
                                     cardMatches(card, synergy, cardsMap)
@@ -366,6 +372,7 @@ object DeckSynergyService {
                 )
             }
             .plus(generateSelfEnhancementCombos(cards))
+            .plus(generateHouseEnhancementCombos(cards))
 
         val a = synergyCombos.sumOf { it.amberControl * it.copies }
         val e = synergyCombos.sumOf { it.expectedAmber * it.copies }

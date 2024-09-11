@@ -11,7 +11,7 @@ object SelfEnhancementAlgorithm {
     fun generateSelfEnhancementCombos(cards: List<DokCardInDeck>): List<SynergyCombo> {
         return cards
             .mapNotNull { cardWithIcons ->
-                if (cardWithIcons.enhanced) {
+                if (cardWithIcons.pipEnhanced) {
                     val card = cardWithIcons.card
                     val trait = cardWithIcons.extraCardInfo.traits.firstOrNull { it.trait == SynergyTrait.replaysSelf }
                         ?: cardWithIcons.extraCardInfo.traits.firstOrNull { it.trait == SynergyTrait.dangerousRandomPlay }

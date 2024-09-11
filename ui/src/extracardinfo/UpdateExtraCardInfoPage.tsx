@@ -8,36 +8,38 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    Switch,
     TextField,
     Typography
 } from "@material-ui/core"
-import { ChevronLeft, ChevronRight } from "@material-ui/icons"
-import { makeObservable, observable } from "mobx"
-import { observer } from "mobx-react"
-import React, { useEffect } from "react"
-import { useParams } from "react-router-dom"
-import { cardStore } from "../cards/CardStore"
-import { spacing } from "../config/MuiConfig"
-import { Routes } from "../config/Routes"
-import { log, prettyJson, Utils } from "../config/Utils"
-import { CardType } from "../generated-src/CardType"
-import { SynTraitValue } from "../generated-src/SynTraitValue"
-import { EventValue } from "../generic/EventValue"
-import { KeyButton } from "../mui-restyled/KeyButton"
-import { LinkButton } from "../mui-restyled/LinkButton"
-import { Loader } from "../mui-restyled/Loader"
-import { uiStore } from "../ui/UiStore"
-import { extraCardInfoStore } from "./ExtraCardInfoStore"
-import { CardTraitsViewAndEdit } from "./traitsynbuilder/CardTraitsViewAndEdit"
-import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
-import { AercBlameView } from "./AercBlameView"
-import { AercBlame } from "../generated-src/AercBlame"
-import { CardView } from "../cards/views/CardView"
-import { FrontendCard } from "../generated-src/FrontendCard"
-import { ExpansionLabel, expansionsWithCards } from "../expansions/Expansions"
-import { keyLocalStorage } from "../config/KeyLocalStorage"
-import { Expansion } from "../generated-src/Expansion"
-import { screenStore } from "../ui/ScreenStore"
+import {ChevronLeft, ChevronRight} from "@material-ui/icons"
+import {makeObservable, observable} from "mobx"
+import {observer} from "mobx-react"
+import React, {useEffect} from "react"
+import {useParams} from "react-router-dom"
+import {cardStore} from "../cards/CardStore"
+import {spacing} from "../config/MuiConfig"
+import {Routes} from "../config/Routes"
+import {log, prettyJson, Utils} from "../config/Utils"
+import {CardType} from "../generated-src/CardType"
+import {SynTraitValue} from "../generated-src/SynTraitValue"
+import {EventValue} from "../generic/EventValue"
+import {KeyButton} from "../mui-restyled/KeyButton"
+import {LinkButton} from "../mui-restyled/LinkButton"
+import {Loader} from "../mui-restyled/Loader"
+import {uiStore} from "../ui/UiStore"
+import {extraCardInfoStore} from "./ExtraCardInfoStore"
+import {CardTraitsViewAndEdit} from "./traitsynbuilder/CardTraitsViewAndEdit"
+import {ExtraCardInfo} from "../generated-src/ExtraCardInfo"
+import {AercBlameView} from "./AercBlameView"
+import {AercBlame} from "../generated-src/AercBlame"
+import {CardView} from "../cards/views/CardView"
+import {FrontendCard} from "../generated-src/FrontendCard"
+import {ExpansionLabel, expansionsWithCards} from "../expansions/Expansions"
+import {keyLocalStorage} from "../config/KeyLocalStorage"
+import {Expansion} from "../generated-src/Expansion"
+import {screenStore} from "../ui/ScreenStore"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
 
 export const UpdateExtraCardInfoPage = observer(() => {
 
@@ -131,6 +133,20 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
     enhancementDiscard = "0"
     @observable
     enhancementDamage = "0"
+    @observable
+    enhancementBrobnar = "0"
+    @observable
+    enhancementDis = "0"
+    @observable
+    enhancementEkwidon = "0"
+    @observable
+    enhancementGeistoid = "0"
+    @observable
+    enhancementLogos = "0"
+    @observable
+    enhancementMars = "0"
+    @observable
+    enhancementSkyborn = "0"
 
     @observable
     traits: SynTraitValue[] = []
@@ -189,6 +205,13 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
         this.enhancementDraw = extraCardInfo.enhancementDraw.toString()
         this.enhancementDiscard = extraCardInfo.enhancementDiscard.toString()
         this.enhancementDamage = extraCardInfo.enhancementDamage.toString()
+        this.enhancementBrobnar = extraCardInfo.enhancementBrobnar.toString()
+        this.enhancementDis = extraCardInfo.enhancementDis.toString()
+        this.enhancementEkwidon = extraCardInfo.enhancementEkwidon.toString()
+        this.enhancementGeistoid = extraCardInfo.enhancementGeistoid.toString()
+        this.enhancementLogos = extraCardInfo.enhancementLogos.toString()
+        this.enhancementMars = extraCardInfo.enhancementMars.toString()
+        this.enhancementSkyborn = extraCardInfo.enhancementSkyborn.toString()
 
         this.extraCardTypes = extraCardInfo.extraCardTypes ?? []
         this.traits = extraCardInfo.traits
@@ -252,6 +275,13 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
             enhancementDraw: Number(this.enhancementDraw),
             enhancementDiscard: Number(this.enhancementDiscard),
             enhancementDamage: Number(this.enhancementDamage),
+            enhancementBrobnar: Number(this.enhancementBrobnar),
+            enhancementDis: Number(this.enhancementDis),
+            enhancementEkwidon: Number(this.enhancementEkwidon),
+            enhancementGeistoid: Number(this.enhancementGeistoid),
+            enhancementLogos: Number(this.enhancementLogos),
+            enhancementMars: Number(this.enhancementMars),
+            enhancementSkyborn: Number(this.enhancementSkyborn),
 
             extraCardTypes: this.extraCardTypes.length === 0 ? undefined : this.extraCardTypes,
             traits: this.traits,
@@ -277,7 +307,8 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                 </Box>
                 <div>
                     <Card style={{maxWidth: 800, margin: spacing(2), padding: spacing(2)}}>
-                        <Box display={"flex"} alignItems={"center"} mb={2} flexDirection={screenStore.screenSizeSm() ? "column" : undefined}>
+                        <Box display={"flex"} alignItems={"center"} mb={2}
+                             flexDirection={screenStore.screenSizeSm() ? "column" : undefined}>
                             <Typography variant={"h4"}>
                                 {card.cardTitle}'s AERC
                             </Typography>
@@ -429,31 +460,70 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                                 value={this.baseSynPercent}
                                 update={(event: EventValue) => this.baseSynPercent = event.target.value}
                             />
-                            <InfoInput
-                                name={"bonus amber"}
-                                value={this.enhancementAmber}
-                                update={(event: EventValue) => this.enhancementAmber = event.target.value}
-                            />
-                            <InfoInput
-                                name={"bonus capture"}
-                                value={this.enhancementCapture}
-                                update={(event: EventValue) => this.enhancementCapture = event.target.value}
-                            />
-                            <InfoInput
-                                name={"bonus draw"}
-                                value={this.enhancementDraw}
-                                update={(event: EventValue) => this.enhancementDraw = event.target.value}
-                            />
-                            <InfoInput
-                                name={"bonus discard"}
-                                value={this.enhancementDiscard}
-                                update={(event: EventValue) => this.enhancementDiscard = event.target.value}
-                            />
-                            <InfoInput
-                                name={"bonus damage"}
-                                value={this.enhancementDamage}
-                                update={(event: EventValue) => this.enhancementDamage = event.target.value}
-                            />
+                            {keyLocalStorage.addBonusIcons && (
+                                <>
+                                    <InfoInput
+                                        name={"bonus amber"}
+                                        value={this.enhancementAmber}
+                                        update={(event: EventValue) => this.enhancementAmber = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus capture"}
+                                        value={this.enhancementCapture}
+                                        update={(event: EventValue) => this.enhancementCapture = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus draw"}
+                                        value={this.enhancementDraw}
+                                        update={(event: EventValue) => this.enhancementDraw = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus discard"}
+                                        value={this.enhancementDiscard}
+                                        update={(event: EventValue) => this.enhancementDiscard = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus damage"}
+                                        value={this.enhancementDamage}
+                                        update={(event: EventValue) => this.enhancementDamage = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus brob"}
+                                        value={this.enhancementBrobnar}
+                                        update={(event: EventValue) => this.enhancementBrobnar = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus dis"}
+                                        value={this.enhancementDis}
+                                        update={(event: EventValue) => this.enhancementBrobnar = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus ekwi"}
+                                        value={this.enhancementEkwidon}
+                                        update={(event: EventValue) => this.enhancementEkwidon = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus ghosts"}
+                                        value={this.enhancementGeistoid}
+                                        update={(event: EventValue) => this.enhancementGeistoid = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus logos"}
+                                        value={this.enhancementLogos}
+                                        update={(event: EventValue) => this.enhancementLogos = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus mars"}
+                                        value={this.enhancementMars}
+                                        update={(event: EventValue) => this.enhancementMars = event.target.value}
+                                    />
+                                    <InfoInput
+                                        name={"bonus skyborn"}
+                                        value={this.enhancementSkyborn}
+                                        update={(event: EventValue) => this.enhancementSkyborn = event.target.value}
+                                    />
+                                </>
+                            )}
                             <Grid item={true} xs={6} sm={2}>
                                 <FormControl fullWidth={true}>
                                     <InputLabel>Card Types</InputLabel>
@@ -481,6 +551,11 @@ export class UpdateExtraCardInfo extends React.Component<UpdateExtraCardInfoProp
                             >
                                 Cards
                             </LinkButton>
+                            <FormControlLabel
+                                label={"Add Bonus Icons"}
+                                control={<Switch checked={keyLocalStorage.addBonusIcons}
+                                                 onChange={keyLocalStorage.toggleAddBonusIcons}/>}
+                            />
                             <div style={{flexGrow: 1}}/>
                             <KeyButton
                                 variant={"contained"}

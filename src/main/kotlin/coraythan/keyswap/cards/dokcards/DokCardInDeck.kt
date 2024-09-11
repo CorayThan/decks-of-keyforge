@@ -50,9 +50,28 @@ data class DokCardInDeck(
         return card.cardTitle.compareTo(other.card.cardTitle)
     }
 
+    val allHouses: Set<House>
+        get() = setOfNotNull(
+            house,
+            if (bonusBobnar) House.Brobnar else null,
+            if (bonusDis) House.Dis else null,
+            if (bonusEkwidon) House.Ekwidon else null,
+            if (bonusGeistoid) House.Geistoid else null,
+            if (bonusLogos) House.Logos else null,
+            if (bonusMars) House.Mars else null,
+            if (bonusSkyborn) House.Skyborn else null,
+        )
+
+    val pipEnhanced: Boolean
+        get() = bonusAember > 0 || bonusCapture > 0 || bonusDamage > 0 || bonusDraw > 0 || bonusDiscard > 0
+
     val enhanced: Boolean
         get() = bonusAember > 0 || bonusCapture > 0 || bonusDamage > 0 || bonusDraw > 0 || bonusDiscard > 0
                 || bonusBobnar || bonusDis || bonusEkwidon || bonusGeistoid || bonusLogos || bonusMars || bonusSkyborn
+
+    val enhancedHouses: Int
+        get() = listOf(bonusBobnar, bonusDis, bonusEkwidon, bonusGeistoid, bonusLogos, bonusMars, bonusSkyborn)
+            .count { it }
 
     val totalAmber: Int
         get() = this.bonusAember + this.card.amber

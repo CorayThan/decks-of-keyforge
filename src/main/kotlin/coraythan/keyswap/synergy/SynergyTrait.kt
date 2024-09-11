@@ -85,6 +85,7 @@ enum class SynergyTrait {
     // Automatically applied traits below here
 
     enhanced,
+    enhancedHouses,
     selfEnhanced,
     bonusAmber,
     bonusDraw,

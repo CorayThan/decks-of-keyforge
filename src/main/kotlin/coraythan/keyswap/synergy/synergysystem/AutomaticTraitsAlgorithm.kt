@@ -27,7 +27,7 @@ object AutomaticTraitsAlgorithm {
                         cardTypes = card.extraCardInfo.allCardTypes().toList()
                     ),
                     card = card,
-                    house = card.house,
+                    houses = card.allHouses,
                     deckTrait = false,
                 )
             }

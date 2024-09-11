@@ -1,16 +1,16 @@
-import { observer } from "mobx-react"
-import { TraitBuilderStore } from "./TraitBuilderStore"
-import { synergyAndTraitGroups, SynTraitDisplayGroup } from "../SynergyTraitUtils"
-import { Box, Button, DialogContent, DialogTitle, TextField } from "@material-ui/core"
-import { Utils } from "../../config/Utils"
-import { grey } from "@material-ui/core/colors"
+import {observer} from "mobx-react"
+import {TraitBuilderStore} from "./TraitBuilderStore"
+import {synergyAndTraitGroups, SynTraitDisplayGroup} from "../SynergyTraitUtils"
+import {Box, Button, DialogContent, DialogTitle, TextField} from "@material-ui/core"
+import {Utils} from "../../config/Utils"
+import {grey} from "@material-ui/core/colors"
 import Typography from "@material-ui/core/Typography/Typography"
-import React, { useState } from "react"
-import { TraitBubble } from "../../synergy/TraitBubble"
-import { HelperText } from "../../generic/CustomTypographies"
-import { themeStore } from "../../config/MuiConfig"
-import { screenStore } from "../../ui/ScreenStore"
-import { SynergyTrait } from "../../generated-src/SynergyTrait"
+import React, {useState} from "react"
+import {TraitBubble} from "../../synergy/TraitBubble"
+import {HelperText} from "../../generic/CustomTypographies"
+import {themeStore} from "../../config/MuiConfig"
+import {screenStore} from "../../ui/ScreenStore"
+import {SynergyTrait} from "../../generated-src/SynergyTrait"
 
 const replaceRsAndConvertToTitleCase = (convert: string) => {
     return Utils.camelCaseToTitleCase(convert).replace(/_ R_/g, " ??? ")
@@ -22,16 +22,26 @@ export const SelectTraitOrSyn = observer((props: { store: TraitBuilderStore }) =
 
     const isSynergy = store.traitOrSynergy === "synergy"
 
-    let filteredTraitGroups = synergyAndTraitGroups
+    let filteredTraitGroups: SynTraitDisplayGroup[] = synergyAndTraitGroups
         .filter(traitGroup => isSynergy || !traitGroup.synergyOnly)
 
     if (filter.trim().length > 1) {
         filteredTraitGroups = filteredTraitGroups
-            .map(group => ({
-                ...group,
-                traits: group.traits.filter(trait => replaceRsAndConvertToTitleCase(trait).toLowerCase().includes(filter.trim().toLowerCase()))
-            }))
-            .filter(group => group.traits.length > 0)
+            .map(group => {
+                return {
+                    ...group,
+                    traits: group.traits.filter(trait => {
+                        return replaceRsAndConvertToTitleCase(trait).toLowerCase().includes(filter.trim().toLowerCase())
+                    }),
+                    synergyTraitsOnly: !isSynergy ? undefined : group.synergyTraitsOnly?.filter(trait => {
+                        return replaceRsAndConvertToTitleCase(trait).toLowerCase().includes(filter.trim().toLowerCase())
+                    }),
+                    traitTraitsOnly: isSynergy ? undefined : group.traitTraitsOnly?.filter(trait => {
+                        return replaceRsAndConvertToTitleCase(trait).toLowerCase().includes(filter.trim().toLowerCase())
+                    }),
+                }
+            })
+            .filter(group => group.traits.length > 0 || (group.traitTraitsOnly?.length ?? 0) > 0 || (group.synergyTraitsOnly?.length ?? 0) > 0)
     }
     return (
         <>
@@ -94,7 +104,8 @@ export const DiplayTraitSelectGroup = (props: {
             )}
             <Box mt={1} display={"flex"} flexWrap={"wrap"} gridGap={8}>
                 <ClickTraitButtons store={store} traits={traitGroup.traits}/>
-                <ClickTraitButtons store={store} traits={isSynergy ? traitGroup.synergyTraitsOnly : traitGroup.traitTraitsOnly}/>
+                <ClickTraitButtons store={store}
+                                   traits={isSynergy ? traitGroup.synergyTraitsOnly : traitGroup.traitTraitsOnly}/>
             </Box>
         </Box>
     )

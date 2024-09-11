@@ -1,5 +1,5 @@
-import { Utils } from "../config/Utils"
-import { SynergyTrait } from "../generated-src/SynergyTrait"
+import {Utils} from "../config/Utils"
+import {SynergyTrait} from "../generated-src/SynergyTrait"
 
 const allSynergyTraits = Utils.enumValues(SynergyTrait) as SynergyTrait[]
 const firstSpecialIndex = allSynergyTraits.indexOf(SynergyTrait.enhanced)
@@ -41,6 +41,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         traits: [SynergyTrait.archives, SynergyTrait.archivesRandom, SynergyTrait.drawsCards,
             SynergyTrait.increasesHandSize, SynergyTrait.playsCards, SynergyTrait.playsFromOtherHouse,
             SynergyTrait.shufflesDiscard, SynergyTrait.mills, SynergyTrait.revealsTopDeck],
+        synergyTraitsOnly: [SynergyTrait.enhancedHouses],
     },
     {
         groupName: "Disruption",

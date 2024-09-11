@@ -16,7 +16,7 @@ object GenerateDeckAndHouseTraits {
         traits: MutableMap<SynergyTrait, MatchSynergiesToTraits>
     ) {
         houses.forEach { house ->
-            val cardsNotForHouse = cards.filter { it.house != house }
+            val cardsNotForHouse = cards.filter { !it.allHouses.contains(house) }
             val creatureCount = cardsNotForHouse.count { it.card.cardType == CardType.Creature }
 
             if (creatureCount > 12) traits.addDeckTrait(
@@ -45,7 +45,7 @@ object GenerateDeckAndHouseTraits {
         traits: MutableMap<SynergyTrait, MatchSynergiesToTraits>,
     ) {
         houses.forEach { house ->
-            val cardsForHouse = cards.filter { it.house == house }
+            val cardsForHouse = cards.filter { it.allHouses.contains(house) }
             val totalCreaturePower = cardsForHouse.sumOf { it.card.power }
             val creatureCount = cardsForHouse.count { it.card.cardType == CardType.Creature }
             val artifactCount = cardsForHouse.count { it.card.cardType == CardType.Artifact }
