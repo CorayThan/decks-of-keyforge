@@ -1,24 +1,24 @@
-import axios, { AxiosResponse } from "axios"
-import { get, set } from "idb-keyval"
-import { clone, sortBy } from "lodash"
-import { computed, makeObservable, observable } from "mobx"
-import { HasAerc } from "../aerc/HasAerc"
-import { HttpConfig } from "../config/HttpConfig"
-import { IdbUtils } from "../config/IdbUtils"
-import { log, roundToHundreds, Utils } from "../config/Utils"
-import { Cap } from "../decks/search/ConstraintDropdowns"
-import { expansionInfos, expansionNumberForExpansion } from "../expansions/Expansions"
-import { Expansion } from "../generated-src/Expansion"
-import { Rarity } from "../generated-src/Rarity"
-import { statsStore } from "../stats/StatsStore"
-import { userStore } from "../user/UserStore"
-import { CardFilters, CardSort } from "./CardFilters"
-import { cardNameToCardNameKey, CardUtils, CardWinRates } from "./KCard"
-import { CardType } from "../generated-src/CardType"
-import { ExtraCardInfo } from "../generated-src/ExtraCardInfo"
-import { FrontendCard } from "../generated-src/FrontendCard"
-import { CardNumberSetPair } from "../generated-src/CardNumberSetPair"
-import { CardsMap } from "../generated-src/CardsMap"
+import axios, {AxiosResponse} from "axios"
+import {get, set} from "idb-keyval"
+import {clone, sortBy} from "lodash"
+import {computed, makeObservable, observable} from "mobx"
+import {HasAerc} from "../aerc/HasAerc"
+import {HttpConfig} from "../config/HttpConfig"
+import {IdbUtils} from "../config/IdbUtils"
+import {log, roundToHundreds, Utils} from "../config/Utils"
+import {Cap} from "../decks/search/ConstraintDropdowns"
+import {expansionInfos, expansionNumberForExpansion} from "../expansions/Expansions"
+import {Expansion} from "../generated-src/Expansion"
+import {Rarity} from "../generated-src/Rarity"
+import {statsStore} from "../stats/StatsStore"
+import {userStore} from "../user/UserStore"
+import {CardFilters, CardSort} from "./CardFilters"
+import {cardNameToCardNameKey, CardUtils, CardWinRates} from "./KCard"
+import {CardType} from "../generated-src/CardType"
+import {ExtraCardInfo} from "../generated-src/ExtraCardInfo"
+import {FrontendCard} from "../generated-src/FrontendCard"
+import {CardNumberSetPair} from "../generated-src/CardNumberSetPair"
+import {CardsMap} from "../generated-src/CardsMap"
 
 export class CardStore {
     static readonly CONTEXT = HttpConfig.API + "/cards"
@@ -335,24 +335,27 @@ export class CardStore {
 
     findExtraInfoToUse = (card: FrontendCard) => {
         let extraInfo = card.extraCardInfo
-        if ((userStore.displayFutureSas || this.showFutureCardInfo) && this.futureCards && this.futureCards.cards[card.cardTitleUrl] != null) {
-            extraInfo = this.futureCards.cards[card.cardTitleUrl].extraCardInfo
+        const cardNameKey = cardNameToCardNameKey(card.cardTitle)
+        if ((userStore.displayFutureSas || this.showFutureCardInfo) && this.futureCards && this.futureCards.cards[cardNameKey] != null) {
+            extraInfo = this.futureCards.cards[cardNameKey].extraCardInfo
         }
         return extraInfo
     }
 
-    findPrevExtraInfoForCard = (cardNameUrl: string) => {
+    findPrevExtraInfoForCard = (cardTitle: string) => {
         if (this.previousCards == null) {
             return undefined
         }
-        return this.previousCards.cards[cardNameUrl]
+        const cardNameKey = cardNameToCardNameKey(cardTitle)
+        return this.previousCards.cards[cardNameKey]
     }
 
-    findNextExtraInfoForCard = (cardNameUrl: string) => {
+    findNextExtraInfoForCard = (cardTitle: string) => {
         if (this.futureCards == null) {
             return undefined
         }
-        return this.futureCards.cards[cardNameUrl]
+        const cardNameKey = cardNameToCardNameKey(cardTitle)
+        return this.futureCards.cards[cardNameKey]
     }
 
     /**

@@ -66,7 +66,7 @@ export const AercViewForDeck = observer((props: { deck: DeckSearchResult, type: 
     const cards = deck.housesAndCards
         .flatMap(house => house.cards.map(simpleCard => {
             if (userStore.displayFutureSas) {
-                return cardStore.findNextExtraInfoForCard(simpleCard.cardTitleUrl) ?? cardStore.fullCardFromCardName(simpleCard.cardTitle)
+                return cardStore.findNextExtraInfoForCard(simpleCard.cardTitle) ?? cardStore.fullCardFromCardName(simpleCard.cardTitle)
             }
             return cardStore.fullCardFromCardName(simpleCard.cardTitle)
         }))

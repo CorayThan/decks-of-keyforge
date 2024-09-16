@@ -49,12 +49,12 @@ export const CardView = observer((props: CardViewProps) => {
 
     let previousCard
     if (displayHistory) {
-        previousCard = cardStore.findPrevExtraInfoForCard(card.cardTitleUrl)
+        previousCard = cardStore.findPrevExtraInfoForCard(card.cardTitle)
     }
 
     let futureCard
     if (userStore.displayFutureSas) {
-        futureCard = cardStore.findNextExtraInfoForCard(card.cardTitleUrl)
+        futureCard = cardStore.findNextExtraInfoForCard(card.cardTitle)
     }
 
     const sidebarProps = screenStore.screenSizeXs() ? {
