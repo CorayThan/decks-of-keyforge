@@ -82,26 +82,33 @@ data class DokCardInDeck(
         house = house,
     )
 
-    fun toSimpleCard(house: House) = SimpleCard(
-        cardTitle = card.cardTitle,
-        cardTitleUrl = cardUrlFull(card.cardTitle, house, anomaly),
-        rarity = rarity,
-        maverick = maverick,
-        anomaly = anomaly,
-        enhanced = enhanced,
-        legacy = legacy,
-        bonusDraw = bonusDraw,
-        bonusCapture = bonusCapture,
-        bonusAember = bonusAember,
-        bonusDamage = bonusDamage,
-        bonusDiscard = bonusDiscard,
-        bonusBobnar = bonusBobnar,
-        bonusDis = bonusDis,
-        bonusEkwidon = bonusEkwidon,
-        bonusGeistoid = bonusGeistoid,
-        bonusLogos = bonusLogos,
-        bonusMars = bonusMars,
-        bonusSkyborn = bonusSkyborn,
-    )
+    fun toSimpleCard(house: House): SimpleCard {
+        val imageHouse = if (maverick) {
+            card.houses.firstOrNull() ?: house
+        } else {
+            house
+        }
+        return SimpleCard(
+            cardTitle = card.cardTitle,
+            cardTitleUrl = cardUrlFull(card.cardTitle, imageHouse, anomaly),
+            rarity = rarity,
+            maverick = maverick,
+            anomaly = anomaly,
+            enhanced = enhanced,
+            legacy = legacy,
+            bonusDraw = bonusDraw,
+            bonusCapture = bonusCapture,
+            bonusAember = bonusAember,
+            bonusDamage = bonusDamage,
+            bonusDiscard = bonusDiscard,
+            bonusBobnar = bonusBobnar,
+            bonusDis = bonusDis,
+            bonusEkwidon = bonusEkwidon,
+            bonusGeistoid = bonusGeistoid,
+            bonusLogos = bonusLogos,
+            bonusMars = bonusMars,
+            bonusSkyborn = bonusSkyborn,
+        )
+    }
 
 }
