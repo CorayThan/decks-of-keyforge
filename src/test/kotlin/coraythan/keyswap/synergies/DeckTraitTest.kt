@@ -1,11 +1,11 @@
 package coraythan.keyswap.synergies
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
-import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import org.junit.Assert
 import org.junit.Test
 import org.slf4j.LoggerFactory
@@ -14,12 +14,11 @@ class DeckTraitTest {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    val jammerPack = listOf<Card>()
+    val jammerPack = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "jammerpack",
+                    testCard(
+                            name = "jammerpack",
                             house = House.Brobnar,
-                            cardTitle = "jammerpack",
                             power = 75,
                             extraCardInfo = ExtraCardInfo(
                                     amberControl = 0.0,
@@ -33,7 +32,7 @@ class DeckTraitTest {
 
     @Test
     fun testJammerpack() {
-        val jammerpack = DeckSynergyService.fromDeckWithCards(boringDeck.copy(totalPower = 75), jammerPack)
+        val jammerpack = DeckSynergyService.fromDeckWithCards(boringDeck, jammerPack)
         Assert.assertEquals(2, jammerpack.synergyRating)
         Assert.assertEquals(2.0, jammerpack.amberControl, 0.001)
 

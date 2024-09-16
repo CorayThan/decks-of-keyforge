@@ -1,13 +1,13 @@
 package coraythan.keyswap.synergies
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
-import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.slf4j.LoggerFactory
@@ -17,12 +17,11 @@ class ComplexSynsTest {
     private val log = LoggerFactory.getLogger(this::class.java)
 
 
-    val grumpBuggy = listOf<Card>()
+    val grumpBuggy = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "grump-buggy",
+                    testCard(
+                            name = "grump-buggy",
                             house = House.Brobnar,
-                            cardTitle = "Grump Buggy",
                             cardType = CardType.Artifact,
                             extraCardInfo = ExtraCardInfo(
                                     amberControl = 0.0,
@@ -38,32 +37,27 @@ class ComplexSynsTest {
                     )
             )
             .plus((0..6).map {
-                basicCard().copy(
-                        id = "Troll",
+                testCard(
+                        name = "Troll",
                         house = House.Brobnar,
-                        cardTitle = "Troll",
                         cardType = CardType.Creature,
                         power = 8,
-                        powerString = "8"
                 )
             })
             .plus((0..2).map {
-                basicCard().copy(
-                        id = "Bumpsy",
+                testCard(
+                        name = "Bumpsy",
                         house = House.Brobnar,
-                        cardTitle = "Bumpsy",
                         cardType = CardType.Creature,
                         power = 5,
-                        powerString = "5"
                 )
             })
 
-    val binateRupture = listOf<Card>()
+    val binateRupture = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "binate-rupture",
+                    testCard(
+                            name = "binate-rupture",
                             house = House.Logos,
-                            cardTitle = "Binate Rupture",
                             cardType = CardType.Artifact,
                             extraCardInfo = ExtraCardInfo(
                                     expectedAmber = 0.0,
@@ -84,10 +78,9 @@ class ComplexSynsTest {
                     )
             )
             .plus((0..1).map {
-                basicCard().copy(
-                        id = "IG",
+                testCard(
+                        name = "IG",
                         house = House.Logos,
-                        cardTitle = "IG",
                         cardType = CardType.Action,
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(
@@ -98,13 +91,11 @@ class ComplexSynsTest {
                                 ))
                 )
             })
-            .plus(basicCard().copy(
-                    id = "Alpha",
+            .plus(testCard(
+                    name = "Alpha",
                     house = House.Logos,
-                    cardTitle = "Alpha",
                     cardType = CardType.Creature,
                     power = 8,
-                    powerString = "8",
                     extraCardInfo = ExtraCardInfo(
                             traits = listOf(
                                     SynTraitValue(

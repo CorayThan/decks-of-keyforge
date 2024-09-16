@@ -1,13 +1,13 @@
 package coraythan.keyswap.synergies
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
-import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import org.junit.Assert
 import org.junit.Test
 import org.slf4j.LoggerFactory
@@ -16,12 +16,11 @@ class GroupSynsTest {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    val dustPixieNoKeyCheats = listOf<Card>()
+    val dustPixieNoKeyCheats = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "dust pixie",
+                    testCard(
+                            name = "dust pixie",
                             house = House.Untamed,
-                            cardTitle = "Dust Pixie",
                             cardType = CardType.Creature,
                             extraCardInfo = ExtraCardInfo(
                                     expectedAmber = 2.0,
@@ -33,10 +32,9 @@ class GroupSynsTest {
                     )
             )
             .plus((0..10).map {
-                basicCard().copy(
-                        id = "nature's call",
+                testCard(
+                        name = "nature's call",
                         house = House.Untamed,
-                        cardTitle = "Nature's Call",
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(
                                         SynTraitValue(SynergyTrait.replays, 3, cardTypesString = "Creature")
@@ -46,10 +44,9 @@ class GroupSynsTest {
 
     val dustPixieWithKeyCheats = dustPixieNoKeyCheats
             .plus((0..10).map {
-                basicCard().copy(
-                        id = "keycharge",
+                testCard(
+                        name = "keycharge",
                         house = House.Untamed,
-                        cardTitle = "keycharge",
                         cardType = CardType.Action,
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(

@@ -1,13 +1,13 @@
 package coraythan.keyswap.synergies
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
-import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.synergy.SynTraitPlayer
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.slf4j.LoggerFactory
@@ -16,12 +16,11 @@ class PlayerMatchTest {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    val ctwCards = listOf<Card>()
+    val ctwCards = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "Control the Weak",
+                    testCard(
+                            name = "Control the Weak",
                             house = House.Dis,
-                            cardTitle = "Control the Weak",
                             extraCardInfo = ExtraCardInfo(
                                     disruption = 1.5,
                                     disruptionMax = 2.0,
@@ -32,10 +31,9 @@ class PlayerMatchTest {
                     )
             )
             .plus(
-                    basicCard().copy(
-                            id = "Gateway to Dis",
+                    testCard(
+                            name = "Gateway to Dis",
                             house = House.Dis,
-                            cardTitle = "Gateway to Dis",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
                                             SynTraitValue(SynergyTrait.destroys, cardTypes = listOf(CardType.Creature), rating = 3)
@@ -44,10 +42,9 @@ class PlayerMatchTest {
                     )
             )
             .plus(
-                    basicCard().copy(
-                            id = "Obsidian Forge",
+                    testCard(
+                            name = "Obsidian Forge",
                             house = House.Dis,
-                            cardTitle = "Obsidian Forge",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
                                             SynTraitValue(SynergyTrait.destroys, player = SynTraitPlayer.FRIENDLY, cardTypes = listOf(CardType.Creature), rating = 3)

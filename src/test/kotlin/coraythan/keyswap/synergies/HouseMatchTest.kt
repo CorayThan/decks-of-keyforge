@@ -1,12 +1,12 @@
 package coraythan.keyswap.synergies
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
-import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import coraythan.keyswap.synergy.SynTraitHouse
 import coraythan.keyswap.synergy.SynTraitValue
 import coraythan.keyswap.synergy.SynergyTrait
+import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.slf4j.LoggerFactory
@@ -15,12 +15,11 @@ class HouseMatchTest {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    val pixieCards = listOf<Card>()
+    val pixieCards = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "dust pixie",
+                    testCard(
+                            name = "dust pixie",
                             house = House.Untamed,
-                            cardTitle = "dust pixie",
                             extraCardInfo = ExtraCardInfo(
                                     expectedAmber = 2.0,
                                     expectedAmberMax = 4.0,
@@ -32,10 +31,9 @@ class HouseMatchTest {
                     )
             )
             .plus(
-                    basicCard().copy(
-                            id = "Hysteria",
+                    testCard(
+                            name = "Hysteria",
                             house = House.Dis,
-                            cardTitle = "Hysteria",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
                                             SynTraitValue(SynergyTrait.replays, rating = 3, house = SynTraitHouse.continuous)

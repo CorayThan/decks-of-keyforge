@@ -1,34 +1,35 @@
 package coraythan.keyswap.synergies
 
 import coraythan.keyswap.House
-import coraythan.keyswap.cards.Card
 import coraythan.keyswap.cards.CardType
+import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
-import coraythan.keyswap.synergy.*
+import coraythan.keyswap.synergy.SynTraitHouse
+import coraythan.keyswap.synergy.SynTraitPlayer
+import coraythan.keyswap.synergy.SynTraitValue
+import coraythan.keyswap.synergy.SynergyTrait
 import coraythan.keyswap.synergy.synergysystem.DeckSynergyService
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.slf4j.LoggerFactory
-import kotlin.math.roundToInt
 
 class BasicSynsTest {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    val basicDeckCards = listOf<Card>()
+    val basicDeckCards = listOf<DokCardInDeck>()
             .plus((0..11).map {
-                basicCard().copy(
-                        id = "tremor",
+                testCard(
+                        name = "tremor",
                         extraCardInfo = ExtraCardInfo(
                                 creatureControl = 1.0
                         )
                 )
             })
             .plus((0..11).map {
-                basicCard().copy(
-                        id = "virtuous works",
+                testCard(
+                        name = "virtuous works",
                         house = House.Sanctum,
-                        cardTitle = "Virtuous Works",
                         amber = 3,
                         extraCardInfo = ExtraCardInfo(
                                 expectedAmber = 3.0
@@ -36,10 +37,9 @@ class BasicSynsTest {
                 )
             })
             .plus((0..11).map {
-                basicCard().copy(
-                        id = "niffle ape",
+                testCard(
+                        name = "niffle ape",
                         house = House.Untamed,
-                        cardTitle = "Niffle Ape",
                         extraCardInfo = ExtraCardInfo(
                                 effectivePower = 3
                         )
@@ -58,12 +58,11 @@ class BasicSynsTest {
 
     }
 
-    val huntingWitch = listOf<Card>()
+    val huntingWitch = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "hunting-witch",
+                    testCard(
+                            name = "hunting-witch",
                             house = House.Untamed,
-                            cardTitle = "Hunting Witch",
                             cardType = CardType.Creature,
                             extraCardInfo = ExtraCardInfo(
                                     expectedAmber = 1.0,
@@ -77,20 +76,18 @@ class BasicSynsTest {
                     )
             )
             .plus((0..2).map {
-                basicCard().copy(
-                        id = "snufflegator",
+                testCard(
+                        name = "snufflegator",
                         house = House.Untamed,
-                        cardTitle = "Snufflegator",
                         cardType = CardType.Creature,
                         extraCardInfo = ExtraCardInfo(
                         )
                 )
             })
             .plus(
-                    basicCard().copy(
-                            id = "nature's call",
+                    testCard(
+                            name = "nature's call",
                             house = House.Untamed,
-                            cardTitle = "Nature's Call",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
                                             SynTraitValue(SynergyTrait.returns_R_ToHand, 4, cardTypesString = "Creature")
@@ -98,10 +95,9 @@ class BasicSynsTest {
                     )
             )
             .plus(
-                    basicCard().copy(
-                            id = "hysteria",
+                    testCard(
+                            name = "hysteria",
                             house = House.Sanctum,
-                            cardTitle = "Hysteria",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
                                             SynTraitValue(SynergyTrait.returns_R_ToHand, 4, cardTypesString = "Creature")
@@ -115,19 +111,18 @@ class BasicSynsTest {
         val huntingResults = DeckSynergyService.fromDeckWithCards(boringDeck, huntingWitch, null)
         assertEquals(0, huntingResults.synergyRating)
         assertEquals(2.875, huntingResults.expectedAmber, 0.001)
-        val combos = huntingResults.synergyCombos.find { it.cardName == "Hunting Witch" }!!.synergies
+        val combos = huntingResults.synergyCombos.find { it.cardName == "hunting-witch" }?.synergies ?: listOf()
         log.info("Combos: $combos")
-        assertEquals(50, combos.find { it.traitCards.contains("Nature's Call") }!!.percentSynergized)
-        assertEquals(25, combos.find { it.traitCards.contains("Hysteria") }!!.percentSynergized)
-        assertEquals(-50, combos.find { it.trait.trait == SynergyTrait.lowCreatureCount }!!.percentSynergized)
+        assertEquals(50, combos.find { it.traitCards.contains("nature's call") }?.percentSynergized)
+        assertEquals(25, combos.find { it.traitCards.contains("hysteria") }?.percentSynergized)
+        assertEquals(-50, combos.find { it.trait.trait == SynergyTrait.lowCreatureCount }?.percentSynergized)
     }
 
-    val basicSynAndAntisyn = listOf<Card>()
+    val basicSynAndAntisyn = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "hunting-witch",
+                    testCard(
+                            name = "hunting-witch",
                             house = House.Untamed,
-                            cardTitle = "Hunting Witch",
                             cardType = CardType.Creature,
                             extraCardInfo = ExtraCardInfo(
                                     expectedAmber = 1.0,
@@ -139,10 +134,9 @@ class BasicSynsTest {
                     )
             )
             .plus(
-                    basicCard().copy(
-                            id = "nature's call",
+                    testCard(
+                            name = "nature's call",
                             house = House.Untamed,
-                            cardTitle = "Nature's Call",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
                                             SynTraitValue(SynergyTrait.returns_R_ToHand, 4)
@@ -150,10 +144,9 @@ class BasicSynsTest {
                     )
             )
             .plus(
-                    basicCard().copy(
-                            id = "gateway to dis",
+                    testCard(
+                            name = "gateway to dis",
                             house = House.Sanctum,
-                            cardTitle = "gateway to dis",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
                                             SynTraitValue(SynergyTrait.destroys, 4)
@@ -167,14 +160,14 @@ class BasicSynsTest {
 
         val basicSynAntisynResults = DeckSynergyService.fromDeckWithCards(boringDeck, basicSynAndAntisyn, null)
         assertEquals(0, basicSynAntisynResults.synergyRating)
-        assertEquals(2, basicSynAntisynResults.sasRating - basicSynAntisynResults.metaScores.values.sum().roundToInt())
+        assertEquals(2, basicSynAntisynResults.sasRating)
         assertEquals(2, basicSynAntisynResults.rawAerc)
     }
 
-    val hasOnlySynergies = listOf<Card>()
+    val hasOnlySynergies = listOf<DokCardInDeck>()
             .plus((0..11).map {
-                basicCard().copy(
-                        id = "returns creatures to hand",
+                testCard(
+                        name = "returns creatures to hand",
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(
                                         SynTraitValue(SynergyTrait.returns_R_ToHand, 4)
@@ -183,11 +176,9 @@ class BasicSynsTest {
                 )
             })
             .plus((0..11).map {
-                basicCard().copy(
-                        id = "liked being returned to hand",
+                testCard(
+                        name = "liked being returned to hand",
                         house = House.Sanctum,
-                        cardTitle = "Virtuous Works",
-                        amber = 3,
                         extraCardInfo = ExtraCardInfo(
                                 expectedAmber = 0.0,
                                 expectedAmberMax = 3.0,
@@ -201,16 +192,16 @@ class BasicSynsTest {
     @Test
     fun testPureSynergies() {
         val hasOnlySynergiesResults = DeckSynergyService.fromDeckWithCards(boringDeck, hasOnlySynergies)
+        log.info("Found synergy results for has only synergies: $hasOnlySynergiesResults")
         assertEquals(36, hasOnlySynergiesResults.synergyRating)
-        // 26 due to meta score
-        assertEquals(26, hasOnlySynergiesResults.sasRating)
+        assertEquals(36, hasOnlySynergiesResults.sasRating)
         assertEquals(0, hasOnlySynergiesResults.rawAerc)
     }
 
-    val hasOnlyAntisynergies = listOf<Card>()
+    val hasOnlyAntisynergies = listOf<DokCardInDeck>()
             .plus((0..11).map {
-                basicCard().copy(
-                        id = "returns creatures to hand",
+                testCard(
+                        name = "returns creatures to hand",
                         extraCardInfo = ExtraCardInfo(
                                 traits = listOf(
                                         SynTraitValue(SynergyTrait.returns_R_ToHand, 4)
@@ -219,11 +210,9 @@ class BasicSynsTest {
                 )
             })
             .plus((0..11).map {
-                basicCard().copy(
-                        id = "hates being returned to hand",
+                testCard(
+                        name = "hates being returned to hand",
                         house = House.Sanctum,
-                        cardTitle = "hates being returned to hand",
-                        amber = 3,
                         extraCardInfo = ExtraCardInfo(
                                 expectedAmber = 0.0,
                                 expectedAmberMax = 3.0,
@@ -239,16 +228,15 @@ class BasicSynsTest {
         val hasOnlySynergiesResults = DeckSynergyService.fromDeckWithCards(boringDeck, hasOnlyAntisynergies)
         assertEquals(0, hasOnlySynergiesResults.synergyRating)
         assertEquals(36, hasOnlySynergiesResults.antisynergyRating)
-        assertEquals(0, hasOnlySynergiesResults.sasRating - hasOnlySynergiesResults.metaScores.values.sum().roundToInt())
+        assertEquals(0, hasOnlySynergiesResults.sasRating)
         assertEquals(36, hasOnlySynergiesResults.rawAerc)
     }
 
-    val shoolerHyseriaKeyA = listOf<Card>()
+    val shoolerHyseriaKeyA = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "shooler",
+                    testCard(
+                            name = "shooler",
                             house = House.Sanctum,
-                            cardTitle = "shooler",
                             extraCardInfo = ExtraCardInfo(
                                     amberControl = 0.0,
                                     amberControlMax = 16.0,
@@ -260,10 +248,9 @@ class BasicSynsTest {
                     )
             )
             .plus(
-                    basicCard().copy(
-                            id = "hysteria",
+                    testCard(
+                            name = "hysteria",
                             house = House.Sanctum,
-                            cardTitle = "hysteria",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
                                             SynTraitValue(SynergyTrait.returns_R_ToHand, 4)
@@ -272,10 +259,9 @@ class BasicSynsTest {
                     )
             )
             .plus(
-                    basicCard().copy(
-                            id = "key abuduction",
+                    testCard(
+                            name = "key abuduction",
                             house = House.Brobnar,
-                            cardTitle = "key abuduction",
                             extraCardInfo = ExtraCardInfo(
                                     traits = listOf(
                                             SynTraitValue(SynergyTrait.returns_R_ToHand, 2, SynTraitHouse.house)
@@ -289,7 +275,7 @@ class BasicSynsTest {
         val shooler = DeckSynergyService.fromDeckWithCards(boringDeck, shoolerHyseriaKeyA)
         log.info("Combos: ${shooler.synergyCombos}")
         assertEquals(5, shooler.synergyRating)
-        assertEquals(5, shooler.sasRating - shooler.metaScores.values.sum().roundToInt())
+        assertEquals(5, shooler.sasRating)
         assertEquals(0, shooler.rawAerc)
         assertEquals(5.28, shooler.amberControl, 0.001)
         val combo = shooler.synergyCombos.find { it.netSynergy > 0 }!!
@@ -301,12 +287,11 @@ class BasicSynsTest {
         assertEquals(5.28, combo.aercScore, 0.001)
     }
 
-    val spiritsWayCards = listOf<Card>()
+    val spiritsWayCards = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "spirits way",
+                    testCard(
+                            name = "spirits way",
                             house = House.Sanctum,
-                            cardTitle = "spirits way",
                             extraCardInfo = ExtraCardInfo(
                                     creatureControl = 0.0,
                                     creatureControlMax = 10.0,
@@ -323,10 +308,9 @@ class BasicSynsTest {
                     )
             )
             .plus((0..9).map {
-                basicCard().copy(
-                        id = "beef",
+                testCard(
+                        name = "beef",
                         house = House.Sanctum,
-                        cardTitle = "beef",
                         cardType = CardType.Creature,
                         power = 3,
                 )
@@ -340,12 +324,11 @@ class BasicSynsTest {
         assertEquals(-100, spiritsWay.synergyCombos.find { it.cardName == "spirits way" }?.synergies?.firstOrNull()?.percentSynergized)
     }
 
-    val selfSynergy = listOf<Card>()
+    val selfSynergy = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "kirby",
+                    testCard(
+                            name = "kirby",
                             house = House.Brobnar,
-                            cardTitle = "kirby",
                             power = 10,
                             extraCardInfo = ExtraCardInfo(
                                     efficiency = 0.0,
@@ -368,12 +351,11 @@ class BasicSynsTest {
         assertEquals(2.0, twoKirby.efficiency, 0.001)
     }
 
-    val selfSynergyInHouse = listOf<Card>()
+    val selfSynergyInHouse = listOf<DokCardInDeck>()
             .plus(
-                    basicCard().copy(
-                            id = "kirby",
+                    testCard(
+                            name = "kirby",
                             house = House.Brobnar,
-                            cardTitle = "kirby",
                             power = 10,
                             extraCardInfo = ExtraCardInfo(
                                     efficiency = 1.0,
@@ -386,10 +368,9 @@ class BasicSynsTest {
             )
             .plus(
                     (0..1).map {
-                        basicCard().copy(
-                                id = "kirby",
+                        testCard(
+                                name = "kirby",
                                 house = House.StarAlliance,
-                                cardTitle = "kirby",
                                 power = 10,
                                 extraCardInfo = ExtraCardInfo(
                                         efficiency = 1.0,
