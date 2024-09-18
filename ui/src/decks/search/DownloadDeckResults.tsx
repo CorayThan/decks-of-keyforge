@@ -11,8 +11,8 @@ import { KeyButton } from "../../mui-restyled/KeyButton"
 import { PatronButton } from "../../thirdpartysites/patreon/PatronButton"
 import { userStore } from "../../user/UserStore"
 import { deckStore } from "../DeckStore"
-import { DeckUtils } from "../models/DeckSearchResult"
 import { DeckFilters } from "./DeckFilters"
+import {DeckUtils} from "../DeckUtils";
 
 class DownloadDeckResultsStore {
     @observable

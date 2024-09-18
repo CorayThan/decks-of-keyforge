@@ -22,9 +22,10 @@ import { DeckListViewProps } from "./DeckListView"
 import { SaStars } from "./DeckScoreView"
 import { deckStore } from "./DeckStore"
 import { deckTableViewStore } from "./DeckTableViewStore"
-import { DeckSearchResult, DeckUtils } from "./models/DeckSearchResult"
+import { DeckSearchResult } from "./models/DeckSearchResult"
 import { ListForSaleView } from "./sales/ListForSaleView"
 import { DeckType } from "../generated-src/DeckType";
+import {DeckUtils} from "./DeckUtils";
 
 @observer
 export class DeckTableView extends React.Component<DeckListViewProps> {

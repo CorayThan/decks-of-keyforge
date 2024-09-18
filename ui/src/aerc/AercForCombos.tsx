@@ -3,9 +3,9 @@ import { sortBy } from "lodash"
 import * as React from "react"
 import { spacing } from "../config/MuiConfig"
 import { roundToHundreds } from "../config/Utils"
-import { DeckUtils } from "../decks/models/DeckSearchResult"
 import { SynergyCombo } from "../generated-src/SynergyCombo"
 import { SasTip } from "../mui-restyled/SasTip"
+import {DeckUtils} from "../decks/DeckUtils";
 
 export interface AercForCombosProps {
     title?: string

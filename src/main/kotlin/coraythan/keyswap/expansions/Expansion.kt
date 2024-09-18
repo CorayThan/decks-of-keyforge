@@ -117,6 +117,11 @@ enum class Expansion(
         setOf(House.Logos, House.Redemption, House.Shadows, House.Skyborn, House.Untamed),
         hasTokens = true,
     ),
+    MORE_MUTATION(
+        874,
+        "MoM",
+        setOf(House.StarAlliance, House.Dis, House.Logos, House.Saurian, House.Sanctum, House.Shadows, House.Untamed),
+    ),
     MARTIAN_CIVIL_WAR(
         892,
         "MCW",
@@ -150,7 +155,8 @@ val activeExpansions = setOf(
     Expansion.VAULT_MASTERS_2024,
     Expansion.MARTIAN_CIVIL_WAR,
     Expansion.AEMBER_SKIES,
-    Expansion.TOKENS_OF_CHANGE
+    Expansion.TOKENS_OF_CHANGE,
+    Expansion.MORE_MUTATION,
 )
 
 // Include Expansions which have had SAS scores created and are tournament legal

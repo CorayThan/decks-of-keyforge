@@ -27,6 +27,7 @@ export enum ExpansionNumber {
     VM24 = 737,
     AS = 800,
     ToC = 855,
+    MoM = 874,
     MCW = 892,
 }
 
@@ -40,6 +41,7 @@ export const displayMyDecksLinksFor = [
     Expansion.GRIM_REMINDERS,
     Expansion.AEMBER_SKIES,
     Expansion.TOKENS_OF_CHANGE,
+    Expansion.MORE_MUTATION,
 ]
 
 export const activeExpansions = [
@@ -56,6 +58,7 @@ export const activeExpansions = [
     Expansion.MENAGERIE_2024,
     Expansion.MARTIAN_CIVIL_WAR,
     Expansion.AEMBER_SKIES,
+    Expansion.MORE_MUTATION,
     Expansion.TOKENS_OF_CHANGE,
 ]
 
@@ -83,6 +86,9 @@ export const activeCardExpansions = [
     ExpansionNumber.DT,
     ExpansionNumber.WOE,
     ExpansionNumber.GR,
+    ExpansionNumber.AS,
+    ExpansionNumber.ToC,
+    ExpansionNumber.MoM,
 ]
 
 export const expansionsWithCards = [
@@ -98,14 +104,15 @@ export const expansionsWithCards = [
     Expansion.MENAGERIE_2024,
     Expansion.MARTIAN_CIVIL_WAR,
     Expansion.AEMBER_SKIES,
+    Expansion.MORE_MUTATION,
     Expansion.TOKENS_OF_CHANGE,
 ]
 
 export const recentExpansions = [
     Expansion.AEMBER_SKIES,
     Expansion.GRIM_REMINDERS,
+    Expansion.MORE_MUTATION,
     Expansion.TOKENS_OF_CHANGE,
-    Expansion.VAULT_MASTERS_2024,
 ]
 
 export const activeCardLinksExpansions = [
@@ -118,6 +125,7 @@ export const activeCardLinksExpansions = [
     Expansion.GRIM_REMINDERS,
     Expansion.AEMBER_SKIES,
     Expansion.TOKENS_OF_CHANGE,
+    Expansion.MORE_MUTATION,
 ]
 
 export const possibleCardExpansionsForExpansion = (exp: ExpansionNumber): ExpansionNumber[] => {
@@ -146,6 +154,7 @@ export const expansionInfos: ExpansionInfo[] = [
     {expansionNumber: ExpansionNumber.MN24, name: "Menagerie", abbreviation: "MN24", backendEnum: Expansion.MENAGERIE_2024, hasTokens: true},
     {expansionNumber: ExpansionNumber.MCW, name: "Martian Civil War", abbreviation: "MCW", backendEnum: Expansion.MARTIAN_CIVIL_WAR, hasTokens: true},
     {expansionNumber: ExpansionNumber.AS, name: "Aember Skies", abbreviation: "AS", backendEnum: Expansion.AEMBER_SKIES},
+    {expansionNumber: ExpansionNumber.MoM, name: "More Mutation", abbreviation: "MoM", backendEnum: Expansion.MORE_MUTATION},
     {expansionNumber: ExpansionNumber.ToC, name: "Tokens of Change", abbreviation: "ToC", backendEnum: Expansion.TOKENS_OF_CHANGE, hasTokens: true},
 ]
 

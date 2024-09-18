@@ -1,10 +1,10 @@
-import { observer } from "mobx-react"
+import {observer} from "mobx-react"
 import * as React from "react"
 import anomalyDark from "../cards/imgs/anomaly-dark.svg"
 import anomaly from "../cards/imgs/anomaly.svg"
-import { themeStore } from "../config/MuiConfig"
-import { Expansion } from "../generated-src/Expansion"
-import { expansionInfoMap } from "./Expansions"
+import {themeStore} from "../config/MuiConfig"
+import {Expansion} from "../generated-src/Expansion"
+import {expansionInfoMap} from "./Expansions"
 import aoaDark from "./imgs/aoa-dark.svg"
 import aoa from "./imgs/aoa.svg"
 import cotaDark from "./imgs/cota-dark.svg"
@@ -31,8 +31,15 @@ import as from "./imgs/as.svg"
 import asDark from "./imgs/as-dark.svg"
 import toc from "./imgs/toc.svg"
 import tocDark from "./imgs/toc-dark.svg"
+import mom from "./imgs/mom.svg"
+import momDark from "./imgs/mom-dark.svg"
 
-export const ExpansionIcon = observer((props: { expansion: Expansion, size?: number, white?: boolean, style?: React.CSSProperties }) => {
+export const ExpansionIcon = observer((props: {
+    expansion: Expansion,
+    size?: number,
+    white?: boolean,
+    style?: React.CSSProperties
+}) => {
 
     let lightSrc
     let darkSrc
@@ -94,6 +101,10 @@ export const ExpansionIcon = observer((props: { expansion: Expansion, size?: num
             lightSrc = toc
             darkSrc = tocDark
             break
+        case Expansion.MORE_MUTATION:
+            lightSrc = mom
+            darkSrc = momDark
+            break
     }
     let src
     if (props.white != null) {
@@ -106,5 +117,11 @@ export const ExpansionIcon = observer((props: { expansion: Expansion, size?: num
     }
     const size = props.size == null ? 24 : props.size
 
-    return <img alt={expansionInfoMap.get(props.expansion)!.name} src={src} style={{width: size, height: size, ...props.style}}/>
+    return (
+        <img
+            alt={expansionInfoMap.get(props.expansion)!.name}
+            src={src}
+            style={{width: size, height: size, ...props.style}}
+        />
+    )
 })
