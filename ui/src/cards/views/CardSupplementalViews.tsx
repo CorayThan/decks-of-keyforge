@@ -1,20 +1,32 @@
-import { ExpansionUtils } from "../../generated-src/Expansion"
-import { ExpansionIcon } from "../../expansions/ExpansionIcon"
-import { spacing } from "../../config/MuiConfig"
-import { SynTraitValue } from "../../generated-src/SynTraitValue"
-import { TraitBubble } from "../../synergy/TraitBubble"
+import {Expansion, ExpansionUtils} from "../../generated-src/Expansion"
+import {ExpansionIcon} from "../../expansions/ExpansionIcon"
+import {spacing} from "../../config/MuiConfig"
+import {SynTraitValue} from "../../generated-src/SynTraitValue"
+import {TraitBubble} from "../../synergy/TraitBubble"
 import * as React from "react"
-import { FrontendCard } from "../../generated-src/FrontendCard"
+import {FrontendCard} from "../../generated-src/FrontendCard"
+import {Box} from "@material-ui/core";
 
 export const CardSetsFromCard = (props: { card: FrontendCard, noDot?: boolean }) => {
-    const sets = ExpansionUtils.sort(props.card.cardNumbers?.map(cardNumber => cardNumber.expansion) ?? [])
+    let sets = ExpansionUtils.sort(props.card.cardNumbers?.map(cardNumber => cardNumber.expansion) ?? [])
+    if (sets.includes(Expansion.VAULT_MASTERS_2023)) {
+        sets = sets.filter(expansion => expansion !== Expansion.VAULT_MASTERS_2024)
+    }
     return (
-        <div style={{display: "flex"}}>
+        <Box
+            display={"flex"}
+            flexWrap={"wrap"}
+            gridGap={spacing(1)}
+            justifyContent={"flex-end"}
+        >
             {sets.map((backendExpansion) => (
-                <ExpansionIcon size={16} expansion={backendExpansion} key={backendExpansion}
-                               style={{marginLeft: spacing(1)}}/>
+                <ExpansionIcon
+                    key={backendExpansion}
+                    size={16}
+                    expansion={backendExpansion}
+                />
             ))}
-        </div>
+        </Box>
     )
 }
 

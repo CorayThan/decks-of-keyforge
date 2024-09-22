@@ -26,7 +26,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         groupName: "Aember and Keys",
         traits: [SynergyTrait.stealsAmber, SynergyTrait.increasesKeyCost, SynergyTrait.scalingAmberControl,
             SynergyTrait.exalt, SynergyTrait.forgesKeys, SynergyTrait.forgesKeysWithoutAember,
-            SynergyTrait.preventsForging],
+            SynergyTrait.preventsForging, SynergyTrait.massCapturedAmberRemoval],
         traitTraitsOnly: [
             SynergyTrait.capturesAmber, SynergyTrait.putsAmberOnTarget,
         ],

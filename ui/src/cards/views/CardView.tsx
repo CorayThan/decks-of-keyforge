@@ -120,7 +120,7 @@ export const CardView = observer((props: CardViewProps) => {
                 {props.history == null ? (
                     <>
                         {futureCard && (
-                            <AercAndSynergies card={futureCard} combo={combo} title={"Future AERC"} copies={copies}/>
+                            <AercAndSynergies card={futureCard} title={"Future AERC"}/>
                         )}
                         <AercAndSynergies card={card} combo={combo}
                                           title={(previousCard || futureCard) && "Current AERC"} copies={copies}/>

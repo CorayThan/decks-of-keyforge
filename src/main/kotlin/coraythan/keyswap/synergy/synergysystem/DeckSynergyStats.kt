@@ -87,7 +87,17 @@ data class DeckSynergyStats(
                 SynergyTrait.bonusDamage to inputCards.sumOf { it.bonusDamage },
                 SynergyTrait.bonusDraw to inputCards.sumOf { it.bonusDraw },
                 SynergyTrait.bonusDiscard to inputCards.sumOf { it.bonusDiscard },
-                SynergyTrait.totalCreaturePower to inputCards.sumOf { it.card.power },
+                SynergyTrait.totalCreaturePower to inputCards.sumOf { card ->
+                    val increasesPowerTrait = card.extraCardInfo.traits.firstOrNull { it.trait == SynergyTrait.increasesCreaturePower && it.player != SynTraitPlayer.ENEMY }
+                    card.card.power + (if (increasesPowerTrait == null) 0 else when (increasesPowerTrait.rating) {
+                        TraitStrength.EXTRA_WEAK.value -> 1
+                        TraitStrength.WEAK.value -> 2
+                        TraitStrength.NORMAL.value -> 3
+                        TraitStrength.STRONG.value -> 4
+                        TraitStrength.EXTRA_STRONG.value -> 6
+                        else -> 0
+                    })
+                                                                    },
                 SynergyTrait.tokenCount to tokensCount,
                 SynergyTrait.totalArmor to inputCards.sumOf { it.card.armor },
                 SynergyTrait.expectedAember to inputCards.sumOf {
@@ -109,6 +119,7 @@ data class DeckSynergyStats(
         private fun calculateCapturePercentWithTraits(
             cards: List<DokCardInDeck>, capturePips: Int, checkTraits: Set<SynergyTrait>, target: SynTraitPlayer = SynTraitPlayer.ANY
         ): Int {
+            val friendlyIncluded = target == SynTraitPlayer.ANY || target == SynTraitPlayer.FRIENDLY
 
             val captureScore = cards.sumOf { dokCardInDeck ->
                 val traits = dokCardInDeck.extraCardInfo.traits
@@ -132,11 +143,11 @@ data class DeckSynergyStats(
                 }
             }
 
-            return capturePips + captureScore.roundToInt()
+            return (if (friendlyIncluded) capturePips else  0) + captureScore.roundToInt()
         }
 
         private fun calculateHauntingPercent(cards: List<DokCardInDeck>, target: SynTraitPlayer = SynTraitPlayer.ANY): Int {
-            val friendlyOnly = target == SynTraitPlayer.ANY || target == SynTraitPlayer.FRIENDLY
+            val friendlyIncluded = target == SynTraitPlayer.ANY || target == SynTraitPlayer.FRIENDLY
             val hauntingScore = cards.sumOf { dokCardInDeck ->
                 val traitValues = dokCardInDeck.extraCardInfo.traits.sumOf {
                     val playerMatch = target == SynTraitPlayer.ANY || it.player == SynTraitPlayer.ANY || target == it.player
@@ -173,9 +184,9 @@ data class DeckSynergyStats(
                     millsOrHauntingTrait + discards
                 }
 
-                val artifact = if (dokCardInDeck.card.cardType == CardType.Artifact && friendlyOnly) -5 else 0
-                val action = if (dokCardInDeck.card.cardType == CardType.Action && friendlyOnly) 2 else 0
-                val discardPips = if (friendlyOnly) dokCardInDeck.bonusDiscard * 4 else 0
+                val artifact = if (dokCardInDeck.card.cardType == CardType.Artifact && friendlyIncluded) -5 else 0
+                val action = if (dokCardInDeck.card.cardType == CardType.Action && friendlyIncluded) 2 else 0
+                val discardPips = if (friendlyIncluded) dokCardInDeck.bonusDiscard * 4 else 0
                 traitValues + artifact + action + discardPips
             }
 

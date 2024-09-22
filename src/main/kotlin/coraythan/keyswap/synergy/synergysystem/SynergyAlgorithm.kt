@@ -193,7 +193,7 @@ object DeckSynergyService {
                             ?: TraitStrength.entries.sumOf { strength ->
                                 val matches: SynMatchInfo? = if (synergy.trait == SynergyTrait.enhancedHouses) {
                                     SynMatchInfo(
-                                        matches = mapOf(TraitStrength.NORMAL to card.enhancedHouses),
+                                        matches = mapOf(TraitStrength.STRONG to card.enhancedHouses),
                                         cardNames = card.allHouses.minus(card.house).map { it.masterVaultValue }
                                     )
                                 } else  if (synergy.cardName == null) {
