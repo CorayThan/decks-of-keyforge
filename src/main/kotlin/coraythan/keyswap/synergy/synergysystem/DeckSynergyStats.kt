@@ -4,6 +4,7 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.decks.models.GenericDeck
+import coraythan.keyswap.roundToTwoSigDig
 import coraythan.keyswap.synergy.*
 import kotlin.math.roundToInt
 
@@ -14,13 +15,30 @@ private data class TraitVals(
     val minHouse: Int = 0,
 )
 
+data class DeckSynStatValue(
+    val value: Int,
+    val matches: List<String>,
+) {
+
+    companion object {
+        fun create(value: Int, matches: List<String> = listOf()): DeckSynStatValue {
+            return DeckSynStatValue(
+                value,
+                matches
+                    .groupBy { it }
+                    .map { if (it.value.size == 1) it.key else "${it.value.size} x ${it.key}" }
+            )
+        }
+    }
+}
+
 data class DeckSynergyStats(
-    val deckStats: Map<SynergyTrait, Int>,
-    val deckStatsFriendly: Map<SynergyTrait, Int>,
-    val deckStatsEnemy: Map<SynergyTrait, Int>,
-    val houseStats: Map<House, Map<SynergyTrait, Int>>,
-    val houseStatsFriendly: Map<House, Map<SynergyTrait, Int>>,
-    val houseStatsEnemy: Map<House, Map<SynergyTrait, Int>>,
+    val deckStats: Map<SynergyTrait, DeckSynStatValue>,
+    val deckStatsFriendly: Map<SynergyTrait, DeckSynStatValue>,
+    val deckStatsEnemy: Map<SynergyTrait, DeckSynStatValue>,
+    val houseStats: Map<House, Map<SynergyTrait, DeckSynStatValue>>,
+    val houseStatsFriendly: Map<House, Map<SynergyTrait, DeckSynStatValue>>,
+    val houseStatsEnemy: Map<House, Map<SynergyTrait, DeckSynStatValue>>,
 ) {
     companion object {
 
@@ -50,9 +68,21 @@ data class DeckSynergyStats(
             tokenValues: TokenValues?
         ): DeckSynergyStats {
             return DeckSynergyStats(
-                deckStats = statsFromCards(inputCards, tokenValues?.tokensPerGame?.roundToInt() ?: 0, SynTraitPlayer.ANY),
-                deckStatsFriendly = statsFromCards(inputCards, tokenValues?.tokensPerGame?.roundToInt() ?: 0, SynTraitPlayer.FRIENDLY),
-                deckStatsEnemy = statsFromCards(inputCards, tokenValues?.tokensPerGame?.roundToInt() ?: 0, SynTraitPlayer.ENEMY),
+                deckStats = statsFromCards(
+                    inputCards,
+                    tokenValues?.tokensPerGame?.roundToInt() ?: 0,
+                    SynTraitPlayer.ANY
+                ),
+                deckStatsFriendly = statsFromCards(
+                    inputCards,
+                    tokenValues?.tokensPerGame?.roundToInt() ?: 0,
+                    SynTraitPlayer.FRIENDLY
+                ),
+                deckStatsEnemy = statsFromCards(
+                    inputCards,
+                    tokenValues?.tokensPerGame?.roundToInt() ?: 0,
+                    SynTraitPlayer.ENEMY
+                ),
                 houseStats = deck.houses.associateWith {
                     statsFromCards(
                         inputCards.filter { card -> card.house == it },
@@ -74,21 +104,21 @@ data class DeckSynergyStats(
             )
         }
 
-        private fun statsFromCards(inputCards: List<DokCardInDeck>, tokensCount: Int, player: SynTraitPlayer): Map<SynergyTrait, Int> {
+        private fun statsFromCards(
+            inputCards: List<DokCardInDeck>,
+            tokensCount: Int,
+            player: SynTraitPlayer
+        ): Map<SynergyTrait, DeckSynStatValue> {
             val capturePips = inputCards.sumOf { it.bonusCapture }
-            return mapOf(
-                SynergyTrait.creatureCount to inputCards.count {
-                    it.card.cardType == CardType.Creature || it.card.cardType == CardType.TokenCreature || it.extraCardInfo.extraCardTypes?.contains(
-                        CardType.Creature
-                    ) == true
-                },
-                SynergyTrait.bonusAmber to inputCards.sumOf { it.card.amber + it.bonusAember },
-                SynergyTrait.bonusCapture to capturePips,
-                SynergyTrait.bonusDamage to inputCards.sumOf { it.bonusDamage },
-                SynergyTrait.bonusDraw to inputCards.sumOf { it.bonusDraw },
-                SynergyTrait.bonusDiscard to inputCards.sumOf { it.bonusDiscard },
-                SynergyTrait.totalCreaturePower to inputCards.sumOf { card ->
-                    val increasesPowerTrait = card.extraCardInfo.traits.firstOrNull { it.trait == SynergyTrait.increasesCreaturePower && it.player != SynTraitPlayer.ENEMY }
+            val creatures = inputCards.filter {
+                it.card.cardType == CardType.Creature || it.card.cardType == CardType.TokenCreature || it.extraCardInfo.extraCardTypes?.contains(
+                    CardType.Creature
+                ) == true
+            }
+            val powerValueMap = inputCards.mapNotNull { card ->
+                val increasesPowerTrait =
+                    card.extraCardInfo.traits.firstOrNull { it.trait == SynergyTrait.increasesCreaturePower && it.player != SynTraitPlayer.ENEMY }
+                val power =
                     card.card.power + (if (increasesPowerTrait == null) 0 else when (increasesPowerTrait.rating) {
                         TraitStrength.EXTRA_WEAK.value -> 1
                         TraitStrength.WEAK.value -> 2
@@ -97,60 +127,102 @@ data class DeckSynergyStats(
                         TraitStrength.EXTRA_STRONG.value -> 6
                         else -> 0
                     })
-                                                                    },
-                SynergyTrait.tokenCount to tokensCount,
-                SynergyTrait.totalArmor to inputCards.sumOf { it.card.armor },
-                SynergyTrait.expectedAember to inputCards.sumOf {
-                    val max = it.extraCardInfo.expectedAmberMax ?: 0.0
-                    val min = it.extraCardInfo.expectedAmber
-                    if (max == 0.0) min else (min + max) / 2
-                }.roundToInt(),
-
+                if (power == 0) {
+                    null
+                } else {
+                    card.card.cardTitle to power
+                }
+            }
+            val expectedAemberMap = inputCards.mapNotNull { card ->
+                val max = card.extraCardInfo.expectedAmberMax ?: 0.0
+                val min = card.extraCardInfo.expectedAmber
+                val expectedAember = if (max == 0.0) min else (min + max) / 2
+                if (expectedAember == 0.0) {
+                    null
+                } else {
+                    card.card.cardTitle to expectedAember
+                }
+            }
+            return mapOf(
+                SynergyTrait.creatureCount to DeckSynStatValue.create(
+                    creatures.size,
+                    creatures.map { it.card.cardTitle }
+                ),
+                SynergyTrait.bonusAmber to DeckSynStatValue.create(inputCards.sumOf { it.card.amber + it.bonusAember }),
+                SynergyTrait.bonusCapture to DeckSynStatValue.create(capturePips),
+                SynergyTrait.bonusDamage to DeckSynStatValue.create(inputCards.sumOf { it.bonusDamage }),
+                SynergyTrait.bonusDraw to DeckSynStatValue.create(inputCards.sumOf { it.bonusDraw }),
+                SynergyTrait.bonusDiscard to DeckSynStatValue.create(inputCards.sumOf { it.bonusDiscard }),
+                SynergyTrait.totalCreaturePower to DeckSynStatValue.create(
+                    powerValueMap.sumOf { it.second },
+                    powerValueMap.map { "${it.first} +${it.second} Power" }
+                ),
+                SynergyTrait.tokenCount to DeckSynStatValue.create(tokensCount),
+                SynergyTrait.totalArmor to DeckSynStatValue.create(inputCards.sumOf { it.card.armor }),
+                SynergyTrait.expectedAember to DeckSynStatValue.create(
+                    expectedAemberMap.sumOf { it.second }.roundToInt(),
+                    expectedAemberMap.map { "${it.first} +${it.second} Aember" }
+                ),
                 SynergyTrait.haunted to calculateHauntingPercent(inputCards, player),
                 SynergyTrait.capturedAmber to calculateCapturePercentWithTraits(
-                    inputCards, capturePips, setOf(SynergyTrait.capturesAmber, SynergyTrait.exalt), player
+                    inputCards, setOf(SynergyTrait.capturesAmber, SynergyTrait.exalt), player
                 ),
                 SynergyTrait.targettedCapturedAmber to calculateCapturePercentWithTraits(
-                    inputCards, capturePips, setOf(SynergyTrait.putsAmberOnTarget), player
+                    inputCards, setOf(SynergyTrait.putsAmberOnTarget), player
                 ),
             )
         }
 
         private fun calculateCapturePercentWithTraits(
-            cards: List<DokCardInDeck>, capturePips: Int, checkTraits: Set<SynergyTrait>, target: SynTraitPlayer = SynTraitPlayer.ANY
-        ): Int {
+            cards: List<DokCardInDeck>,
+            checkTraits: Set<SynergyTrait>,
+            target: SynTraitPlayer = SynTraitPlayer.ANY
+        ): DeckSynStatValue {
             val friendlyIncluded = target == SynTraitPlayer.ANY || target == SynTraitPlayer.FRIENDLY
 
-            val captureScore = cards.sumOf { dokCardInDeck ->
+            val captureScore: List<Pair<Double, String>> = cards.mapNotNull { dokCardInDeck ->
                 val traits = dokCardInDeck.extraCardInfo.traits
 
                 val capTrait = traits.firstOrNull {
                     val traitMatch = checkTraits.contains(it.trait)
-                    val playerMatch = target == SynTraitPlayer.ANY || it.player == SynTraitPlayer.ANY || target == it.player
+                    val playerMatch =
+                        target == SynTraitPlayer.ANY || it.player == SynTraitPlayer.ANY || target == it.player
                     traitMatch && playerMatch
                 }
+                val capturePips = if (friendlyIncluded) dokCardInDeck.bonusCapture else 0
 
-                if (capTrait == null) {
-                    0.0
+                if (capTrait == null && capturePips < 1) {
+                    null
                 } else {
-                    when (capTrait.strength()) {
-                        TraitStrength.EXTRA_WEAK -> 0.5
-                        TraitStrength.WEAK -> 1.0
-                        TraitStrength.NORMAL -> 2.0
-                        TraitStrength.STRONG -> 3.0
-                        TraitStrength.EXTRA_STRONG -> 4.0
-                    }
+                    val expectedCapture = if (capTrait != null) {
+                        when (capTrait.strength()) {
+                            TraitStrength.EXTRA_WEAK -> 0.5
+                            TraitStrength.WEAK -> 1.0
+                            TraitStrength.NORMAL -> 2.0
+                            TraitStrength.STRONG -> 3.0
+                            TraitStrength.EXTRA_STRONG -> 4.0
+                        }
+                    } else 0.0
+
+                    (expectedCapture + capturePips) to "${dokCardInDeck.card.cardTitle}${if (expectedCapture > 0.0) " $expectedCapture Expected Capture" else ""}${if (capturePips > 0) " $capturePips Bonus Capture Pips" else ""}"
                 }
             }
 
-            return (if (friendlyIncluded) capturePips else  0) + captureScore.roundToInt()
+            return DeckSynStatValue.create(
+                captureScore.sumOf { it.first }.roundToInt(),
+                captureScore.map { it.second }
+            )
         }
 
-        private fun calculateHauntingPercent(cards: List<DokCardInDeck>, target: SynTraitPlayer = SynTraitPlayer.ANY): Int {
+        private fun calculateHauntingPercent(
+            cards: List<DokCardInDeck>,
+            target: SynTraitPlayer = SynTraitPlayer.ANY
+        ): DeckSynStatValue {
             val friendlyIncluded = target == SynTraitPlayer.ANY || target == SynTraitPlayer.FRIENDLY
-            val hauntingScore = cards.sumOf { dokCardInDeck ->
+            val hauntingScore = cards.mapNotNull { dokCardInDeck ->
                 val traitValues = dokCardInDeck.extraCardInfo.traits.sumOf {
-                    val playerMatch = target == SynTraitPlayer.ANY || it.player == SynTraitPlayer.ANY || target == it.player
+                    val playerMatch =
+                        target == SynTraitPlayer.ANY || it.player == SynTraitPlayer.ANY || target == it.player
                     val millsOrHauntingTrait =
                         if ((it.trait == SynergyTrait.mills || it.trait == SynergyTrait.haunted) && playerMatch) {
                             when (it.strength()) {
@@ -187,17 +259,29 @@ data class DeckSynergyStats(
                 val artifact = if (dokCardInDeck.card.cardType == CardType.Artifact && friendlyIncluded) -5 else 0
                 val action = if (dokCardInDeck.card.cardType == CardType.Action && friendlyIncluded) 2 else 0
                 val discardPips = if (friendlyIncluded) dokCardInDeck.bonusDiscard * 4 else 0
-                traitValues + artifact + action + discardPips
+                val total = traitValues + artifact + action + discardPips
+                if (total == 0) {
+                    null
+                } else {
+                    val traitsDesc = if (traitValues == 0) "" else " Traits = $traitValues"
+                    val discardPipsDesc = if (discardPips == 0) "" else " Discard Pips = $discardPips"
+                    val artifactDesc = if (artifact == 0) "" else " Artifact = $artifact"
+                    val actionDesc = if (action == 0) "" else " Action = $action"
+                    total to "${dokCardInDeck.card.cardTitle}: $traitsDesc$discardPipsDesc$artifactDesc$actionDesc".trim()
+                }
             }
 
-            return hauntingScore
+            return DeckSynStatValue.create(
+                hauntingScore.sumOf { it.first },
+                hauntingScore.map { it.second }
+            )
         }
     }
 
-    fun synPercent(trait: SynTraitValue, house: House): Int? {
+    fun synPercent(trait: SynTraitValue, house: House): DeckSynStatValue? {
         if (!matches(trait.trait)) return null
 
-        val vals = traits[trait.trait] ?: return 0
+        val vals = traits[trait.trait] ?: return null
         val multiplier = when (trait.rating) {
             4 -> 2.0
             3 -> 1.0
@@ -220,8 +304,15 @@ data class DeckSynergyStats(
 
             // Checking for in house
             SynTraitHouse.house -> {
-                val actual = relevantHouseStats[house]?.get(trait.trait)?.toDouble() ?: return 0
-                return calculatePercent(actual, vals.minHouse.toDouble(), vals.maxHouse.toDouble(), multiplier)
+                val entry = relevantHouseStats[house]?.get(trait.trait) ?: return DeckSynStatValue.create(0)
+                val actual = entry.value.toDouble()
+                return DeckSynStatValue.create(
+                    calculatePercent(actual, vals.minHouse.toDouble(), vals.maxHouse.toDouble(), multiplier),
+                    listOf(
+                        percentDescription(actual, vals.minHouse.toDouble(), vals.maxHouse.toDouble(), trait.trait)
+                    )
+                        .plus(entry.matches)
+                )
             }
 
             // Checking for deck trait
@@ -231,30 +322,63 @@ data class DeckSynergyStats(
                     SynTraitPlayer.FRIENDLY -> deckStatsFriendly
                     SynTraitPlayer.ENEMY -> deckStatsEnemy
                 }
-                val actual = relevantDeckStats[trait.trait]?.toDouble() ?: return 0
-                return calculatePercent(actual, vals.minDeck.toDouble(), vals.maxDeck.toDouble(), multiplier)
+                val entry = relevantDeckStats[trait.trait] ?: return DeckSynStatValue.create(0)
+                val actual = entry.value.toDouble()
+                return DeckSynStatValue.create(
+                    calculatePercent(actual, vals.minDeck.toDouble(), vals.maxDeck.toDouble(), multiplier),
+                    listOf(
+                        percentDescription(actual, vals.minDeck.toDouble(), vals.maxDeck.toDouble(), trait.trait)
+                    )
+                        .plus(entry.matches)
+                )
             }
 
             // Checking for out of house trait
             else -> {
-                val actual = relevantHouseStats.filter { it.key != house }
-                    .values.sumOf { it[trait.trait]?.toDouble() ?: 0.0 }
-                return calculatePercent(
-                    actual,
-                    (vals.minHouse * 2).toDouble(),
-                    (vals.maxHouse.toDouble() * 2),
-                    multiplier
+                val entry = relevantHouseStats.filter { it.key != house }
+                val actual = entry.values.sumOf { it[trait.trait]?.value?.toDouble() ?: 0.0 }
+                val matches = entry.values.flatMap { it[trait.trait]?.matches ?: listOf() }
+                val outOfHouseMin = (vals.minHouse * 2).toDouble()
+                val outOfHouseMax = (vals.maxHouse.toDouble() * 2)
+                return DeckSynStatValue.create(
+                    calculatePercent(
+                        actual,
+                        outOfHouseMin,
+                        outOfHouseMax,
+                        multiplier
+                    ),
+                    listOf(
+                        percentDescription(actual, outOfHouseMin, outOfHouseMax, trait.trait)
+                    )
+                        .plus(matches)
                 )
             }
         }
     }
 
-    private fun calculatePercent(actual: Double, min: Double, max: Double, multiplier: Double): Int {
+    private fun percentDescription(actual: Double, min: Double, max: Double, trait: SynergyTrait): String {
+        val outOf = "out of " + if (min == 0.0) {
+            max
+        } else {
+            "$min-$max"
+        }
+        return "${actual.roundToTwoSigDig()} $trait $outOf = ${
+            calculateSynPercent(
+                actual,
+                min,
+                max
+            ).roundToInt()
+        }%"
+    }
+
+    private fun calculateSynPercent(actual: Double, min: Double, max: Double): Double {
         val range = max - min
         val actualMinusMin = actual - min
-        val synPercent = (actualMinusMin * 100.0) / range
-        val finalPercent = synPercent * multiplier
-        // println("Inputs $actual $min $max $divisor $finalPercent")
+        return (actualMinusMin * 100.0) / range
+    }
+
+    private fun calculatePercent(actual: Double, min: Double, max: Double, multiplier: Double): Int {
+        val finalPercent = calculateSynPercent(actual, min, max) * multiplier
         return finalPercent.roundToInt()
     }
 }

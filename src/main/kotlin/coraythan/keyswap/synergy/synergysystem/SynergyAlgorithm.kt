@@ -189,7 +189,11 @@ object DeckSynergyService {
                         val cardNames = mutableSetOf<String>()
 
                         // First check if the synergy matches a deck stat. If not then calculate a cards based trait
-                        val synPercent = deckStats.synPercent(synergy, cardsById.key.second)
+                        val deckStatsSyn = deckStats.synPercent(synergy, cardsById.key.second)
+                        if (deckStatsSyn != null) {
+                            cardNames.addAll(deckStatsSyn.matches)
+                        }
+                        val synPercent = deckStatsSyn?.value
                             ?: TraitStrength.entries.sumOf { strength ->
                                 val matches: SynMatchInfo? = if (synergy.trait == SynergyTrait.enhancedHouses) {
                                     SynMatchInfo(
@@ -429,7 +433,7 @@ object DeckSynergyService {
                 tokensPerHouse = tokenValues.tokensPerGamePerHouse.map { TokensPerGameForHouse(it.key, it.value) },
             ),
             hauntingOdds = if (deck.expansionEnum == Expansion.GRIM_REMINDERS) {
-                deckStats.deckStats[SynergyTrait.haunted]?.toDouble()?.div(10)?.roundToInt()
+                deckStats.deckStats[SynergyTrait.haunted]?.value?.toDouble()?.div(10)?.roundToInt()
             } else {
                 null
             }
