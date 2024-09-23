@@ -1,11 +1,11 @@
-import { Box, Typography } from "@material-ui/core"
+import {Box, Typography} from "@material-ui/core"
 import * as React from "react"
-import { spacing, theme } from "../../config/MuiConfig"
-import { roundToHundreds, roundToTens } from "../../config/Utils"
-import { CardType } from "../../generated-src/CardType"
-import { SynergyCombo } from "../../generated-src/SynergyCombo"
-import { ExtraCardInfoUtils } from "../../extracardinfo/ExtraCardInfoUtils"
-import { FrontendCard } from "../../generated-src/FrontendCard"
+import {spacing, theme} from "../../config/MuiConfig"
+import {roundToHundreds, roundToTens} from "../../config/Utils"
+import {CardType} from "../../generated-src/CardType"
+import {SynergyCombo} from "../../generated-src/SynergyCombo"
+import {ExtraCardInfoUtils} from "../../extracardinfo/ExtraCardInfoUtils"
+import {FrontendCard} from "../../generated-src/FrontendCard"
 
 export const AercForCard = (props: {
     card: FrontendCard,
@@ -132,7 +132,13 @@ const AercScore = (props: {
     }
     let secondColumn
     if (max != null) {
-        secondColumn = `${roundToHundreds(score)} to ${roundToHundreds(max)}`
+        const scoreRounded = roundToHundreds(score)
+        const maxRounded = roundToHundreds(max)
+        if (scoreRounded === maxRounded) {
+            secondColumn = `${scoreRounded}`
+        } else {
+            secondColumn = `${scoreRounded} to ${maxRounded}`
+        }
     } else if (max == null && synergizedScore == null && !singleColumn) {
         secondColumn = roundToHundreds(score)
     }

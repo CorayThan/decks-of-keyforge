@@ -38,7 +38,6 @@ enum class SynergyTrait {
     drawsCards,
     increasesHandSize,
     playsCards,
-    playsFromOtherHouse,
     shufflesDiscard,
     mills,
     revealsTopDeck,
@@ -85,7 +84,9 @@ enum class SynergyTrait {
 
     // Automatically applied traits below here
 
+    // This must stay as the first of the auto applied traits
     enhanced,
+
     enhancedHouses,
     selfEnhanced,
     bonusAmber,
@@ -98,7 +99,6 @@ enum class SynergyTrait {
     targettedCapturedAmber,
 
     // Deck traits In general these are 50 to 60 percentile = 0, 60+ = 1, 70+ = 2, 80+ = 3 90+ = 4 +=1
-    hasMars,
 
     creatureCount,
     haunted,
@@ -112,6 +112,11 @@ enum class SynergyTrait {
     highValue,
 
     // DEPRECATED
+
+    // This must stay as first deprecated!
+    playsFromOtherHouse,
+
+    hasMars,
 
     returns_R_FromDiscard,
     highExpectedAmber, // for house: 7=0, 8=1/4, 9=1/2, 10=3/4, 11=1

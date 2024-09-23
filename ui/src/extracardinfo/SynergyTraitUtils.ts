@@ -3,7 +3,7 @@ import {SynergyTrait} from "../generated-src/SynergyTrait"
 
 const allSynergyTraits = Utils.enumValues(SynergyTrait) as SynergyTrait[]
 const firstSpecialIndex = allSynergyTraits.indexOf(SynergyTrait.enhanced)
-const firstDeprecatedIndex = allSynergyTraits.indexOf(SynergyTrait.elusive)
+const firstDeprecatedIndex = allSynergyTraits.indexOf(SynergyTrait.playsFromOtherHouse)
 export const deprecatedTraits = allSynergyTraits.slice(firstDeprecatedIndex, allSynergyTraits.length)
 export const specialTraits = allSynergyTraits.slice(firstSpecialIndex, allSynergyTraits.length)
 
@@ -39,7 +39,7 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
     {
         groupName: "Efficiency",
         traits: [SynergyTrait.archives, SynergyTrait.archivesRandom, SynergyTrait.drawsCards,
-            SynergyTrait.increasesHandSize, SynergyTrait.playsCards, SynergyTrait.playsFromOtherHouse,
+            SynergyTrait.increasesHandSize, SynergyTrait.playsCards,
             SynergyTrait.shufflesDiscard, SynergyTrait.mills, SynergyTrait.revealsTopDeck],
         synergyTraitsOnly: [SynergyTrait.enhancedHouses],
     },
@@ -88,6 +88,6 @@ export const synergyAndTraitGroups: SynTraitDisplayGroup[] = [
         synergyOnly: true,
         traits: [SynergyTrait.creatureCount, SynergyTrait.capturedAmber, SynergyTrait.targettedCapturedAmber,
             SynergyTrait.highValue, SynergyTrait.tokenCount, SynergyTrait.totalArmor, SynergyTrait.totalCreaturePower,
-            SynergyTrait.expectedAember, SynergyTrait.hasMars],
+            SynergyTrait.expectedAember],
     },
 ]
