@@ -200,7 +200,7 @@ object DeckSynergyService {
                                         matches = mapOf(TraitStrength.STRONG to card.enhancedHouses),
                                         cardNames = card.allHouses.minus(card.house).map { it.masterVaultValue }
                                     )
-                                } else  if (synergy.cardName == null) {
+                                } else if (synergy.cardName == null) {
                                     traitsMap[synergyTrait]?.matches(card, synergy)
                                 } else {
                                     cardMatches(card, synergy, cardsMap)
@@ -208,8 +208,11 @@ object DeckSynergyService {
                                 if (matches == null) {
                                     0
                                 } else {
-                                    cardNames.addAll(matches.cardNames)
                                     val matchesAtStrength = matches.matches[strength] ?: 0
+                                    if (matchesAtStrength > 0) {
+                                        println("Putting in card names: ${matches.cardNames}")
+                                        cardNames.addAll(matches.cardNames)
+                                    }
                                     // log.info("${card.cardTitle}: $synergyTrait syn rating: ${synergy.rating} $strength = $matchesAtStrength")
                                     matchesAtStrength * ratingsToPercent(synergy.rating, strength)
                                 }
