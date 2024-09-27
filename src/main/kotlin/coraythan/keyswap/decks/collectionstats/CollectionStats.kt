@@ -91,9 +91,6 @@ data class CollectionStats(
                             ) },
                     cardCounts = cardsToDecks
                             .map { decksForCard ->
-                                if (decksForCard.key == "Drecker") {
-                                    println("Drecker")
-                                }
                                 val cardDecks = decksForCard.value
                                 val cards: List<SimpleCard> = cardDecks.flatMap {
                                     it.housesAndCards.flatMap { houseAndCards ->

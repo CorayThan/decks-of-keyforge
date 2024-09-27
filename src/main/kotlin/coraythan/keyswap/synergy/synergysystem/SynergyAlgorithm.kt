@@ -211,7 +211,6 @@ object DeckSynergyService {
                                 } else {
                                     val matchesAtStrength = matches.matches[strength] ?: 0
                                     if (matchesAtStrength > 0) {
-                                        println("Putting in card names: ${matches.cardNames}")
                                         cardNames.addAll(matches.cardNames)
                                     }
                                     // log.info("${card.cardTitle}: $synergyTrait syn rating: ${synergy.rating} $strength = $matchesAtStrength")
