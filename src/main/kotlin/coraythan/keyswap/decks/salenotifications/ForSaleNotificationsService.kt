@@ -2,7 +2,6 @@ package coraythan.keyswap.decks.salenotifications
 
 import coraythan.keyswap.config.BadRequestException
 import coraythan.keyswap.config.UnauthorizedException
-import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSasValuesSearchableRepo
 import coraythan.keyswap.decks.DeckSearchService
 import coraythan.keyswap.decks.UserHolder
@@ -31,7 +30,6 @@ class ForSaleNotificationsService(
     private val userService: KeyUserService,
     private val deckSearchService: DeckSearchService,
     private val dsvsRepo: DeckSasValuesSearchableRepo,
-    private val deckRepo: DeckRepo,
     private val emailService: EmailService
 ) {
 
@@ -60,7 +58,7 @@ class ForSaleNotificationsService(
 
                 log.debug("Checking for sending")
                 toSend.forEach {
-                    log.debug("Sending for sale email ${it.name} to ${it.userId} deck id: ${listingInfo.deckId}")
+//                    log.debug("Sending for sale email ${it.name} to ${it.userId} deck id: ${listingInfo.deckId}")
                     emailService.sendDeckListedNotification(
                         it.userId,
                         listingInfo,
@@ -126,6 +124,7 @@ class ForSaleNotificationsService(
                     it.mav
                 )
             },
+            tokens = query.tokens,
             owner = query.owner,
             user = user,
         )

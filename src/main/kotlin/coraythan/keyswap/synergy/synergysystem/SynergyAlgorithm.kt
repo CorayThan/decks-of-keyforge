@@ -146,10 +146,11 @@ object DeckSynergyService {
             cardAllTraits
                 .forEach { traitValue ->
                     traitsMap.addTrait(traitValue, dokCardInDeck, dokCardInDeck.allHouses)
-                    if (traitValue.trait == SynergyTrait.uses && (traitValue.cardTypes.isNullOrEmpty() || traitValue.cardTypes.contains(
-                            CardType.Creature
-                        ))
+                    if (traitValue.trait == SynergyTrait.uses
+                        && (traitValue.cardTypes.isNullOrEmpty()
+                                || traitValue.cardTypes.any { it == CardType.Creature || it == CardType.TokenCreature })
                     ) {
+
                         traitsMap.addTrait(
                             traitValue.copy(trait = SynergyTrait.causesReaping),
                             dokCardInDeck,

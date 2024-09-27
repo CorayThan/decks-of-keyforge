@@ -46,7 +46,6 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                 </TableCell>
                             )}
                             <TableCell>Notifications Search</TableCell>
-                            <TableCell>Notifications Search</TableCell>
                             <TableCell>Search Type</TableCell>
                             {!small && (
                                 <>
@@ -56,6 +55,7 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                     <TableCell>My Country</TableCell>
                                     <TableCell>Filters</TableCell>
                                     <TableCell>Card Filters</TableCell>
+                                    <TableCell>Token Filters</TableCell>
                                 </>
                             )}
                             <TableCell/>
@@ -111,6 +111,11 @@ export class ForSaleQueryTable extends React.Component<ForSaleQueryTableProps> {
                                                         </Typography>
                                                     </div>
                                                 ))}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography>
+                                                    {query.tokens.join(", ")}
+                                                </Typography>
                                             </TableCell>
                                         </>
                                     )}

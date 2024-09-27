@@ -8,7 +8,9 @@ import coraythan.keyswap.decks.DeckFilters
 import coraythan.keyswap.generatets.GenerateTs
 import coraythan.keyswap.generic.Country
 import coraythan.keyswap.users.KeyUser
+import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.*
+import org.hibernate.annotations.Type
 import java.util.*
 
 @Entity
@@ -27,8 +29,7 @@ data class SaleNotificationQuery(
 
         val forSale: Boolean? = false,
         val forTrade: Boolean = false,
-        // Deprecated
-        val forAuction: Boolean = false,
+
         @Column(columnDefinition = "INT4")
         val forSaleInCountry: Country? = null,
 
@@ -40,6 +41,12 @@ data class SaleNotificationQuery(
 
         @OneToMany(cascade = [CascadeType.ALL])
         val cards: List<SaleNotificationDeckCardQuantity> = listOf(),
+
+        @Type(ListArrayType::class)
+        @Column(
+                columnDefinition = "varchar[]"
+        )
+        val tokens: List<String>? = listOf(),
 
         val owner: String = "",
 
@@ -68,6 +75,7 @@ data class SaleNotificationQuery(
                 cards.map {
                     DeckCardQuantity(it.cardNames, it.quantity, it.house, it.mav)
                 },
+                tokens ?: listOf(),
                 owner,
                 user.id,
                 precedence,
@@ -100,6 +108,7 @@ data class SaleNotificationQueryDto(
         val constraints: List<Constraint> = listOf(),
 
         val cards: List<DeckCardQuantity> = listOf(),
+        val tokens: List<String> = listOf(),
 
         val owner: String = "",
 
@@ -119,6 +128,7 @@ data class SaleNotificationQueryDto(
             expansions = expansions,
             constraints = constraints,
             cards = cards,
+            tokens = tokens,
             owner = owner,
     )
 }
