@@ -24,7 +24,7 @@ export class ExtraCardInfoUtils {
             + (info.creatureControlMax ?? info.creatureControl)
             + (info.creatureProtectionMax ?? info.creatureProtection)
             + (info.disruptionMax ?? info.disruption)
-            + ((info.effectivePowerMax ?? info.effectivePower) / 10)
+            + ((info.effectivePowerMax ?? info.realEffectivePower) / 10)
             + (info.efficiencyMax ?? info.efficiency)
             + (info.expectedAmberMax ?? info.expectedAmber)
             + (info.otherMax ?? info.other)
