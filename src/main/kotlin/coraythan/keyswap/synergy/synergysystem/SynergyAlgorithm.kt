@@ -300,12 +300,12 @@ object DeckSynergyService {
                     cardInfo.baseSynPercent
                 )
                 val pValue =
-                    if (cardInfo.effectivePower == 0 && (cardInfo.effectivePowerMax == null || cardInfo.effectivePowerMax == 0.0)) {
+                    if (cardInfo.realEffectivePower == 0 && (cardInfo.effectivePowerMax == null || cardInfo.effectivePowerMax == 0.0)) {
                         SynergizedValue(cardInfo.realEffectivePower.toDouble(), 0.0)
                     } else {
                         synergizedValue(
                             totalSynPercent,
-                            cardInfo.effectivePower.toDouble(),
+                            cardInfo.realEffectivePower.toDouble(),
                             cardInfo.effectivePowerMax,
                             hasPositive,
                             hasNegative,

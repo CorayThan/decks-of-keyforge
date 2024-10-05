@@ -11,7 +11,7 @@ object HouseEnhancementAlgorithm {
                 if (cardWithIcons.enhancedHouses > 0) {
                     val card = cardWithIcons.card
 
-                    val ep = cardWithIcons.extraCardInfo.effectivePower
+                    val ep = cardWithIcons.extraCardInfo.realEffectivePower
 
                     val amberMod = when {
                         card.cardType != CardType.Creature -> 0.0

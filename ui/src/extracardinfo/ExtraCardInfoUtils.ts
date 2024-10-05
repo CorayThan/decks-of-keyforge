@@ -6,9 +6,15 @@ export class ExtraCardInfoUtils {
     static readonly creatureBonus = 0.4
 
     static minAERC = (type: CardType, info: ExtraCardInfo): number => {
-        return info.amberControl + info.artifactControl + info.creatureControl + info.creatureProtection
-            + info.disruption + (info.effectivePower / 10) + info.efficiency
-            + info.expectedAmber + info.other + info.recursion
+        return info.amberControl
+            + info.artifactControl
+            + info.creatureControl
+            + info.creatureProtection
+            + info.disruption
+            + (info.realEffectivePower / 10)
+            + info.efficiency
+            + info.expectedAmber + info.other
+            + info.recursion
             + ((type === CardType.Creature || type === CardType.TokenCreature) ? ExtraCardInfoUtils.creatureBonus : 0)
     }
 

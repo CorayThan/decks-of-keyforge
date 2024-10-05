@@ -210,7 +210,7 @@ data class ExtraCardInfo(
         printValue("C", creatureControl, creatureControlMax),
         printValue(
             "P",
-            this.effectivePower.toDouble() / 10,
+            this.realEffectivePower.toDouble() / 10,
             if (effectivePowerMax != null && effectivePowerMax != 0.0) effectivePowerMax / 10 else null
         ),
         printValue("F", efficiency, efficiencyMax),

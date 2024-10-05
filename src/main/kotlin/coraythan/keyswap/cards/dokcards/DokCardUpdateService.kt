@@ -21,6 +21,23 @@ class DokCardUpdateService(
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    private val bigNames = setOf("Tormax", "Wretched Anathema", "Horizon Saber", "Ascendant Hester", "Sirs Colossus",
+        "Bawretchadontius", "Boosted B4-RRY", "Dodger's 10", "Cadet Allison", "J43G3R V", "Titanic Bumblebird")
+
+    fun updateBigs() {
+        bigNames.forEach { bigName ->
+            val dokCard = dokCardRepo.findByCardTitleUrl(bigName.toLegacyUrlFriendlyCardTitle())
+            if (dokCard == null) {
+                log.warn("No big for name: $bigName")
+            } else if (dokCard.big) {
+                log.info("Skipping updating $bigName was already big")
+            } else {
+                dokCardRepo.save(dokCard.copy(big = true))
+                log.info("Updated $bigName to be Big")
+            }
+        }
+    }
+
     fun createDoKCardsFromKCards(cards: List<Card>): Boolean {
         var updatedCards = false
 
