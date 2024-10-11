@@ -1,4 +1,5 @@
 
+$ErrorActionPreference = "Stop"
 docker --version
 
 ./gradlew genSrc
