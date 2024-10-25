@@ -14,7 +14,7 @@ import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 import { DokLink } from "../generic/DokLink"
 
-export const latestVersion = "7.2"
+export const latestVersion = "7.3"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -46,6 +46,28 @@ export class ReleaseNotes extends React.Component {
                     </Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"7.3"}
+                    date={"10/25/2024"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Releasing SAS v1 for Aember Skies, Tokens of Change and More Mutation!",
+                            note: "All new cards in the sets newly added to Master Vault have been rated and " +
+                                "reviewed. Much appreciation to the Keepers of the SAS group that helped me " +
+                                "create and refine the ratings for these sets, in no particular order: " +
+                                "jfilipeg, r0gershrubber, june, Player Hurp and siaka."
+                        },
+                        {
+                            highlight: "Revisions to Traits and Synergies",
+                            note: "We've performed some backend optimizations to the SAS algorithm, as well as " +
+                                "modified some traits to use these optimizations. Traits like creature count, and " +
+                                "captured aember synergies, for example, have been comprehensively revised to " +
+                                "hopefully make them more accurately rate decks and be easier to work with when " +
+                                "creating ratings for cards."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"7.2"}
                     date={"9/6/2024"}

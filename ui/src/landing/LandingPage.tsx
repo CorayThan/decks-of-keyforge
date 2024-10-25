@@ -22,7 +22,6 @@ import { AlliancesSearchLink, DeckSearchLink, LandingPageLink } from "./DeckSear
 import { AllianceDeckFiltersUtils } from "../alliancedecks/AllianceDeckFiltersUtils"
 import { SortDirection } from "../generated-src/SortDirection"
 import { DokLink } from "../generic/DokLink"
-import {AnnouncementPaper} from "../generic/AnnouncementPaper";
 
 const topSas = new DeckFilters()
 
@@ -153,22 +152,22 @@ export class LandingPage extends React.Component<{}> {
                     </KeyDrawer>
                     <Box style={{flexGrow: 1}}>
 
-                        <AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>
-                            <Typography variant={"h5"} gutterBottom={true}>
-                                Aember Skies SAS Release Plan
-                            </Typography>
-                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                The Keepers of SAS and I are hard at work rating cards for the three new sets, Aember
-                                Skies, Tokens of Change and More Mutation! All cards have preliminary scores in the
-                                works, and we'll be working to improve and refine those scores for the next few weeks
-                                in order to officially release the new SAS Scores.
-                            </Typography>
-                            <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>
-                                For anyone who would like to follow along and see these SAS scores as we work on them,
-                                please consider becoming a 2nd level tier patron. Those patrons can turn on SAS
-                                Preview Mode from their DoK profile and see the preliminary scores.
-                            </Typography>
-                        </AnnouncementPaper>
+                        {/*<AnnouncementPaper maxWidth={800} style={{margin: spacing(4), marginBottom: spacing(2)}}>*/}
+                        {/*    <Typography variant={"h5"} gutterBottom={true}>*/}
+                        {/*        Aember Skies SAS Release Plan*/}
+                        {/*    </Typography>*/}
+                        {/*    <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
+                        {/*        The Keepers of SAS and I are hard at work rating cards for the three new sets, Aember*/}
+                        {/*        Skies, Tokens of Change and More Mutation! All cards have preliminary scores in the*/}
+                        {/*        works, and we'll be working to improve and refine those scores for the next few weeks*/}
+                        {/*        in order to officially release the new SAS Scores.*/}
+                        {/*    </Typography>*/}
+                        {/*    <Typography variant={"body1"} style={{marginBottom: spacing(1)}}>*/}
+                        {/*        For anyone who would like to follow along and see these SAS scores as we work on them,*/}
+                        {/*        please consider becoming a 2nd level tier patron. Those patrons can turn on SAS*/}
+                        {/*        Preview Mode from their DoK profile and see the preliminary scores.*/}
+                        {/*    </Typography>*/}
+                        {/*</AnnouncementPaper>*/}
                         {screenStore.screenSizeSm() ? (
                             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                                 <DeckSearchLink name={"Search"} filters={topSas} style={{marginTop: spacing(2)}}/>
