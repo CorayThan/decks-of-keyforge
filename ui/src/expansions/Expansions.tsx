@@ -75,6 +75,9 @@ export const activeSasExpansions = [
     Expansion.VAULT_MASTERS_2023,
     Expansion.MENAGERIE_2024,
     Expansion.VAULT_MASTERS_2024,
+    Expansion.AEMBER_SKIES,
+    Expansion.TOKENS_OF_CHANGE,
+    Expansion.MORE_MUTATION,
 ]
 
 export const activeCardExpansions = [

@@ -170,4 +170,7 @@ val includeInGlobalStats = setOf(
     Expansion.VAULT_MASTERS_2023,
     Expansion.GRIM_REMINDERS,
     Expansion.VAULT_MASTERS_2024,
+    Expansion.AEMBER_SKIES,
+    Expansion.TOKENS_OF_CHANGE,
+    Expansion.MORE_MUTATION,
 )

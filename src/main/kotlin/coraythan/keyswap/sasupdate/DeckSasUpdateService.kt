@@ -25,7 +25,7 @@ import kotlin.concurrent.schedule
 import kotlin.system.measureTimeMillis
 
 private const val lockUpdateRatings = "PT10S"
-private const val lockCheckToPublishSAS = "PT2H"
+private const val lockCheckToPublishSAS = "PT1H"
 
 private const val lockUpdateAllianceRatings = "PT1H"
 
