@@ -167,6 +167,16 @@ export class CardsSearchDrawer extends React.Component<CardsSearchDrawerProps> {
                                                 Rarity.Special,
                                             ]}
                                         />
+                                        <FormControlLabel
+                                            style={{width: "100%"}}
+                                            control={
+                                                <Checkbox
+                                                    checked={filters.gigantic}
+                                                    onChange={filters.handleGiganticUpdate}
+                                                />
+                                            }
+                                            label={"Gigantic Cards"}
+                                        />
                                         <KeyMultiSelect
                                             name={"Aember"}
                                             selected={this.selectedAmbers}

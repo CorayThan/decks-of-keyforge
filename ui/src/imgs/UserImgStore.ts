@@ -47,7 +47,6 @@ export class UserImgStore {
                 useWebWorker: true
             })
 
-
             const imageData = new FormData()
             imageData.append("img", compressedImg)
 

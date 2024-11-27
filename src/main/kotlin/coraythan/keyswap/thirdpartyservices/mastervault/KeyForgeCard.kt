@@ -7,6 +7,9 @@ import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.Rarity
 import coraythan.keyswap.cards.evilTwinCardName
 
+const val giganticCreatureTopCardType = "Gigantic Creature Art"
+const val giganticCreatureBottomCardType = "Gigantic Creature Base"
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KeyForgeCard(
     val id: String,
@@ -58,7 +61,7 @@ data class KeyForgeCard(
             is_maverick,
             is_anomaly,
             traits = traits?.uppercase()?.split(" • ")?.toSet() ?: setOf(),
-            big = card_type == "Creature1" || card_type == "Creature2",
+            big = card_type == giganticCreatureTopCardType || card_type == giganticCreatureBottomCardType,
             enhanced = is_enhanced,
             token = realCardType == CardType.TokenCreature,
             extraCardInfo = null,
@@ -70,8 +73,8 @@ data class KeyForgeCard(
             "Action" -> CardType.Action
             "Artifact" -> CardType.Artifact
             "Creature" -> CardType.Creature
-            "Creature1" -> CardType.Creature
-            "Creature2" -> CardType.Creature
+            giganticCreatureTopCardType -> CardType.Creature
+            giganticCreatureBottomCardType -> CardType.Creature
             "Upgrade" -> CardType.Upgrade
             "The Tide" -> null
             "Token Creature" -> CardType.TokenCreature

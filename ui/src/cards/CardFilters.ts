@@ -37,6 +37,7 @@ export class CardFilters {
             .value("aercHistoryDate")
             .value("sortDirection")
             .value("anomalies")
+            .value("gigantic")
             .stringArrayValue("houses")
             .stringArrayValue("types")
             .stringArrayValue("rarities")
@@ -72,6 +73,8 @@ export class CardFilters {
     @observable
     anomalies: boolean = false
     @observable
+    gigantic: boolean = false
+    @observable
     trait?: SynergyTrait
     @observable
     synergy?: SynergyTrait
@@ -97,6 +100,7 @@ export class CardFilters {
         this.powers = []
         this.ambers = []
         this.anomalies = false
+        this.gigantic = false
         this.trait = undefined
         this.constraints = []
         this.synergy = undefined
@@ -110,6 +114,7 @@ export class CardFilters {
     handleTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.title = event.target.value
     handleDescriptionUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.description = event.target.value
     handleAnomaliesUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.anomalies = event.target.checked
+    handleGiganticUpdate = (event: React.ChangeEvent<HTMLInputElement>) => this.gigantic = event.target.checked
 
     constructor() {
         makeObservable(this)

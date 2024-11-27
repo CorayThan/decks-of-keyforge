@@ -144,6 +144,8 @@ export class CardStore {
                 &&
                 (!filters.anomalies || (filters.anomalies && card.expansions.find(expansion => expansion.expansion === Expansion.ANOMALY_EXPANSION) != null))
                 &&
+                (!filters.gigantic || (filters.gigantic && card.big))
+                &&
                 (filters.synergy == null || extraInfo.synergies.some(infoTrait => infoTrait.trait === filters.synergy))
                 &&
                 (filters.powers.length === 0 || filters.powers.indexOf(card.power) !== -1)

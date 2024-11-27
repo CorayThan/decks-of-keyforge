@@ -6,6 +6,7 @@ import aws.sdk.kotlin.services.s3.model.DeleteObjectRequest
 import aws.sdk.kotlin.services.s3.model.HeadObjectRequest
 import aws.sdk.kotlin.services.s3.model.NotFound
 import aws.sdk.kotlin.services.s3.model.PutObjectRequest
+import aws.sdk.kotlin.services.s3control.model.S3ObjectMetadata
 import aws.smithy.kotlin.runtime.auth.awscredentials.Credentials
 import aws.smithy.kotlin.runtime.content.ByteStream
 import aws.smithy.kotlin.runtime.http.engine.crt.CrtHttpEngine
@@ -109,10 +110,10 @@ class S3Service(
                 bucket = cardImagesBucket
                 key = objKey
                 body = ByteStream.fromBytes(image)
-                metadata = mapOf(
-                    "Cache-Control" to "max-age=31536000",
-                    "Content-Type" to "image/png",
-                )
+                metadata = S3ObjectMetadata.invoke {
+                    cacheControl = "max-age=31536000"
+                    contentType = "image/png"
+                }.userMetadata
             })
 
             log.debug("Uploaded image for: $cardUrl")

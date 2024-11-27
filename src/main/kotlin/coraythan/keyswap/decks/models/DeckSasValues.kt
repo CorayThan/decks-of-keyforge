@@ -17,7 +17,7 @@ abstract class DeckSasValues(
     val rawAmber: Int,
     val bonusDraw: Int,
     val bonusCapture: Int,
-    val creatureCount: Int,
+    var creatureCount: Int,
     val actionCount: Int,
     val artifactCount: Int,
     val upgradeCount: Int,
@@ -53,7 +53,7 @@ abstract class DeckSasValues(
     @Column(name = "deck_id", nullable = false)
     val deckId: Long,
 
-) {
+    ) {
     constructor(deck: Deck, cards: List<DokCardInDeck>, deckSyns: DeckSynergyInfo, sasVersion: Int) : this(
         name = deck.name,
         expansion = deck.expansion,
@@ -61,7 +61,11 @@ abstract class DeckSasValues(
         rawAmber = cards.sumOf { it.card.amber } + deck.bonusIcons().bonusIconHouses.sumOf { it.bonusIconCards.sumOf { it.bonusAember } },
         bonusDraw = deck.bonusIcons().bonusIconHouses.sumOf { it.bonusIconCards.sumOf { it.bonusDraw } },
         bonusCapture = deck.bonusIcons().bonusIconHouses.sumOf { it.bonusIconCards.sumOf { it.bonusCapture } },
-        creatureCount = cards.count { it.card.cardType == CardType.Creature },
+        creatureCount = cards.count {
+            !it.card.big && it.card.cardType == CardType.Creature
+        } + cards.count {
+            it.card.big && it.card.cardType == CardType.Creature
+        }.div(2),
         actionCount = cards.count { it.card.cardType == CardType.Action },
         artifactCount = cards.count { it.card.cardType == CardType.Artifact },
         upgradeCount = cards.count { it.card.cardType == CardType.Upgrade },
@@ -93,8 +97,8 @@ abstract class DeckSasValues(
         deckId = deck.id,
     )
 
-    fun sasValuesChanged(deck: DeckSynergyInfo, inputAercVersion: Int): Boolean {
-        
+    fun sasValuesChanged(deck: DeckSynergyInfo, inputAercVersion: Int, cards: List<DokCardInDeck>): Boolean {
+
         val ratingsEqual = this.amberControl.roundToTwoSigDig() == deck.amberControl.roundToTwoSigDig() &&
                 this.expectedAmber.roundToTwoSigDig() == deck.expectedAmber.roundToTwoSigDig() &&
                 this.artifactControl.roundToTwoSigDig() == deck.artifactControl.roundToTwoSigDig() &&
@@ -107,7 +111,7 @@ abstract class DeckSasValues(
                 this.other.roundToTwoSigDig() == deck.other.roundToTwoSigDig() &&
                 this.sasRating == deck.sasRating &&
                 this.aercScore.roundToTwoSigDig() == deck.rawAerc.toDouble().roundToTwoSigDig()
-        
+
         // Indexed SAS values
         expectedAmber = deck.expectedAmber
         amberControl = deck.amberControl
@@ -127,13 +131,26 @@ abstract class DeckSasValues(
         other = deck.other
         creatureProtection = deck.creatureProtection
 
+        // TODO Remove this code after the next SAS update as all will be well
+        val creatureCountRecalculated = cards.count {
+            !it.card.big && it.card.cardType == CardType.Creature
+        } + cards.count {
+            it.card.big && it.card.cardType == CardType.Creature
+        }.div(2)
+
+        if (creatureCountRecalculated != creatureCount) {
+            creatureCount = creatureCountRecalculated
+            return true
+        }
+
         return ratingsEqual
     }
 
 }
 
 @Entity
-class DeckSasValuesSearchable(deck: Deck, cards: List<DokCardInDeck>, deckSyns: DeckSynergyInfo, sasVersion: Int) : DeckSasValues(deck, cards, deckSyns, sasVersion) {
+class DeckSasValuesSearchable(deck: Deck, cards: List<DokCardInDeck>, deckSyns: DeckSynergyInfo, sasVersion: Int) :
+    DeckSasValues(deck, cards, deckSyns, sasVersion) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "deck_search_values_1_sequence")
     @SequenceGenerator(name = "deck_search_values_1_sequence", allocationSize = 1)
@@ -141,7 +158,8 @@ class DeckSasValuesSearchable(deck: Deck, cards: List<DokCardInDeck>, deckSyns: 
 }
 
 @Entity
-class DeckSasValuesUpdatable(deck: Deck, cards: List<DokCardInDeck>, deckSyns: DeckSynergyInfo, sasVersion: Int) : DeckSasValues(deck, cards, deckSyns, sasVersion) {
+class DeckSasValuesUpdatable(deck: Deck, cards: List<DokCardInDeck>, deckSyns: DeckSynergyInfo, sasVersion: Int) :
+    DeckSasValues(deck, cards, deckSyns, sasVersion) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "deck_search_values_2_sequence")
     @SequenceGenerator(name = "deck_search_values_2_sequence", allocationSize = 1)

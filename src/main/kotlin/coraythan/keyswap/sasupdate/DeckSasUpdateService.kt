@@ -42,6 +42,7 @@ class DeckSasUpdateService(
     private val allianceDeckRepo: AllianceDeckRepo,
     private val currentUserService: CurrentUserService,
     private val statsService: StatsService,
+    private val dokCardCacheService: DokCardCacheService,
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -110,8 +111,9 @@ class DeckSasUpdateService(
 
                 updatedDsv = dsvForPage.decks
                     .mapNotNull {
+                        val cards = dokCardCacheService.cardsForDeck(it.deck)
                         val ratedDeck = deckCreationService.rateDeck(it.deck)
-                        val ratingsEqual = it.sasValuesChanged(ratedDeck, updateVersion)
+                        val ratingsEqual = it.sasValuesChanged(ratedDeck, updateVersion, cards)
                         if (ratingsEqual) null else it
                     }
 

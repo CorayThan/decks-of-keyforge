@@ -19,6 +19,7 @@ import coraythan.keyswap.userdeck.*
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.ZonedDateTime
+import kotlin.math.roundToInt
 
 @Entity
 data class Deck(
@@ -133,7 +134,17 @@ data class Deck(
             wins = wins.zeroToNull(),
             losses = losses.zeroToNull(),
 
-            creatureCount = cards?.count { it.card.cardType == CardType.Creature },
+            creatureCount = cards?.sumOf {
+                if (it.card.cardType == CardType.Creature) {
+                    if (it.card.big) {
+                        0.5
+                    } else {
+                        1.0
+                    }
+                } else {
+                    0.0
+                }
+            }?.roundToInt(),
             actionCount = cards?.count { it.card.cardType == CardType.Action },
             artifactCount = cards?.count { it.card.cardType == CardType.Artifact },
             upgradeCount = cards?.count { it.card.cardType == CardType.Upgrade },
