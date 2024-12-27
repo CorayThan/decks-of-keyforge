@@ -144,11 +144,18 @@ class AllianceDeckService(
                             TheoryCard(
                                 it.card.cardTitle,
                                 enhanced = false,
-                                bonusAmber = it.bonusAember,
+                                bonusAember = it.bonusAember,
                                 bonusCapture = it.bonusCapture,
                                 bonusDamage = it.bonusDamage,
                                 bonusDraw = it.bonusDraw,
                                 bonusDiscard = it.bonusDiscard,
+                                bonusBobnar = it.bonusBobnar,
+                                bonusDis = it.bonusDis,
+                                bonusEkwidon = it.bonusEkwidon,
+                                bonusGeistoid = it.bonusGeistoid,
+                                bonusLogos = it.bonusLogos,
+                                bonusMars = it.bonusMars,
+                                bonusSkyborn = it.bonusSkyborn,
                             )
                         }
                 },
@@ -157,27 +164,9 @@ class AllianceDeckService(
                 alliance = true,
             )
 
-            val bonusIcons = DeckBonusIcons(allianceDeckInfo.cards.entries
-                .map { allyHouses ->
-                    BonusIconHouse(
-                        house = allyHouses.key,
-                        bonusIconCards = allyHouses.value
-                            .map { theoryCard ->
-                                BonusIconsCard(
-                                    cardTitle = theoryCard.name,
-                                    bonusAember = theoryCard.bonusAmber,
-                                    bonusCapture = theoryCard.bonusCapture,
-                                    bonusDamage = theoryCard.bonusDamage,
-                                    bonusDraw = theoryCard.bonusDraw,
-                                    bonusDiscard = theoryCard.bonusDiscard,
-                                )
-                            }
-                    )
-                })
-
+            val bonusIcons = allianceDeckInfo.bonusIcons
             val deck = deckCreationService.viewTheoreticalDeck(allianceDeckInfo)
             val cards = cardCache.cardsForDeck(deck)
-
 
             val tempAllianceDeck = AllianceDeck.fromDeck(deck, cards, user)
                 .copy(

@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@material-ui/core"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import * as React from "react"
 import { useEffect, useState } from "react"
@@ -22,6 +22,11 @@ import { userStore } from "../../user/UserStore"
 import { deckBuilderStore, DisplayCardsInHouseEditable } from "../DeckBuilder"
 import { CardsInHouses } from "../DeckBuilderData"
 import { theoreticalDeckStore } from "./TheoreticalDeckStore"
+import { EnhancementType } from "../../cards/EnhancementType"
+import { EnhancementIcon } from "../../generic/icons/EnhancementIcon"
+import { CardAsLine } from "../../cards/views/CardAsLine"
+import IconButton from "@material-ui/core/IconButton/IconButton"
+import { Add, Remove } from "@material-ui/icons"
 
 export const CreateTheoreticalDeck = observer(() => {
 
@@ -38,6 +43,7 @@ export const CreateTheoreticalDeck = observer(() => {
                 expansion: expansionStore.currentExpansionOrDefault()
             }
             deckBuilderStore.houses = undefined
+            deckBuilderStore.enhanceCardDialogInfo = undefined
         } else {
             expansionStore.expansion = deckBuilderStore.currentDeck?.expansion
         }
@@ -79,11 +85,22 @@ export const CreateTheoreticalDeck = observer(() => {
         return <Redirect to={Routes.theoreticalDeckPage(savedDeckId)}/>
     }
 
+    const currentCardToEnhance = deckBuilderStore.cardToEnhance()
+    let fullCardToEnhance
+    if (currentCardToEnhance != null) {
+        fullCardToEnhance = cardStore.fullCardFromCardName(currentCardToEnhance.name)!
+    }
+
+    const selectedHouses = housesStore.getHousesSelectedTrue()
+
     return (
         <div style={{display: "flex", flexDirection: "column", padding: spacing(4), alignItems: "center"}}>
             <div>
                 <Box display={"flex"} flexWrap={"wrap"}>
-                    <ExpansionSelector store={expansionStore} style={{marginBottom: spacing(2), marginRight: spacing(2), width: 200}}/>
+                    <ExpansionSelector
+                        store={expansionStore}
+                        style={{marginBottom: spacing(2), marginRight: spacing(2), width: 200}}
+                    />
                     <Box flexGrow={1}/>
                     <div>
                         <LinkButton href={Routes.myTheoreticalDecks}>My Past Theories</LinkButton>
@@ -92,7 +109,106 @@ export const CreateTheoreticalDeck = observer(() => {
                 <div style={{maxWidth: 784}}>
                     <HouseSelect style={{marginBottom: spacing(4)}} selectedHouses={housesStore}/>
                 </div>
-                <CreateTheoreticalDeckBuilder expansion={expansionStore.currentExpansionOrDefault()} houses={housesStore.getHousesSelectedTrue()}/>
+                <CreateTheoreticalDeckBuilder
+                    expansion={expansionStore.currentExpansionOrDefault()}
+                    houses={selectedHouses}
+                />
+
+                <Dialog
+                    open={currentCardToEnhance != null}
+                    onClose={deckBuilderStore.stopEnhancingCard}
+                >
+                    <DialogTitle>{currentCardToEnhance?.name} Bonus Icons</DialogTitle>
+                    <DialogContent>
+                        {currentCardToEnhance != null && (
+                            <CardAsLine
+                                card={{
+                                    ...currentCardToEnhance,
+                                    cardTitle: currentCardToEnhance.name,
+                                    cardTitleUrl: fullCardToEnhance?.cardTitleUrl ?? ""
+                                }}
+                            />
+                        )}
+                        <Box display={"flex"} flexWrap={"wrap"} style={{gap: spacing(2)}} maxWidth={320} mt={2}>
+                            <AddEnhanceIcon
+                                type={EnhancementType.AEMBER}
+                                hasBonus={(currentCardToEnhance?.bonusAember ?? 0) > 0}
+                            />
+                            <AddEnhanceIcon
+                                type={EnhancementType.CAPTURE}
+                                hasBonus={(currentCardToEnhance?.bonusCapture ?? 0) > 0}
+                            />
+                            <AddEnhanceIcon
+                                type={EnhancementType.DAMAGE}
+                                hasBonus={(currentCardToEnhance?.bonusDamage ?? 0) > 0}
+                            />
+                            <AddEnhanceIcon
+                                type={EnhancementType.DISCARD}
+                                hasBonus={(currentCardToEnhance?.bonusDiscard ?? 0) > 0}
+                            />
+                            <AddEnhanceIcon
+                                type={EnhancementType.DRAW}
+                                hasBonus={(currentCardToEnhance?.bonusDraw ?? 0) > 0}
+                            />
+
+                            {deckBuilderStore.enhanceCardDialogInfo?.house !== House.Brobnar && (
+                                <AddEnhanceIcon
+                                    type={EnhancementType.BROBNAR}
+                                    hasBonus={!!currentCardToEnhance?.bonusBobnar}
+                                    isHouse={true}
+                                />
+                            )}
+                            {deckBuilderStore.enhanceCardDialogInfo?.house !== House.Dis && (
+                                <AddEnhanceIcon
+                                    type={EnhancementType.DIS}
+                                    hasBonus={!!currentCardToEnhance?.bonusDis}
+                                    isHouse={true}
+                                />
+                            )}
+                            {deckBuilderStore.enhanceCardDialogInfo?.house !== House.Ekwidon && (
+                                <AddEnhanceIcon
+                                    type={EnhancementType.EKWIDON}
+                                    hasBonus={!!currentCardToEnhance?.bonusEkwidon}
+                                    isHouse={true}
+                                />
+                            )}
+                            {deckBuilderStore.enhanceCardDialogInfo?.house !== House.Geistoid && (
+                                <AddEnhanceIcon
+                                    type={EnhancementType.GEISTOID}
+                                    hasBonus={!!currentCardToEnhance?.bonusGeistoid}
+                                    isHouse={true}
+                                />
+                            )}
+                            {deckBuilderStore.enhanceCardDialogInfo?.house !== House.Logos && (
+                                <AddEnhanceIcon
+                                    type={EnhancementType.LOGOS}
+                                    hasBonus={!!currentCardToEnhance?.bonusLogos}
+                                    isHouse={true}
+                                />
+                            )}
+                            {deckBuilderStore.enhanceCardDialogInfo?.house !== House.Mars && (
+                                <AddEnhanceIcon
+                                    type={EnhancementType.MARS}
+                                    hasBonus={!!currentCardToEnhance?.bonusMars}
+                                    isHouse={true}
+                                />
+                            )}
+                            {deckBuilderStore.enhanceCardDialogInfo?.house !== House.Skyborn && (
+                                <AddEnhanceIcon
+                                    type={EnhancementType.SKYBORN}
+                                    hasBonus={!!currentCardToEnhance?.bonusSkyborn}
+                                    isHouse={true}
+                                />
+                            )}
+                        </Box>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={deckBuilderStore.stopEnhancingCard}>
+                            Done
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
                 <Button onClick={() => resetDeck(true)} style={{marginRight: spacing(2)}}>
                     Reset
                 </Button>
@@ -114,29 +230,50 @@ export const CreateTheoreticalDeck = observer(() => {
                             deckBuilderStore.currentDeck!.cards["Shadows"] = cardStore.allCards.slice(0, 12).map(card => ({
                                 name: card.cardTitle,
                                 enhanced: false,
-                                bonusAmber: 0,
+                                bonusAember: 0,
                                 bonusCapture: 0,
                                 bonusDamage: 0,
                                 bonusDiscard: 0,
                                 bonusDraw: 0,
+                                bonusBobnar: false,
+                                bonusDis: false,
+                                bonusEkwidon: false,
+                                bonusGeistoid: false,
+                                bonusLogos: false,
+                                bonusMars: false,
+                                bonusSkyborn: false,
                             }))
                             deckBuilderStore.currentDeck!.cards["Dis"] = cardStore.allCards.slice(0, 12).map(card => ({
                                 name: card.cardTitle,
                                 enhanced: false,
-                                bonusAmber: 0,
+                                bonusAember: 0,
                                 bonusCapture: 0,
                                 bonusDamage: 0,
                                 bonusDiscard: 0,
                                 bonusDraw: 0,
+                                bonusBobnar: false,
+                                bonusDis: false,
+                                bonusEkwidon: false,
+                                bonusGeistoid: false,
+                                bonusLogos: false,
+                                bonusMars: false,
+                                bonusSkyborn: false,
                             }))
                             deckBuilderStore.currentDeck!.cards["Logos"] = cardStore.allCards.slice(0, 12).map(card => ({
                                 name: card.cardTitle,
                                 enhanced: false,
-                                bonusAmber: 0,
+                                bonusAember: 0,
                                 bonusCapture: 0,
                                 bonusDamage: 0,
                                 bonusDiscard: 0,
                                 bonusDraw: 0,
+                                bonusBobnar: false,
+                                bonusDis: false,
+                                bonusEkwidon: false,
+                                bonusGeistoid: false,
+                                bonusLogos: false,
+                                bonusMars: false,
+                                bonusSkyborn: false,
                             }))
                         }}
                     >
@@ -145,10 +282,33 @@ export const CreateTheoreticalDeck = observer(() => {
                 )}
                 <HelperText style={{marginTop: spacing(2)}}>Changing the expansion will reset your cards.</HelperText>
                 <HelperText style={{marginTop: spacing(1)}}>
-                    After clicking view you can use the URL to share or save the theoretical deck. It will not be searchable.
+                    After clicking view you can use the URL to share or save the theoretical deck. It will not be
+                    searchable.
                 </HelperText>
             </div>
         </div>
+    )
+})
+
+const AddEnhanceIcon = observer((props: { type: EnhancementType, hasBonus: boolean, isHouse?: boolean }) => {
+    return (
+        <Box display={"flex"} style={{gap: spacing(1)}} alignItems={"center"}>
+            <EnhancementIcon type={props.type}/>
+            <IconButton
+                size={"small"}
+                onClick={() => deckBuilderStore.enhanceCard(props.type, true)}
+                disabled={props.isHouse && props.hasBonus}
+            >
+                <Add/>
+            </IconButton>
+            <IconButton
+                size={"small"}
+                onClick={() => deckBuilderStore.enhanceCard(props.type, false)}
+                disabled={!props.hasBonus}
+            >
+                <Remove/>
+            </IconButton>
+        </Box>
     )
 })
 
@@ -175,7 +335,11 @@ const CreateTheoreticalDeckBuilder = observer((props: { expansion: Expansion, ho
                 {deckCards.map((value: [string, TheoryCard[]], index: number) => {
                     return (
                         <div key={value[0]} style={{marginRight: index !== 2 ? spacing(2) : 0}}>
-                            <DisplayCardsInHouseEditable house={value[0] as House} cards={value[1]} expansion={expansion}/>
+                            <DisplayCardsInHouseEditable
+                                house={value[0] as House}
+                                cards={value[1]}
+                                expansion={expansion}
+                            />
                         </div>
                     )
                 })}

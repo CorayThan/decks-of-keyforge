@@ -8,10 +8,9 @@ import coraythan.keyswap.config.UnauthorizedException
 import coraythan.keyswap.deckimports.DeckCreationService
 import coraythan.keyswap.decks.DeckRepo
 import coraythan.keyswap.decks.DeckSearchService
-import coraythan.keyswap.decks.models.Deck
 import coraythan.keyswap.deckimports.DeckBuildingData
-import coraythan.keyswap.decks.models.DeckWithSynergyInfo
 import coraythan.keyswap.deckimports.TheoryCard
+import coraythan.keyswap.decks.models.*
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.firstWord
 import coraythan.keyswap.patreon.PatreonRewardsTier
@@ -69,9 +68,11 @@ class TheoreticalDeckService(
     fun saveTheoreticalDeck(toSave: DeckBuildingData): UUID {
         val user = currentUserService.hasPatronLevelOrUnauthorized(PatreonRewardsTier.NOTICE_BARGAINS)
         val deck = deckCreationService.viewTheoreticalDeck(toSave)
+            .withBonusIcons(toSave.bonusIcons)
         val makeBelieveDeck = TheoreticalDeck(
             expansion = deck.expansion,
             cardIds = deck.cardIds,
+            bonusIconsString = deck.bonusIconsString,
             houseNamesString = deck.houseNamesString,
             creatorId = user.id,
             alliance = false,
@@ -104,7 +105,8 @@ class TheoreticalDeckService(
             expansion = theoryDeck.expansion ?: Expansion.CALL_OF_THE_ARCHONS.expansionNumber,
             keyforgeId = theoryDeck.id.toString(),
             cardIds = theoryDeck.cardIds,
-            houseNamesString = theoryDeck.houseNamesString
+            houseNamesString = theoryDeck.houseNamesString,
+            bonusIconsString = theoryDeck.bonusIconsString,
         )
         val deckResult = deckSearchService.deckToDeckWithSynergies(deck)
 

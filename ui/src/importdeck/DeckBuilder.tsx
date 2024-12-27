@@ -18,6 +18,7 @@ import { TheoryCard } from "../generated-src/TheoryCard"
 import { HouseLabel } from "../houses/HouseUtils"
 import { CardsInHouses, DeckBuilderData } from "./DeckBuilderData"
 import { FrontendCard } from "../generated-src/FrontendCard"
+import { EnhancementType } from "../cards/EnhancementType"
 
 class DeckBuilderStore {
     @observable
@@ -25,6 +26,9 @@ class DeckBuilderStore {
 
     @observable
     houses?: House[]
+
+    @observable
+    enhanceCardDialogInfo?: { house: House, cardIdx: number }
 
     constructor() {
         makeObservable(this)
@@ -56,12 +60,64 @@ class DeckBuilderStore {
         return valid
     }
 
+    stopEnhancingCard = () => this.enhanceCardDialogInfo = undefined
+
     removeCard = (house: House, cardIdx: number) => {
         this.currentDeck!.cards[house]!.splice(cardIdx, 1)
     }
 
-    enhanceCard = (house: House, cardIdx: number) => {
-        this.currentDeck!.cards[house]![cardIdx].enhanced = !this.currentDeck!.cards[house]![cardIdx].enhanced
+    cardToEnhance = (): TheoryCard | undefined => {
+        if (this.enhanceCardDialogInfo == null) {
+            return undefined
+        }
+        return this.currentDeck!.cards[this.enhanceCardDialogInfo.house]![this.enhanceCardDialogInfo.cardIdx]
+    }
+
+    enhanceCard = (enhanceType: EnhancementType, add: boolean) => {
+        if (this.enhanceCardDialogInfo == null) {
+            log.warn("No card available to enhance")
+            return
+        }
+        const enhanceThis = this.currentDeck!.cards[this.enhanceCardDialogInfo.house]![this.enhanceCardDialogInfo.cardIdx]
+        const change = add ? 1 : -1
+        switch (enhanceType) {
+            case EnhancementType.AEMBER:
+                enhanceThis.bonusAember += change
+                break
+            case EnhancementType.CAPTURE:
+                enhanceThis.bonusCapture += change
+                break
+            case EnhancementType.DAMAGE:
+                enhanceThis.bonusDamage += change
+                break
+            case EnhancementType.DISCARD:
+                enhanceThis.bonusDiscard += change
+                break
+            case EnhancementType.DRAW:
+                enhanceThis.bonusDraw += change
+                break
+            case EnhancementType.BROBNAR:
+                enhanceThis.bonusBobnar = add
+                break
+            case EnhancementType.DIS:
+                enhanceThis.bonusDis = add
+                break
+            case EnhancementType.EKWIDON:
+                enhanceThis.bonusEkwidon = add
+                break
+            case EnhancementType.GEISTOID:
+                enhanceThis.bonusGeistoid = add
+                break
+            case EnhancementType.LOGOS:
+                enhanceThis.bonusLogos = add
+                break
+            case EnhancementType.MARS:
+                enhanceThis.bonusMars = add
+                break
+            case EnhancementType.SKYBORN:
+                enhanceThis.bonusSkyborn = add
+                break
+        }
     }
 
     addCardHandler = (house: House) => {
@@ -78,11 +134,18 @@ class DeckBuilderStore {
                 houseCards.push({
                     name: foundCard.cardTitle,
                     enhanced: false,
-                    bonusAmber: 0,
+                    bonusAember: foundCard.amber,
                     bonusCapture: 0,
                     bonusDamage: 0,
                     bonusDiscard: 0,
                     bonusDraw: 0,
+                    bonusBobnar: false,
+                    bonusDis: false,
+                    bonusEkwidon: false,
+                    bonusGeistoid: false,
+                    bonusLogos: false,
+                    bonusMars: false,
+                    bonusSkyborn: false,
                 })
                 this.currentDeck!.cards[house] = sortBy(houseCards, (card: TheoryCard) => cardStore.fullCardFromCardName(card.name)?.cardType)
                 cardHolder.option = ""
@@ -99,11 +162,18 @@ class DeckBuilderStore {
             cards[houseAndCards.house] = houseAndCards.cards.map(card => ({
                 name: card.cardTitle,
                 enhanced: card.enhanced ?? false,
-                bonusAmber: card.bonusAember ?? 0,
+                bonusAember: card.bonusAember ?? 0,
                 bonusCapture: card.bonusCapture ?? 0,
                 bonusDamage: card.bonusDamage ?? 0,
                 bonusDiscard: card.bonusDiscard ?? 0,
                 bonusDraw: card.bonusDraw ?? 0,
+                bonusBobnar: card.bonusBobnar ?? false,
+                bonusDis: card.bonusDis ?? false,
+                bonusEkwidon: card.bonusEkwidon ?? false,
+                bonusGeistoid: card.bonusGeistoid ?? false,
+                bonusLogos: card.bonusLogos ?? false,
+                bonusMars: card.bonusMars ?? false,
+                bonusSkyborn: card.bonusSkyborn ?? false,
             }))
         })
         this.currentDeck = {
@@ -133,24 +203,33 @@ export class DisplayCardsInHouseEditable extends React.Component<{
             }
         })))
         const showEnhanced = ExtendedExpansionUtils.allowsEnhancements(expansion)
+
         return (
             <div style={{display: "flex", flexDirection: "column", width: 240}}>
                 <HouseLabel title={true} house={house}/>
                 <Divider style={{marginTop: 4}}/>
                 {cards.map((card, idx) => {
                     const fullCard = cardStore.fullCardFromCardName(card.name) as FrontendCard
+                    log.info(`Card ${fullCard.cardTitle} enhanced aember ${card.bonusAember}`)
                     return (
                         <Box display={"flex"} alignItems={"center"} key={idx}>
-                            <CardAsLine card={fullCard} width={showEnhanced ? 120 : 160} marginTop={4}
-                                        cardActualHouse={this.props.house}/>
+                            <CardAsLine
+                                card={{
+                                    ...card,
+                                    cardTitle: fullCard.cardTitle,
+                                    cardTitleUrl: fullCard.cardTitleUrl,
+                                }}
+                                width={showEnhanced ? 120 : 160}
+                                marginTop={4}
+                                cardActualHouse={this.props.house}
+                            />
                             <Box flexGrow={1}/>
                             {showEnhanced && (
                                 <Button
-                                    onClick={() => deckBuilderStore.enhanceCard(house, idx)}
-                                    color={card.enhanced ? "primary" : undefined}
+                                    onClick={() => deckBuilderStore.enhanceCardDialogInfo = {house, cardIdx: idx}}
                                     size={"small"}
                                 >
-                                    Enhanced
+                                    Enhance
                                 </Button>
                             )}
                             <IconButton
