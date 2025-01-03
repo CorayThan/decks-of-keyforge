@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "coraythan"
-version = "640"
+version = "641"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -77,6 +77,7 @@ dependencies {
     val shedlockVersion = "5.8.0"
     val kotlinAwsSdkVersion = "1.0.41"
     val smithyKotlinVersion = "1.0.10"
+    val flywayVersion = "10.22.0"
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -92,7 +93,10 @@ dependencies {
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
-    implementation("org.flywaydb:flyway-core")
+
+    implementation("org.flywaydb:flyway-core:$flywayVersion")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:$flywayVersion")
+
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
     implementation("org.apache.commons:commons-lang3:3.13.0")
