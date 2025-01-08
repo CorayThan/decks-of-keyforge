@@ -4,7 +4,6 @@ import coraythan.keyswap.House
 import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.synergy.*
-import org.slf4j.LoggerFactory
 
 
 data class MatchSynergiesToTraits(
@@ -12,7 +11,7 @@ data class MatchSynergiesToTraits(
 ) {
 
     fun matches(card: DokCardInDeck, synergyValue: SynTraitValue): SynMatchInfo {
-        val house = card.house
+        val synCardHouses = card.allHouses
         val cardName = card.card.cardTitle
 
         // log.info("Check if there is a match for card ${card.cardTitle} in trait values ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitValues)}")
@@ -21,6 +20,7 @@ data class MatchSynergiesToTraits(
             .filter {
                 val extraCardInfo = it.card?.extraCardInfo
                 val traitsCard = it.card?.card
+                val traitCardHouses = it.card?.allHouses
                 val typeMatch =
                     typesMatch(
                         traitTrait = it.value.trait,
@@ -28,9 +28,16 @@ data class MatchSynergiesToTraits(
                         cardTypes = extraCardInfo?.allCardTypes(),
                         traitTypes = it.value.cardTypes ?: listOf(),
                     )
-                val zoneMatch = fromZonesMatch(synFromZones = synergyValue.fromZones, traitFromZones = it.value.fromZones)
+                val zoneMatch =
+                    fromZonesMatch(synFromZones = synergyValue.fromZones, traitFromZones = it.value.fromZones)
                 val playerMatch = playersMatch(synergyValue.player, it.value.player)
-                val houseMatch = housesMatch(synergyValue.house, house, it.value.house, it.house, it.deckTrait)
+                val houseMatch = housesMatch(
+                    synHouse = synergyValue.house,
+                    synCardHouses = synCardHouses,
+                    traitHouse = it.value.house,
+                    traitCardHouses = traitCardHouses,
+                    deckTrait = it.deckTrait,
+                )
 
                 // If the synergy has a power range, does the traits card match that power range?
                 val synergyPowerMatch = synergyValue.powerMatch(traitsCard?.power ?: -1, traitsCard?.cardType)
@@ -125,33 +132,34 @@ data class MatchSynergiesToTraits(
 
     private fun housesMatch(
         synHouse: SynTraitHouse,
-        house1: House,
+        synCardHouses: Set<House>,
         traitHouse: SynTraitHouse,
-        house2: House?,
+        traitCardHouses: Set<House>?,
         deckTrait: Boolean = false
     ): Boolean {
+        val housesMatch = if (traitCardHouses == null) true else synCardHouses.any { traitCardHouses.contains(it) }
         return when (synHouse) {
             SynTraitHouse.anyHouse -> when (traitHouse) {
                 // any house with any house always true
                 SynTraitHouse.anyHouse -> true
-                SynTraitHouse.house -> !deckTrait && house1 == house2
-                SynTraitHouse.outOfHouse -> !deckTrait && house1 != house2
+                SynTraitHouse.house -> !deckTrait && housesMatch
+                SynTraitHouse.outOfHouse -> !deckTrait && !housesMatch
                 SynTraitHouse.continuous -> true
             }
 
             SynTraitHouse.house -> when (traitHouse) {
-                SynTraitHouse.anyHouse -> !deckTrait && house1 == house2
-                SynTraitHouse.house -> house1 == house2
+                SynTraitHouse.anyHouse -> !deckTrait && housesMatch
+                SynTraitHouse.house -> housesMatch
                 // out of house with in house always false
                 SynTraitHouse.outOfHouse -> false
                 SynTraitHouse.continuous -> true
             }
 
             SynTraitHouse.outOfHouse -> when (traitHouse) {
-                SynTraitHouse.anyHouse -> !deckTrait && house1 != house2
+                SynTraitHouse.anyHouse -> !deckTrait && !housesMatch
                 // out of house with in house always false
                 SynTraitHouse.house -> false
-                SynTraitHouse.outOfHouse -> house1 != house2
+                SynTraitHouse.outOfHouse -> !housesMatch
                 SynTraitHouse.continuous -> true
             }
             // Synergies with omni always match
@@ -187,7 +195,12 @@ fun MutableMap<SynergyTrait, MatchSynergiesToTraits>.addDeckTrait(
     strength: TraitStrength = TraitStrength.NORMAL
 ) {
     repeat(count) {
-        this.addTrait(SynTraitValue(trait, strength.value, traitHouse), null, if (house == null) null else setOf(house), true)
+        this.addTrait(
+            SynTraitValue(trait, strength.value, traitHouse),
+            null,
+            if (house == null) null else setOf(house),
+            true
+        )
     }
 }
 

@@ -68,9 +68,8 @@ class BasicSynsTest {
                                     expectedAmber = 1.0,
                                     expectedAmberMax = 4.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.highCreatureCount, 3, SynTraitHouse.house),
-                                            SynTraitValue(SynergyTrait.lowCreatureCount, -3, SynTraitHouse.house),
-                                            SynTraitValue(SynergyTrait.returns_R_ToHand, 4, SynTraitHouse.house, player = SynTraitPlayer.FRIENDLY, cardTypesString = "Creature"),
+                                            SynTraitValue(SynergyTrait.creatureCount, 3, SynTraitHouse.house),
+                                              SynTraitValue(SynergyTrait.returns_R_ToHand, 4, SynTraitHouse.house, player = SynTraitPlayer.FRIENDLY, cardTypesString = "Creature"),
                                             SynTraitValue(SynergyTrait.returns_R_ToHand, 2, SynTraitHouse.outOfHouse, player = SynTraitPlayer.FRIENDLY, cardTypesString = "Creature")
                                     ))
                     )
@@ -109,13 +108,13 @@ class BasicSynsTest {
     fun testHuntingWitch() {
 
         val huntingResults = DeckSynergyService.fromDeckWithCards(boringDeck, huntingWitch, null)
-        assertEquals(0, huntingResults.synergyRating)
-        assertEquals(2.875, huntingResults.expectedAmber, 0.001)
+        assertEquals(3, huntingResults.synergyRating)
+        assertEquals(3.67, huntingResults.expectedAmber, 0.001)
         val combos = huntingResults.synergyCombos.find { it.cardName == "hunting-witch" }?.synergies ?: listOf()
         log.info("Combos: $combos")
         assertEquals(50, combos.find { it.traitCards.contains("nature's call") }?.percentSynergized)
         assertEquals(25, combos.find { it.traitCards.contains("hysteria") }?.percentSynergized)
-        assertEquals(-50, combos.find { it.trait.trait == SynergyTrait.lowCreatureCount }?.percentSynergized)
+        assertEquals(14, combos.find { it.trait.trait == SynergyTrait.creatureCount }?.percentSynergized)
     }
 
     val basicSynAndAntisyn = listOf<DokCardInDeck>()

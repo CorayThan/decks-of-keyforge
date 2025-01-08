@@ -14,7 +14,7 @@ fun testCard(
     house: House = House.Brobnar,
     amber: Int? = null,
     power: Int? = null,
-    bonusDis: Boolean = false,
+    bonusMars: Boolean = false,
     traits: Set<String> = setOf(),
     extraCardInfo: ExtraCardInfo = ExtraCardInfo(),
 ): DokCardInDeck {
@@ -24,7 +24,7 @@ fun testCard(
         cardType = cardType,
         amber = amber ?: 0,
         power = power ?: 0,
-        houses = if (bonusDis) listOf(house, House.Dis) else listOf(house),
+        houses = if (bonusMars) listOf(house, House.Mars) else listOf(house),
         traits = traits.toList(),
     )
     return DokCardInDeck(
@@ -36,7 +36,7 @@ fun testCard(
         ),
         house = house,
         rarity = Rarity.Common,
-        bonusDis = bonusDis,
+        bonusMars = bonusMars,
     )
 }
 
@@ -45,4 +45,11 @@ val boringDeck = Deck(
     expansion = 341,
     name = "boring",
     houseNamesString = "Brobnar|Sanctum|Untamed"
+)
+
+val aemberSkiesDeck = Deck(
+    keyforgeId = "",
+    expansion = 800,
+    name = "Aember Skies",
+    houseNamesString = "Ekwidon|Mars|Skyborn"
 )

@@ -85,19 +85,19 @@ data class DeckSynergyStats(
                 ),
                 houseStats = deck.houses.associateWith {
                     statsFromCards(
-                        inputCards.filter { card -> card.house == it },
+                        inputCards.filter { card -> card.allHouses.contains(it) },
                         tokenValues?.tokensPerGamePerHouse?.get(it)?.roundToInt() ?: 0, SynTraitPlayer.ANY
                     )
                 },
                 houseStatsFriendly = deck.houses.associateWith {
                     statsFromCards(
-                        inputCards.filter { card -> card.house == it },
+                        inputCards.filter { card -> card.allHouses.contains(it) },
                         tokenValues?.tokensPerGamePerHouse?.get(it)?.roundToInt() ?: 0, SynTraitPlayer.FRIENDLY
                     )
                 },
                 houseStatsEnemy = deck.houses.associateWith {
                     statsFromCards(
-                        inputCards.filter { card -> card.house == it },
+                        inputCards.filter { card -> card.allHouses.contains(it) },
                         tokenValues?.tokensPerGamePerHouse?.get(it)?.roundToInt() ?: 0, SynTraitPlayer.ENEMY
                     )
                 },

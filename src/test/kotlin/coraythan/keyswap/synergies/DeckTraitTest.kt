@@ -19,12 +19,12 @@ class DeckTraitTest {
                     testCard(
                             name = "jammerpack",
                             house = House.Brobnar,
-                            power = 75,
+                            power = 65,
                             extraCardInfo = ExtraCardInfo(
                                     amberControl = 0.0,
                                     amberControlMax = 4.0,
                                     synergies = listOf(
-                                            SynTraitValue(SynergyTrait.highTotalCreaturePower, 3)
+                                            SynTraitValue(SynergyTrait.totalCreaturePower, 3)
                                     )
                             )
                     )
@@ -33,6 +33,7 @@ class DeckTraitTest {
     @Test
     fun testJammerpack() {
         val jammerpack = DeckSynergyService.fromDeckWithCards(boringDeck, jammerPack)
+
         Assert.assertEquals(2, jammerpack.synergyRating)
         Assert.assertEquals(2.0, jammerpack.amberControl, 0.001)
 

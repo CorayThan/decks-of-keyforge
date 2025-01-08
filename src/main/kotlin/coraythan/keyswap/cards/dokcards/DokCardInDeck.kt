@@ -8,6 +8,7 @@ import coraythan.keyswap.decks.models.SimpleCard
 import coraythan.keyswap.decks.models.TokenInfo
 import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.generatets.GenerateTs
+import coraythan.keyswap.generatets.TsIgnore
 
 @GenerateTs
 data class DokCardInDeck(
@@ -50,17 +51,17 @@ data class DokCardInDeck(
         return card.cardTitle.compareTo(other.card.cardTitle)
     }
 
-    val allHouses: Set<House>
-        get() = setOfNotNull(
-            house,
-            if (bonusBobnar) House.Brobnar else null,
-            if (bonusDis) House.Dis else null,
-            if (bonusEkwidon) House.Ekwidon else null,
-            if (bonusGeistoid) House.Geistoid else null,
-            if (bonusLogos) House.Logos else null,
-            if (bonusMars) House.Mars else null,
-            if (bonusSkyborn) House.Skyborn else null,
-        )
+    @TsIgnore
+    val allHouses: Set<House> = setOfNotNull(
+        house,
+        if (bonusBobnar) House.Brobnar else null,
+        if (bonusDis) House.Dis else null,
+        if (bonusEkwidon) House.Ekwidon else null,
+        if (bonusGeistoid) House.Geistoid else null,
+        if (bonusLogos) House.Logos else null,
+        if (bonusMars) House.Mars else null,
+        if (bonusSkyborn) House.Skyborn else null,
+    )
 
     val pipEnhanced: Boolean
         get() = bonusAember > 0 || bonusCapture > 0 || bonusDamage > 0 || bonusDraw > 0 || bonusDiscard > 0

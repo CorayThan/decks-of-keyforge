@@ -8,8 +8,6 @@ import coraythan.keyswap.expansions.Expansion
 import coraythan.keyswap.roundToTwoSigDig
 import coraythan.keyswap.synergy.*
 import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addDeckTraits
-import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addHouseTraits
-import coraythan.keyswap.synergy.synergysystem.GenerateDeckAndHouseTraits.addOutOfHouseTraits
 import coraythan.keyswap.synergy.synergysystem.HouseEnhancementAlgorithm.generateHouseEnhancementCombos
 import coraythan.keyswap.synergy.synergysystem.SelfEnhancementAlgorithm.generateSelfEnhancementCombos
 import coraythan.keyswap.synergy.synergysystem.TokenSynergyService.makeTokenValues
@@ -172,9 +170,7 @@ object DeckSynergyService {
         // log.info("Traits map is: ${ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(traitsMap)}")
 
         AutomaticTraitsAlgorithm.addAutomaticTraits(traitsMap, cards)
-        addDeckTraits(deck, traitsMap, cards)
-        addHouseTraits(deck.houses, cards, traitsMap)
-        addOutOfHouseTraits(deck.houses, cards, traitsMap)
+        addDeckTraits(traitsMap, cards)
 
         val synergyCombos: List<SynergyCombo> = cards
             .groupBy { Pair(it.card.cardTitle, it.house) }

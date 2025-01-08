@@ -1,6 +1,7 @@
 package coraythan.keyswap.synergies
 
 import coraythan.keyswap.House
+import coraythan.keyswap.cards.CardType
 import coraythan.keyswap.cards.dokcards.DokCardInDeck
 import coraythan.keyswap.cards.extrainfo.ExtraCardInfo
 import coraythan.keyswap.synergy.SynTraitHouse
@@ -42,13 +43,41 @@ class HouseMatchTest {
                     )
             )
 
+    val housePipCards = listOf<DokCardInDeck>()
+        .plus(
+            testCard(
+                name = "Crystal Hive",
+                house = House.Mars,
+                extraCardInfo = ExtraCardInfo(
+                    expectedAmber = 0.0,
+                    expectedAmberMax = 10.0,
+                    synergies = listOf(
+                        SynTraitValue(SynergyTrait.creatureCount, rating = 3, house = SynTraitHouse.house),
+                    )
+                )
+            )
+        )
+        .plus(
+            (0..5).map {
+                testCard(
+                    name = "Ace Jonavan",
+                    house = House.Ekwidon,
+                    bonusMars = true,
+                    cardType = CardType.Creature,
+                )
+            }
+        )
+
     @Test
     fun testPixieHysteria() {
-
         val pixieResults = DeckSynergyService.fromDeckWithCards(boringDeck, pixieCards)
-
-        // TODO this should be 2.5, but I haven't implemented this yet
         assertEquals(2.8, pixieResults.expectedAmber, 0.001)
+    }
+
+    @Test
+    fun testHousePips() {
+        val housePipResults = DeckSynergyService.fromDeckWithCards(aemberSkiesDeck, housePipCards)
+        assertEquals(5.8, housePipResults.expectedAmber, 0.001)
     }
 
 }
