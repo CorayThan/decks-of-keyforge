@@ -47,6 +47,13 @@ val boringDeck = Deck(
     houseNamesString = "Brobnar|Sanctum|Untamed"
 )
 
+val worldsCollideDeck = Deck(
+    keyforgeId = "",
+    expansion = 341,
+    name = "boring",
+    houseNamesString = "Brobnar|Sanctum|StarAlliance"
+)
+
 val aemberSkiesDeck = Deck(
     keyforgeId = "",
     expansion = 800,

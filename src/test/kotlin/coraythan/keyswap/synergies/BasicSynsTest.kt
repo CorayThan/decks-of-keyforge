@@ -384,8 +384,9 @@ class BasicSynsTest {
 
     @Test
     fun testSelfSynergyInHouse() {
-        val twoKirby = DeckSynergyService.fromDeckWithCards(boringDeck, selfSynergyInHouse)
-        assertEquals(1.0, twoKirby.synergyCombos.find { it.cardName == "kirby" }!!.netSynergy, 0.001)
+        val twoKirby = DeckSynergyService.fromDeckWithCards(worldsCollideDeck, selfSynergyInHouse)
+        assertEquals(1.0, twoKirby.synergyCombos.find { it.cardName == "kirby" && it.house == House.StarAlliance }!!.netSynergy, 0.001)
+        assertEquals(0.0, twoKirby.synergyCombos.find { it.cardName == "kirby" && it.house == House.Brobnar }!!.netSynergy, 0.001)
         assertEquals(5.0, twoKirby.efficiency, 0.001)
     }
 }

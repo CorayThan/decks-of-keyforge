@@ -110,13 +110,13 @@ object DeckSynergyService {
 
         val traitsMap = mutableMapOf<SynergyTrait, MatchSynergiesToTraits>()
 
-        val cardsMap: Map<House, Map<String, CardToMatchInfo>> = cards
-            .groupBy { it.house }
-            .map { cardsByHouse ->
-                cardsByHouse.key to cardsByHouse.value.groupBy { it.card.cardTitle }
+        val cardsMap: Map<House, Map<String, CardToMatchInfo>> = deck.houses
+            .associateWith { house ->
+                cards
+                    .filter { it.allHouses.contains(house) }
+                    .groupBy { it.card.cardTitle }
                     .map { it.key to CardToMatchInfo(it.value.size, it.value.first().card.cardType) }.toMap()
             }
-            .toMap()
 
         // Add traits from each card
         cards.forEach { dokCardInDeck ->
@@ -445,13 +445,16 @@ object DeckSynergyService {
         cardsMap: Map<House, Map<String, CardToMatchInfo>>
     ): SynMatchInfo? {
         val matches: List<CardToMatchInfo> = when (synergy.house) {
-            SynTraitHouse.anyHouse -> cardsMap.mapNotNull {
-                it.value[synergy.cardName]
-            }
+            SynTraitHouse.house ->
+                card.allHouses.mapNotNull { cardsMap[it]?.get(synergy.cardName) }
 
-            SynTraitHouse.house -> listOfNotNull(cardsMap[card.house]?.get(synergy.cardName))
-            else -> cardsMap.entries.filter { it.key != card.house }
-                .mapNotNull { it.value[synergy.cardName] }
+            SynTraitHouse.outOfHouse ->
+                cardsMap.filter { !card.allHouses.contains(it.key) }
+                    .mapNotNull { it.value[synergy.cardName] }
+
+            else -> cardsMap.mapNotNull {
+                it.value[synergy.cardName]
+            } // Continuous and any are synonymous for card matches
         }
         val targetType = matches.firstOrNull()?.type
         val cardCount = if (targetType == CardType.TokenCreature) 2 else matches.sumOf { it.quantity }
