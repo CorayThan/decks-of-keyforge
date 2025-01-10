@@ -70,35 +70,38 @@ data class DeckSynergyStats(
             return DeckSynergyStats(
                 deckStats = statsFromCards(
                     inputCards,
-                    tokenValues?.tokensPerGame?.roundToInt() ?: 0,
-                    SynTraitPlayer.ANY
+                    tokensCount = tokenValues?.tokensPerGame?.roundToInt() ?: 0,
+                    player = SynTraitPlayer.ANY
                 ),
                 deckStatsFriendly = statsFromCards(
                     inputCards,
-                    tokenValues?.tokensPerGame?.roundToInt() ?: 0,
-                    SynTraitPlayer.FRIENDLY
+                    tokensCount = tokenValues?.tokensPerGame?.roundToInt() ?: 0,
+                    player = SynTraitPlayer.FRIENDLY
                 ),
                 deckStatsEnemy = statsFromCards(
                     inputCards,
-                    tokenValues?.tokensPerGame?.roundToInt() ?: 0,
-                    SynTraitPlayer.ENEMY
+                    tokensCount = tokenValues?.tokensPerGame?.roundToInt() ?: 0,
+                    player = SynTraitPlayer.ENEMY
                 ),
                 houseStats = deck.houses.associateWith {
                     statsFromCards(
                         inputCards.filter { card -> card.allHouses.contains(it) },
-                        tokenValues?.tokensPerGamePerHouse?.get(it)?.roundToInt() ?: 0, SynTraitPlayer.ANY
+                        tokensCount = if (tokenValues?.tokenHouse == it) tokenValues.tokensPerGame.roundToInt() else 0,
+                        player = SynTraitPlayer.ANY
                     )
                 },
                 houseStatsFriendly = deck.houses.associateWith {
                     statsFromCards(
                         inputCards.filter { card -> card.allHouses.contains(it) },
-                        tokenValues?.tokensPerGamePerHouse?.get(it)?.roundToInt() ?: 0, SynTraitPlayer.FRIENDLY
+                        tokensCount = if (tokenValues?.tokenHouse == it) tokenValues.tokensPerGame.roundToInt() else 0,
+                        player = SynTraitPlayer.FRIENDLY
                     )
                 },
                 houseStatsEnemy = deck.houses.associateWith {
                     statsFromCards(
                         inputCards.filter { card -> card.allHouses.contains(it) },
-                        tokenValues?.tokensPerGamePerHouse?.get(it)?.roundToInt() ?: 0, SynTraitPlayer.ENEMY
+                        tokensCount = 0,
+                        player = SynTraitPlayer.ENEMY
                     )
                 },
             )
