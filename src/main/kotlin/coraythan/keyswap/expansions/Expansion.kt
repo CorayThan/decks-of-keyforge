@@ -129,6 +129,11 @@ enum class Expansion(
         hasTokens = true,
         tournamentLegal = false,
         singleHouse = true
+    ),
+    DISCOVERY(
+        907,
+        "D",
+        setOf(House.Brobnar, House.Dis, House.Logos, House.Sanctum, House.StarAlliance, House.Shadows, House.Untamed),
     );
 
     companion object {
@@ -157,6 +162,7 @@ val activeExpansions = setOf(
     Expansion.AEMBER_SKIES,
     Expansion.TOKENS_OF_CHANGE,
     Expansion.MORE_MUTATION,
+    Expansion.DISCOVERY,
 )
 
 // Include Expansions which have had SAS scores created and are tournament legal
@@ -173,4 +179,5 @@ val includeInGlobalStats = setOf(
     Expansion.AEMBER_SKIES,
     Expansion.TOKENS_OF_CHANGE,
     Expansion.MORE_MUTATION,
+    Expansion.DISCOVERY,
 )

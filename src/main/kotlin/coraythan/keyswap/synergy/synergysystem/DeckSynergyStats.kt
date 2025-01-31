@@ -259,7 +259,7 @@ data class DeckSynergyStats(
                     millsOrHauntingTrait + discards
                 }
 
-                val artifact = if (dokCardInDeck.card.cardType == CardType.Artifact && friendlyIncluded) -5 else 0
+                val artifact = if (dokCardInDeck.card.cardType == CardType.Artifact && friendlyIncluded) -2 else 0
                 val action = if (dokCardInDeck.card.cardType == CardType.Action && friendlyIncluded) 2 else 0
                 val discardPips = if (friendlyIncluded) dokCardInDeck.bonusDiscard * 4 else 0
                 val total = traitValues + artifact + action + discardPips

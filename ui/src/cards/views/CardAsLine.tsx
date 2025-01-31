@@ -7,7 +7,7 @@ import { observer } from "mobx-react"
 import * as React from "react"
 import { AercForCard } from "../../aerc/views/AercForCard"
 import { spacing, themeStore } from "../../config/MuiConfig"
-import { log, prettyJson } from "../../config/Utils"
+import { log } from "../../config/Utils"
 import { DeckSearchResult } from "../../decks/models/DeckSearchResult"
 import { Expansion } from "../../generated-src/Expansion"
 import { House } from "../../generated-src/House"
@@ -153,12 +153,6 @@ class CardAsLineComplex extends React.Component<CardAsLineProps> {
         const imgWidth = width ?? 100
 
         const synergies = findSynegyComboForCardFromDeck(fullCard, cardActualHouse, this.props.deck)
-
-        if (card.cardTitle === "Berserker") {
-            log.info(`Found synergies for Berserker: ${prettyJson(synergies)}`)
-        }
-
-        log.info(`Card URL is ${card.cardTitleUrl}`)
 
         return (
             <div

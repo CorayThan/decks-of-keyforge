@@ -205,6 +205,7 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                     <List dense={true}>
                         <ListItem>
                             <TextField
+                                size={"small"}
                                 label={titleQl ? "Exact Match Deck Name" : "Deck Name"}
                                 onChange={handleTitleUpdate}
                                 value={title}
@@ -232,73 +233,8 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 </IconButton>
                             ) : null}
                         </ListItem>
-                        <ListItem style={{marginTop: spacing(2)}}>
-                            <ExpansionSelectOrExclude selectedExpansions={deckSearchDrawerStore.selectedExpansions}/>
-                        </ListItem>
                         <ListItem style={{marginTop: spacing(1)}}>
-                            <div>
-                                <Typography variant={"subtitle1"} color={"textSecondary"}>Options</Typography>
-                                <FormGroup row={true}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.myDecks}
-                                                onChange={handleMyDecksUpdate}
-                                                disabled={!showMyDecks}
-                                            />
-                                        }
-                                        label={<Typography variant={"body2"}>My Decks</Typography>}
-                                        style={{width: 136}}
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={this.props.filters.forSale === true}
-                                                onChange={(event) => this.updateForSale(event.target.checked ? true : undefined)}
-                                            />
-                                        }
-                                        label={(
-                                            <div style={{display: "flex", alignItems: "center"}}>
-                                                <SellDeckIcon/>
-                                                <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>
-                                                    For Sale
-                                                </Typography>
-                                            </div>
-                                        )}
-                                        style={{width: 136}}
-                                    />
-                                    {showDecksOwner && (
-                                        <div style={{display: "flex", alignItems: "center"}}>
-                                            <UserLink username={owner}/>
-                                            <IconButton
-                                                style={{marginLeft: spacing(1)}}
-                                                size={"small"}
-                                                onClick={() => this.props.filters.owner = ""}
-                                            >
-                                                <Close fontSize={"small"}/>
-                                            </IconButton>
-                                        </div>
-                                    )}
-                                    {tournamentIds.length > 0 && (
-                                        <>
-                                            {tournamentIds.map(id => (
-                                                <Box display={"flex"} key={id} mt={2}>
-                                                    <LinkButton href={Routes.tournamentPage(id)}>Tournament</LinkButton>
-                                                    <IconButton
-                                                        style={{marginLeft: spacing(1)}}
-                                                        size={"small"}
-                                                        onClick={() => {
-                                                            ArrayUtils.removeFromArray(tournamentIds, id)
-                                                        }}
-                                                    >
-                                                        <Close fontSize={"small"}/>
-                                                    </IconButton>
-                                                </Box>
-                                            ))}
-                                        </>
-                                    )}
-                                </FormGroup>
-                            </div>
+                            <ExpansionSelectOrExclude selectedExpansions={deckSearchDrawerStore.selectedExpansions}/>
                         </ListItem>
                         <ListItem style={{marginTop: spacing(1)}}>
                             <div>
@@ -308,7 +244,70 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                         || forTrade || myFavorites || teamDecks
                                         || withOwners || owners.length > 0
                                     }
-                                    title={"Extra Options"}
+                                    title={"Options"}
+                                    alwaysPresentChildren={(
+                                        <FormGroup row={true}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.myDecks}
+                                                        onChange={handleMyDecksUpdate}
+                                                        disabled={!showMyDecks}
+                                                    />
+                                                }
+                                                label={<Typography variant={"body2"}>My Decks</Typography>}
+                                                style={{width: 136}}
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.props.filters.forSale === true}
+                                                        onChange={(event) => this.updateForSale(event.target.checked ? true : undefined)}
+                                                    />
+                                                }
+                                                label={(
+                                                    <div style={{display: "flex", alignItems: "center"}}>
+                                                        <SellDeckIcon/>
+                                                        <Typography style={{marginLeft: spacing(1)}} variant={"body2"}>
+                                                            For Sale
+                                                        </Typography>
+                                                    </div>
+                                                )}
+                                                style={{width: 136}}
+                                            />
+                                            {showDecksOwner && (
+                                                <div style={{display: "flex", alignItems: "center"}}>
+                                                    <UserLink username={owner}/>
+                                                    <IconButton
+                                                        style={{marginLeft: spacing(1)}}
+                                                        size={"small"}
+                                                        onClick={() => this.props.filters.owner = ""}
+                                                    >
+                                                        <Close fontSize={"small"}/>
+                                                    </IconButton>
+                                                </div>
+                                            )}
+                                            {tournamentIds.length > 0 && (
+                                                <>
+                                                    {tournamentIds.map(id => (
+                                                        <Box display={"flex"} key={id} mt={2}>
+                                                            <LinkButton
+                                                                href={Routes.tournamentPage(id)}>Tournament</LinkButton>
+                                                            <IconButton
+                                                                style={{marginLeft: spacing(1)}}
+                                                                size={"small"}
+                                                                onClick={() => {
+                                                                    ArrayUtils.removeFromArray(tournamentIds, id)
+                                                                }}
+                                                            >
+                                                                <Close fontSize={"small"}/>
+                                                            </IconButton>
+                                                        </Box>
+                                                    ))}
+                                                </>
+                                            )}
+                                        </FormGroup>
+                                    )}
                                 >
                                     <div style={{display: "flex", flexWrap: "wrap", flexGrow: 1}}>
                                         <div style={{display: "flex"}}>
@@ -494,9 +493,12 @@ export class DecksSearchDrawer extends React.Component<DecksSearchDrawerProps> {
                                 />
                                 <SearchDrawerExpansionPanel
                                     initiallyOpen={deckSearchDrawerStore.selectedHouses.anySelected()}
-                                    title={"Houses"}>
-                                    <HouseSelectOrExclude selectedHouses={deckSearchDrawerStore.selectedHouses}
-                                                          excludeTitle={true}/>
+                                    title={"Houses"}
+                                >
+                                    <HouseSelectOrExclude
+                                        selectedHouses={deckSearchDrawerStore.selectedHouses}
+                                        excludeTitle={true}
+                                    />
                                 </SearchDrawerExpansionPanel>
                                 <DeckSearchDrawerConstraints
                                     store={deckSearchDrawerStore.constraintsStore}

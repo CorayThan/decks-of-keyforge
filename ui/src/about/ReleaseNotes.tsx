@@ -14,7 +14,7 @@ import { UserLink } from "../user/UserLink"
 import { AboutGridItem } from "./AboutPage"
 import { DokLink } from "../generic/DokLink"
 
-export const latestVersion = "7.3"
+export const latestVersion = "7.4"
 
 const decFirstUpdateCards = new CardFilters()
 decFirstUpdateCards.aercHistory = true
@@ -46,6 +46,18 @@ export class ReleaseNotes extends React.Component {
                     </Typography>
                     {cardsUpdateLink}
                 </Paper>
+                <ReleaseNote
+                    releaseNumber={"7.4"}
+                    date={"1/31/2025"}
+                    expanded={true}
+                    releaseNotesWithHighlights={[
+                        {
+                            highlight: "Adding Discovery!",
+                            note: "We've enabled the new KeyForge expansion Discovery on DoK! Since there are no " +
+                                "new cards in this set, it wasn't too hard to add."
+                        },
+                    ]}
+                />
                 <ReleaseNote
                     releaseNumber={"7.3"}
                     date={"10/25/2024"}

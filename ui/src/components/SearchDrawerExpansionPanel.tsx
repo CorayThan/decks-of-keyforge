@@ -7,6 +7,7 @@ interface SearchDrawerExpansionPanelProps {
     initiallyOpen: boolean
     title: string
     onClick?: () => void
+    alwaysPresentChildren?: React.ReactNode
     children: React.ReactNode
     lastPanel?: boolean
 }
@@ -16,7 +17,7 @@ const transition = {
 }
 
 export const SearchDrawerExpansionPanel = (props: SearchDrawerExpansionPanelProps) => {
-    const {title, onClick, children, initiallyOpen, lastPanel} = props
+    const {title, onClick, alwaysPresentChildren, children, initiallyOpen, lastPanel} = props
 
     const [open, setOpen] = useState(initiallyOpen)
 
@@ -35,6 +36,7 @@ export const SearchDrawerExpansionPanel = (props: SearchDrawerExpansionPanelProp
                 <Typography variant={"subtitle1"} color={"textSecondary"} style={{flexGrow: 1}}>{title}</Typography>
                 <ExpandMore style={rotateIconStyle(open)}/>
             </div>
+            {alwaysPresentChildren}
             <Collapse in={open} style={{marginBottom: open ? spacing(1) : 0}}>
                 {children}
             </Collapse>

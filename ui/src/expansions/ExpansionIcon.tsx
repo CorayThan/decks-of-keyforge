@@ -33,6 +33,8 @@ import toc from "./imgs/toc.svg"
 import tocDark from "./imgs/toc-dark.svg"
 import mom from "./imgs/mom.svg"
 import momDark from "./imgs/mom-dark.svg"
+import d from "./imgs/d.svg"
+import dDark from "./imgs/d-dark.svg"
 
 export const ExpansionIcon = observer((props: {
     expansion: Expansion,
@@ -104,6 +106,10 @@ export const ExpansionIcon = observer((props: {
         case Expansion.MORE_MUTATION:
             lightSrc = mom
             darkSrc = momDark
+            break
+        case Expansion.DISCOVERY:
+            lightSrc = d
+            darkSrc = dDark
             break
     }
     let src
