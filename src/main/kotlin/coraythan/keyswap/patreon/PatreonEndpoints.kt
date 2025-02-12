@@ -11,6 +11,9 @@ class PatreonEndpoints(
         val apiKeys: SecretApiKeyValidator
 ) {
 
+    @PostMapping("/secured/refresh-primary/{token}")
+    fun refreshPrimary(@PathVariable token: String) = patreonService.refreshCreatorAccountManually(token)
+
     @PostMapping("/secured/link/{code}")
     fun linkAccount(@PathVariable code: String) = patreonService.linkAccount(code)
 

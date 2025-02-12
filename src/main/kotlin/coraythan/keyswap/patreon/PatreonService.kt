@@ -8,6 +8,7 @@ import coraythan.keyswap.keyforgeevents.KeyForgeEventService
 import coraythan.keyswap.scheduledException
 import coraythan.keyswap.scheduledStart
 import coraythan.keyswap.scheduledStop
+import coraythan.keyswap.toReadableStringWithOffsetMinutes
 import coraythan.keyswap.users.CurrentUserService
 import coraythan.keyswap.users.KeyUser
 import coraythan.keyswap.users.KeyUserRepo
@@ -51,7 +52,13 @@ class PatreonService(
         log.info("$scheduledStart refresh patreon creator account.")
         try {
             val creatorAccount = patreonAccountRepo.findAll().toList().firstOrNull()
-            log.info("Found creator account.")
+            log.info(
+                "Found creator account last refreshed: ${
+                    creatorAccount?.refreshedAt?.toReadableStringWithOffsetMinutes(
+                        0
+                    )
+                } UTC."
+            )
             if (creatorAccount != null) {
                 try {
                     updateCreatorAccount(creatorAccount.refreshToken)
@@ -64,7 +71,7 @@ class PatreonService(
                     }
                 }
             } else {
-                log.warn("Couldn't refresh patreon creator account.")
+                log.error("Couldn't refresh patreon creator account.")
             }
 
             topPatrons = userRepo.findByPatreonTier(PatreonRewardsTier.ALWAYS_GENEROUS)
@@ -73,6 +80,11 @@ class PatreonService(
             log.error("$scheduledException Couldn't refresh creator account due to exception.", e)
         }
         log.info("$scheduledStop Done refreshing patreon creator account.")
+    }
+
+    fun refreshCreatorAccountManually(refreshToken: String) {
+        currentUserService.adminOrUnauthorized()
+        updateCreatorAccount(refreshToken)
     }
 
     fun topPatrons() = topPatrons
@@ -174,20 +186,25 @@ class PatreonService(
         patreonCampaign.data.forEach { member ->
 
             val patreonId = member.relationships.user.data.id
-            val tierIds = member.relationships.currentlyEntitledTiers.data.map { tier -> tier.id }
+            val tierIds = member.relationships.currentlyEntitledTiers.data
+                .mapNotNull { tier ->
+                    // Skip free tier
+                    if (tier.id == "10536267") null else tier.id
+                }
+
             val lifetimeSupportCents = member.attributes.lifetimeSupportCents
 
+            val user = userRepo.findByPatreonId(patreonId)
             val bestTier = when {
                 tierIds.any { PatreonRewardsTier.ALWAYS_GENEROUS.tierIds.contains(it) } -> PatreonRewardsTier.ALWAYS_GENEROUS
                 tierIds.any { PatreonRewardsTier.MERCHANT_AEMBERMAKER.tierIds.contains(it) } -> PatreonRewardsTier.MERCHANT_AEMBERMAKER
                 tierIds.any { PatreonRewardsTier.SUPPORT_SOPHISTICATION.tierIds.contains(it) } -> PatreonRewardsTier.SUPPORT_SOPHISTICATION
                 tierIds.any { PatreonRewardsTier.NOTICE_BARGAINS.tierIds.contains(it) } -> PatreonRewardsTier.NOTICE_BARGAINS
                 else -> {
-                    if (tierIds.isNotEmpty()) log.warn("Couldn't find patreon tier for member with id $patreonId tiers $tierIds email $ member: $member")
+                    if (tierIds.isNotEmpty()) log.warn("Couldn't find patreon tier for member with id $patreonId tiers $tierIds email ${user?.email} username ${user?.username} member: $member")
                     null
                 }
             }
-            val user = userRepo.findByPatreonId(patreonId)
             if (user != null && (user.patreonTier != bestTier || user.lifetimeSupportCents != lifetimeSupportCents)) {
                 log.info("Found patreon user to save: ${user.email}. Updating their tier to $bestTier and contribution to $lifetimeSupportCents.")
                 val storeName =

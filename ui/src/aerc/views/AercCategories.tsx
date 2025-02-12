@@ -278,7 +278,7 @@ const expansionSpecificCounts = (props: AercCatProps, width: number | undefined)
         }
     }
 
-    if (deck.expansion === Expansion.MASS_MUTATION) {
+    if (deck.expansion === Expansion.MASS_MUTATION || deck.expansion === Expansion.MORE_MUTATION) {
         return {
             icon: <MutantIcon width={width}/>,
             info: cards.filter(card => card.traits?.includes("MUTANT") ?? false).length,

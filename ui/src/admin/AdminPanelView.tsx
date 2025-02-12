@@ -1,4 +1,4 @@
-import { Box, Typography } from "@material-ui/core"
+import { Box, TextField, Typography } from "@material-ui/core"
 import { observer } from "mobx-react"
 import React, { useEffect } from "react"
 import { spacing } from "../config/MuiConfig"
@@ -7,6 +7,8 @@ import { KeyButton } from "../mui-restyled/KeyButton"
 import { WhiteSpaceTypography } from "../mui-restyled/WhiteSpaceTypography"
 import { uiStore } from "../ui/UiStore"
 import { adminStore } from "./AdminStore"
+import { patreonStore } from "../thirdpartysites/patreon/PatreonStore"
+import { DokLink } from "../generic/DokLink"
 
 export const AdminPanelView = observer(() => {
 
@@ -25,17 +27,44 @@ export const AdminPanelView = observer(() => {
                 )}
                 style={{margin: spacing(2)}}
             >
-                <Box p={2}>
+                <Box display={"flex"} padding={2} flexDirection={"column"} alignItems={"start"}
+                     style={{gap: spacing(2)}}>
+                    <DokLink target={"_blank"} href={"https://www.patreon.com/portal/registration/register-clients"}>Get
+                        Patreon Refresh Token</DokLink>
+                    <Box width={520}>
+                        <TextField
+                            fullWidth={true}
+                            label={"patreon refresh token"}
+                            variant={"outlined"}
+                            value={patreonStore.refreshToken}
+                            onChange={(event) => patreonStore.refreshToken = event.target.value}
+                        />
+                    </Box>
                     <KeyButton
-                        variant={"contained"}
-                        color={"secondary"}
+                        variant={"outlined"}
+                        color={"primary"}
+                        onClick={patreonStore.refreshPrimaryAccount}
+                        loading={patreonStore.refreshingPrimaryPatreon}
+                        disabled={patreonStore.refreshToken.trim().length < 1}
+                    >
+                        Refresh Primary Patreon Account
+                    </KeyButton>
+                    <KeyButton
+                        variant={"outlined"}
+                        color={"primary"}
                         onClick={adminStore.reloadCards}
                         loading={adminStore.reloadingCards}
                     >
                         Reload Cards
                     </KeyButton>
-                </Box>
-                <Box pt={0} p={2}>
+                    <KeyButton
+                        variant={"outlined"}
+                        color={"primary"}
+                        onClick={adminStore.startNewStats}
+                        loading={adminStore.startingStats}
+                    >
+                        Start New Stats
+                    </KeyButton>
                     <KeyButton
                         variant={"contained"}
                         color={"secondary"}
@@ -44,18 +73,6 @@ export const AdminPanelView = observer(() => {
                     >
                         Publish New SAS Version
                     </KeyButton>
-                </Box>
-                <Box pt={0} p={2}>
-                    <KeyButton
-                        variant={"contained"}
-                        color={"secondary"}
-                        onClick={adminStore.startNewStats}
-                        loading={adminStore.startingStats}
-                    >
-                        Start New Stats
-                    </KeyButton>
-                </Box>
-                <Box pt={0} p={2}>
                     <WhiteSpaceTypography>{adminStore.info}</WhiteSpaceTypography>
                 </Box>
             </KeyCard>
