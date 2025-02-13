@@ -6,7 +6,7 @@ import { spacing, themeStore } from "../config/MuiConfig"
 import { AboutSubPaths, Routes, StatsSubPaths } from "../config/Routes"
 import { DeckFilters } from "../decks/search/DeckFilters"
 import { ExpansionIcon } from "../expansions/ExpansionIcon"
-import { activeCardLinksExpansions, displayMyDecksLinksFor, expansionInfoMap } from "../expansions/Expansions"
+import { displayMyDecksLinksFor, expansionInfoMap, expansionInfos } from "../expansions/Expansions"
 import { UnstyledLink } from "../generic/UnstyledLink"
 import { LinkButton } from "../mui-restyled/LinkButton"
 import { Loader } from "../mui-restyled/Loader"
@@ -24,6 +24,11 @@ import { SortDirection } from "../generated-src/SortDirection"
 import { DokLink } from "../generic/DokLink"
 
 const topSas = new DeckFilters()
+
+const tournamentLegal = new DeckFilters()
+tournamentLegal.expansions = expansionInfos
+    .filter(expansionInfo => expansionInfo.tournamentIllegal != true)
+    .map(expansionInfo => expansionInfo.expansionNumber)
 
 const forSale = DeckFilters.forSale()
 const forTrade = new DeckFilters()
@@ -54,14 +59,21 @@ export class LandingPage extends React.Component<{}> {
                 <Box display={"flex"}>
                     <KeyDrawer width={landingPageDrawerWidth} hamburgerMenu={true}>
                         <List>
+                            <ListSubheader>
+                                Decks
+                            </ListSubheader>
                             <div style={{
                                 display: "flex",
                                 flexWrap: "wrap",
-                                marginTop: spacing(2),
                                 paddingRight: spacing(1)
                             }}>
                                 <DeckSearchLink
-                                    name={"Search Decks"}
+                                    name={"Tourny Legal"}
+                                    filters={tournamentLegal}
+                                    style={{marginBottom: spacing(2)}}
+                                />
+                                <DeckSearchLink
+                                    name={"Search"}
                                     filters={topSas}
                                     style={{marginBottom: spacing(2)}}
                                 />
@@ -72,7 +84,8 @@ export class LandingPage extends React.Component<{}> {
                                         <DeckSearchLink
                                             key={expansion}
                                             name={<ExpansionIcon expansion={expansion} white={true}/>}
-                                            filters={expansionFilters} style={{marginBottom: spacing(2)}}
+                                            filters={expansionFilters}
+                                            style={{marginBottom: spacing(2)}}
                                         />
                                     )
                                 })}
@@ -134,19 +147,7 @@ export class LandingPage extends React.Component<{}> {
                                     name={"Search Cards"}
                                     to={Routes.cards}
                                     color={"secondary"}
-                                    style={{marginBottom: spacing(2)}}
                                 />
-                                {activeCardLinksExpansions.map(expansion => {
-                                    return (
-                                        <LandingPageLink
-                                            key={expansion}
-                                            name={<ExpansionIcon expansion={expansion} white={false}/>}
-                                            color={"secondary"}
-                                            to={Routes.cardsForExpansion(expansionInfoMap.get(expansion)!.expansionNumber)}
-                                            style={{marginBottom: spacing(2)}}
-                                        />
-                                    )
-                                })}
                             </div>
                         </List>
                     </KeyDrawer>
